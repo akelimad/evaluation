@@ -75,25 +75,39 @@
                                 </div>
                             </div>
                             <div class="tab-pane" id="timeline">
-                                <ul class="list-group list-group-unbordered">
-                                    <li class="list-group-item"><b>Date d'entrée</b> <span> {{$user->created_at}} </span></li>
-                                    <li class="list-group-item"><b>Fonction </b> <span> {{$user->function}} </span></li>
-                                    <li class="list-group-item"><b>Service</b> <span> {{$user->service}} </span></li>
-                                </ul>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Date d'entrée</label>
+                                    <div class="col-md-9">{{ $user->created_at }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Fonction</label>
+                                    <div class="col-md-9">{{ $user->function }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Service</label>
+                                    <div class="col-md-9">{{ $user->service }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
                             </div>
 
                             <div class="tab-pane" id="settings">
-                                <ul class="list-group list-group-unbordered">
-                                    <li class="list-group-item">
-                                        <b>Afficher l'aide contextuelle</b> 1,322
-                                    </li>
-                                    <li class="list-group-item">
-                                        <b>Recevoir les notifications par email</b> 1,322
-                                    </li>
-                                    <li class="list-group-item">
-                                        <b>Nombre de ligne par page</b> 1,322
-                                    </li>
-                                </ul>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
+                                    <div class="col-md-9">1,322</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Recevoir les notifications par email</label>
+                                    <div class="col-md-9">1,322</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Nombre de ligne par page</label>
+                                    <div class="col-md-9">1,322</div>
+                                    <div class="clearfix"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
