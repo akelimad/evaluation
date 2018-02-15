@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('society');
             $table->string('zip_code');
             $table->string('city');
+            $table->string('country');
             $table->string('tel');
             $table->string('fix');
             $table->string('about');
@@ -30,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('function');
             $table->string('service');
             $table->string('qualification');
+            $table->integer('user_id');
             $table->rememberToken();
             $table->timestamps();
         });

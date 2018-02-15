@@ -29,13 +29,14 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i" rel="stylesheet">
 </head>
 <body class="hold-transition login-page">
 	<div class="container">
 	    <div class="row">
 	        <div class="col-md-6 col-md-offset-3">
 			    <div class="login-logo">
-			      	<img src="{{ asset('img/logo.png') }}" alt="" class="img-responsive">
+			      	<img src="{{ asset('img/logo1.png') }}" alt="" class="img-responsive">
 			    </div>
 			    @if ($errors->any())
                     <div class="chm-alerts alert alert-danger alert-white rounded">
@@ -45,7 +46,7 @@
 					</div>
                 @endif
 			    <div class="login-box-body ">
-			      	<p class="login-box-msg"> Login pour pouvoir se connecter à l'application. </p>
+			      	<p class="login-box-msg"> Veuillez entrer votre email et mot de passe pour se connecter à l'application. </p>
 			      	<form action="{{ url('/login') }}" method="post" class="form-horizontal" role="form">
 			      		{{ csrf_field() }}
 			      		<div class="">
@@ -77,7 +78,7 @@
 				          <!-- /.col -->
 				          <div class="col-md-4">
 				          	<div class="form-group">
-					            <button type="submit" class="btn btn-primary btn-block btn-flat"> Se connecter </button>
+					            <button type="submit" class="btn btn-primary btn-block btn-lg"> Se connecter </button>
 					        </div>
 				          </div>
 				          <!-- /.col -->

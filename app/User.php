@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
+    use EntrustUserTrait;
     /**
      * The attributes that are mass assignable.
      *
@@ -23,4 +25,31 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany('App\User', 'user_id');
+    }
+
+    /**
+     * Get the interview for the given user.
+     */
+    public function entretiens()
+    {
+        return $this->hasMany('App\Entretien');
+    }
+
+    /**
+     * Get the interview for the given user.
+     */
+    public function activites()
+    {
+        return $this->hasMany('App\Activite');
+    }
+
 }

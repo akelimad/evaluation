@@ -1,16 +1,28 @@
 body{
     font-family: 'Roboto';
 }
-
+.mb40{
+    margin-bottom: 40px;
+}
+textarea { 
+   /* will prevent resizing horizontally */
+   resize:vertical;
+   min-height: 70px;
+}
+.box{
+    padding: 1em;
+    box-shadow: -2px 3px 20px 4px rgb(113, 140, 150);
+}
 .login-page{
-    padding-top: 6%;
+    padding-top: 5%;
     background: url('../img/bg-login.jpg') no-repeat center center ;
     background-size: cover;
 
 }
 .login-box-body{
-    box-shadow: 1px 1px 5px 2px #8e7575;
+    box-shadow: -1px -2px 28px 2px #e2dddd;
     padding: 5em 3em;
+    border-radius: 7px;
 }
 .login-page ul{
     list-style-type: none;
@@ -63,12 +75,12 @@ body{
     border: 0;
 }
 
-.profile .nav-tabs-custom{
+.profile .nav-tabs-custom, .index .nav-tabs-custom{
     overflow: auto;
     padding: 1em 0 0 0;
     margin-bottom: 0;
 }
-.profile .nav-tabs-custom .caption{
+.profile .nav-tabs-custom .caption, .index .nav-tabs-custom .caption{
     float: left;
     display: inline-block;
     font-size: 18px;
@@ -79,7 +91,7 @@ body{
     text-transform: uppercase;
 }
 .card{
-    padding: 12px 20px 15px 20px;
+    padding: 12px 20px 25px 20px;
     background-color: #fff;
 }
 .list-group-item:first-child{
@@ -100,4 +112,114 @@ body{
 }
 .profile .nav>li>a{
     padding: 1em 4em;
+}
+.content-header{
+    background: #f4f4f4 !important;
+    padding: 15px;
+}
+.content-header>.breadcrumb{
+    float: none;
+    position: static;
+    padding: 0 5px;
+    font-size: 17px;
+}
+.user-menu a span , .user-panel>.info>p{
+    text-transform: capitalize;
+}
+.home-logo{
+    background: white;
+    padding: 5px 0;
+}
+.home-logo img{
+    margin: auto;
+}
+.icheckbox_square-blue{
+    margin: 0 5px 0 0;
+}
+.checkbox label{
+    padding-left: 0;
+}
+.icon-fill{
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    display: inline-block;
+    text-align: center;
+    color: white;
+    border-radius: 50%;
+}
+.navbar-nav>.user-menu>.dropdown-menu>.user-footer{
+    background: #5796bb;
+}
+.news li{
+    margin-bottom: 10px;
+}
+.news li i{
+    background: #d2a54f;
+    padding: 8px;
+    color: white;
+}
+.interview-pro a{
+    letter-spacing: 1px;
+    font-weight: normal;
+    font-size: 16px;
+}
+.nav-tabs-custom>.tab-content{
+    border: 1px solid #d2cfcf;
+}
+.nav-tabs-custom>.nav-tabs>li.active>a{
+    border-right-color: #c7bdbd;
+    border-left-color: #c7bdbd !important;
+}
+.evaluations .nav-tabs>li>a{
+    padding: 1em 1.5em;
+}
+.professionels .nav-tabs>li>a{
+    padding: 1em 3em;
+}
+.table-bordered{
+    border: 1px solid #ddd;
+}
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>td{
+    border: 1px solid #d0d0d0;
+}
+.current-interview {
+    background: #f3f3f3;
+    margin-bottom: 1em;
+    padding: 10px;
+    border-left: 2px solid #3c8dbc;
+}
+.current-interview .name{
+    font-size: 17px;
+    color: #158bc5;
+    text-transform: capitalize;
+}
+.current-interview img {
+    float: left;
+    margin-right: 1em;
+}
+.coll-entretien {
+    padding-top: 1em;
+}
+.empty{
+    padding: 4px;
+    display: inline-block;
+    border-radius: 50%;
+}
+.treeview-menu>li>a {
+    padding: 12px 5px 5px 15px;
+}
+.sidebar-menu>li>a {
+    font-size: 17px;
+}
+.box-header {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #dedede;
+}
+.box-header h3{
+    font-size: 24px !important;
+    color: #fb8935;
+}
+.mentor{
+    padding: 1em 0;
 }

@@ -77,7 +77,9 @@
                             <div class="tab-pane" id="timeline">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Date d'entrée</label>
-                                    <div class="col-md-9">{{ $user->created_at }}</div>
+                                    <div class="col-md-9">
+                                        {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}}
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
@@ -95,17 +97,17 @@
                             <div class="tab-pane" id="settings">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
-                                    <div class="col-md-9">1,322</div>
+                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Recevoir les notifications par email</label>
-                                    <div class="col-md-9">1,322</div>
+                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Nombre de ligne par page</label>
-                                    <div class="col-md-9">1,322</div>
+                                    <div class="col-md-9"><span class="label label-success pull-right">10</span></div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
