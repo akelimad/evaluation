@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">La liste des utilisateurs</h3>
+                        <h3 class="box-title">La liste des utilisateurs <span class="badge">{{$users->total()}}</span></h3>
                         <div class="box-tools">
                             <a href="{{ url('user/create') }}" class="btn bg-maroon"> <i class="fa fa-plus"></i> Ajouter </a>
                       </div>
@@ -49,6 +49,9 @@
                             </tr>
                             @endforeach
                         </table>
+
+                        {{ $users->links() }}
+
                     </div>
                 </div>
             </div>

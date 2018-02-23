@@ -35,7 +35,7 @@ class EntretienController extends Controller
     {
         $entretiens = Entretien::where('type' , '=', 'annuel')->where('user_id' , '=', Auth::user()->id)->get();
         $mentor = Auth::user()->parent;
-        return view('entretiens/evaluation.index', compact('entretiens', 'mentor'));
+        return view('entretiens/annuel.index', compact('entretiens', 'mentor'));
     }
 
     /**
@@ -55,33 +55,10 @@ class EntretienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showEntretien($type, $id)
+    public function show($e_id)
     {
-        $entretienEval = Entretien::where(['id'=>$id])->with('user')->first();
-        return view('entretiens/'.$type.'.show', ['e' => $entretienEval]);
-    }
-
-    // /**
-    //  * Display a listing of the resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function showEntretienProf($type, $id)
-    // {
-    //     $entretienProf = Entretien::where(['id'=>$id])->with('user')->first();
-    //     return view('entretiens/professionnel.show', ['ep' => $entretienProf]);
-    // }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function createEval()
-    {
-        $users = Auth::user()->children;
-        return view('entretiens/evaluation.create', compact('users'));
+        $entretienEval = Entretien::where(['id'=>$e_id])->with('user')->first();
+        return view('entretiens/'.$entretienEval->type.'.show', ['e' => $entretienEval]);
     }
 
     /**
@@ -89,10 +66,13 @@ class EntretienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createProf()
+    public function create($type)
     {
-        $users = Auth::user()->children;
-        return view('entretiens/professionnel.create', compact('users'));
+        ob_start();
+        $users = User::select('id', 'email')->where('id', '<>', Auth::user()->id)->get();
+        echo view('entretiens/'.$type.'.form', compact('users'));
+        $content = ob_get_clean();
+        return ['title' => 'Ajouter un entretien '.$type.'', 'content' => $content];
     }
 
 
@@ -104,31 +84,32 @@ class EntretienController extends Controller
      */
     public function store(Request $request)
     {
-        $entretien = new Entretien();
-        $entretien->date = Carbon::createFromFormat('d-m-Y', $request->date);
-        if(!empty($request->date_limit)){
-            $entretien->date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit); 
+        if($request->id == null ){
+            $entretien = new Entretien();
+        }else{
+            $entretien = Entretien::find($request->id);
         }
-        $entretien->titre = $request->titre;
-        $entretien->motif = $request->motif;
-        $entretien->frequence = $request->frequence;
-        $entretien->user_id = $request->user_id;
-        $entretien->type = $request->type;
-        $entretien->conclusion_coll = $request->conclusion_coll;
-        $entretien->conclusion_mentor = $request->conclusion_mentor;
-        $entretien->save();
-        return redirect('entretiens/'.$entretien->type.'/'.$entretien->id);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        if(count($request->usersId)>0){
+            foreach ($request->usersId as $user_id) {
+                $entretien->date = Carbon::createFromFormat('d-m-Y', $request->date);
+                if(!empty($request->date_limit)){
+                    $entretien->date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit); 
+                }
+                $entretien->titre = $request->titre;
+                $entretien->motif = $request->motif;
+                $entretien->frequence = $request->frequence;
+                if($request->id == null) $entretien->user_id = $user_id;
+                $entretien->type = $request->type;
+                $entretien->conclusion_coll = $request->conclusion_coll;
+                $entretien->conclusion_mentor = $request->conclusion_mentor;
+                $entretien->save();
+            }
+            if($entretien->save()) {
+                return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+            } else {
+                return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+            }
+        }
     }
 
     /**
@@ -137,21 +118,14 @@ class EntretienController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function editEntretien($e_id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        ob_start();
+        $users = Auth::user()->children;
+        $entretienEval = Entretien::where(['id'=>$e_id])->first();
+        echo view('entretiens/'.$entretienEval->type.'.form', ['e' => $entretienEval, 'users'=> $users]);
+        $content = ob_get_clean();
+        return ['title' => 'Modifier un entretien', 'content' => $content];
     }
 
     /**

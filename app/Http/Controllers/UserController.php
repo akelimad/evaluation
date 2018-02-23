@@ -4,14 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\CsvData;
 use App\Http\Requests;
 use Auth;
 use App\User;
 use App\Role;
 use App\Permission;
+use Session;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function profile(){
         $user = Auth::user();
@@ -24,7 +31,7 @@ class UserController extends Controller
     }
 
     public function indexUsers(){
-        $users = User::with('roles')->paginate(10);
+        $users = User::with('roles')->paginate(4);
         return view('users.index', compact('users'));
     }
 
@@ -118,7 +125,71 @@ class UserController extends Controller
     public function destroyUser(Request $request, $id){
         $user = User::find($id);
         $user->delete();
-        return redirect('utilisateurs');
+        return redirect('users');
+    }
+
+    public function importUsers(Request $request){
+        return view('users.data.import');
+    }
+
+    public function parseImport(Request $request){
+        $path = $request->file('usersDataCsv')->getRealPath();
+        $csv_data = Excel::load($path, function($reader) {})->get()->toArray();
+        if (count($csv_data) > 0) {
+            $csv_header_fields = [];
+            $csv_values_fields = [];
+            foreach ($csv_data[0] as $key => $value) {
+                $csv_header_fields[] = $key;
+            }
+        }
+        Session::forget('session_csv_data');
+        Session::forget('session_csv_headers');
+        Session::push('session_csv_data', $csv_data);
+        Session::push('session_csv_headers', $csv_header_fields);
+        //dd(json_encode($csv_data));
+        return view('users.data.import_fields', compact( 'csv_header_fields','csv_values_fields', 'csv_data'));
+    }
+
+    public function getRoleByName($roleName){
+        if($roleName == "RH") return 1;
+        if($roleName == "ADMIN") return 2;
+        if($roleName == "MENTOR") return 3;
+        if($roleName == "COLLABORATEUR") return 4;
+    }
+
+    public function processImport(Request $request){
+        $csv_data = Session::get('session_csv_data')[0];
+        $fields = Session::get('session_csv_headers')[0];
+        $count = User::all()->count();
+        foreach ($csv_data as $row) {
+                $user = new User();
+                $user->id= $count+1;
+                $user->name= $row[$fields[0]];
+                $user->last_name = $row[$fields[1]];
+                $user->email= $row[$fields[2]];
+                $user->password= bcrypt("password");
+                $user->address= $row[$fields[5]];
+                $user->zip_code= $row[$fields[6]];
+                $user->city= $row[$fields[7]];
+                $user->country= $row[$fields[8]];
+                $user->fix= $row[$fields[9]];
+                $user->tel= $row[$fields[10]];
+                $user->function= $row[$fields[11]];
+                $user->service= $row[$fields[12]];
+                $user->qualification= $row[$fields[13]];
+                $user->status= 1;
+                $mentor = User::where('email', '=', $row[$fields[4]])->first();
+                if($mentor != null){
+                    $user->user_id= $mentor->id;
+                }else{
+                    $user->user_id= 0;
+                }
+                $user->save();
+                $user->attachRole($this->getRoleByName($row[$fields[3]]));
+                $count++;
+        }
+        return redirect('users');
+
     }
 
     public function indexRoles(){
@@ -126,11 +197,11 @@ class UserController extends Controller
         return view('users/roles.index' , ['roles' => $roles]);
     }
     public function createRole(){
-        //ob_start();
+        ob_start();
         $permissions = Permission::all();
-        return view('users.roles.create', ['permissions' => $permissions]);
-        // $content = ob_get_clean();
-        // return ['title' => 'Ajouter un rôle', 'content' => $content];
+        echo view('users.roles.form', ['permissions' => $permissions]);
+        $content = ob_get_clean();
+        return ['title' => 'Ajouter un rôle', 'content' => $content];
     }
     public function storeRole(Request $request){
         $id = $request->input('id', false);
@@ -157,12 +228,11 @@ class UserController extends Controller
             // $role->perms()->detach($request->permissions);
             $role->attachPermissions($request->permissions);
         }
-        // if($role->save()) {
-        //     return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-        // } else {
-        //     return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
-        // }
-        return redirect('roles');
+        if($role->save()) {
+            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+        } else {
+            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+        }
 
     }
 
@@ -174,7 +244,7 @@ class UserController extends Controller
             $role_perms[] = $perm->id;
         }
         $permissions = Permission::all();
-        echo view('users/roles.edit' , ['role' => $role, 'permissions' => $permissions,'role_perms' => $role_perms]);
+        echo view('users/roles.form' , ['role' => $role, 'permissions' => $permissions,'role_perms' => $role_perms]);
         $content = ob_get_clean();
         return ['title' => 'Editer le rôle', 'content' => $content];
     }
@@ -190,10 +260,10 @@ class UserController extends Controller
         return view('users/permissions.index' ,['permissions' => $permissions]);
     }
     public function createPermission(){
-        //ob_start();
+        ob_start();
         return view('users/permissions.create');
-        // $content = ob_get_clean();
-        // return ['title' => 'Créer une permission', 'content' => $content];
+        $content = ob_get_clean();
+        return ['title' => 'Créer une permission', 'content' => $content];
     }
     public function storePermission(Request $request){
         $id = $request->input('id', false);
@@ -206,12 +276,11 @@ class UserController extends Controller
         $permission->display_name = $request->display_name;
         $permission->description = $request->description;
         $permission->save();
-        // if($permission->save()) {
-        //     return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-        // } else {
-        //     return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
-        // }
-        return redirect('permissions');
+        if($permission->save()) {
+            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+        } else {
+            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+        }
     }
     public function editPermission($id){
         ob_start();

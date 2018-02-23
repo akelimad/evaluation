@@ -2,7 +2,7 @@
 @section('content')
     <section class="content profile">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
@@ -45,27 +45,27 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Code postale</label>
-                                    <div class="col-md-9">{{ $user->zip_code }}</div>
+                                    <div class="col-md-9">{{ $user->zip_code ? $user->zip_code : '---' }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Ville</label>
-                                    <div class="col-md-9">{{ $user->city }}</div>
+                                    <div class="col-md-9">{{ $user->city ? $user->city : '---' }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Téléphone mobile</label>
-                                    <div class="col-md-9">{{ $user->tel }}</div>
+                                    <div class="col-md-9">{{ $user->tel ? $user->tel : '---' }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Téléphone fixe</label>
-                                    <div class="col-md-9">{{ $user->fix }}</div>
+                                    <div class="col-md-9">{{ $user->fix ? $user->fix : '---' }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">A propos de moi</label>
-                                    <div class="col-md-9">{{ $user->about }}</div>
+                                    <div class="col-md-9">{{ $user->about ? $user->about : '---' }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

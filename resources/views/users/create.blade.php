@@ -118,8 +118,8 @@
                             </div>
                             
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default">Annuler</button>
                                 <button type="submit" class="btn btn-info pull-right">Sauvegarder</button>
+                                <a href="" class="btn btn-default pull-right">Annuler</a>
                             </div>
                         </form>
                     </div>

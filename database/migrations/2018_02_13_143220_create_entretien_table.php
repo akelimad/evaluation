@@ -15,14 +15,15 @@ class CreateEntretienTable extends Migration
         Schema::create('entretiens', function (Blueprint $table) {
             $table->increments('id');
             $table->date('date');
-            $table->date('date_limit');
+            $table->date('date_limit')->nullable();
             $table->string('titre');
-            $table->string('motif');
-            $table->string('frequence');
-            $table->integer('user_id')->unsigned()->index();
+            $table->string('motif')->nullable();
+            $table->string('frequence')->nullable();
+            $table->string('type');
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('conclusion_coll');
-            $table->string('conclusion_mentor');
+            $table->string('conclusion_coll')->nullable();
+            $table->string('conclusion_mentor')->nullable();
             $table->timestamps();
         });
     }

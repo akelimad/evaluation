@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Mes entretiens | Tableau de board</title>
+  <title>E-entretiens | Tableau de board</title>
+  <link rel="website" href="{{ url('/') }}">
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -13,6 +14,7 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="{{ asset('bower_components/Ionicons/css/ionicons.min.css')}}">
   <!-- Theme style -->
+  <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css')}}">
   <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css')}}">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
@@ -29,8 +31,8 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
 
-    <link rel="stylesheet" href="{{asset('css/alerts.css')}}">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+  <link rel="stylesheet" href="{{asset('css/alerts.css')}}">
+  <link rel="stylesheet" href="{{asset('css/style.css')}}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -42,6 +44,9 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i" rel="stylesheet">
+
+  <link href="{{ App\Asset::path('app.css') }}" rel="stylesheet">
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -52,7 +57,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>M</b>E</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Mes</b>Entretiens</span>
+      <span class="logo-lg"><b>E</b>-entretiens</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -85,10 +90,10 @@
                     <!-- Menu Footer-->
                     <li class="user-footer">
                         <div class="pull-left">
-                          <a href="{{url('/profile')}}" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
+                          <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> Profile</a>
                         </div>
                         <div class="pull-right">
-                          <a href="{{url('/logout')}}" class="btn btn-default btn-flat">Déconnexion <i class="fa fa-sign-out"></i></a>
+                          <a href="{{url('/logout')}}" class="btn btn-info">Déconnexion <i class="fa fa-sign-out"></i></a>
                         </div>
                     </li>
                 </ul>
@@ -192,6 +197,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{{ url('users') }}"><i class="fa fa-circle-o"></i> Les utilisateurs </a></li>
+                    <li><a href="{{ url('users/import') }}"><i class="fa fa-circle-o"></i> Importer les utilisateurs </a></li>
                     <li><a href="{{ url('roles') }}"><i class="fa fa-circle-o"></i> Les rôles </a></li>
                     <li><a href="{{ url('permissions') }}"><i class="fa fa-circle-o"></i> Les permissions </a></li>
                 </ul>
@@ -272,20 +278,23 @@
 <script src="{{asset('bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
 <!-- datepicker -->
 <script src="{{asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+<script src="{{asset('bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js')}}"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
 <script src="{{asset('bower_components/fastclick/lib/fastclick.js')}}"></script>
+<script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('js/adminlte.min.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('js/pages/dashboard.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('js/demo.js')}}"></script>
-<script src="{{asset('vendor/iCheck/icheck.min.js')}}"></script>
 <script src="{{asset('js/script.js')}}"></script>
+
+<script src="{{ App\Asset::path('app.js') }}"></script>
 </body>
 </html>
 

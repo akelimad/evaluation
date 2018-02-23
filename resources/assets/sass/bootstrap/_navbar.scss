@@ -1,0 +1,17 @@
+.navbar {
+  margin-bottom: 0px;
+  .navbar-brand, .navbar-brand:hover, .navbar-brand:focus {
+    background: #f25656;
+    color: #fff;
+    padding: 20px 15px;
+    height: 60px;
+  }
+}
+
+.navbar-nav {
+  > li {
+    > a {
+      padding: 20px 15px !important;
+    }
+  }
+}

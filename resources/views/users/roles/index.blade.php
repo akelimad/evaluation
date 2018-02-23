@@ -7,7 +7,7 @@
                     <div class="box-header">
                         <h3 class="box-title">La liste des rôles</h3>
                         <div class="box-tools">
-                            <a href="{{ url('role/create') }}" class="btn bg-maroon"> <i class="fa fa-plus"></i> Ajouter </a>
+                            <a class="btn bg-maroon" onclick="return chmRole.create()"> <i class="fa fa-plus"></i> Ajouter </a>
                       </div>
                     </div>
                     <div class="box-body table-responsive no-padding">
@@ -26,7 +26,7 @@
                                 <td> {{ $role->display_name }} </td>
                                 <td> {{ $role->description }} </td>
                                 <td>  
-                                    <a href="#"> <i class="fa fa-eye"></i> </a>
+                                    <a href="#" class="btn-primary icon-fill"> <i class="fa fa-eye"></i> </a>
                                 </td>
                             </tr>
                             @endforeach

@@ -1,6 +1,11 @@
 body{
     font-family: 'Roboto';
 }
+.modal-header {
+    background: #32bae4;
+    padding: 10px;
+    color: white;
+}
 .mb40{
     margin-bottom: 40px;
 }
@@ -8,6 +13,16 @@ textarea {
    /* will prevent resizing horizontally */
    resize:vertical;
    min-height: 70px;
+}
+.label{
+    border-radius: 15px;
+    font-weight: normal;
+}
+i{
+    transition: all .7s ease-in-out;
+}
+.icon-fill:hover i{
+    transform: scale(1.2) rotate(360deg);
 }
 .box{
     padding: 1em;
@@ -97,7 +112,9 @@ textarea {
 .list-group-item:first-child{
     border-top: 0;
 }
-
+.profile .form-group:first-child{
+    border-top: none;
+}
 .profile .form-group{
     margin-bottom: 0;
     border: 1px solid #d0d0d0;
@@ -149,7 +166,7 @@ textarea {
     border-radius: 50%;
 }
 .navbar-nav>.user-menu>.dropdown-menu>.user-footer{
-    background: #5796bb;
+    background: #efeded;
 }
 .news li{
     margin-bottom: 10px;
@@ -218,8 +235,110 @@ textarea {
 }
 .box-header h3{
     font-size: 24px !important;
-    color: #fb8935;
+    color: #35b0fb;
 }
 .mentor{
     padding: 1em 0;
+}
+.box-footer button{
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+
+/*checkbox on off*/
+.toggle-check-input {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+}
+
+.toggle-check-text {
+    display: inline-block;
+    position: relative;
+    text-transform: uppercase;
+    background: #CCC;
+    padding: 0.25em 0.5em 0.25em 2em;
+    border-radius: 1em;
+    min-width: 2em;
+    color: #FFF;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    font-weight: normal;
+}
+
+.toggle-check-text:after {
+    content: ' ';
+    display: block;
+    background: #FFF;
+    width: 1.1em;
+    height: 1.1em;
+    border-radius: 1em;
+    position: absolute;
+    left: 0.3em;
+    top: 0.25em;
+    transition: left 0.15s, margin-left 0.15s;
+}
+
+.toggle-check-text:before {
+    content: 'Non';
+}
+
+.toggle-check-input:checked ~ .toggle-check-text {
+    background: #8ad869;
+    padding-left: 0.5em;
+    padding-right: 2em;
+}
+
+.toggle-check-input:checked ~ .toggle-check-text:before {
+    content: 'Oui';
+}
+
+.toggle-check-input:checked ~ .toggle-check-text:after {
+    left: 100%;
+    margin-left: -1.4em;
+}
+.showFile{
+    margin-top: 10px;
+}
+.showFile a{
+    color: #20a2ca;
+}
+p.alert-default{
+    background: whitesmoke;
+    border-left: 3px solid #3c8dbc;
+    color: gray;
+}
+.box h3.mb40{
+    padding: 5px 0;
+    color: #365e92cf;
+    border-bottom: 1px solid #e0e0e0;
+    text-transform: capitalize;
+}
+ul.user-data li{
+    margin-bottom: 4px;
+    color: #0c523f;
+    font-style: italic;
+    font-weight: bold;
+}
+ul.user-data li i{
+    color: #1d8ec5;
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
 }

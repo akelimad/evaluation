@@ -1,0 +1,39 @@
+.chmTable {
+  text-align: center; 
+  border-top: 3px solid #e32b2b !important; 
+  border-bottom: 3px solid #e32b2b !important;
+  thead th {
+    vertical-align: sub !important;
+  }
+  tfoot th {
+    border-top: 2px solid #ddd;
+  }
+  td, td {
+    text-align: left;
+    padding: 8px 8px 3px !important;
+  }
+  .btn-xs {
+    margin-bottom: 5px;
+    width: 24px;
+  }
+  .fa-mobile {
+    font-size: 18px;
+    margin-right: 5px;
+  }
+}
+
+.small-rows {
+  td, th {
+    padding: 4px 5px !important;
+  }
+}
+
+.table-title {
+  background-color: #787c80;
+  margin: 0 0 15px;
+  width: 100%;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 14px;
+  padding: 2px 5px;
+}

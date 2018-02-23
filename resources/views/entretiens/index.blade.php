@@ -36,12 +36,12 @@
                         <hr>
                         <h2>Les entretiens d'évaluation</h2>
                         <p class="help-block">Veuillez sélectionner un collaboreur dans la liste de gauche ou créer un nouvel entretien d'évaluation... </p>
-                        <a href="{{ url('entretiens/evaluation/create') }}" class="label label-success"> Créer un entretien d'évaluation </a>
+                        <a onclick="return chmEntretien.create('annuel')" class="label label-success"> Créer un entretien d'évaluation </a>
                     </div>
                     <div class="">
                         <h2>Les entretiens professionnels</h2>
                         <p class="help-block">Veuillez sélectionner un collaboreur dans la liste de gauche ou créer une nouvelle évaluation...  </p>
-                        <a href="{{ url('entretiens/professionnel/create') }}" class="label label-success"> Créer un entretien professionnel </a>
+                        <a onclick="return chmEntretien.create('professionnel')" class="label label-success"> Créer un entretien professionnel </a>
                     </div>
                 </div>
             </div>

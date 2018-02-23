@@ -5,15 +5,17 @@
             <div class="col-md-3">
                 <div class="box box-primary">
                     <div class="box-body box-profile">
+                        <p>Bienvenue {{ $user->name }} {{ $user->last_name }}</p>
+                        <p>Voici les informations de votre Mentor:</p>
                         <img class="profile-user-img img-responsive img-circle" src="{{ asset('img/avatar.png') }}" alt="User profile picture">
-                        <h3 class="profile-username text-center">{{ $user->name }} {{ $user->last_name }} </h3>
-                        <p class="text-muted text-center"> {{ $user->function }} </p>
+                        <h3 class="profile-username text-center">{{ $mentor->name }} {{ $mentor->last_name }} </h3>
+                        <p class="text-muted text-center"> {{ $mentor->function }} </p>
 
                         <ul class="list-group list-group-unbordered">
-                            <li class="list-group-item"><b>Service: </b> <a class="pull-right">{{ $user->service }}</a></li>
-                            <li class="list-group-item"><b>Téléphone fixe: </b> <a class="pull-right">{{ $user->fix }}</a></li>
-                            <li class="list-group-item"><b>Téléphone mobile: </b> <a class="pull-right">{{ $user->tel }}</a></li>
-                            <li class="list-group-item"><b>Email: </b> <a class="pull-right">{{ $user->email }}</a></li>
+                            <li class="list-group-item"><b>Service: </b> <a class="pull-right">{{ $mentor->service ? $mentor->service : '---' }}</a></li>
+                            <li class="list-group-item"><b>Téléphone fixe: </b> <a class="pull-right">{{ $mentor->fix ? $mentor->fix : '---' }}</a></li>
+                            <li class="list-group-item"><b>Téléphone mobile: </b> <a class="pull-right">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
+                            <li class="list-group-item"><b>Email: </b> <a class="pull-right">{{ $mentor->email }}</a></li>
                         </ul>
                         <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
                     </div>
@@ -64,7 +66,7 @@
                                             @foreach($entretiens as $e)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ url('entretiens/'.$e->type.'/'.$e->id) }}">{{$e->titre}}</a>
+                                                    <a href="{{ url('entretiens/'.$e->id) }}">{{$e->titre}}</a>
                                                 </td>
                                                 <td>{{$e->type}}</td>
                                                 <td>{{$e->date}}</td>
@@ -78,7 +80,7 @@
                                     </table>
                                 </div>
                                 @else
-                                    <p class="alert alert-info">Aucune donnée disponible !</p>
+                                    <p class="alert alert-default">Aucune donnée disponible !</p>
                                 @endif
                             </div>
                             <div class="tab-pane" id="objectifs">
@@ -202,8 +204,8 @@
                                             @foreach($collaborateurs as $coll)
                                             @foreach($coll->entretiens as $en)
                                             <tr>
-                                                <td>{{$coll->name}} {{$coll->last_name}}</td>
-                                                <td> {{ $en->titre }} </td>
+                                                <td><a href="{{url('user/'.$coll->id)}}">{{$coll->name}} {{$coll->last_name}}</a></td>
+                                                <td> <a href="{{url('entretiens/'.$en->id)}}">{{ $en->titre }}</a> </td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>
@@ -215,7 +217,7 @@
                                     </table>
                                 </div>
                                 @else
-                                    <p class="alert alert-info">Aucune donnée disponible !</p>
+                                    <p class="alert alert-default">Aucune donnée disponible !</p>
                                 @endif
                             </div>
                             <div class="tab-pane" id="bb">

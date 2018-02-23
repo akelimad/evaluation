@@ -28,10 +28,15 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
+        if($user->parent == null){
+            $mentor = $user;
+        }else{
+            $mentor = $user->parent;
+        }
         $entretiens = $user->entretiens;
         $collaborateurs = User::with('entretiens')->where('user_id', '=', $user->id)->get();
-        //dd($collaborateurs);
-        return view('index', compact('user', 'entretiens', 'collaborateurs'));
+        //dd($entretiens);
+        return view('index', compact('user', 'mentor', 'entretiens', 'collaborateurs'));
     }
 
 

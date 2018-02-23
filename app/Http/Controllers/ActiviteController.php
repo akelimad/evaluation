@@ -11,15 +11,20 @@ use App\Activite;
 
 class ActiviteController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($type, $id)
+    public function index($e_id)
     {
-        $activites = Entretien::find($id)->activites;
-        return view('activites.index', ['activites' => $activites]);
+        $entretien = Entretien::find($e_id);
+        $activites = $entretien->activites;
+        return view('activites.index', ['activites' => $activites, 'e'=> $entretien]);
     }
 
     /**
@@ -27,9 +32,13 @@ class ActiviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($e_id)
     {
-        return view('activites.form');
+        ob_start();
+        $entretien = Entretien::find($e_id);
+        echo view('activites.form', ['e' => $entretien]);
+        $content = ob_get_clean();
+        return ['title' => 'Ajouter une activité', 'content' => $content];
     }
 
     /**
@@ -38,7 +47,7 @@ class ActiviteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($e_id, Request $request)
     {
         if($request->id == null ){
             $activite = new Activite();
@@ -52,9 +61,13 @@ class ActiviteController extends Controller
         $activite->amelioration = $request->amelioration;
         $activite->commentaire = $request->commentaire;
         $activite->evaluation = $request->evaluation;
-        $activite->user_id = Auth::user()->id;
+        $activite->entretien_id = $e_id;
         $activite->save();
-        return redirect('entretiens/activites');
+        if($activite->save()) {
+            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+        } else {
+            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+        }
     }
 
     /**
@@ -74,10 +87,13 @@ class ActiviteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($type, $id)
+    public function edit($e_id, $id)
     {
+        $entretien = Entretien::find($e_id);
         $activite = Activite::find($id);
-        return view('activites.form', ['a' => $activite]);
+        echo view('activites.form', ['a' => $activite, 'e'=>$entretien]);
+        $content = ob_get_clean();
+        return ['title' => 'Modifier une activité', 'content' => $content];
     }
 
     /**

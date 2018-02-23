@@ -19,27 +19,71 @@ Route::get('/home', 'HomeController@home');
 Route::get('profile', 'UserController@profile');
 Route::get('users', 'UserController@indexUsers');
 Route::get('user/create', 'UserController@createUser');
+Route::get('user/{id}/edit', 'UserController@createUser');
 Route::post('user/store', 'UserController@storeUser');
 Route::get('user/{id}', 'UserController@show');
+Route::delete('user/{id}/delete', 'UserController@deleteUser');
+Route::get('users/import', 'UserController@importUsers');
+Route::post('users/import_parse', 'UserController@parseImport');
+Route::post('users/import_process', 'UserController@processImport');
 
 Route::get('roles', 'UserController@indexRoles');
 Route::get('role/create', 'UserController@createRole');
 Route::post('role/store', 'UserController@storeRole');
+Route::get('role/{id}/edit', 'UserController@editRole');
 
 Route::get('permissions', 'UserController@indexPermisions');
 Route::get('permission/create', 'UserController@createPermission');
 Route::post('permission/store', 'UserController@storePermission');
+Route::get('permission/{id}/edit', 'UserController@editPermission');
 
-Route::get('entretiens', 'EntretienController@index');
-Route::get('entretiens/evaluations', 'EntretienController@entretiensEval');
-Route::get('entretiens/professionnels', 'EntretienController@entretiensProf');
-Route::get('entretiens', 'EntretienController@index');
-Route::get('entretiens/evaluation/create', 'EntretienController@createEval');
-Route::get('entretiens/professionnel/create', 'EntretienController@createProf');
+Route::get('entretiens', 'EntretienController@index'); //index
+Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens annuel
+Route::get('entretiens/professionnels', 'EntretienController@entretiensProf'); //mes entretiens prof
+
+Route::get('entretiens/{type}/create', 'EntretienController@create');
 Route::post('entretiens/store', 'EntretienController@store');
-Route::get('entretiens/{type}/{id}', 'EntretienController@showEntretien');
+Route::get('entretiens/{e_id}', 'EntretienController@show');
+Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 
-Route::get('entretiens/{type}/{id}/activites', 'ActiviteController@index');
-Route::get('entretiens/activites/create', 'ActiviteController@create');
-Route::post('entretiens/activites/store', 'ActiviteController@store');
-Route::get('entretiens/activites/{id}/edit', 'ActiviteController@edit');
+Route::get('entretiens/{e_id}/activites', 'ActiviteController@index');
+Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
+Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
+Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
+
+Route::get('entretiens/{e_id}/skills', 'SkillController@index');
+Route::get('entretiens/{e_id}/skills/create', 'SkillController@create');
+Route::post('entretiens/{e_id}/skills/store', 'SkillController@store');
+Route::get('entretiens/{e_id}/skills/{id}/edit', 'SkillController@edit');
+
+Route::get('entretiens/{e_id}/objectifs', 'ObjectifController@index');
+Route::get('entretiens/{e_id}/objectifs/create', 'ObjectifController@create');
+Route::post('entretiens/{e_id}/objectifs/store', 'ObjectifController@store');
+Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
+
+Route::get('entretiens/{e_id}/formations', 'FormationController@index');
+Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');
+Route::post('entretiens/{e_id}/formations/store', 'FormationController@store');
+Route::get('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit');
+
+Route::get('entretiens/{e_id}/documents', 'DocumentController@index');
+Route::get('entretiens/{e_id}/documents/create', 'DocumentController@create');
+Route::post('entretiens/{e_id}/documents/store', 'DocumentController@store');
+Route::get('entretiens/{e_id}/documents/{id}/edit', 'DocumentController@edit');
+
+Route::get('entretiens/{e_id}/remunerations', 'RemunerationController@index');
+Route::get('entretiens/{e_id}/remunerations/create', 'RemunerationController@create');
+Route::post('entretiens/{e_id}/remunerations/store', 'RemunerationController@store');
+Route::get('entretiens/{e_id}/remunerations/{id}/edit', 'RemunerationController@edit');
+
+Route::get('entretiens/{e_id}/comments', 'CommentController@index');
+Route::get('entretiens/{e_id}/comments/create', 'CommentController@create');
+Route::post('entretiens/{e_id}/comments/store', 'CommentController@store');
+Route::get('entretiens/{e_id}/comments/{id}/edit', 'CommentController@edit');
+
+
+Route::get('entretiens/{e_id}/decisions', 'DecisionController@index');
+Route::get('entretiens/{e_id}/decisions/create', 'DecisionController@create');
+Route::post('entretiens/{e_id}/decisions/store', 'DecisionController@store');
+Route::get('entretiens/{e_id}/decisions/{id}/edit', 'DecisionController@edit');
+

@@ -54,7 +54,7 @@
                         </table>
                     </div>
                     @else
-                        <p class="alert alert-info">Aucune donnée disponible !</p>
+                        <p class="alert alert-default">Aucune donnée disponible !</p>
                     @endif
                 </div>
             </div>

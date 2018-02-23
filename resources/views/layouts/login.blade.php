@@ -68,11 +68,8 @@
 				        <div class="">
 				          <div class="col-md-8">
 				          	<div class="form-group">
-					            <div class="checkbox icheck">
-					              <label>
-					                <input type="checkbox" name="remember"> Se souvenir de moi
-					              </label>
-					            </div>
+                                <label for="remember"> Se souvenir de moi </label>
+                                <input type="checkbox" id="remember" name="remember"/>
 					        </div>
 				          </div>
 				          <!-- /.col -->
@@ -97,14 +94,5 @@
 <script src="{{asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 <!-- iCheck -->
 <script src="{{asset('vendor/iCheck/icheck.min.js')}}"></script>
-<script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' /* optional */
-    });
-  });
-</script>
 </body>
 </html>

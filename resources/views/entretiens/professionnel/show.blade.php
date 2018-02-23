@@ -4,18 +4,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card box box-primary">
-                    <h2 class="mb40"> Voir un entretien professionel </h2>
+                    <h3 class="mb40"> Détails de l'entretien professionnel: {{$e->titre}} </h3>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#Synthèse" data-toggle="tab">Synthèse</a></li>
-                            <li><a href="#Parcours" data-toggle="tab">Parcours</a></li>
-                            <li><a href="#Formations" data-toggle="tab">Formations</a></li>
-                            <li><a href="#Supports_annexes" data-toggle="tab">Supports annexes</a></li>
-                            <li><a href="#Décisions" data-toggle="tab">Décisions</a></li>
-                            <li><a href="#Notes" data-toggle="tab">Notes</a></li>
+                            <li class="active"><a href="#">Synthèse</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/activites')}}">Activités</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/formations')}}">Formations</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/documents')}}">Documents</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/decisions')}}">Décisions</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaire</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="active tab-pane" id="Synthèse">
+                            <div class="active tab-pane">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Crée le </label>
                                     <div class="col-md-9"> {{ $e->date }} </div>
@@ -38,7 +38,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fréquence </label>
-                                    <div class="col-md-9"> {{ $e->frequence }} </div>
+                                    <div class="col-md-9">
+                                        @if($e->frequence == 1) Tous les 6 ans 
+                                        @elseif($e->frequence == 2) Tous les 2 ans 
+                                        @elseif($e->frequence == 3) Autre cas
+                                        @endif
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
@@ -52,48 +57,8 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <a href="" class="btn btn-default"> Annuler </a>
-                                    <a href="" class="btn btn-primary"> Mettre à jour </a>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="Parcours">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Fonction</label>
-                                    <div class="col-md-9">uio</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Service</label>
-                                    <div class="col-md-9">uio</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="Formations">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
-                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="Supports_annexes">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
-                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="Décisions">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
-                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="Notes">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
-                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
-                                    <div class="clearfix"></div>
+                                    <a href="{{url('/')}}" class="btn btn-default"> Annuler </a>
+                                    <a onclick="return chmEntretien.edit({e_id:{{ $e->id }}})" class="btn btn-success"> Mettre à jour </a>
                                 </div>
                             </div>
                         </div>
