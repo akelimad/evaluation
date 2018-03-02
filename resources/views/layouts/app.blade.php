@@ -141,7 +141,7 @@
                 <a href="{{url('/home')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
             </li>
 
-            <li class="treeview">
+<!--             <li class="treeview">
                 <a href="{{url('/')}}">
                     <i class="fa fa-comments"></i> <span>Mes entretiens</span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
@@ -150,7 +150,7 @@
                     <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-circle-o"></i> D'évaluation</a></li>
                     <li><a href="{{ url('entretiens/professionnels') }}"><i class="fa fa-circle-o"></i> Professionnels</a></li>
                 </ul>
-            </li>
+            </li> -->
 
             <li class="treeview">
                 <a href="#">
@@ -178,9 +178,8 @@
             </li>
 
             <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-wrench"></i> <span>Configurations</span>
-                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                <a href="#"><i class="fa fa-wrench"></i> <span>Configurations</span>
+                  <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a href=""><i class="fa fa-circle-o"></i> Abonnements </a></li>
@@ -189,7 +188,6 @@
                     <li><a href=""><i class="fa fa-circle-o"></i> Importer des utilisateurs </a></li>
                 </ul>
             </li>
-
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-gears"></i> <span>Administration</span>
@@ -200,9 +198,18 @@
                     <li><a href="{{ url('users/import') }}"><i class="fa fa-circle-o"></i> Importer les utilisateurs </a></li>
                     <li><a href="{{ url('roles') }}"><i class="fa fa-circle-o"></i> Les rôles </a></li>
                     <li><a href="{{ url('permissions') }}"><i class="fa fa-circle-o"></i> Les permissions </a></li>
+                    <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-circle-o"></i> Les évaluations </a></li>
+                    <li class="treeview">
+                      <a href="#"><i class="fa fa-help"></i> <span>Questionnaires</span>  
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                      </a>
+                      <ul class="treeview-menu">
+                        <li><a href="{{ url('groupes') }}"><i class="fa fa-circle-o"></i> List groupes </a></li>
+                        <li><a href=""><i class="fa fa-circle-o"></i> List Questions </a></li>
+                      </ul>
+                    </li>
                 </ul>
             </li>
-
 
         </ul>
     </section>

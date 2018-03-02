@@ -53,27 +53,27 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Collaborateur(trice) évalué(e) :</label>
-                                    <div class="col-md-9"> {{ $e->user->name }} </div>
+                                    <div class="col-md-9"> coll </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Société :</label>
-                                    <div class="col-md-9"> {{ $e->user->society ? $e->user->society : '--'  }} </div>
+                                    <div class="col-md-9"> soc </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Adresse email :</label>
-                                    <div class="col-md-9"> {{ $e->user->email }} </div>
+                                    <div class="col-md-9"> email </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fonction :</label>
-                                    <div class="col-md-9"> {{ $e->user->function ? $e->user->function : '--' }} </div>
+                                    <div class="col-md-9"> func </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Service :</label>
-                                    <div class="col-md-9"> {{ $e->user->service ? $e->user->service : '--' }} </div>
+                                    <div class="col-md-9"> serv </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

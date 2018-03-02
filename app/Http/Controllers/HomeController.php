@@ -33,9 +33,10 @@ class HomeController extends Controller
         }else{
             $mentor = $user->parent;
         }
-        $entretiens = $user->entretiens;
-        $collaborateurs = User::with('entretiens')->where('user_id', '=', $user->id)->get();
-        //dd($entretiens);
+
+        $entretiens = $user->entretiens;    
+        $collaborateurs = Auth::user()->children;
+        //dd($collaborateurs);
         return view('index', compact('user', 'mentor', 'entretiens', 'collaborateurs'));
     }
 

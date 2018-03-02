@@ -18,6 +18,7 @@ Route::get('/home', 'HomeController@home');
 
 Route::get('profile', 'UserController@profile');
 Route::get('users', 'UserController@indexUsers');
+Route::get('users/filter', 'UserController@filterUsers');
 Route::get('user/create', 'UserController@createUser');
 Route::get('user/{id}/edit', 'UserController@createUser');
 Route::post('user/store', 'UserController@storeUser');
@@ -38,11 +39,12 @@ Route::post('permission/store', 'UserController@storePermission');
 Route::get('permission/{id}/edit', 'UserController@editPermission');
 
 Route::get('entretiens', 'EntretienController@index'); //index
-Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens annuel
-Route::get('entretiens/professionnels', 'EntretienController@entretiensProf'); //mes entretiens prof
+Route::get('entretiens/list', 'EntretienController@entretiensList'); //index
+Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens
 
 Route::get('entretiens/{type}/create', 'EntretienController@create');
 Route::post('entretiens/store', 'EntretienController@store');
+Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
 Route::get('entretiens/{e_id}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 
@@ -87,3 +89,13 @@ Route::get('entretiens/{e_id}/decisions/create', 'DecisionController@create');
 Route::post('entretiens/{e_id}/decisions/store', 'DecisionController@store');
 Route::get('entretiens/{e_id}/decisions/{id}/edit', 'DecisionController@edit');
 
+Route::get('groupes', 'GroupeController@index');
+Route::get('groupes/create', 'GroupeController@create');
+Route::post('groupes/store', 'GroupeController@store');
+Route::get('groupes/{id}/edit', 'GroupeController@edit');
+
+Route::get('groupes/{gid}/questions', 'QuestionController@index');
+Route::get('groupes/{gid}/questions/create', 'QuestionController@create');
+Route::post('groupes/{gid}/questions/store', 'QuestionController@store');
+Route::get('groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
+Route::get('groupes/{gid}/questions/{qid}', 'QuestionController@show');

@@ -23,6 +23,8 @@ import chmSkill from './class/skill'
 import chmActivite from './class/activite'
 import chmFormation from './class/formation'
 import chmObjectif from './class/objectif'
+import chmGroupe from './class/groupe'
+import chmQuestion from './class/question'
 
 // Store modules in window
 window.chmSite = chmSite
@@ -43,6 +45,8 @@ window.chmSkill = chmSkill
 window.chmActivite = chmActivite
 window.chmFormation = chmFormation
 window.chmObjectif = chmObjectif
+window.chmGroupe = chmGroupe
+window.chmQuestion = chmQuestion
 
 // Standart jQuery script
 import './custom'

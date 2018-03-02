@@ -10,6 +10,7 @@ use App\Http\Requests;
 use Auth;
 use App\User;
 use App\Role;
+use App\Entretien;
 use App\Permission;
 use Session;
 
@@ -31,8 +32,35 @@ class UserController extends Controller
     }
 
     public function indexUsers(){
-        $users = User::with('roles')->paginate(4);
-        return view('users.index', compact('users'));
+        $entretiens = Entretien::select('id', 'titre')->get();
+        $users = User::with('roles')->paginate(15);
+        $roles = Role::select('id', 'name')->get();
+        return view('users.index', compact('users', 'roles', 'entretiens'));
+    }
+
+    public function filterUsers(Request $request){
+        $name = $request->name;
+        $service = $request->service;
+        $function = $request->function;
+        $roleSelected = $request->role;
+        $roles = Role::select('id', 'name')->get();
+        $users = User::with('roles')->paginate(15);
+        
+        if(!empty($roleSelected))
+            $users = User::with('roles')
+            ->where('name', 'like', '%'.$name.'%')
+            ->where('service', 'like', '%'.$service.'%')
+            ->where('function', 'like', '%'.$function.'%')
+            ->whereHas('roles', function ($query) use ($roleSelected) {$query->where('id', '=', $roleSelected); } )
+            ->paginate(15);
+        else{
+            $users = User::with('roles')
+            ->where('name', 'like', '%'.$name.'%')
+            ->where('service', 'like', '%'.$service.'%')
+            ->where('function', 'like', '%'.$function.'%')
+            ->paginate(15);
+        }
+        return view('users.index', compact('users', 'roles', 'name', 'service', 'function', 'roleSelected'));
     }
 
     public function createUser(){
@@ -137,7 +165,6 @@ class UserController extends Controller
         $csv_data = Excel::load($path, function($reader) {})->get()->toArray();
         if (count($csv_data) > 0) {
             $csv_header_fields = [];
-            $csv_values_fields = [];
             foreach ($csv_data[0] as $key => $value) {
                 $csv_header_fields[] = $key;
             }
@@ -188,7 +215,7 @@ class UserController extends Controller
                 $user->attachRole($this->getRoleByName($row[$fields[3]]));
                 $count++;
         }
-        return redirect('users');
+        return redirect('users')->with('flash_message_success', 'Your Employee Schedule Uploaded successfully!');;
 
     }
 
@@ -289,6 +316,8 @@ class UserController extends Controller
         $content = ob_get_clean();
         return ['title' => 'Modifier une permission', 'content' => $content];
     }
+
+
 
 
 }

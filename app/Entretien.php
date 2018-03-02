@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Entretien extends Model
 {
     
-    public function user()
+    public function users()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsToMany('App\User');
     }
 
     public function activites()

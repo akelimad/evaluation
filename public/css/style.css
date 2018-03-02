@@ -9,6 +9,7 @@ body{
 .mb40{
     margin-bottom: 40px;
 }
+
 textarea { 
    /* will prevent resizing horizontally */
    resize:vertical;
@@ -18,8 +19,26 @@ textarea {
     border-radius: 15px;
     font-weight: normal;
 }
+.accordion-toggle:after {
+    font-family: 'FontAwesome';
+    content: "\f078";    
+    float: right;
+}
+.accordion-opened .accordion-toggle:after {    
+    content: "\f054";    
+}
+.accordion-heading{
+    padding: 10px 9px;
+    border: 1px solid #e8e8e8;
+    margin-bottom: 10px;
+}
 i{
     transition: all .7s ease-in-out;
+}
+.users .table th{
+    background: #3c8dbc;
+    color: white;
+    font-weight: normal;
 }
 .icon-fill:hover i{
     transform: scale(1.2) rotate(360deg);
@@ -341,4 +360,32 @@ ul.user-data li i{
     background: white;
     cursor: inherit;
     display: block;
+}
+.btn span.glyphicon {               
+    opacity: 0;             
+}
+.btn.active span.glyphicon {                
+    opacity: 1;             
+}
+.usersCheckbox .btn{
+    padding: 0px 4px;
+    border-radius: 0;
+    /*background: none;*/
+}
+.userName{
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.showQuestion .box{
+    padding: 0;
+}
+.circle-icon {
+    background: #00a65a;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    margin: 0;
+    color: white;
 }

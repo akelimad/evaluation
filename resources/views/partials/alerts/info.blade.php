@@ -1,4 +1,4 @@
-<div class="chm-alerts alert alert-default alert-white rounded">
+<div class="chm-alerts alert alert-info alert-white rounded">
     @if( !isset($dismissible) || $dismissible === true )
 	    <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
 	@endif
