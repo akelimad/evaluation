@@ -14,22 +14,23 @@
             <div class="col-md-3">
                 <div class="box box-primary">
                     <div class="box-body">
+                        <a href="{{ url('questions/preview') }}"> <i class="fa fa-eye fa-2x"></i> Preview</a>
                         <div class="accordion" id="accordion2">
                             @foreach($groupes as $g)
                             <div class="accordion-group">
                                 <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{$g->id}}">
+                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{$g->id}}" {{ $g->id == $gr->id ? 'aria-expanded="true"': '' }}>
                                     {{ $g->name }}
                                     </a>
                                 </div>
-                                <div id="collapse{{$g->id}}" class="accordion-body collapse">
+                                <div id="collapse{{$g->id}}" class="accordion-body collapse {{ $g->id == $gr->id ? 'in': '' }}">
                                     <div class="accordion-inner">
                                         <a href="javascript:void(0)" onclick="return chmQuestion.create({gid: {{$g->id}} })"> <i class="fa fa-plus circle-icon"></i> </a>
                                         @if(count($g->questions)>0)
                                             <ul class="list-group">
                                                 @foreach($g->questions as $q)
                                                     <li class="list-group-item">
-                                                        <a href="{{url('groupes/'.$q->groupe->id.'/questions/'.$q->id)}}">{{ $q->titre }}</a>
+                                                        <a href="{{url('groupes/'.$g->id.'/questions/'.$q->id)}}">{{ $q->titre }}</a>
                                                     </li>
                                                 @endforeach
                                             </ul>
@@ -50,14 +51,21 @@
                         <h3 class="title mb40"> Resumé de la question </h3>
                         <p>
                             <label class="col-md-3">Question groupe</label> 
-                            <span class="col-md-7"> {{ $q->groupe->name }} </span>
+                            <span class="col-md-7"> {{ $qs->groupe->name }} </span>
                             <span class="clearfix"></span>
                         </p>
                         <p>
                             <label class="col-md-3">Question</label> 
-                            <span class="col-md-7"> {{ $q->titre }} </span>
+                            <span class="col-md-7"> {{ $qs->titre }} </span>
                             <span class="clearfix"></span>
                         </p>
+                        @if($qs->type == "checkbox" || $qs->type == "radio")
+                        <p>
+                            <label class="col-md-3">Sous question</label> 
+                            <span class="col-md-7"> <a href="">N'oubliez pas d'ajouter les sous questions(ou bien les choix)</a> </span>
+                            <span class="clearfix"></span>
+                        </p>
+                        @endif
                         <div class="">
                             <div class="col-md-4">
                                 <div class="box box-success box-solid">

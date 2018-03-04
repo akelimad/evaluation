@@ -99,3 +99,6 @@ Route::get('groupes/{gid}/questions/create', 'QuestionController@create');
 Route::post('groupes/{gid}/questions/store', 'QuestionController@store');
 Route::get('groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
 Route::get('groupes/{gid}/questions/{qid}', 'QuestionController@show');
+
+Route::get('questions/preview', 'QuestionController@preview');
+

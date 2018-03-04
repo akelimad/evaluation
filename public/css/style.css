@@ -1,5 +1,5 @@
 body{
-    font-family: 'Roboto';
+    font-family: 'Roboto', 'arial';
 }
 .modal-header {
     background: #32bae4;
@@ -14,6 +14,9 @@ textarea {
    /* will prevent resizing horizontally */
    resize:vertical;
    min-height: 70px;
+}
+.alert a{
+    color: #ea5f5f;
 }
 .label{
     border-radius: 15px;
@@ -128,7 +131,7 @@ i{
     padding: 12px 20px 25px 20px;
     background-color: #fff;
 }
-.list-group-item:first-child{
+.profile .list-group-item:first-child{
     border-top: 0;
 }
 .profile .form-group:first-child{

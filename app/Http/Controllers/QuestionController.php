@@ -10,6 +10,10 @@ use App\Groupe;
 
 class QuestionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -55,6 +59,7 @@ class QuestionController extends Controller
         $request->session()->flash('success', "La question à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour la consulter</a>");
         if($question->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+            redirect('users');
         } else {
             return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
         }
@@ -66,11 +71,18 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($gid, $qid)
     {
         $groupes = Groupe::all();
-        $q = Question::find($id);
-        return view('questions.show', compact('groupes', 'q'));
+        $gr = Groupe::findOrFail($gid);
+        $qs = Question::findOrFail($qid);
+        return view('questions.show', compact('groupes', 'gr', 'qs'));
+    }
+
+    public function preview()
+    {
+        $groupes = Groupe::all();
+        return view('questions.preview', compact('groupes'));
     }
 
     /**
