@@ -20,4 +20,9 @@ class Question extends Model
     {
         return $this->belongsTo('App\Groupe');
     }
+
+    public function answers()
+    {
+        return $this->hasMany('App\Answer');
+    }
 }

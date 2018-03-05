@@ -35,6 +35,13 @@ textarea {
     border: 1px solid #e8e8e8;
     margin-bottom: 10px;
 }
+.treeview-menu>li:last-child{
+    padding-bottom: 1em;
+}
+.survey-checkbox{
+    float: left;
+    margin-right: 1em;
+}
 i{
     transition: all .7s ease-in-out;
 }

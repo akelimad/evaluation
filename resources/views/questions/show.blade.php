@@ -62,7 +62,7 @@
                         @if($qs->type == "checkbox" || $qs->type == "radio")
                         <p>
                             <label class="col-md-3">Sous question</label> 
-                            <span class="col-md-7"> <a href="">N'oubliez pas d'ajouter les sous questions(ou bien les choix)</a> </span>
+                            <span class="col-md-7"> <a href="javascript:void(0)" onclick="return chmQuestion.create({gid: {{$qs->groupe->id}}, parent_id: {{$qs->id}} })">N'oubliez pas d'ajouter les sous questions(ou bien les choix)</a> </span>
                             <span class="clearfix"></span>
                         </p>
                         @endif

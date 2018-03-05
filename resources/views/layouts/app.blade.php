@@ -204,8 +204,10 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                       </a>
                       <ul class="treeview-menu">
+                        <li><a href="{{ url('survey') }}"><i class="fa fa-circle-o"></i> Questionnaire </a></li>
+                        <li><a href="{{ url('survey2') }}"><i class="fa fa-circle-o"></i> Entretien d'evaluation </a></li>
                         <li><a href="{{ url('groupes') }}"><i class="fa fa-circle-o"></i> List groupes </a></li>
-                        <li><a href=""><i class="fa fa-circle-o"></i> List Questions </a></li>
+                        <li><a href="{{ url('questions/preview') }}"><i class="fa fa-circle-o"></i> List Questions </a></li>
                       </ul>
                     </li>
                 </ul>

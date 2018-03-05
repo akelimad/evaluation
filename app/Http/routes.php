@@ -100,5 +100,8 @@ Route::post('groupes/{gid}/questions/store', 'QuestionController@store');
 Route::get('groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
 Route::get('groupes/{gid}/questions/{qid}', 'QuestionController@show');
 
+Route::get('survey', 'QuestionController@survey');
+Route::get('survey2', 'QuestionController@survey2');
 Route::get('questions/preview', 'QuestionController@preview');
 
+Route::post('answers/store', 'AnswerController@store');

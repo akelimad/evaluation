@@ -3,7 +3,7 @@ import $ from 'jquery'
 export default class chmQuestion {
 
   static create (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('groupes/' + params.gid + '/questions/create')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('groupes/' + params.gid + '/questions/create'), data: {parent_id: params.parent_id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmQuestion.store'

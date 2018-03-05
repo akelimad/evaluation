@@ -10,17 +10,34 @@
                                 <ul class="list-group">
                                     @foreach($groupes as $g)
                                         <li class="list-group-item">
-                                            <h3>{{ $g->name }}</h3>
-                                            @foreach($g->questions as $q)
+                                            <h3 class="mb40">{{ $g->name }}</h3>
+                                            @forelse($g->questions as $q)
                                             <div class="form-group">
-                                                <label for="titre" class="control-label help-block">{{$q->titre}}</label>
+                                                @if($q->parent == null)
+                                                <p class="control-label help-block">{{$q->titre}}</p>
+                                                @endif
                                                 @if($q->type == 'text')
-                                                <input type="{{$q->type}}" name="titre" id="titre" class="form-control">
+                                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control">
                                                 @elseif($q->type == 'textarea')
-                                                <textarea name="textarea" class="form-control"></textarea>
+                                                <textarea name="answers[{{$q->id}}][]" class="form-control" ></textarea>
+                                                @elseif($q->type == "checkbox")
+                                                    @foreach($q->children as $child)
+                                                        <div class="survey-checkbox">
+                                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}">
+                                                            <label for="{{$child->titre}}">{{ $child->titre }}</label>
+                                                        </div>
+                                                    @endforeach
+                                                    <div class="clearfix"></div>
+                                                @elseif($q->type == "radio")
+                                                    @foreach($q->children as $child)
+                                                        <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->id}}" value="{{$child->id}}"> 
+                                                        <label for="{{$child->id}}">{{ $child->titre }}</label>
+                                                    @endforeach
                                                 @endif
                                             </div>
-                                            @endforeach
+                                            @empty
+                                                <p class="help-block"> Aucune question </p>
+                                            @endforelse
                                         </li>
                                     @endforeach
                                 </ul>

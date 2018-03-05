@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Question;
 use App\Groupe;
+use App\Answer;
+use Auth;
 
 class QuestionController extends Controller
 {
@@ -29,10 +31,11 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($gid)
+    public function create($gid, Request $request)
     {
         ob_start();
-        echo view('questions.form', compact('gid'));
+        $parent_id = $request->parent_id;
+        echo view('questions.form', compact('gid', 'parent_id'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter une question', 'content' => $content];
     }
@@ -45,16 +48,22 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->id == null ){
+        if(empty($request->parent_id)){
             $question = new Question();
+            $question->titre = $request->titre;
+            $question->type = $request->type;
+            $question->parent_id = $request->parent_id ? $request->parent_id : 0;
+            $question->groupe_id = $request->groupe_id;
+            $question->save();
         }else{
-            $question =  Question::find($request->id);
+            foreach ($request->subQuestions as $sub_q) {
+                $question = new Question();
+                $question->titre = $sub_q;
+                $question->parent_id = $request->parent_id;
+                $question->groupe_id = $request->groupe_id;
+                $question->save();
+            }
         }
-        $question->titre = $request->titre;
-        $question->type = $request->type;
-        $question->parent_id = 0;
-        $question->groupe_id = $request->groupe_id;
-        $question->save();
         $url=url('groupes/'.$request->groupe_id.'/questions/'.$question->id);
         $request->session()->flash('success', "La question à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour la consulter</a>");
         if($question->save()) {
@@ -83,6 +92,19 @@ class QuestionController extends Controller
     {
         $groupes = Groupe::all();
         return view('questions.preview', compact('groupes'));
+    }
+
+    public function survey()
+    {
+        $groupes = Groupe::all();
+        return view('questions.survey', compact('groupes'));
+    }
+
+    public function survey2()
+    {
+        $groupes = Groupe::all();
+        // dd(Answer::getAnswers(1));
+        return view('questions.survey2', compact('groupes'));
     }
 
     /**
