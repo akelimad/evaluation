@@ -39,6 +39,7 @@ Route::post('permission/store', 'UserController@storePermission');
 Route::get('permission/{id}/edit', 'UserController@editPermission');
 
 Route::get('entretiens', 'EntretienController@index'); //index
+Route::get('entretiens/index', 'EntretienController@indexEntretien'); //index
 Route::get('entretiens/list', 'EntretienController@entretiensList'); //index
 Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens
 

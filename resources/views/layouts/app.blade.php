@@ -199,6 +199,7 @@
                     <li><a href="{{ url('roles') }}"><i class="fa fa-circle-o"></i> Les rôles </a></li>
                     <li><a href="{{ url('permissions') }}"><i class="fa fa-circle-o"></i> Les permissions </a></li>
                     <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-circle-o"></i> Les évaluations </a></li>
+                    <li><a href="{{ url('entretiens/index') }}"><i class="fa fa-circle-o"></i> Les Entretiens </a></li>
                     <li class="treeview">
                       <a href="#"><i class="fa fa-help"></i> <span>Questionnaires</span>  
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>

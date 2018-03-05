@@ -54,6 +54,17 @@ class EntretienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function indexEntretien()
+    {
+        $entretiens = Entretien::all();
+        return view('entretiens.listing', compact('entretiens'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function entretiensEval()
     {
         $entretiens = Entretien::with('users.parent')->get();
