@@ -72,7 +72,7 @@
             <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="{{asset('img/avatar.png')}}" class="user-image" alt="User Image">
-                  <span class="hidden-xs">{{ Auth::user()->name }} 
+                  <span class="hidden-xs">{{ Auth::user()->name." ".Auth::user()->last_name }} 
                     (@foreach(Auth::user()->roles as $role)
                         {{$role->name}}
                     @endforeach)</span>
@@ -83,7 +83,7 @@
                     <img src="{{asset('img/avatar.png')}}" class="img-circle" alt="User Image">
 
                     <p>
-                      {{ Auth::user()->name }} {{ Auth::user()->last_name }}
+                      {{ Auth::user()->name." ".Auth::user()->last_name }}
                       <small> {{ Auth::user()->function }} </small>
                     </p>
                     </li>
@@ -121,7 +121,7 @@
               <img src="{{asset('img/avatar.png')}}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>{{ Auth::user()->name }}</p>
+              <p>{{ Auth::user()->name." ".Auth::user()->last_name }}</p>
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
@@ -147,33 +147,33 @@
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-circle-o"></i> D'évaluation</a></li>
-                    <li><a href="{{ url('entretiens/professionnels') }}"><i class="fa fa-circle-o"></i> Professionnels</a></li>
+                    <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-long-arrow-right"></i> D'évaluation</a></li>
+                    <li><a href="{{ url('entretiens/professionnels') }}"><i class="fa fa-long-arrow-right"></i> Professionnels</a></li>
                 </ul>
             </li> -->
-
+            @role(["ADMIN", "MENTOR"])
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-users"></i> <span>Mes collaborateurs</span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ url('entretiens') }}"><i class="fa fa-circle-o"></i> Les entretiens</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Annoncer une formation</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Les rémunirations</a></li>
+                    <li><a href="{{ url('entretiens') }}"><i class="fa fa-long-arrow-right"></i> Les entretiens</a></li>
+                    <li><a href="#"><i class="fa fa-long-arrow-right"></i> Annoncer une formation</a></li>
+                    <li><a href="#"><i class="fa fa-long-arrow-right"></i> Les rémunirations</a></li>
                 </ul>
             </li>
-
-            <li class="treeview">
+            @endrole
+<!--             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-graduation-cap"></i> <span>Formations</span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href=""><i class="fa fa-circle-o"></i> Le catalogue </a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Le planning </a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Les candidats </a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Les présences </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Le catalogue </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Le planning </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Les candidats </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Les présences </a></li>
                 </ul>
             </li>
 
@@ -182,38 +182,39 @@
                   <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href=""><i class="fa fa-circle-o"></i> Abonnements </a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Exporter </a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Paramètres </a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Importer des utilisateurs </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Abonnements </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Exporter </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Paramètres </a></li>
+                    <li><a href=""><i class="fa fa-long-arrow-right"></i> Importer des utilisateurs </a></li>
                 </ul>
-            </li>
+            </li> -->
+            @role("ADMIN")
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-gears"></i> <span>Administration</span>
                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ url('users') }}"><i class="fa fa-circle-o"></i> Les utilisateurs </a></li>
-                    <li><a href="{{ url('users/import') }}"><i class="fa fa-circle-o"></i> Importer les utilisateurs </a></li>
-                    <li><a href="{{ url('roles') }}"><i class="fa fa-circle-o"></i> Les rôles </a></li>
-                    <li><a href="{{ url('permissions') }}"><i class="fa fa-circle-o"></i> Les permissions </a></li>
-                    <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-circle-o"></i> Les évaluations </a></li>
-                    <li><a href="{{ url('entretiens/index') }}"><i class="fa fa-circle-o"></i> Les Entretiens </a></li>
+                    <li><a href="{{ url('users') }}"><i class="fa fa-long-arrow-right"></i> Les utilisateurs </a></li>
+                    <li><a href="{{ url('users/import') }}"><i class="fa fa-long-arrow-right"></i> Importer les utilisateurs </a></li>
+                    <li><a href="{{ url('roles') }}"><i class="fa fa-long-arrow-right"></i> Les rôles </a></li>
+                    <li><a href="{{ url('permissions') }}"><i class="fa fa-long-arrow-right"></i> Les permissions </a></li>
+                    <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-long-arrow-right"></i> Les évaluations </a></li>
+                    <li><a href="{{ url('entretiens/index') }}"><i class="fa fa-long-arrow-right"></i> Les entretiens </a></li>
                     <li class="treeview">
                       <a href="#"><i class="fa fa-help"></i> <span>Questionnaires</span>  
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                       </a>
                       <ul class="treeview-menu">
-                        <li><a href="{{ url('survey') }}"><i class="fa fa-circle-o"></i> Questionnaire </a></li>
-                        <li><a href="{{ url('survey2') }}"><i class="fa fa-circle-o"></i> Entretien d'evaluation </a></li>
-                        <li><a href="{{ url('groupes') }}"><i class="fa fa-circle-o"></i> List groupes </a></li>
-                        <li><a href="{{ url('questions/preview') }}"><i class="fa fa-circle-o"></i> List Questions </a></li>
+                        <li><a href="{{ url('survey') }}"><i class="fa fa-long-arrow-right"></i> Questionnaire </a></li>
+                        <li><a href="{{ url('survey2') }}"><i class="fa fa-long-arrow-right"></i> Entretien d'evaluation </a></li>
+                        <li><a href="{{ url('groupes') }}"><i class="fa fa-long-arrow-right"></i> List groupes </a></li>
+                        <li><a href="{{ url('questions/preview') }}"><i class="fa fa-long-arrow-right"></i> List Questions </a></li>
                       </ul>
                     </li>
                 </ul>
             </li>
-
+            @endrole
         </ul>
     </section>
     <!-- /.sidebar -->

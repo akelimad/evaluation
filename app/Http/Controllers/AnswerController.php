@@ -48,6 +48,7 @@ class AnswerController extends Controller
                 $a->save();
             }
         }
+        return redirect('survey2')
     }
 
     /**

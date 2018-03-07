@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use App\Entretien;
+use App\Entretien_user;
+use App\Question;
 use Carbon\Carbon; 
 use Auth;
 use Mail;
+use Session;
 
 class EntretienController extends Controller
 {
@@ -56,8 +59,16 @@ class EntretienController extends Controller
      */
     public function indexEntretien()
     {
+        $to_fill = [
+            "1" => "Carrières",
+            "2" => "Formations",
+            "3" => "Compétences",
+            "4" => "Objectifs",
+            "5" => "Salaires",
+            "6" => "Commentaires",
+        ];
         $entretiens = Entretien::all();
-        return view('entretiens.listing', compact('entretiens'));
+        return view('entretiens.listing', compact('entretiens', 'to_fill'));
     }
 
     /**
@@ -67,7 +78,7 @@ class EntretienController extends Controller
      */
     public function entretiensEval()
     {
-        $entretiens = Entretien::with('users.parent')->get();
+        $entretiens = Entretien::with('users.parent')->paginate(10);
         return view('entretiens/annuel.index', compact('entretiens'));
     }
 
@@ -79,8 +90,16 @@ class EntretienController extends Controller
      */
     public function show($e_id)
     {
-        $entretienEval = Entretien::where(['id'=>$e_id])->with('users')->first();
-        return view('entretiens/'.$entretienEval->type.'.show', ['e' => $entretienEval]);
+        $user_id = 7;
+        $entretien = Entretien::find($e_id);
+
+        $entretienEval = $entretien->users()
+       ->where('entretien_user.user_id', $user_id) // or comments.owner_id in case of ambiguity
+       ->get();
+
+       dd($entretienEval);
+
+        return view('entretiens/annuel.show', ['e' => $entretien]);
     }
 
     /**
@@ -115,12 +134,24 @@ class EntretienController extends Controller
         // }else{
         //     $entretien = Entretien::find($request->id);
         // }
+        $to_fill = [
+            "1" => "Carrières",
+            "2" => "Formations",
+            "3" => "Compétences",
+            "4" => "Objectifs",
+            "5" => "Salaires",
+            "6" => "Commentaires",
+        ];
+        foreach ($to_fill as $key => $value) {
+            $evaluations[] = $key ;
+        }
         $entretien = new Entretien();
         $entretien->date = Carbon::createFromFormat('d-m-Y', $request->date);
         $entretien->date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit); 
         $entretien->titre = $request->titre;
         $entretien->created_by = Auth::user()->id;
         $entretien->type = $request->type;
+        $entretien->evaluations = json_encode($evaluations);
         $entretien->save();
 
         $users_id = $request->usersId;
@@ -177,19 +208,16 @@ class EntretienController extends Controller
         $entretien = Entretien::find($request->entretien_id);
         $users_id = json_decode($request->ids);
         $mentors = [];
-        $mentors_id = [];
         foreach ($users_id as $user_id) {
             $user = User::find($user_id);
             if($user->parent == null){
                 $mentors[] = $user;
-                $mentors_id[] = $user->id;
             }else{
                 $mentors[] = $user->parent;
-                $mentors_id[] = $user->parent->id;
             }
             $exist = $user->entretiens->contains($user_id);
         }
-        $entretien->users()->syncWithoutDetaching(array_merge($mentors_id, $users_id));
+        $entretien->users()->syncWithoutDetaching($users_id);
 
         $user_mentors = array_unique($mentors);
         foreach ($user_mentors as $mentor) {
@@ -205,8 +233,23 @@ class EntretienController extends Controller
                 $m->to($mentor->email, $mentor->name)->subject('Invitation !');
             });
         }
+        $url=url('entretiens/evaluations');
+        $request->session()->flash('attach_users_entretien', "Les utilisateurs ont bien à été ajouté à l'entretien et un email est envoyé à leur mentor. <a href='{$url}'>cliquer ici pour les consulter</a>");
         return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
 
+    }
+
+    public function storeEntretienEvals(Request $request)
+    {
+        if($request->evaluations){
+            foreach ($request->evaluations as $key => $evaluation) {
+                $entretien = Entretien::find($key);
+                $entretien->evaluations = json_encode($evaluation);
+                $entretien->save();
+            }
+        }
+        Session::flash('success_evaluations_save', "Les évaluations de l'entretien ont bien été mises à jour");
+        return redirect('entretiens/index');
     }
 
     /**
@@ -224,6 +267,16 @@ class EntretienController extends Controller
         $content = ob_get_clean();
         return ['title' => 'Modifier un entretien', 'content' => $content];
     }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user->motif = $request->motif;
+        $user->save();
+        Session::flash('success_motif_save', "Le motif d'abscence a bien été sauvegardé.");
+        return redirect('entretiens/evaluations');
+    }
+
 
     /**
      * Remove the specified resource from storage.

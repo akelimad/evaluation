@@ -1,0 +1,5 @@
+Prenom;Nom;Email;Rôle;Mentor email;Adresse;Code postal;Ville;Pays;Telephone fixe;Telephone mobile;Fonction;Service;Qualification
+prénom_1;nom_1;user1@demo.com;COLLABORATEUR;akel.dev@gmail.com;10, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
+prenom_2;nom_2;user2@demo.com;ADMIN;admin42@demo.com;1, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
+prenom_3;nom_3;user3@demo.com;COLLABORATEUR;admin@demo.com;1, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
+prenom_4;nom_4;user4@demo.com;ADMIN;admin@demo.com;1, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe

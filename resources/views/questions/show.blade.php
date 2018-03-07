@@ -14,7 +14,7 @@
             <div class="col-md-3">
                 <div class="box box-primary">
                     <div class="box-body">
-                        <a href="{{ url('questions/preview') }}"> <i class="fa fa-eye fa-2x"></i> Preview</a>
+                        <p class="lead"> <a href="{{ url('questions/preview') }}"> <i class="fa fa-eye"></i> preview </a> </p>
                         <div class="accordion" id="accordion2">
                             @foreach($groupes as $g)
                             <div class="accordion-group">
@@ -22,10 +22,11 @@
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{$g->id}}" {{ $g->id == $gr->id ? 'aria-expanded="true"': '' }}>
                                     {{ $g->name }}
                                     </a>
+                                    <a href="javascript:void(0)" onclick="return chmQuestion.create({gid: {{$g->id}} })" class="icon-add-question" data-toggle="tooltip" title="Ajouter une question pour ce groupe"> <i class="fa fa-plus circle-icon"></i> </a>
                                 </div>
                                 <div id="collapse{{$g->id}}" class="accordion-body collapse {{ $g->id == $gr->id ? 'in': '' }}">
                                     <div class="accordion-inner">
-                                        <a href="javascript:void(0)" onclick="return chmQuestion.create({gid: {{$g->id}} })"> <i class="fa fa-plus circle-icon"></i> </a>
+                                        
                                         @if(count($g->questions)>0)
                                             <ul class="list-group">
                                                 @foreach($g->questions as $q)

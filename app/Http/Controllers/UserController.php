@@ -117,7 +117,13 @@ class UserController extends Controller
             $user->tel= $request->tel;
             $user->fix= $request->fix;
             $user->about= $request->about;
-            $user->avatar= "";
+            if($file = $request->hasFile('avatar')) {
+                $file = $request->file('avatar') ;
+                $fileName = time()."_".$file->getClientOriginalName();
+                $destinationPath = public_path('/avatars') ;
+                $file->move($destinationPath,$fileName);
+                $user->avatar = $fileName ;
+            }
             $user->function= $request->function;
             $user->service= $request->service;
             $user->qualification= $request->qualification;

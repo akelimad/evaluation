@@ -8,7 +8,7 @@
                         <h3 class="box-title">Ajouter un collaborateur</h3>
                     </div>
                     <div class="box-body">
-                        <form class="form-horizontal" method="post" action="{{ url('user/store') }}">
+                        <form class="form-horizontal" method="post" action="{{ url('user/store') }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <div class="col-md-6">
@@ -69,9 +69,9 @@
                                     <label for="about" class="control-label">A propos de moi </label>
                                     <textarea name="about" id="about" class="form-control"></textarea>
                                 </div>
-                                <div class="col-md-6"> 
-                                    <label for="avatar" class="control-label">Photo</label>
-                                    <input type="file" name="avatar" id="avatar">
+                                <div class="col-md-6">
+                                    <label for="qualification" class="control-label">Qualification </label>
+                                    <textarea name="qualification" id="qualification" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -85,14 +85,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-6">
-                                    <label for="qualification" class="control-label">Qualification </label>
-                                    <textarea name="qualification" id="qualification" class="form-control"></textarea>
+                                <div class="col-md-6"> 
+                                    <label for="avatar" class="control-label">Photo</label>
+                                    <input type="file" name="avatar" id="avatar" class="form-control">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="tel" class="control-label">Statut </label>
-                                    <label>
-                                        <input type="checkbox" class="minimal" name="status">
+                                    <label class="toggle-check" style="display: block;">
+                                        <input type="checkbox" name="is_done" class="toggle-check-input" checked/>
+                                        <span class="toggle-check-text"></span>
                                     </label>
                                 </div>
                             </div>
@@ -119,7 +120,7 @@
                             
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-info pull-right">Sauvegarder</button>
-                                <a href="" class="btn btn-default pull-right">Annuler</a>
+                                <a href="{{ url('users') }}" class="btn btn-default pull-right">Annuler</a>
                             </div>
                         </form>
                     </div>

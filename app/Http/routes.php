@@ -40,8 +40,10 @@ Route::get('permission/{id}/edit', 'UserController@editPermission');
 
 Route::get('entretiens', 'EntretienController@index'); //index
 Route::get('entretiens/index', 'EntretienController@indexEntretien'); //index
-Route::get('entretiens/list', 'EntretienController@entretiensList'); //index
+Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretienEvals'); 
+Route::get('entretiens/list', 'EntretienController@entretiensList'); 
 Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens
+Route::put('entretiens/{id}/update', 'EntretienController@update'); //mes entretiens
 
 Route::get('entretiens/{type}/create', 'EntretienController@create');
 Route::post('entretiens/store', 'EntretienController@store');

@@ -3,6 +3,13 @@
     <section class="content users">
         <div class="row">
             <div class="col-md-12">
+                 @if (Session::has('attach_users_entretien'))
+                    <div class="chm-alerts alert alert-success alert-white rounded">
+                        <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
+                        <div class="icon"><i class="fa fa-info-circle"></i></div>
+                        <span> {!! Session::get('attach_users_entretien') !!} </span>
+                    </div>
+                @endif
                 <div class="box box-primary">
                     <div class="filter-box mb40">
                         <h4>  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez </h4>
@@ -54,7 +61,7 @@
                     </div>
                     @if(count($users)>0)
                         <div class="box-body table-responsive no-padding mb40">
-                            <table class="table table-hover table-bordered">
+                            <table class="table table-hover table-bordered table-inversed-blue">
                                 <tr>
                                     <th><i class="fa fa-envelope"></i></th>
                                     <th>Nom complet</th>
@@ -78,9 +85,9 @@
                                             </label>
                                         </div>
                                     </td>
-                                    <td> {{ $user->name }} {{ $user->last_name }} </td>
+                                    <td> <a href="{{url('user/'.$user->id)}}">{{ $user->name." ".$user->last_name }}</a> </td>
                                     <td> {{ $user->email }} </td>
-                                    <td> {{ $user->society }} </td>
+                                    <td> {{ $user->society ? $user->society : '---' }} </td>
                                     <td> 
                                         @if(count($user->roles)>0) 
                                             @foreach($user->roles as $role)
@@ -90,12 +97,8 @@
                                             ---
                                         @endif
                                     </td>
-                                    <td>
-                                        {{ $user->service }}
-                                    </td>
-                                    <td>
-                                        {{ $user->function }}
-                                    </td>
+                                    <td>{{ $user->service ? $user->service : '---' }}</td>
+                                    <td>{{ $user->function ? $user->function : '---' }}</td>
                                     <td> {{ $user->user_id != 0 ? $user->parent->email : '---' }} </td>
                                     <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
                                     <td> 

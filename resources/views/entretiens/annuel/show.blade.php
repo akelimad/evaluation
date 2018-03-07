@@ -8,27 +8,24 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#" >Synthèse</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" >Activités</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" >Evaluation</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" >Carrières</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/skills')}}" >Compétences</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/objectifs')}}" >Objectifs</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/formations')}}" >Formations</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/documents')}}" >Documents</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/remunerations')}}">Rémunérations</a></li>
-                            @if($e->type == "professionnel")
-                            <li><a href="{{url('entretiens/'.$e->id.'/decisions')}}">Décisions</a></li>
-                            @endif
+                            <li><a href="{{url('entretiens/'.$e->id.'/remunerations')}}">Salaire</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaire</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="active tab-pane">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Date de l'entretien : </label>
-                                    <div class="col-md-9"> {{ $e->date }} </div>
+                                    <div class="col-md-9"> {{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Entretien à clôturer avant fin : </label>
-                                    <div class="col-md-9"> {{ $e->date }} </div>
+                                    <div class="col-md-9"> {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

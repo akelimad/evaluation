@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-md-8">
                                 <p>
-                                    <a href="" class="btn btn-warning" target="_blank"> Télécharger un modèle au format csv </a>
+                                    <a href="{{asset('data/user_modele.csv')}}" class="btn btn-warning"> Télécharger un modèle au format csv </a>
                                 </p>
                                 <p class="help-block">
                                     Voici les consignes à respecter pour importer ou mettre à jour la liste de compte :
@@ -52,7 +52,7 @@
                                     <div class="input-group form-group col-md-6">
                                         <label class="input-group-btn">
                                             <span class="btn btn-primary">
-                                                Parcourir <input type="file" name="usersDataCsv" style="display: none;" required="">
+                                                Parcourir <input type="file" name="usersDataCsv" style="display: none;" required="" accept=".csv">
                                             </span>
                                         </label>
                                         <input type="text" class="form-control" readonly="">

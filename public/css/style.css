@@ -45,7 +45,7 @@ textarea {
 i{
     transition: all .7s ease-in-out;
 }
-.users .table th{
+.table-inversed-blue th{
     background: #3c8dbc;
     color: white;
     font-weight: normal;
@@ -391,11 +391,26 @@ ul.user-data li i{
 }
 .circle-icon {
     background: #00a65a;
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
     border-radius: 50%;
     text-align: center;
     margin: 0;
     color: white;
+}
+.entretien-row{
+    border-bottom: 2px solid #a0a0a0;
+}
+.entretien-row form{
+    display: none;
+}
+.icon-add-question{
+    display: inline-block;
+    margin-left: 2em;
+}
+.user-profile-img{
+    width: 100px;
+    padding: 3px;
+    border: 3px solid #d2d6de;
 }

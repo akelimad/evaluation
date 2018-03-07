@@ -14,16 +14,16 @@
                             <div class="active tab-pane" id="activity">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Société</label>
-                                    <div class="col-md-9">{{$user->society}}</div>
+                                    <div class="col-md-9">{{$user->society ? $user->society : '---'}}</div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Photo</label>
                                     <div class="col-md-4">
+                                    <!-- <label class="control-label">Photo</label> -->
                                         @if(!empty($user->avatar))
-                                            <img src="{{asset('avatar/'.$user->avatar)}}" alt="" class="profile-user-img img-responsive img-circle">
+                                            <img src="{{asset('avatars/'.$user->avatar)}}" alt="" class="user-profile-img img-responsive img-circle">
                                         @else
-                                            <img src="{{asset('img/avatar.png')}}" alt="" class="profile-user-img img-responsive img-circle">
+                                            <img src="{{asset('img/avatar.png')}}" alt="" class="user-profile-img img-responsive img-circle">
                                         @endif
                                     </div>
                                     <div class="clearfix"></div>

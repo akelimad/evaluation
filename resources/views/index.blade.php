@@ -20,6 +20,7 @@
                         <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
                     </div>
                 </div>
+                @role('ADMIN')
                 <div class="box box-primary">
                     <div class="box-header with-border">
                       <h3 class="box-title"> Mes actualités </h3>
@@ -32,6 +33,7 @@
                         </ul>
                     </div>
                 </div>
+                @endrole
             </div>
             <div class="col-md-9">
                 <div class="card portlet box box-primary">
@@ -192,8 +194,9 @@
                                     <table class="table table-hover table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Collaborateur </th>
-                                                <th>Entretien</th>
+                                                <th>Nom prénom </th>
+                                                <th>Fonction</th>
+                                                <th>Type d'évaluation</th>
                                                 <th>Statut</th>
                                                 <th>Mentor</th>
                                                 <th>RH</th>
@@ -204,7 +207,8 @@
                                             @foreach($collaborateurs as $coll)
                                             @foreach($coll->entretiens as $en)
                                             <tr>
-                                                <td><a href="{{url('user/'.$coll->id)}}">{{$coll->name}} {{$coll->last_name}}</a></td>
+                                                <td><a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a></td>
+                                                <td> {{ $coll->function ? $coll->function : '---'}} </td>
                                                 <td> <a href="{{url('entretiens/'.$en->id)}}">{{ $en->titre }}</a> </td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>
