@@ -48,8 +48,9 @@ Route::put('entretiens/{id}/update', 'EntretienController@update'); //mes entret
 Route::get('entretiens/{type}/create', 'EntretienController@create');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
-Route::get('entretiens/{e_id}', 'EntretienController@show');
+Route::get('entretiens/{e_id}/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
+Route::get('notifyUserInterview', 'EntretienController@notifyUserInterview');
 
 Route::get('entretiens/{e_id}/activites', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');

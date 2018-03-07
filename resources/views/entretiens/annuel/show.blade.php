@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Mentor :</label>
-                                    <div class="col-md-9"> mentor </div>
+                                    <div class="col-md-9"> {{Auth::user()->name." ".Auth::user()->last_name}} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
@@ -50,27 +50,29 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Collaborateur(trice) évalué(e) :</label>
-                                    <div class="col-md-9"> coll </div>
+                                    <div class="col-md-9"> {{ $u->name." ".$u->last_name }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Société :</label>
-                                    <div class="col-md-9"> soc </div>
+                                    <div class="col-md-9"> {{ $u->society ? $u->society : '---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Adresse email :</label>
-                                    <div class="col-md-9"> email </div>
+                                    <div class="col-md-9"> 
+                                        <a href="mailto:{{ $u->email }}">{{ $u->email }}</a> <a href="{{url('notifyUserInterview')}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> envoyer-le un email pour l'informer</a>
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fonction :</label>
-                                    <div class="col-md-9"> func </div>
+                                    <div class="col-md-9"> {{ $u->function ? $u->function :'---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Service :</label>
-                                    <div class="col-md-9"> serv </div>
+                                    <div class="col-md-9"> {{ $u->service ? $u->service : '---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

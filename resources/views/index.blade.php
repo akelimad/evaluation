@@ -209,7 +209,7 @@
                                             <tr>
                                                 <td><a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a></td>
                                                 <td> {{ $coll->function ? $coll->function : '---'}} </td>
-                                                <td> <a href="{{url('entretiens/'.$en->id)}}">{{ $en->titre }}</a> </td>
+                                                <td> <a href="{{url('entretiens/'.$en->id.'/'.$coll->id)}}">{{ $en->titre }}</a> </td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>

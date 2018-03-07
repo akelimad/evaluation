@@ -88,18 +88,15 @@ class EntretienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($e_id)
+    public function show($e_id, $uid)
     {
-        $user_id = 7;
+        $user_id = 5;
         $entretien = Entretien::find($e_id);
 
-        $entretienEval = $entretien->users()
-       ->where('entretien_user.user_id', $user_id) // or comments.owner_id in case of ambiguity
-       ->get();
-
-       dd($entretienEval);
-
-        return view('entretiens/annuel.show', ['e' => $entretien]);
+        $user = $entretien->users()
+        ->where('entretien_user.user_id', $uid)
+        ->first();
+        return view('entretiens/annuel.show', ['e' => $entretien, 'u'=> $user]);
     }
 
     /**
@@ -168,7 +165,7 @@ class EntretienController extends Controller
                     $mentors_id[] = $user->parent->id;
                 }
             }
-            $entretien->users()->attach(array_unique(array_merge($mentors_id, $users_id)));
+            $entretien->users()->attach(array_unique($users_id));
         }else{
             $users = User::select('id', 'email', 'user_id')->get();
             $users_id = [];
@@ -182,7 +179,7 @@ class EntretienController extends Controller
                     $mentors_id[] = $user->parent->id;
                 }
             }
-            $entretien->users()->attach(array_unique(array_merge($mentors_id, $users_id)));
+            $entretien->users()->attach(array_unique($users_id));
         }
 
         $user_mentors = array_unique($mentors);
@@ -250,6 +247,11 @@ class EntretienController extends Controller
         }
         Session::flash('success_evaluations_save', "Les évaluations de l'entretien ont bien été mises à jour");
         return redirect('entretiens/index');
+    }
+
+    public function notifyUserInterview(Request $request)
+    {
+        die('ok');
     }
 
     /**
