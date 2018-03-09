@@ -31,11 +31,11 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($gid, Request $request)
+    public function create($sid, $gid, Request $request)
     {
         ob_start();
         $parent_id = $request->parent_id;
-        echo view('questions.form', compact('gid', 'parent_id'));
+        echo view('questions.form', compact('sid','gid', 'parent_id'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter une question', 'content' => $content];
     }
@@ -64,7 +64,7 @@ class QuestionController extends Controller
                 $question->save();
             }
         }
-        $url=url('groupes/'.$request->groupe_id.'/questions/'.$question->id);
+        $url=url('surveys/1/groupes/'.$request->groupe_id.'/questions/'.$question->id);
         $request->session()->flash('success', "La question à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour la consulter</a>");
         if($question->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -103,7 +103,6 @@ class QuestionController extends Controller
     public function survey2()
     {
         $groupes = Groupe::all();
-        // dd(Answer::getAnswers(1));
         return view('questions.survey2', compact('groupes'));
     }
 

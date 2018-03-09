@@ -3,18 +3,24 @@
     <section class="content evaluations">
         <div class="row">
             <div class="col-md-12">
+                @if(session()->has('message'))
+                    @include('partials.alerts.success', ['messages' => session()->get('message') ])
+                @endif
                 <div class="card box box-primary">
                     <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} </h3>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#" >Synthèse</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" >Evaluation</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" >Carrières</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/skills')}}" >Compétences</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/objectifs')}}" >Objectifs</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/formations')}}" >Formations</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/remunerations')}}">Salaire</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaire</a></li>
+                            <li class="active">
+                                <a href="#" >Synthèse</a>
+                            </li>
+                            <li>
+                                <a href="{{url('entretiens/'.$e->id.'/'.$u->id.'/evaluation')}}" > Evaluation </a>
+                            </li>
+                            @foreach($to_fill as $key => $value)
+                                @if (in_array($key, json_decode($e->evaluations)))
+                                    <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" > {{ $value }} </a></li>
+                                @endif
+                            @endforeach
                         </ul>
                         <div class="tab-content">
                             <div class="active tab-pane">
@@ -30,7 +36,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Validé par le collaborateur :</label>
-                                    <div class="col-md-9"> <span class="label label-success">oui</span> </div>
+                                    <div class="col-md-9"> <span class="label label-success">{{App\Entretien::answered($e->id, $u->id) ? 'oui':'non'}}</span> </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
@@ -61,7 +67,10 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Adresse email :</label>
                                     <div class="col-md-9"> 
-                                        <a href="mailto:{{ $u->email }}">{{ $u->email }}</a> <a href="{{url('notifyUserInterview')}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> envoyer-le un email pour l'informer</a>
+                                        <a href="mailto:{{ $u->email }}">{{ $u->email }}</a> 
+                                        @role(['MENTOR', 'ADMIN'])
+                                        <a href="{{url('notifyUserInterview', ['entretien'=>$e, 'user'=> $u])}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> envoyez-le un email pour l'informer</a>
+                                        @endrole
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

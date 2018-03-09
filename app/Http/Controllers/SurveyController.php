@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Survey;
 
 use App\Http\Requests;
-use App\Answer;
-use App\Token;
-use App\Entretien_user;
-use Auth;
 
-class AnswerController extends Controller
+class SurveyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +16,8 @@ class AnswerController extends Controller
      */
     public function index()
     {
-        //
+        $surveys = Survey::paginate(10);
+        return view('surveys.index', compact('surveys'));
     }
 
     /**
@@ -29,7 +27,10 @@ class AnswerController extends Controller
      */
     public function create()
     {
-        //
+        ob_start();
+        echo view('surveys.form');
+        $content = ob_get_clean();
+        return ['title' => 'Ajouter un questionnaire', 'content' => $content];
     }
 
     /**
@@ -40,27 +41,19 @@ class AnswerController extends Controller
      */
     public function store(Request $request)
     {
-        foreach ($request->answers as $key => $answers) {
-            foreach ($answers as $answer) {
-                $a = new Answer();
-                $a->answer      = $answer;
-                $a->question_id = $key;
-                $a->user_id = $request->user_id;
-                $a->save();
-            }
-        }
-        $token = Token::where('entretien_id', $request->entretien_id)->where('user_id', $request->user_id)->first();
-        if($token){
-            $token->mentor_id = $request->mentor_id;
-            $token->save();
+        if($request->id == null ){
+            $survey = new Survey();
         }else{
-            $token = new Token();
-            $token->entretien_id = $request->entretien_id;
-            $token->user_id = $request->user_id;
-            $token->mentor_id = $request->mentor_id;
-            $token->save();
+            $survey = Survey::find($request->id);
         }
-        return redirect('/');
+        $survey->title = $request->title;
+        $survey->description = $request->description;
+        $survey->save();
+        if($survey->save()) {
+            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+        } else {
+            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+        }
     }
 
     /**
@@ -82,7 +75,11 @@ class AnswerController extends Controller
      */
     public function edit($id)
     {
-        //
+        ob_start();
+        $s = Survey::find($id);
+        echo view('surveys.form', compact('s'));
+        $content = ob_get_clean();
+        return ['title' => 'Modifier un questionnaire', 'content' => $content];
     }
 
     /**

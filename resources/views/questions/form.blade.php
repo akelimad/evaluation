@@ -1,6 +1,7 @@
 
 <div class="content">
     <input type="hidden" name="id" value="{{ isset($g->id) ? $g->id : null }}">
+    <input type="hidden" name="survey_id" value="{{$sid}}">
     <input type="hidden" name="groupe_id" value="{{$gid}}">
     <input type="hidden" name="parent_id" value="{{$parent_id}}">
     {{ csrf_field() }}

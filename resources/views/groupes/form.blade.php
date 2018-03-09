@@ -1,6 +1,7 @@
 
 <div class="content">
     <input type="hidden" name="id" value="{{ isset($g->id) ? $g->id : null }}">
+    <input type="hidden" name="sid" value="{{ isset($sid) ? $sid : null }}">
     {{ csrf_field() }}
     <div class="form-group">
         <label for="name" class="col-md-2 control-label">Nom</label>

@@ -17,11 +17,11 @@ class Answer extends Model
         return $this->belongsTo('App\User');
     }
 
-    public static function getAnswers($qid){
+    public static function getAnswers($qid, $uid){
         $question = Question::find($qid);
         $answers_id = [];
         if(count($question->children)>0){
-            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', Auth::user()->id)->get()->toArray();
+            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->get()->toArray();
             foreach ($answers as $answer) {
                 foreach ($answer as $a) {
                     $answers_id[] = $a;
@@ -29,7 +29,8 @@ class Answer extends Model
             }
             return $answers_id;
         }else{
-            return Answer::where('question_id', $qid)->where('user_id', Auth::user()->id)->first();
+            $answer = Answer::where('question_id', $qid)->where('user_id', $uid)->first();
+            return $answer;
         }
     }
 }

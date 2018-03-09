@@ -35,5 +35,20 @@ $(function(){
     $(".show-motif").click(function(){
         $(".motif-form-"+ $(this).data('id')).slideToggle();
     })
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        $(".sendInvitationBtn").slideToggle();
+    });
+
+    $(".checkItem").click(function () {
+        var check = $('.wrap-checkItem').find('input[type=checkbox]:checked').length;
+        if(check >= 1){
+            $(".sendInvitationBtn").fadeIn();
+        }else if(check <= 1){
+            $(".sendInvitationBtn").slideToggle();
+
+        }
+    });
     
 })

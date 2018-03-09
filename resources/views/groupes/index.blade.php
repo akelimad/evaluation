@@ -3,7 +3,11 @@
     <section class="content users">
         <div class="row">
             <div class="col-md-12">
+                
                 <div class="box box-primary">
+                    <h3 class="alert alert-info">
+                        <i class="fa fa-long-arrow-left"></i> <a href="{{ url('surveys') }}">Retour à la liste des questionnaires</a>
+                    </h3>
                     @foreach (['danger', 'warning', 'success', 'info'] as $key)
                         @if(Session::has($key))
                             <div class="chm-alerts alert alert-info alert-white rounded">
@@ -16,12 +20,12 @@
                     <div class="box-header">
                         <h3 class="box-title">La liste des groupes <span class="badge">{{$groupes->total()}}</span></h3>
                         <div class="box-tools mb40">
-                            <a href="javascript:void(0)" onclick="return chmGroupe.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
+                            <a href="javascript:void(0)" onclick="return chmGroupe.create({sid: {{$sid}}})" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
                         </div>
                     </div>
                     @if(count($groupes)>0)
                         <div class="box-body table-responsive no-padding mb40">
-                            <table class="table table-hover table-bordered">
+                            <table class="table table-hover table-bordered table-inversed-blue">
                                 <tr>
                                     <th>Id</th>
                                     <th>Nom</th>
@@ -34,7 +38,7 @@
                                     <td> {{ $g->name }} </td>
                                     <td> {{ $g->description }} </td>
                                     <td class="text-center">  
-                                        <a href="javascript:void(0)" onclick="return chmGroupe.edit({id: {{$g->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmGroupe.edit({id: {{$g->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Modifier le groupe"> <i class="glyphicon glyphicon-pencil"></i> </a>
 
                                         <a href="javascript:void(0)" onclick="return chmQuestion.create({gid: {{$g->id}} })" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions au groupe"> <i class="fa fa-question"></i> </a>
                                     </td>

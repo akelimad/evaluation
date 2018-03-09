@@ -10,4 +10,10 @@ class Groupe extends Model
     {
         return $this->hasMany('App\Question');
     }
+
+    public function survey()
+    {
+        return $this->belongsTo('App\Survey');
+    }
+
 }

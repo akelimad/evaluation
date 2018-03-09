@@ -35,6 +35,12 @@
                                             @foreach($to_fill as $key => $value)
                                             <td>
                                                 <input type="checkbox" name="evaluations[{{$e->id}}][]" value="{{ $key }}" {{ $e->evaluations && in_array($key, json_decode($e->evaluations)) ? 'checked' : '' }}>
+                                                <select name="surveys[{{$e->id}}][]" id="survey" class="form-control">
+                                                    <option value="">Quest.</option>
+                                                    @foreach($surveys as $survey)
+                                                    <option value="{{$survey->id}}">{{$survey->title}}</option>
+                                                    @endforeach
+                                                </select>
                                             </td>
                                             @endforeach
                                         </tr>

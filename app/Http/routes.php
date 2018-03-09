@@ -48,11 +48,11 @@ Route::put('entretiens/{id}/update', 'EntretienController@update'); //mes entret
 Route::get('entretiens/{type}/create', 'EntretienController@create');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
-Route::get('entretiens/{e_id}/{uid}', 'EntretienController@show');
+Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
-Route::get('notifyUserInterview', 'EntretienController@notifyUserInterview');
+Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 
-Route::get('entretiens/{e_id}/activites', 'ActiviteController@index');
+Route::get('entretiens/{e_id}/{uid}/evaluation', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
 Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
 Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
@@ -93,19 +93,24 @@ Route::get('entretiens/{e_id}/decisions/create', 'DecisionController@create');
 Route::post('entretiens/{e_id}/decisions/store', 'DecisionController@store');
 Route::get('entretiens/{e_id}/decisions/{id}/edit', 'DecisionController@edit');
 
-Route::get('groupes', 'GroupeController@index');
-Route::get('groupes/create', 'GroupeController@create');
-Route::post('groupes/store', 'GroupeController@store');
-Route::get('groupes/{id}/edit', 'GroupeController@edit');
 
-Route::get('groupes/{gid}/questions', 'QuestionController@index');
-Route::get('groupes/{gid}/questions/create', 'QuestionController@create');
-Route::post('groupes/{gid}/questions/store', 'QuestionController@store');
-Route::get('groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
-Route::get('groupes/{gid}/questions/{qid}', 'QuestionController@show');
+Route::get('surveys', 'SurveyController@index');
+Route::get('surveys/create', 'SurveyController@create');
+Route::post('surveys/store', 'SurveyController@store');
+Route::get('surveys/{id}/edit', 'SurveyController@edit');
+Route::delete('surveys/{id}/delete', 'SurveyController@delete');
 
-Route::get('survey', 'QuestionController@survey');
-Route::get('survey2', 'QuestionController@survey2');
+Route::get('surveys/{sid}/groupes', 'GroupeController@index');
+Route::get('surveys/{sid}/groupes/create', 'GroupeController@create');
+Route::post('surveys/{sid}/groupes/store', 'GroupeController@store');
+Route::get('surveys/{sid}/groupes/{gid}/edit', 'GroupeController@edit');
+
+Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
+Route::get('surveys/{sid}/groupes/{gid}/questions/create', 'QuestionController@create');
+Route::post('surveys/{sid}/groupes/{gid}/questions/store', 'QuestionController@store');
+Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
+Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}', 'QuestionController@show');
+
 Route::get('questions/preview', 'QuestionController@preview');
 
 Route::post('answers/store', 'AnswerController@store');

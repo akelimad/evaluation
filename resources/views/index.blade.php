@@ -58,23 +58,21 @@
                                                 <th>Titre </th>
                                                 <th>Type</th>
                                                 <th>Limité au</th>
-                                                <th>Status</th>
+                                                <th>Collaborateur</th>
                                                 <th>Mentor</th>
                                                 <th>RH</th>
-                                                <th>Signé</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($entretiens as $e)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ url('entretiens/'.$e->id) }}">{{$e->titre}}</a>
+                                                    <a href="{{ url('entretiens/'.$e->id.'/u/'.Auth::user()->id) }}">{{$e->titre}}</a>
                                                 </td>
                                                 <td>{{$e->type}}</td>
                                                 <td>{{$e->date}}</td>
-                                                <td><span class="label label-danger empty"> </span></td>
-                                                <td><span class="label label-danger empty"> </span></td>
-                                                <td><span class="label label-danger empty"> </span></td>
+                                                <td><span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty"> </span></td>
+                                                <td><span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id,App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                             </tr>
                                             @endforeach
@@ -197,10 +195,9 @@
                                                 <th>Nom prénom </th>
                                                 <th>Fonction</th>
                                                 <th>Type d'évaluation</th>
-                                                <th>Statut</th>
+                                                <th>Collaborateur</th>
                                                 <th>Mentor</th>
                                                 <th>RH</th>
-                                                <th>Signé</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -209,10 +206,9 @@
                                             <tr>
                                                 <td><a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a></td>
                                                 <td> {{ $coll->function ? $coll->function : '---'}} </td>
-                                                <td> <a href="{{url('entretiens/'.$en->id.'/'.$coll->id)}}">{{ $en->titre }}</a> </td>
-                                                <td><span class="label label-danger empty"> </span></td>
-                                                <td><span class="label label-danger empty"> </span></td>
-                                                <td><span class="label label-danger empty"> </span></td>
+                                                <td> <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a> </td>
+                                                <td><span class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty"> </span></td>
+                                                <td><span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                             </tr>
                                             @endforeach

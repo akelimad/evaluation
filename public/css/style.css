@@ -341,7 +341,6 @@ p.alert-default{
     padding: 5px 0;
     color: #365e92cf;
     border-bottom: 1px solid #e0e0e0;
-    text-transform: capitalize;
 }
 ul.user-data li{
     margin-bottom: 4px;
@@ -413,4 +412,7 @@ ul.user-data li i{
     width: 100px;
     padding: 3px;
     border: 3px solid #d2d6de;
+}
+.sendInvitationBtn{
+    display: none;
 }

@@ -1,12 +1,12 @@
 import $ from 'jquery'
 
-export default class chmQuestion {
+export default class chmSurvey {
 
-  static create (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/groupes/' + params.gid + '/questions/create'), data: {parent_id: params.parent_id}}, {
+  static create () {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/create')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmQuestion.store'
+        callback: 'chmSurvey.store'
       },
       footer: {
         label: 'Sauvegarder'
@@ -15,10 +15,10 @@ export default class chmQuestion {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/groupes/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.id + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmQuestion.store'
+        callback: 'chmSurvey.store'
       },
       footer: {
         label: 'Mettre à jour'
@@ -27,7 +27,7 @@ export default class chmQuestion {
   }
 
   static show (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/' + params.id)})
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.id)})
   }
 
   static store (event) {
@@ -39,12 +39,10 @@ export default class chmQuestion {
     btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
     var id = $('[name="id"]').val()
-    var sid = $('[name="survey_id"]').val()
-    var gid = $('[name="group_id"]').val()
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('surveys/' + sid + '/groupes/' + gid + '/questions/store'),
+      url: window.chmSite.url('surveys/store'),
       data: data,
       processData: false,
       contentType: false,
@@ -69,7 +67,7 @@ export default class chmQuestion {
 
   static delete (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('user/' + params.id + '/delete'), data: {'_token': token}}, {
+    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('surveys/' + params.id + '/delete'), data: {'_token': token}}, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')

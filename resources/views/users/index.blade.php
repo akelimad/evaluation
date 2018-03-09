@@ -63,7 +63,9 @@
                         <div class="box-body table-responsive no-padding mb40">
                             <table class="table table-hover table-bordered table-inversed-blue">
                                 <tr>
-                                    <th><i class="fa fa-envelope"></i></th>
+                                    <th>
+                                        <input type="checkbox" id="checkAll">
+                                    </th>
                                     <th>Nom complet</th>
                                     <th>Email</th>
                                     <th>Société</th>
@@ -78,11 +80,8 @@
                                 @foreach($users as $key => $user)
                                 <tr>
                                     <td>
-                                        <div class="btn-group usersCheckbox" data-toggle="buttons">
-                                            <label class="btn btn-warning">
-                                                <input type="checkbox" class="usersId" autocomplete="off" value="{{$user->id}}" >
-                                                <span class="glyphicon glyphicon-ok"></span>
-                                            </label>
+                                        <div class="wrap-checkItem">
+                                            <input type="checkbox" class="usersId checkItem" autocomplete="off" value="{{$user->id}}" >
                                         </div>
                                     </td>
                                     <td> <a href="{{url('user/'.$user->id)}}">{{ $user->name." ".$user->last_name }}</a> </td>
@@ -112,7 +111,7 @@
                             </table>
                             {{ $users->links() }}
                         </div>
-                        <div class="mb40">
+                        <div class="sendInvitationBtn mb40">
                             <a onclick="return chmEntretien.entretiens()" class="btn btn-success"> <i class="fa fa-send"></i> Envoyer une invitation</a>
                         </div>
                     @else

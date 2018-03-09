@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Groupe;
+use App\Survey;
 
 class GroupeController extends Controller
 {
@@ -19,10 +20,11 @@ class GroupeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($sid)
     {
-        $groupes = Groupe::paginate(10);
-        return view('groupes/index', compact('groupes'));
+        $survey = Survey::find($sid);
+        $groupes = $survey->groupes()->paginate(10);
+        return view('groupes/index', compact('groupes', 'sid'));
     }
 
     /**
@@ -30,10 +32,10 @@ class GroupeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($sid)
     {
         ob_start();
-        echo view('groupes.form');
+        echo view('groupes.form', compact('sid'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter un groupe', 'content' => $content];
     }
@@ -53,6 +55,7 @@ class GroupeController extends Controller
         }
         $groupe->name = $request->name;
         $groupe->description = $request->description;
+        $groupe->survey_id = $request->sid;
         $groupe->save();
         if($groupe->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];

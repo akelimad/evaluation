@@ -3,9 +3,42 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Auth;
 class Entretien extends Model
 {
+    public static function getEvaluations()
+    {
+        return $to_fill = [
+            "1" => "Evaluations",
+            "2" => "Carrières",
+            "3" => "Formations",
+            "4" => "Compétences",
+            "5" => "Objectifs",
+            "6" => "Salaires",
+            "7" => "Commentaires",
+        ];
+    }
+
+    public static function answered($eid, $uid)
+    {
+        $answer = Token::where('entretien_id', $eid)->where('user_id', $uid)->first();
+        if($answer) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+    public static function answeredMentor($eid, $uid, $mentor_id)
+    {
+        $answer = Token::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', $mentor_id)->first();
+        if($answer) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
     
     public function users()
     {

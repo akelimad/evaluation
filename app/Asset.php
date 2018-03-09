@@ -25,7 +25,7 @@ class Asset
 
   public static function isLocal()
   {
-    return false;
+    //return false;
     return strpos($_SERVER['HTTP_HOST'], 'localhost') !== false;
   }
 }

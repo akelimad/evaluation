@@ -2,8 +2,8 @@ import $ from 'jquery'
 
 export default class chmGroupe {
 
-  static create () {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('groupes/create')}, {
+  static create (params) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/groupes/create')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmGroupe.store'
@@ -39,10 +39,11 @@ export default class chmGroupe {
     btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
     var id = $('[name="id"]').val()
+    var sid = $('[name="sid"]').val()
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('groupes/store'),
+      url: window.chmSite.url('surveys/' + sid + '/groupes/store'),
       data: data,
       processData: false,
       contentType: false,

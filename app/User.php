@@ -26,6 +26,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public static function getMentor($uid)
+    {
+        $user = User::findOrFail($uid);
+        return $user->parent;
+    }
+
     public function parent()
     {
         return $this->belongsTo('App\User', 'user_id');
