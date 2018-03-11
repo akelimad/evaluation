@@ -65,6 +65,19 @@ class SurveyController extends Controller
     public function show($id)
     {
         //
+    }    
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function preview($sid)
+    {
+        $survey = Survey::find($sid);
+        $groupes = $survey->groupes;
+        return view('surveys.preview', compact('groupes', 'sid'));
     }
 
     /**

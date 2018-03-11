@@ -45,9 +45,9 @@ class Entretien extends Model
         return $this->belongsToMany('App\User');
     }
 
-    public function activites()
+    public function evaluations()
     {
-        return $this->hasMany('App\Activite');
+        return $this->belongsToMany('App\Evaluation');
     }
 
     public function skills()

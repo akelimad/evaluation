@@ -13,13 +13,10 @@
                             <li class="active">
                                 <a href="#" >Synthèse</a>
                             </li>
+                            @foreach($evaluations as $evaluation)
                             <li>
-                                <a href="{{url('entretiens/'.$e->id.'/'.$u->id.'/evaluation')}}" > Evaluation </a>
+                                <a href="{{url('entretiens/'.$e->id.'/u/'.$u->id.'/'.$evaluation->title)}}" > {{ $evaluation->title }} </a>
                             </li>
-                            @foreach($to_fill as $key => $value)
-                                @if (in_array($key, json_decode($e->evaluations)))
-                                    <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" > {{ $value }} </a></li>
-                                @endif
                             @endforeach
                         </ul>
                         <div class="tab-content">

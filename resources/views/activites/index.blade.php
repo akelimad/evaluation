@@ -7,12 +7,11 @@
                     <h3 class="mb40"> Remplir votre évaluation pour: {{ $e->titre }} </h3>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}" >Synthèse</a></li>
-                            <li class="active"><a href="{{url('entretiens/'.$e->id.'/'.$user->id.'/evaluation')}}" > Evaluation </a></li>
-                            @foreach($to_fill as $key => $value)
-                                @if (in_array($key, json_decode($e->evaluations)))
-                                    <li><a href="{{url('entretiens/'.$e->id.'/activites')}}" > {{ $value }} </a></li>
-                                @endif
+                            <li ><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}" >Synthèse</a></li>
+                            @foreach($evaluations as $evaluation)
+                            <li >
+                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}" > {{ $evaluation->title }} </a>
+                            </li>
                             @endforeach
                         </ul>
                         <div class="tab-content">

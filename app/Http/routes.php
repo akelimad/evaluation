@@ -52,7 +52,7 @@ Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 
-Route::get('entretiens/{e_id}/{uid}/evaluation', 'ActiviteController@index');
+Route::get('entretiens/{e_id}/u/{uid}/{evaluation}', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
 Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
 Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
@@ -94,11 +94,12 @@ Route::post('entretiens/{e_id}/decisions/store', 'DecisionController@store');
 Route::get('entretiens/{e_id}/decisions/{id}/edit', 'DecisionController@edit');
 
 
-Route::get('surveys', 'SurveyController@index');
+Route::get('surveys', 'SurveyController@index')->name('surveys-list');
 Route::get('surveys/create', 'SurveyController@create');
 Route::post('surveys/store', 'SurveyController@store');
 Route::get('surveys/{id}/edit', 'SurveyController@edit');
 Route::delete('surveys/{id}/delete', 'SurveyController@delete');
+Route::get('surveys/{sid}/preview', 'SurveyController@preview');
 
 Route::get('surveys/{sid}/groupes', 'GroupeController@index');
 Route::get('surveys/{sid}/groupes/create', 'GroupeController@create');
@@ -110,7 +111,5 @@ Route::get('surveys/{sid}/groupes/{gid}/questions/create', 'QuestionController@c
 Route::post('surveys/{sid}/groupes/{gid}/questions/store', 'QuestionController@store');
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}', 'QuestionController@show');
-
-Route::get('questions/preview', 'QuestionController@preview');
 
 Route::post('answers/store', 'AnswerController@store');

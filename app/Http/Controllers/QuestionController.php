@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Question;
 use App\Groupe;
+use App\Survey;
 use App\Answer;
 use Auth;
 
@@ -64,7 +65,7 @@ class QuestionController extends Controller
                 $question->save();
             }
         }
-        $url=url('surveys/1/groupes/'.$request->groupe_id.'/questions/'.$question->id);
+        $url=url('surveys/'.$request->survey_id.'/groupes/'.$request->groupe_id.'/questions/'.$question->id);
         $request->session()->flash('success', "La question à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour la consulter</a>");
         if($question->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -80,30 +81,13 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($gid, $qid)
+    public function show($sid ,$gid, $qid)
     {
-        $groupes = Groupe::all();
+        $survey = Survey::find($sid);
+        $groupes = $survey->groupes;
         $gr = Groupe::findOrFail($gid);
         $qs = Question::findOrFail($qid);
-        return view('questions.show', compact('groupes', 'gr', 'qs'));
-    }
-
-    public function preview()
-    {
-        $groupes = Groupe::all();
-        return view('questions.preview', compact('groupes'));
-    }
-
-    public function survey()
-    {
-        $groupes = Groupe::all();
-        return view('questions.survey', compact('groupes'));
-    }
-
-    public function survey2()
-    {
-        $groupes = Groupe::all();
-        return view('questions.survey2', compact('groupes'));
+        return view('questions.show', compact('groupes', 'sid', 'gr', 'qs'));
     }
 
     /**

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Auth;
 use App\Entretien;
-use App\Activite;
+use App\Evaluation;
 use App\Groupe;
 
 class ActiviteController extends Controller
@@ -21,16 +21,21 @@ class ActiviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id, $uid)
+    public function index($e_id, $uid, $eval)
     {
-        $groupes = Groupe::all();
-        $to_fill = Entretien::getEvaluations();
         $entretien = Entretien::find($e_id);
-        $activites = $entretien->activites;
-        $user = $entretien->users()
-        ->where('entretien_user.user_id', $uid)
-        ->first();
-        return view('activites.index', ['activites' => $activites, 'e'=> $entretien, 'to_fill'=>$to_fill, 'groupes' => $groupes, 'user' => $user]);
+        $evaluations = $entretien->evaluations;
+        $evaluation = Evaluation::where('title', $eval)->first();
+        $survey = $evaluation->survey;
+        $groupes = $survey->groupes;
+        $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
+        return view('activites.index', [
+            'evaluations' => $evaluations, 
+            'survey' => $survey, 
+            'e'=> $entretien,  
+            'groupes' => $groupes, 
+            'user' => $user
+        ]);
     }
 
     /**

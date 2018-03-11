@@ -15,7 +15,7 @@ export default class chmSurvey {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmSurvey.store'

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
 use App\Http\Requests;
 use App\Groupe;
 use App\Survey;
@@ -24,7 +24,7 @@ class GroupeController extends Controller
     {
         $survey = Survey::find($sid);
         $groupes = $survey->groupes()->paginate(10);
-        return view('groupes/index', compact('groupes', 'sid'));
+        return view('groupes/index', compact('survey', 'groupes', 'sid'));
     }
 
     /**
@@ -57,6 +57,9 @@ class GroupeController extends Controller
         $groupe->description = $request->description;
         $groupe->survey_id = $request->sid;
         $groupe->save();
+        $url=url('surveys/'.$request->sid.'/groupes');
+        $request->session()->flash('success', "La groupe à été ajouté avec suucès.");
+        // $request->session()->flash('success', "La groupe à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour voir la liste des groupe du questionnaire</a>");
         if($groupe->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {

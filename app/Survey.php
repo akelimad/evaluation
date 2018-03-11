@@ -10,4 +10,10 @@ class Survey extends Model
     {
         return $this->hasMany('App\Groupe');
     }
+
+    public function evaluations()
+    {
+        return $this->belongsToMany('App\Evaluation');
+    }
+
 }

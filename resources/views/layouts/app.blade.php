@@ -207,9 +207,6 @@
                       </a>
                       <ul class="treeview-menu">
                         <li><a href="{{ url('surveys') }}"><i class="fa fa-long-arrow-right"></i> Questionnaires </a></li>
-                        <li><a href="{{ url('/') }}"><i class="fa fa-long-arrow-right"></i> Entretien d'evaluation </a></li>
-                        <li><a href="{{ url('groupes') }}"><i class="fa fa-long-arrow-right"></i> List groupes </a></li>
-                        <li><a href="{{ url('questions/preview') }}"><i class="fa fa-long-arrow-right"></i> List Questions </a></li>
                       </ul>
                     </li>
                 </ul>

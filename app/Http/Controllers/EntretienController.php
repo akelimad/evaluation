@@ -87,11 +87,17 @@ class EntretienController extends Controller
     public function show($e_id, $uid)
     {
         $entretien = Entretien::find($e_id);
+        $evaluations = $entretien->evaluations;
         $user = $entretien->users()
         ->where('entretien_user.user_id', $uid)
         ->first();
         $to_fill = Entretien::getEvaluations();
-        return view('entretiens/annuel.show', ['e' => $entretien, 'u'=> $user, 'to_fill' =>$to_fill]);
+        return view('entretiens/annuel.show', [
+            'e' => $entretien, 
+            'u'=> $user, 
+            'to_fill' =>$to_fill,
+            'evaluations' => $evaluations
+        ]);
     }
 
     /**

@@ -17,6 +17,7 @@ textarea {
 }
 .alert a{
     color: #ea5f5f;
+    text-decoration: none;
 }
 .label{
     border-radius: 15px;
