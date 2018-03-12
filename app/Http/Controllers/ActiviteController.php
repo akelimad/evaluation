@@ -21,7 +21,7 @@ class ActiviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id, $uid, $eval)
+    public function index($e_id, $uid, $eval, Request $request)
     {
         $entretien = Entretien::find($e_id);
         $evaluations = $entretien->evaluations;

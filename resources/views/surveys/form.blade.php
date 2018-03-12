@@ -5,7 +5,7 @@
     <div class="form-group">
         <label for="title" class="col-md-2 control-label">Titre</label>
         <div class="col-md-10">
-            <input type="text" name="title" id="title" class="form-control" value="{{ isset($s->title) ? $s->title :''}}">
+            <input type="text" name="title" id="title" class="form-control" value="{{ isset($s->title) ? $s->title :''}}" required="">
         </div>
     </div>
     <div class="form-group">

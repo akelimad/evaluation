@@ -34,17 +34,23 @@
                             <tbody>
                                 @foreach($entretiens as $entretien)
                                     @foreach($entretien->users as $key =>$user)
-                                    <tr>
+                                    <tr class="{{ !empty($user->motif) ? 'has-motif': '' }}">
                                         <td class="text-blue">{{ Carbon\Carbon::parse($entretien->date_limit)->format('d/m/Y')}}</td>
                                         <td><b><a href="{{url('user/'.$user->id)}}">{{ $user->name. ' '.$user->last_name  }}</a></b></td>
                                         <td>{{$user->function ? $user->function : '---'}}</td>
-                                        <td>{{$entretien->titre}}</td>
+                                        <td><a href="{{url('entretiens/'.$entretien->id.'/u/'.$user->id)}}">{{$entretien->titre}}</a></td>
                                         <td>{{$entretien->id}}</td>
-                                        <td>{{$user->parent ? $user->parent->name.' '. $user->parent->last_name : '---'}}</td>
+                                        <td>
+                                            @if($user->parent)
+                                                <a href="{{url('user/'.$user->parent->id)}}">{{ $user->parent->name.' '. $user->parent->last_name }}</a>
+                                            @else
+                                                ---
+                                            @endif
+                                        </td>
                                         <td>{{$user->parent ? $user->parent->function : '---'}}</td>
-                                        <td><span class="label label-danger"> Non </span></td>
-                                        <td><span class="label label-danger"> Non </span></td>
-                                        <td><span class="label label-danger"> Non </span></td>
+                                        <td><span class="label label-{{App\Entretien::answered($entretien->id, $user->id) ? 'success':'danger'}} empty"> </span></td>
+                                        <td><span class="label label-{{App\Entretien::answeredMentor($entretien->id, $user->id, App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span></td>
+                                        <td><span class="label label-danger empty"> </span></td>
                                         <td class="text-center">
                                             <a href="" class="btn-primary icon-fill"> <i class="fa fa-print"></i> </a>
                                             <a href="javascript:void(0)" class="btn-warning icon-fill show-motif" data-toggle="tooltip" data-placement="top" title="Motif de non réaliation" data-id="{{$entretien->id.$key}}"> <i class="glyphicon glyphicon-wrench"></i> </a>

@@ -6,18 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 class Entretien extends Model
 {
-    public static function getEvaluations()
-    {
-        return $to_fill = [
-            "1" => "Evaluations",
-            "2" => "Carrières",
-            "3" => "Formations",
-            "4" => "Compétences",
-            "5" => "Objectifs",
-            "6" => "Salaires",
-            "7" => "Commentaires",
-        ];
-    }
 
     public static function answered($eid, $uid)
     {

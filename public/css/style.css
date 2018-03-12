@@ -400,7 +400,10 @@ ul.user-data li i{
     color: white;
 }
 .entretien-row{
-    border-bottom: 2px solid #a0a0a0;
+    /*border-bottom: 2px solid #a0a0a0;*/
+}
+.entretien-row>td{
+    padding: 0 ;
 }
 .entretien-row form{
     display: none;
@@ -416,4 +419,23 @@ ul.user-data li i{
 }
 .sendInvitationBtn{
     display: none;
+}
+.entretiens-list .checkbox-item{
+    max-width: 23%;
+    display: inline-block;
+}
+.entretiens-list #surveySelect{
+    max-width: 72%;
+    display: inline-block;
+}
+.tooltip-inner{
+    font-weight: normal;
+    background: #3b3b3c;
+    font-size: 13px;
+}
+.has-motif{
+    background: #cc0b0b2e;
+}
+.survey label.questionTitle{
+    display: block;
 }

@@ -14,9 +14,11 @@
                                 <a href="#" >Synthèse</a>
                             </li>
                             @foreach($evaluations as $evaluation)
+                            @if(in_array($evaluation->id, $e->evaluations->pluck('id')->toArray())) 
                             <li>
                                 <a href="{{url('entretiens/'.$e->id.'/u/'.$u->id.'/'.$evaluation->title)}}" > {{ $evaluation->title }} </a>
                             </li>
+                            @endif
                             @endforeach
                         </ul>
                         <div class="tab-content">
@@ -32,13 +34,13 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Validé par le collaborateur :</label>
-                                    <div class="col-md-9"> <span class="label label-success">{{App\Entretien::answered($e->id, $u->id) ? 'oui':'non'}}</span> </div>
+                                    <label class="control-label col-md-3">Visa du collaborateur :</label>
+                                    <div class="col-md-9"> <span class="label label-{{App\Entretien::answered($e->id, $u->id) ? 'success':'danger'}} empty"> </span> </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Validé par le mentor :</label>
-                                    <div class="col-md-9"> <span class="label label-success">oui</span> </div>
+                                    <label class="control-label col-md-3">Visa du mentor :</label>
+                                    <div class="col-md-9"> <span class="label label-{{App\Entretien::answeredMentor($e->id, $u->id,App\User::getMentor($u->id)->id) ? 'success':'danger'}} empty"> </span> </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

@@ -84,11 +84,11 @@ class GroupeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($sid, $gid)
     {
         ob_start();
-        $g = Groupe::find($id);
-        echo view('groupes.form', ['g' => $g]);
+        $g = Groupe::find($gid);
+        echo view('groupes.form', compact('g', 'sid'));
         $content = ob_get_clean();
         return ['title' => 'Modifier un groupe', 'content' => $content];
     }

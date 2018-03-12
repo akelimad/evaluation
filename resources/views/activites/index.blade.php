@@ -9,7 +9,7 @@
                         <ul class="nav nav-tabs">
                             <li ><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}" >Synthèse</a></li>
                             @foreach($evaluations as $evaluation)
-                            <li >
+                            <li class= "{{ Request::segment(5) == $evaluation->title ? 'active':'' }}">
                                 <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}" > {{ $evaluation->title }} </a>
                             </li>
                             @endforeach

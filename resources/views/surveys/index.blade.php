@@ -16,7 +16,7 @@
                     <div class="box-header">
                         <h3 class="box-title">La liste des questionnaires <span class="badge">{{$surveys->total()}}</span></h3>
                         <div class="box-tools mb40">
-                            <a href="javascript:void(0)" onclick="return chmSurvey.create()" class="btn bg-maroon"> <i class="fa fa-plus"></i> Ajouter </a>
+                            <a href="javascript:void(0)" onclick="return chmSurvey.create()" class="btn bg-maroon" title="Ajouter un questionnaire" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
                     </div>
                     @if(count($surveys)>0)
@@ -32,7 +32,7 @@
                                 <tr>
                                     <td> {{ $survey->id }}</td>
                                     <td> {{ $survey->title }}</td>
-                                    <td> {{ $survey->description }} </td>
+                                    <td> {{ $survey->description ? $survey->description : '---' }} </td>
                                     <td class="text-center">  
                                         <a href="javascript:void(0)" onclick="return chmSurvey.edit({sid: {{$survey->id}}})" class="btn-primary icon-fill" title="Modifier ce questionnaire" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmGroupe.create({sid: {{$survey->id}}})" class="btn-warning icon-fill" title="Ajouter un groupe pour ce questionnaire" data-toggle="tooltip"> <i class="fa fa-plus"></i> </a>

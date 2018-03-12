@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Evaluation extends Model
 {
+
+    protected $fillable = [
+        'survey_id'
+    ];
+
     public function survey()
     {
         return $this->belongsTo('App\Survey');

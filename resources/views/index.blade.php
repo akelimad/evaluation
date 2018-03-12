@@ -56,7 +56,6 @@
                                         <thead>
                                             <tr>
                                                 <th>Titre </th>
-                                                <th>Type</th>
                                                 <th>Limité au</th>
                                                 <th>Collaborateur</th>
                                                 <th>Mentor</th>
@@ -69,8 +68,7 @@
                                                 <td>
                                                     <a href="{{ url('entretiens/'.$e->id.'/u/'.Auth::user()->id) }}">{{$e->titre}}</a>
                                                 </td>
-                                                <td>{{$e->type}}</td>
-                                                <td>{{$e->date}}</td>
+                                                <td>{{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</td>
                                                 <td><span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty"> </span></td>
                                                 <td><span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id,App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>

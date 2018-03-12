@@ -15,7 +15,7 @@ export default class chmGroupe {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('groupes/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/groupes/' + params.gid + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmGroupe.store'

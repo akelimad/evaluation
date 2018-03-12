@@ -10,6 +10,7 @@ use App\Entretien;
 use App\Entretien_user;
 use App\Question;
 use App\Survey;
+use App\Evaluation;
 use Carbon\Carbon; 
 use Auth;
 use Mail;
@@ -61,10 +62,10 @@ class EntretienController extends Controller
      */
     public function indexEntretien()
     {
-        $to_fill = Entretien::getEvaluations();
+        $evaluations = Evaluation::all();
         $surveys = Survey::select('id', 'title')->get();
         $entretiens = Entretien::all();
-        return view('entretiens.listing', compact('entretiens', 'to_fill', 'surveys'));
+        return view('entretiens.listing', compact('entretiens', 'evaluations', 'surveys'));
     }
 
     /**
@@ -88,14 +89,11 @@ class EntretienController extends Controller
     {
         $entretien = Entretien::find($e_id);
         $evaluations = $entretien->evaluations;
-        $user = $entretien->users()
-        ->where('entretien_user.user_id', $uid)
-        ->first();
-        $to_fill = Entretien::getEvaluations();
+        //dd($evaluations);
+        $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
         return view('entretiens/annuel.show', [
             'e' => $entretien, 
             'u'=> $user, 
-            'to_fill' =>$to_fill,
             'evaluations' => $evaluations
         ]);
     }
@@ -132,18 +130,14 @@ class EntretienController extends Controller
         // }else{
         //     $entretien = Entretien::find($request->id);
         // }
-        $to_fill = Entretien::getEvaluations();
-        foreach ($to_fill as $key => $value) {
-            $evaluations[] = $key ;
-        }
+        $evaluations = Evaluation::pluck('id')->toArray(); //to get ids of all object in one array
         $entretien = new Entretien();
         $entretien->date = Carbon::createFromFormat('d-m-Y', $request->date);
         $entretien->date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit); 
         $entretien->titre = $request->titre;
         $entretien->created_by = Auth::user()->id;
-        $entretien->type = $request->type;
-        $entretien->evaluations = json_encode($evaluations);
         $entretien->save();
+        $entretien->evaluations()->attach($evaluations);
 
         $users_id = $request->usersId;
         $mentors = [];
@@ -232,14 +226,19 @@ class EntretienController extends Controller
 
     public function storeEntretienEvals(Request $request)
     {
-        dd($request->surveys);
-        if($request->evaluations){
-            foreach ($request->evaluations as $key => $evaluation) {
-                $entretien = Entretien::find($key);
-                $entretien->evaluations = json_encode($evaluation);
-                $entretien->save();
+        //dd($request->choix);
+        $evaluationsIds=[];
+        $entretien = Entretien::find($request->entretien_id);
+        foreach ($request->choix as $key => $choix) {
+            if(isset($choix['evaluation_id'])){
+                $evaluationsIds[]=$choix['evaluation_id'];
+            }
+            if(!empty($choix['survey_id'])){
+                Evaluation::find($key)->update(['survey_id'=> $choix['survey_id']]);
             }
         }
+        $entretien->evaluations()->sync($evaluationsIds);
+
         Session::flash('success_evaluations_save', "Les évaluations de l'entretien ont bien été mises à jour");
         return redirect('entretiens/index');
     }
