@@ -7,19 +7,14 @@
                     <h3 class="mb40"> La liste des objectifs </h2>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li><a href="{{url('entretiens/'.$e->id)}}">Synthèse</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/activites')}}">Activités</a></li>
-                            @if($e->type == "annuel")
-                            <li ><a href="{{url('entretiens/'.$e->id.'/skills')}}">Compétences</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">Synthèse</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/evaluations')}}">Evaluations</a></li>
+                            <li><a href="">Carrieres</a></li>
+                            <li><a href="">Formations</a></li>
+                            <li><a href="">Competences</a></li>
                             <li class="active"><a href="#">Objectifs</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/remunerations')}}">Rémunérations</a></li>
-                            @endif
-                            <li><a href="{{url('entretiens/'.$e->id.'/formations')}}">Formations</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/documents')}}">Documents</a></li>
-                            @if($e->type == "professionnel")
-                            <li><a href="{{url('entretiens/'.$e->id.'/decisions')}}">Décisions</a></li>
-                            @endif
-                            <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaire</a></li>
+                            <li><a href="">Salaires</a></li>
+                            <li><a href="">Commentaires</a></li>
                         </ul>
                         <div class="tab-content">
                             @if(count($objectifs)>0)
@@ -27,23 +22,36 @@
                                     <table class="table table-hover table-bordered text-center">
                                         <thead>
                                             <tr>
-                                              <th>Titre</th>
-                                              <th>Avant fin du trimestre </th>
-                                              <th>Validation</th>
-                                              <th class="">Action</th>
+                                                <th>Titre</th>
+                                                <th>Description </th>
+                                                <th>Notation</th>
+                                                <th class="">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($objectifs as $o)
                                             <tr>
                                                 <td> {{$o->titre}} </td>
-                                                <td> {{$o->echeance}} </td>
+                                                <td> {{$o->description}} </td>
                                                 <td>
-                                                    @if($o->statut == 0)
-                                                        <span class="label label-danger">Non validé</span>
-                                                    @else
-                                                        <span class="label label-success">Validé</span>
-                                                    @endif
+                                                    <table class="table" style="margin-bottom: 0">
+                                                        <tr>
+                                                            <td>N-1</td>
+                                                            <td>Réalisé</td>
+                                                            <td>Ecart</td>
+                                                            <td>N+1</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>10</td>
+                                                            <td>0</td>
+                                                            <td>-10</td>
+                                                            <td> </td>
+                                                        </tr>
+                                                        <div class="range-slider">
+                                                          <input class="range-slider__range" type="range" value="100" min="0" max="500">
+                                                          <span class="range-slider__value">0</span>
+                                                        </div>
+                                                    </table>
                                                 </td>
                                                 <td> 
                                                     <a href="" class="btn-primary icon-fill"> <i class="fa fa-eye"></i> </a>

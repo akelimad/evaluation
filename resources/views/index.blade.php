@@ -44,7 +44,6 @@
                             <li><a href="#objectifs" data-toggle="tab"> Objectifs  </a></li>
                             <li><a href="#formations" data-toggle="tab"> Formations </a></li>
                             <li><a href="#taches" data-toggle="tab"> Tâches à mener  </a></li>
-                            
                         </ul>
                     </div>
                     <div class="portlet-body">
@@ -70,7 +69,7 @@
                                                 </td>
                                                 <td>{{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</td>
                                                 <td><span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty"> </span></td>
-                                                <td><span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id,App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty"> </span></td>
+                                                <td><span class="label label-danger empty"> </span></td>
                                                 <td><span class="label label-danger empty"> </span></td>
                                             </tr>
                                             @endforeach

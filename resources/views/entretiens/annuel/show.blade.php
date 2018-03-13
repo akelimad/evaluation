@@ -10,16 +10,14 @@
                     <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} </h3>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="active">
-                                <a href="#" >Synthèse</a>
-                            </li>
-                            @foreach($evaluations as $evaluation)
-                            @if(in_array($evaluation->id, $e->evaluations->pluck('id')->toArray())) 
-                            <li>
-                                <a href="{{url('entretiens/'.$e->id.'/u/'.$u->id.'/'.$evaluation->title)}}" > {{ $evaluation->title }} </a>
-                            </li>
-                            @endif
-                            @endforeach
+                            <li class="active"><a href="#" >Synthèse</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/evaluations')}}">Evaluations</a></li>
+                            <li ><a href="{{url('entretiens/'.$e->id.'/skills')}}">Carrieres</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/formations')}}">Formations</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/remunerations')}}">Competences</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/objectifs')}}">Objectifs</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/documents')}}">Salaires</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaires</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="active tab-pane">
@@ -35,12 +33,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Visa du collaborateur :</label>
-                                    <div class="col-md-9"> <span class="label label-{{App\Entretien::answered($e->id, $u->id) ? 'success':'danger'}} empty"> </span> </div>
+                                    <div class="col-md-9"> <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty"> </span> </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Visa du mentor :</label>
-                                    <div class="col-md-9"> <span class="label label-{{App\Entretien::answeredMentor($e->id, $u->id,App\User::getMentor($u->id)->id) ? 'success':'danger'}} empty"> </span> </div>
+                                    <div class="col-md-9"> <span class="label label-{{App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span> </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
@@ -55,32 +53,32 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Collaborateur(trice) évalué(e) :</label>
-                                    <div class="col-md-9"> {{ $u->name." ".$u->last_name }} </div>
+                                    <div class="col-md-9"> {{ $user->name." ".$user->last_name }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Société :</label>
-                                    <div class="col-md-9"> {{ $u->society ? $u->society : '---' }} </div>
+                                    <div class="col-md-9"> {{ $user->society ? $user->society : '---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Adresse email :</label>
                                     <div class="col-md-9"> 
-                                        <a href="mailto:{{ $u->email }}">{{ $u->email }}</a> 
+                                        <a href="mailto:{{ $user->email }}">{{ $user->email }}</a> 
                                         @role(['MENTOR', 'ADMIN'])
-                                        <a href="{{url('notifyUserInterview', ['entretien'=>$e, 'user'=> $u])}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> envoyez-le un email pour l'informer</a>
+                                        <a href="{{url('notifyUserInterview', ['entretien'=>$e, 'user'=> $user])}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> envoyez-le un email pour l'informer</a>
                                         @endrole
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fonction :</label>
-                                    <div class="col-md-9"> {{ $u->function ? $u->function :'---' }} </div>
+                                    <div class="col-md-9"> {{ $user->function ? $user->function :'---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Service :</label>
-                                    <div class="col-md-9"> {{ $u->service ? $u->service : '---' }} </div>
+                                    <div class="col-md-9"> {{ $user->service ? $user->service : '---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

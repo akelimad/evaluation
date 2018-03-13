@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use App\Entretien;
 use App\Objectif;
@@ -20,11 +20,16 @@ class ObjectifController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id)
+    public function index($e_id, $uid)
     {
         $entretien = Entretien::find($e_id);
-        $objectifs = $entretien->objectifs;
-        return view('objectifs.index', ['objectifs' => $objectifs, 'e'=> $entretien]);
+        $objectifs = Objectif::all();
+        $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
+        return view('objectifs.index', [
+            'objectifs' => $objectifs, 
+            'e'=> $entretien,
+            'user'=> $user,
+        ]);
     }
 
     /**
@@ -49,19 +54,33 @@ class ObjectifController extends Controller
      */
     public function store($e_id ,Request $request)
     {
-        if($request->id == null ){
-            $objectif = new Objectif();
-        }else{
-            $objectif =  Objectif::find($request->id);
+        $rules = [];
+        $validator = Validator::make($request->all(), $rules);
+        $messages = $validator->errors();
+
+        if($request->objectifs){
+            $somme = 0;
+            foreach ($request->objectifs as $obj) {
+                $somme = $somme + $obj['pourcentage'];
+            }
+            if($somme < 100) {
+                $messages->add('under_100', 'La somme des pourcentage doit être égale à 100 %');
+            }
+            if(count($messages)>0){
+                return ["status" => "danger", "message" => $messages];
+            }else{
+                foreach ($request->objectifs as $obj) {
+                    $objectif = new Objectif();
+                    $objectif->titre = $obj['title'];
+                    $objectif->description = $obj['description'];
+                    $objectif->notationNmoins1 = $obj['pourcentage'];
+                    $objectif->realise = $request->mesure;
+                    $objectif->ecart = $request->echeance;
+                    $objectif->notationNplus1 = $request->statut;
+                    $objectif->save();
+                }
+            }
         }
-        $objectif->titre = $request->titre;
-        $objectif->description = $request->description;
-        $objectif->methode = $request->methode;
-        $objectif->mesure = $request->mesure;
-        $objectif->echeance = $request->echeance;
-        $objectif->statut = $request->statut;
-        $objectif->entretien_id = $e_id;
-        $objectif->save();
         if($objectif->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {

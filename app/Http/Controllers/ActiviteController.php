@@ -21,11 +21,11 @@ class ActiviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id, $uid, $eval, Request $request)
+    public function index($e_id, $uid)
     {
         $entretien = Entretien::find($e_id);
         $evaluations = $entretien->evaluations;
-        $evaluation = Evaluation::where('title', $eval)->first();
+        $evaluation = Evaluation::where('title', 'Evaluations')->first();
         $survey = $evaluation->survey;
         $groupes = $survey->groupes;
         $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();

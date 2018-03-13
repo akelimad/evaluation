@@ -41,8 +41,16 @@ class HomeController extends Controller
     }
 
 
-    public function home()
+    public function dashboard()
     {
-        return view('home');
+        $nbColls = User::with('roles')->whereHas('roles', function ($query) {
+            $query->where('name', '=', 'COLLABORATEUR');
+        })->count();
+
+        $nbMentors = User::with('roles')->whereHas('roles', function ($query) {
+            $query->where('name', '=', 'Mentor');
+        })->count();
+
+        return view('dashboard', compact('nbColls', 'nbMentors'));
     }
 }

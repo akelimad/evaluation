@@ -183,17 +183,23 @@ class UserController extends Controller
         return view('users.data.import_fields', compact( 'csv_header_fields','csv_values_fields', 'csv_data'));
     }
 
-    public function getRoleByName($roleName){
-        if($roleName == "RH") return 1;
-        if($roleName == "ADMIN") return 2;
-        if($roleName == "MENTOR") return 3;
-        if($roleName == "COLLABORATEUR") return 4;
+    public function getRoleByName($rolesName){
+        $rolesids = [];
+        foreach (explode(", ",$rolesName) as $name) {
+            $role = Role::where('name', $name)->first();
+            if($role){
+                $rolesids[]= $role->id;
+                
+            }
+        }
+        return $rolesids;
     }
 
     public function processImport(Request $request){
         $csv_data = Session::get('session_csv_data')[0];
         $fields = Session::get('session_csv_headers')[0];
-        $count = User::all()->count();
+        $maxUserId = User::whereRaw('id = (select max(`id`) from users)')->first();
+        $count = $maxUserId->id;
         foreach ($csv_data as $row) {
                 $user = new User();
                 $user->id= $count+1;
@@ -218,7 +224,7 @@ class UserController extends Controller
                     $user->user_id= 0;
                 }
                 $user->save();
-                $user->attachRole($this->getRoleByName($row[$fields[3]]));
+                $user->roles()->attach($this->getRoleByName($row[$fields[3]]));
                 $count++;
         }
         return redirect('users')->with('flash_message_success', 'Your Employee Schedule Uploaded successfully!');;
@@ -244,13 +250,14 @@ class UserController extends Controller
             $role->display_name = $request->display_name;
             $role->description = $request->description;
             $role->save();
+            if($request->permissions){
             $role_perms = [];
-            foreach ($role->perms()->get() as $perm) {
-                $role_perms[] = $perm->id;
+                foreach ($role->perms()->get() as $perm) {
+                    $role_perms[] = $perm->id;
+                }
+                $role->perms()->detach($role_perms);
+                $role->perms()->attach($request->permissions);
             }
-            
-            $role->perms()->detach($role_perms);
-            $role->perms()->attach($request->permissions);
             
         }else{
             $role = new Role();
@@ -259,7 +266,9 @@ class UserController extends Controller
             $role->description = $request->description;
             $role->save();
             // $role->perms()->detach($request->permissions);
-            $role->attachPermissions($request->permissions);
+            if($request->permissions){
+                $role->attachPermissions($request->permissions);   
+            }
         }
         if($role->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];

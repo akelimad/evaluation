@@ -138,7 +138,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="active">
-                <a href="{{url('/home')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
+                <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
             </li>
 
 <!--             <li class="treeview">
@@ -159,8 +159,6 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{{ url('entretiens') }}"><i class="fa fa-long-arrow-right"></i> Les entretiens</a></li>
-                    <li><a href="#"><i class="fa fa-long-arrow-right"></i> Annoncer une formation</a></li>
-                    <li><a href="#"><i class="fa fa-long-arrow-right"></i> Les rémunirations</a></li>
                 </ul>
             </li>
             @endrole

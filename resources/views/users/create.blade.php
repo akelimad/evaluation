@@ -100,8 +100,7 @@
                             <div class="form-group">
                                 <div class="col-md-6">
                                     <label for="role" class="control-label">Rôle </label>
-                                    <select name="role" id="role" class="form-control">
-                                        <option value="">=== Select ===</option>
+                                    <select name="role" id="role" class="form-control" multiple="">
                                         @foreach($roles as $role)
                                             <option value="{{$role->id}}"> {{$role->name}} </option>
                                         @endforeach

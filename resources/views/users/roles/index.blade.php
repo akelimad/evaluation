@@ -26,7 +26,8 @@
                                 <td> {{ $role->display_name }} </td>
                                 <td> {{ $role->description }} </td>
                                 <td>  
-                                    <a href="#" class="btn-primary icon-fill"> <i class="fa fa-eye"></i> </a>
+                                    <a href="javascript:void(0)" onclick="return chmRole.edit({id:{{$role->id}}})" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
+
                                 </td>
                             </tr>
                             @endforeach

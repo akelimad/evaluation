@@ -7,21 +7,23 @@
                     <h3 class="mb40"> Remplir votre évaluation pour: {{ $e->titre }} </h3>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li ><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}" >Synthèse</a></li>
-                            @foreach($evaluations as $evaluation)
-                            <li class= "{{ Request::segment(5) == $evaluation->title ? 'active':'' }}">
-                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}" > {{ $evaluation->title }} </a>
-                            </li>
-                            @endforeach
+                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">Synthèse</a></li>
+                            <li class="active"><a href="#">Evaluations</a></li>
+                            <li><a href="">Carrieres</a></li>
+                            <li><a href="">Formations</a></li>
+                            <li><a href="">Competences</a></li>
+                            <li ><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/objectifs')}}">Objectifs</a></li>
+                            <li><a href="">Salaires</a></li>
+                            <li><a href="">Commentaires</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="box-body mb40">
-                                @role('MENTOR')
+                                @if(count($user->children)>0)
                                     @include('questions/survey2')
-                                @endrole
-                                @role('COLLABORATEUR')
+                                @endif
+                                @if(count($user->children)<=0)
                                     @include('questions/survey')
-                                @endrole
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -12,7 +12,7 @@ export default class chmObjectif {
       footer: {
         label: 'Sauvegarder'
       },
-      width: 676
+      width: 700
     })
   }
 
@@ -25,7 +25,7 @@ export default class chmObjectif {
       footer: {
         label: 'Mettre à jour'
       },
-      width: 676
+      width: 700
     })
   }
 

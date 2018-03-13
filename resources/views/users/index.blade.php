@@ -98,7 +98,7 @@
                                     </td>
                                     <td>{{ $user->service ? $user->service : '---' }}</td>
                                     <td>{{ $user->function ? $user->function : '---' }}</td>
-                                    <td> {{ $user->user_id != 0 ? $user->parent->email : '---' }} </td>
+                                    <td> {{ $user->email }} </td>
                                     <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
                                     <td> 
                                         @if($user->status == 0) <span class="label label-danger">Désactivé</span> @else <span class="label label-success">Activé</span> </td>

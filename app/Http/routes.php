@@ -14,7 +14,7 @@
 Route::auth();
 
 Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@home');
+Route::get('/dashboard', 'HomeController@dashboard');
 
 Route::get('profile', 'UserController@profile');
 Route::get('users', 'UserController@indexUsers');
@@ -52,7 +52,7 @@ Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 
-Route::get('entretiens/{e_id}/u/{uid}/{evaluation}', 'ActiviteController@index');
+Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
 Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
 Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
@@ -62,7 +62,7 @@ Route::get('entretiens/{e_id}/skills/create', 'SkillController@create');
 Route::post('entretiens/{e_id}/skills/store', 'SkillController@store');
 Route::get('entretiens/{e_id}/skills/{id}/edit', 'SkillController@edit');
 
-Route::get('entretiens/{e_id}/objectifs', 'ObjectifController@index');
+Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/create', 'ObjectifController@create');
 Route::post('entretiens/{e_id}/objectifs/store', 'ObjectifController@store');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');

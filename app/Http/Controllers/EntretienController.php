@@ -93,7 +93,7 @@ class EntretienController extends Controller
         $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
         return view('entretiens/annuel.show', [
             'e' => $entretien, 
-            'u'=> $user, 
+            'user'=> $user, 
             'evaluations' => $evaluations
         ]);
     }

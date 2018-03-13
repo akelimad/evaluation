@@ -3,45 +3,54 @@
     <input type="hidden" name="id" value="{{ isset($o->id) ? $o->id : null }}">
     <input type="hidden" name="e_id" value="{{ isset($e->e_id) ? $e->e_id : null }}">
     {{ csrf_field() }}
-    <div class="form-group">
-        <label for="titre" class="col-md-3 control-label">Titre de l'objectif</label>
-        <div class="col-md-9">
-            <input type="text" class="form-control" name="titre" id="titre" placeholder="" value="{{isset($o->titre) ? $o->titre :''}}" >
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="description" class="col-md-3 control-label">Description</label>
-        <div class="col-md-9">
-            <textarea name="description" id="description" class="form-control">{{ isset($o->description) ? $o->description :''}}</textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="methode" class="col-md-3 control-label">Moyen pour l'atteindre</label>
-        <div class="col-md-9">
-            <textarea name="methode" id="methode" class="form-control">{{ isset($o->methode) ? $o->methode :''}}</textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="mesure" class="col-md-3 control-label">Mesure</label>
-        <div class="col-md-9">
-            <textarea name="mesure" id="mesure" class="form-control">{{ isset($o->mesure) ? $o->mesure :''}}</textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="echeance" class="col-md-3 control-label">A réaliser avant la fin du trimestre</label>
-        <div class="col-md-9">
-            <input type="number" class="form-control" name="echeance" id="echeance" placeholder="" value="{{isset($o->echeance) ? $o->echeance :''}}" min="1" max="4" maxlength="1" pattern="\d*">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="statut" class="col-md-3 control-label">Statut</label>
-        <div class="col-md-9">
-            <select name="statut" id="statut" class="form-control">
-                <option value="0" {{isset($o->statut) && $o->statut == "1" ? 'selected' :''}}> En attente de validation  </option>
-                <option value="1" {{isset($o->statut) && $o->statut == "2" ? 'selected' :''}}> Accepté par le Mentor   </option>
-                <option value="2" {{isset($o->statut) && $o->statut == "3" ? 'selected' :''}}> Objectif atteint   </option>
-                <option value="3" {{isset($o->statut) && $o->statut == "4" ? 'selected' :''}}> Objectif non atteint   </option>
-            </select>
+    <div id="addLine-wrap">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="control-label">Titre </label>
+                    <input type="text" class="form-control" name="objectifs[0][title]" placeholder="Titre" required="" />
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">Description </label>
+                    <input type="text" class="form-control prevu" name="objectifs[0][description]" placeholder="Description" min="0" required="" />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label">Pourcentage </label>
+                    <input type="number" class="form-control realise" name="objectifs[0][pourcentage]" placeholder="%" min="0" required="" />
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label"> &nbsp; </label>
+                    <button type="button" class="btn btn-info addLine pull-right"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(function(){
+        function uuidv4() {
+            return ([1e7]+-1e3).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            )
+        }
+        $(".addLine").click(function(event){
+            event.preventDefault()
+            var copy = $('#addLine-wrap').find(".form-group:first").clone()
+            copy.find('input').val('')
+            copy.find('button').toggleClass('addLine deleteLine')
+            copy.find('button>i').toggleClass('fa-plus fa-minus')
+            var uid = uuidv4()
+            $.each(copy.find('input'), function(){
+                var name = $(this).attr('name')
+                $(this).attr('name', name.replace('[0]', '['+uid+']'))
+            })
+            $('#addLine-wrap').append(copy)
+        })
+        $('#addLine-wrap').on('click', '.deleteLine', function(){
+            $(this).closest('.form-group').remove();
+        });
+
+
+    })
+</script>
