@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateObjectifs1Table extends Migration
+class CreateObjectifTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,10 @@ class CreateObjectifs1Table extends Migration
     {
         Schema::create('objectifs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('titre');
-            $table->string('description');
-            $table->string('methode');
-            $table->string('mesure');
-            $table->string('echeance');
-            $table->string('statut');
-            $table->integer('entretien_id')->unsigned();
-            $table->foreign('entretien_id')->references('id')->on('entretiens')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('title');
+            $table->integer('parent_id')->nullable()->default('0');
+            $table->integer('note')->nullable();
+            $table->integer('ponderation')->nullable();
             $table->timestamps();
         });
     }

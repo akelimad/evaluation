@@ -15,8 +15,20 @@ class ObjectifController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource for admin.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexAdmin()
+    {
+        $objectifs = Objectif::where('parent_id', 0)->paginate(10);
+        return view('objectifs.indexAdmin', compact('objectifs'));
+    }
+
+    /**
+     * Display a listing of the resource for user
      *
      * @return \Illuminate\Http\Response
      */
@@ -59,27 +71,28 @@ class ObjectifController extends Controller
         $messages = $validator->errors();
 
         if($request->objectifs){
-            $somme = 0;
-            foreach ($request->objectifs as $obj) {
-                $somme = $somme + $obj['pourcentage'];
-            }
-            if($somme < 100) {
-                $messages->add('under_100', 'La somme des pourcentage doit être égale à 100 %');
-            }
-            if(count($messages)>0){
-                return ["status" => "danger", "message" => $messages];
-            }else{
+            // $somme = 0;
+            // foreach ($request->objectifs as $obj) {
+            //     $somme = $somme + $obj['pourcentage'];
+            // }
+            // if($somme < 100) {
+            //     $messages->add('under_100', 'La somme des pourcentage doit être égale à 100 %');
+            // }
+            // if(count($messages)>0){
+            //     return ["status" => "danger", "message" => $messages];
+            // }else{
+                $objectif = new Objectif();
+                $objectif->title = $request->title;
+                $objectif->save();
                 foreach ($request->objectifs as $obj) {
-                    $objectif = new Objectif();
-                    $objectif->titre = $obj['title'];
-                    $objectif->description = $obj['description'];
-                    $objectif->notationNmoins1 = $obj['pourcentage'];
-                    $objectif->realise = $request->mesure;
-                    $objectif->ecart = $request->echeance;
-                    $objectif->notationNplus1 = $request->statut;
-                    $objectif->save();
+                    $subObj = new Objectif();
+                    $subObj->title = $obj['subTitle'];
+                    $subObj->note = $obj['note'];
+                    $subObj->ponderation = $obj['ponderation'];
+                    $subObj->parent_id = $objectif->id;
+                    $subObj->save();
                 }
-            }
+            // }
         }
         if($objectif->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];

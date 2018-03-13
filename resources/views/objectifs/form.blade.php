@@ -3,20 +3,24 @@
     <input type="hidden" name="id" value="{{ isset($o->id) ? $o->id : null }}">
     <input type="hidden" name="e_id" value="{{ isset($e->e_id) ? $e->e_id : null }}">
     {{ csrf_field() }}
+    <div class="form-group">
+        <label for="">Titre d'objectifs</label>
+        <input type="text" name="title" required="" class="form-control">
+    </div>
     <div id="addLine-wrap">
         <div class="form-group">
             <div class="row">
+                <div class="col-md-5">
+                    <label class="control-label">Titre de sous section </label>
+                    <input type="text" class="form-control" name="objectifs[0][subTitle]" placeholder="Titre" required="" />
+                </div>
                 <div class="col-md-3">
-                    <label class="control-label">Titre </label>
-                    <input type="text" class="form-control" name="objectifs[0][title]" placeholder="Titre" required="" />
+                    <label class="control-label">note </label>
+                    <input type="text" class="form-control prevu" name="objectifs[0][note]" placeholder="Note" min="0" />
                 </div>
-                <div class="col-md-6">
-                    <label class="control-label">Description </label>
-                    <input type="text" class="form-control prevu" name="objectifs[0][description]" placeholder="Description" min="0" required="" />
-                </div>
-                <div class="col-md-2">
-                    <label class="control-label">Pourcentage </label>
-                    <input type="number" class="form-control realise" name="objectifs[0][pourcentage]" placeholder="%" min="0" required="" />
+                <div class="col-md-3">
+                    <label class="control-label">Ponderation </label>
+                    <input type="number" class="form-control realise" name="objectifs[0][ponderation]" placeholder="%" min="0" max="100" required="" />
                 </div>
                 <div class="col-md-1">
                     <label class="control-label"> &nbsp; </label>

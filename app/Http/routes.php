@@ -66,6 +66,7 @@ Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/create', 'ObjectifController@create');
 Route::post('entretiens/{e_id}/objectifs/store', 'ObjectifController@store');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
+Route::get('objectifs', 'ObjectifController@indexAdmin');
 
 Route::get('entretiens/{e_id}/formations', 'FormationController@index');
 Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');
