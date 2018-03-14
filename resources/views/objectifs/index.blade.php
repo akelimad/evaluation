@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
     <section class="content evaluations">
         <div class="row">
             <div class="col-md-12">
@@ -19,54 +20,57 @@
                         <div class="tab-content">
                             @if(count($objectifs)>0)
                                 <div class="box-body table-responsive no-padding mb40">
-                                    <table class="table table-hover table-bordered text-center">
-                                        <thead>
+                                    <form action="{{url('objectifs/updateNoteObjectifs')}}">
+                                        <table class="table table-hover table-bordered table-inversed-blue">
                                             <tr>
-                                                <th>Titre</th>
-                                                <th>Description </th>
-                                                <th>Notation</th>
-                                                <th class="">Action</th>
+                                                <th>Critères d'évaluation</th>
+                                                <th>Note</th>
+                                                <th>Pondération % </th>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($objectifs as $o)
-                                            <tr>
-                                                <td> {{$o->titre}} </td>
-                                                <td> {{$o->description}} </td>
-                                                <td>
-                                                    <table class="table" style="margin-bottom: 0">
-                                                        <tr>
-                                                            <td>N-1</td>
-                                                            <td>Réalisé</td>
-                                                            <td>Ecart</td>
-                                                            <td>N+1</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>10</td>
-                                                            <td>0</td>
-                                                            <td>-10</td>
-                                                            <td> </td>
-                                                        </tr>
-                                                        <div class="range-slider">
-                                                          <input class="range-slider__range" type="range" value="100" min="0" max="500">
-                                                          <span class="range-slider__value">0</span>
-                                                        </div>
-                                                    </table>
-                                                </td>
-                                                <td> 
-                                                    <a href="" class="btn-primary icon-fill"> <i class="fa fa-eye"></i> </a>
-                                                    <a href="javascript:void(0)" onclick="return chmObjectif.edit({e_id: {{$e->id}} , id: {{$o->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
-                                                </td>
-                                            </tr>
+                                            @foreach($objectifs as $objectif)
+                                                <input type="hidden" name="parentObjectif[]" value="{{$objectif->id}}">
+                                                <tr>
+                                                    <td colspan="3" class="objectifTitle"> <b>{{ $objectif->title }}</b> </td>
+                                                </tr>
+                                                @foreach($objectif->children as $sub)
+                                                <tr>
+                                                    <td>{{ $sub->title }}</td>
+                                                    <td class="criteres">
+                                                        <input type="text" id="slider" name="objectifs[{{$objectif->id}}][note][]" data-provide="slider" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="{{ isset($sub->note) ? $sub->note : '' }}" data-slider-tooltip="{{isset($sub->note) && $sub->note > 1 ? 'always' : '' }}" required >
+                                                        <input type="hidden" name="subObjectifIds[{{$objectif->id}}][]" value="{{$sub->id}}">
+                                                    </td>
+                                                    <td>
+                                                        {{ $sub->ponderation }}
+                                                        <input type="hidden" name="objectifs[{{$objectif->id}}][ponderation][]" value="{{$sub->ponderation}}">
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                                <tr>
+                                                    <td colspan="3" class="sousTotal"> 
+                                                        Sous-total  <span class="pull-right">{{$objectif->sousTotal ? $objectif->sousTotal : 0.00}}</span>
+                                                    </td>
+                                                </tr>
                                             @endforeach
-                                        </tbody>
-                                    </table>
+                                            <tr>
+                                                <td colspan="3" class="btn-warning">
+                                                    TOTAL DE L'ÉVALUATION  <span class="pull-right">
+                                                        {{ $total }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" class="btn-danger">
+                                                    NOTE FINALE  <span class="pull-right">0.00 %</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <input type="submit" value="Sauvegarder" class="btn btn-success">
+                                    </form>
+                                    {{ $objectifs->links() }}
                                 </div>
                             @else
-                                <p class="alert alert-default">Aucune donnée disponible !</p>
+                                @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
                             @endif
-                            <a href="{{url('/')}}" class="btn btn-default">Revenir à la liste</a>
-                            <a onclick="return chmObjectif.create()" data-id="{{$e->id}}" class="btn btn-success addBtn">Ajouter un objectif</a>
                         </div>
                     </div>
                 </div>
@@ -75,3 +79,4 @@
     </section>
 @endsection
   
+

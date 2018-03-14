@@ -5,22 +5,22 @@
     {{ csrf_field() }}
     <div class="form-group">
         <label for="">Titre d'objectifs</label>
-        <input type="text" name="title" required="" class="form-control">
+        <input type="text" name="title" required="" class="form-control" placeholder="ex: Relation interne">
     </div>
     <div id="addLine-wrap">
         <div class="form-group">
             <div class="row">
-                <div class="col-md-5">
-                    <label class="control-label">Titre de sous section </label>
-                    <input type="text" class="form-control" name="objectifs[0][subTitle]" placeholder="Titre" required="" />
+                <div class="col-md-7">
+                    <label class="control-label">Titre du critère </label>
+                    <input type="text" class="form-control" name="objectifs[0][subTitle]" placeholder="ex: Travail en équipe" required="" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="control-label">note </label>
                     <input type="text" class="form-control prevu" name="objectifs[0][note]" placeholder="Note" min="0" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="control-label">Ponderation </label>
-                    <input type="number" class="form-control realise" name="objectifs[0][ponderation]" placeholder="%" min="0" max="100" required="" />
+                    <input type="number" class="form-control realise" name="objectifs[0][ponderation]" placeholder="0%" min="0" max="100" required="" />
                 </div>
                 <div class="col-md-1">
                     <label class="control-label"> &nbsp; </label>

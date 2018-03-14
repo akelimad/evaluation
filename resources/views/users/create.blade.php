@@ -13,17 +13,17 @@
                             <div class="form-group">
                                 <div class="col-md-6">
                                     <label for="name" class="control-label">Prénom</label>
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Prénom">
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="Prénom" required="">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="last_name" class="control-label">Nom</label>
-                                    <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Nom">
+                                    <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Nom" required="">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-6">
                                     <label for="email" class="control-label">Email</label>
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com">
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com" required="">
                                 </div>
                                 <div class="col-md-6"> 
                                     <label for="password" class="control-label">Mot de passe</label>
@@ -92,7 +92,7 @@
                                 <div class="col-md-6">
                                     <label for="tel" class="control-label">Statut </label>
                                     <label class="toggle-check" style="display: block;">
-                                        <input type="checkbox" name="is_done" class="toggle-check-input" checked/>
+                                        <input type="checkbox" name="status" class="toggle-check-input" checked/>
                                         <span class="toggle-check-text"></span>
                                     </label>
                                 </div>
@@ -100,7 +100,7 @@
                             <div class="form-group">
                                 <div class="col-md-6">
                                     <label for="role" class="control-label">Rôle </label>
-                                    <select name="role" id="role" class="form-control" multiple="">
+                                    <select name="role" id="role" class="form-control" multiple="" required="">
                                         @foreach($roles as $role)
                                             <option value="{{$role->id}}"> {{$role->name}} </option>
                                         @endforeach
@@ -108,7 +108,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="user_id" class="control-label">Mentor </label>
-                                    <select name="user_id" id="user_id" class="form-control">
+                                    <select name="user_id" id="user_id" class="form-control" required="">
                                         <option value="">=== Select ===</option>
                                         @foreach($users as $user)
                                             <option value="{{$user->id}}"> {{$user->email}} </option>

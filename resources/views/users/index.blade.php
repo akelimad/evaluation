@@ -3,12 +3,18 @@
     <section class="content users">
         <div class="row">
             <div class="col-md-12">
-                 @if (Session::has('attach_users_entretien'))
+                @if (Session::has('attach_users_entretien'))
                     <div class="chm-alerts alert alert-success alert-white rounded">
                         <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
                         <div class="icon"><i class="fa fa-info-circle"></i></div>
                         <span> {!! Session::get('attach_users_entretien') !!} </span>
                     </div>
+                @endif
+                @if(Session::has('import_success'))
+                    @include('partials.alerts.success', ['messages' => Session::get('import_success') ])
+                @endif
+                @if(Session::has('exist_already'))
+                    @include('partials.alerts.warning', ['messages' => Session::get('exist_already') ])
                 @endif
                 <div class="box box-primary">
                     <div class="filter-box mb40">
@@ -98,7 +104,13 @@
                                     </td>
                                     <td>{{ $user->service ? $user->service : '---' }}</td>
                                     <td>{{ $user->function ? $user->function : '---' }}</td>
-                                    <td> {{ $user->email }} </td>
+                                    <td> 
+                                        @if($user->parent)
+                                        <a href="{{url('user/'.$user->parent->id)}}">{{ $user->parent->name." ".$user->parent->last_name }}</a> 
+                                        @else
+                                            ---
+                                        @endif
+                                    </td>
                                     <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
                                     <td> 
                                         @if($user->status == 0) <span class="label label-danger">Désactivé</span> @else <span class="label label-success">Activé</span> </td>

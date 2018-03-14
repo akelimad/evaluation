@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-daterangepicker/daterangepicker.css')}}">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.4.0/css/bootstrap-slider.min.css">
 
   <link rel="stylesheet" href="{{asset('css/alerts.css')}}">
   <link rel="stylesheet" href="{{asset('css/style.css')}}">
@@ -300,6 +301,7 @@
 <!-- FastClick -->
 <script src="{{asset('bower_components/fastclick/lib/fastclick.js')}}"></script>
 <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.4.0/bootstrap-slider.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('js/adminlte.min.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->

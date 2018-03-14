@@ -201,6 +201,8 @@ class UserController extends Controller
         $maxUserId = User::whereRaw('id = (select max(`id`) from users)')->first();
         $count = $maxUserId->id;
         foreach ($csv_data as $row) {
+            $user = User::where('email', $row[$fields[2]])->first(); // model or null
+            if (!$user && !empty($row[$fields[0]]) && !empty($row[$fields[1]]) && !empty($row[$fields[2]]) && $row[$fields[3]] && !empty($row[$fields[4]]) ) {
                 $user = new User();
                 $user->id= $count+1;
                 $user->name= $row[$fields[0]];
@@ -226,8 +228,11 @@ class UserController extends Controller
                 $user->save();
                 $user->roles()->attach($this->getRoleByName($row[$fields[3]]));
                 $count++;
+            }else{
+                return redirect('users')->with('exist_already', 'Une erreur est survenu lors l\'importation. les utilisateurs existent deja ou bien un des chmaps obligatoire(Prenom, nom, email, role, Parent email) est vide!');;
+            }
         }
-        return redirect('users')->with('flash_message_success', 'Your Employee Schedule Uploaded successfully!');;
+        return redirect('users')->with('import_success', 'Les utilisateurs ont été importés avec succès!');;
 
     }
 

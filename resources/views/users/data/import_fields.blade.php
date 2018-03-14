@@ -3,6 +3,9 @@
     <section class="content index">
         <div class="row">
             <div class="col-md-12">
+                @if(Session::has('exist_already'))
+                @include('partials.alerts.danger', ['messages' => Session::get('exist_already') ])
+                @endif
                 <div class="box box-primary">
                     <div class="box-header">
                         <h3 class="box-title"> <i class="fa fa-upload"></i> Prévisualisation des informations des utilisateurs. </h3>

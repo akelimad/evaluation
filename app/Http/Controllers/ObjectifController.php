@@ -35,12 +35,17 @@ class ObjectifController extends Controller
     public function index($e_id, $uid)
     {
         $entretien = Entretien::find($e_id);
-        $objectifs = Objectif::all();
+        $objectifs = Objectif::where('parent_id', 0)->paginate(10);
+        $total = 0;
+        foreach ($objectifs as $obj) {
+            $total += $obj->sousTotal; 
+        }
         $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
         return view('objectifs.index', [
             'objectifs' => $objectifs, 
             'e'=> $entretien,
             'user'=> $user,
+            'total'=> $total,
         ]);
     }
 
@@ -135,9 +140,29 @@ class ObjectifController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateNoteObjectifs(Request $request)
     {
-        //
+        foreach ($request->objectifs as $key => $value) {
+            $objectifs[$key] = array_combine($request->subObjectifIds[$key], $request->objectifs[$key]['note']);
+        }
+        foreach ($objectifs as $key => $arrySubObj) {
+            foreach ($arrySubObj as $id => $note) {
+                $obj = Objectif::find($id);
+                $obj->note = $note;
+                $obj->save();
+            }
+        }
+        foreach ($request->objectifs as $key => $objectifs) {
+            $sousTotal = 0;
+            for ($i=0; $i < count($objectifs['note']); $i++) { 
+                $sousTotal += ((($objectifs['note'][$i])/10) * (($objectifs['ponderation'][$i])/100));
+            }
+            $objectif = Objectif::find($key);
+            $objectif->sousTotal = $sousTotal*10;
+            $objectif->save(); 
+        }
+        return redirect()->back();
+
     }
 
     /**
