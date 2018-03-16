@@ -62,7 +62,7 @@
                     <div class="box-header">
                         <h3 class="box-title">La liste des utilisateurs <span class="badge">{{$users->total()}}</span></h3>
                         <div class="box-tools mb40">
-                            <a href="{{ url('user/create') }}" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
+                            <a onclick="return chmUser.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
                         </div>
                     </div>
                     @if(count($users)>0)
@@ -77,7 +77,6 @@
                                     <th>Société</th>
                                     <th>Rôle</th>
                                     <th>Service</th>
-                                    <th>Fonction</th>
                                     <th>Mentor</th>
                                     <th>Date d'embauche</th>
                                     <th>Statut</th>
@@ -103,7 +102,6 @@
                                         @endif
                                     </td>
                                     <td>{{ $user->service ? $user->service : '---' }}</td>
-                                    <td>{{ $user->function ? $user->function : '---' }}</td>
                                     <td> 
                                         @if($user->parent)
                                         <a href="{{url('user/'.$user->parent->id)}}">{{ $user->parent->name." ".$user->parent->last_name }}</a> 
@@ -117,6 +115,7 @@
                                         @endif
                                     <td>  
                                         <a href="{{ url('user/'.$user->id) }}" class="btn-primary icon-fill"> <i class="fa fa-eye"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{$user->id}}})" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

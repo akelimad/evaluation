@@ -53,6 +53,14 @@ class User extends Authenticatable
     /**
      * Get the interview for the given user.
      */
+    public function objectifs()
+    {
+        return $this->belongsToMany('App\Objectif');
+    }
+
+    /**
+     * Get the interview for the given user.
+     */
     public function activites()
     {
         return $this->hasMany('App\Activite');

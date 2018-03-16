@@ -11,13 +11,18 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#" >Synthèse</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/evaluations')}}">Evaluations</a></li>
-                            <li ><a href="{{url('entretiens/'.$e->id.'/skills')}}">Carrieres</a></li>
+                            @foreach($evaluations as $evaluation)
+                            <li>
+                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}">{{ $evaluation->title }}</a>
+                            </li>
+                            @endforeach
+
+                            <!-- <li ><a href="{{url('entretiens/'.$e->id.'/skills')}}">Carrieres</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/formations')}}">Formations</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/remunerations')}}">Competences</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/objectifs')}}">Objectifs</a></li>
                             <li><a href="{{url('entretiens/'.$e->id.'/documents')}}">Salaires</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaires</a></li>
+                            <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaires</a></li> -->
                         </ul>
                         <div class="tab-content">
                             <div class="active tab-pane">

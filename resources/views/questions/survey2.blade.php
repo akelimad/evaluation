@@ -42,7 +42,7 @@
     </div>
     <div class="col-md-6">
         <h4 class="alert alert-info"> {{ App\User::getMentor($user->id)->name." ".App\User::getMentor($user->id)->last_name }} </h4>
-        <form action="{{url('answers/store')}}" method="post">
+        <form action="{{url('answers/store')}}" method="post" id="surveyForm">
             <input type="hidden" name="entretien_id" value="{{$e->id}}">
             <input type="hidden" name="mentor_id" value="{{Auth::user()->id}}">
             <input type="hidden" name="user_id" value="{{$user->id}}">
@@ -58,10 +58,11 @@
                                     <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                                 @endif
                                 @if($q->type == 'text')
-                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control">
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control" required="">
                                 @elseif($q->type == 'textarea')
-                                <textarea name="answers[{{$q->id}}][]" class="form-control" ></textarea>
+                                <textarea name="answers[{{$q->id}}][]" class="form-control" required=""></textarea>
                                 @elseif($q->type == "checkbox")
+                                    <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                     @foreach($q->children as $child)
                                         <div class="survey-checkbox">
                                             <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}">
@@ -71,7 +72,7 @@
                                     <div class="clearfix"></div>
                                 @elseif($q->type == "radio")
                                     @foreach($q->children as $child)
-                                        <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->id}}" value="{{$child->id}}"> 
+                                        <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->id}}" value="{{$child->id}}" required=""> 
                                         <label for="{{$child->id}}">{{ $child->titre }}</label>
                                     @endforeach
                                 @endif
@@ -83,7 +84,7 @@
                     </div>
                 @endforeach
             </div>
-            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Valider vos réponses</button>
+            <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Valider vos réponses</button>
         </form>
     </div>
     @else

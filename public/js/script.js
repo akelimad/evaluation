@@ -50,5 +50,16 @@ $(function(){
 
         }
     });
+
+    $('#submitAnswers').click(function() {
+        checked = $("#surveyForm input[type=checkbox]:checked").length;
+        if(checked<0) {
+            $(".checkboxError").fadeIn();
+            var errorDiv = $('.checkboxError:visible').first();
+            var scrollPos = errorDiv.offset().top;
+            $(window).scrollTop(scrollPos);
+            return false;
+        }
+    });
   
 })

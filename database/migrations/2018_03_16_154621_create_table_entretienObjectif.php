@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateObjectifTable extends Migration
+class CreateTableEntretienObjectif extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,10 @@ class CreateObjectifTable extends Migration
      */
     public function up()
     {
-        Schema::create('objectifs', function (Blueprint $table) {
+        Schema::create('entretienobjectifs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->integer('parent_id')->nullable()->default('0');
-            $table->integer('ponderation')->nullable();
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateObjectifTable extends Migration
      */
     public function down()
     {
-        Schema::drop('objectifs');
+        Schema::drop('entretienObjectifs');
     }
 }

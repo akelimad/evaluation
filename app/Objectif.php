@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Auth;
 
 class Objectif extends Model
 {
@@ -21,4 +22,13 @@ class Objectif extends Model
         return $this->hasMany('App\Objectif', 'parent_id');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
+
+    public static function getObjectif($id){
+        $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $id)->first();
+        return $objectif;
+    }
 }

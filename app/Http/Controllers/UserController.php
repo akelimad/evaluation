@@ -33,7 +33,7 @@ class UserController extends Controller
 
     public function indexUsers(){
         $entretiens = Entretien::select('id', 'titre')->get();
-        $users = User::with('roles')->paginate(15);
+        $users = User::with('roles')->orderBy('id', 'DESC')->paginate(10);
         $roles = Role::select('id', 'name')->get();
         return view('users.index', compact('users', 'roles', 'entretiens'));
     }
@@ -64,86 +64,78 @@ class UserController extends Controller
     }
 
     public function createUser(){
+        ob_start();
         $roles = Role::all();
         $users = User::select('id','email')->get();
-        return view('users.create', compact('roles', 'users'));
+        echo view('users.form', compact('roles', 'users'));
+        $content = ob_get_clean();
+        return ['title' => 'Ajouter un utilisateur', 'content' => $content];
     }
 
     public function storeUser(Request $request){
         $id = $request->input('id', false);
+        $rules = [
+            'name'      => 'required|min:3|max:25',
+            'last_name' => 'required|min:3|max:25',
+            'password'  => 'required|confirmed|min:6',
+        ];
         if($id) {
-            $user = User::find($id);
-            $rules=[
-                'name' => 'required|max:255',
-                'email' => 'unique:users,email,'.$user->id
+            $rules = [
+                'name'      => 'required|min:3|max:25',
+                'last_name' => 'required|min:3|max:25',
             ];
-            $user->civilite = $request->civilite;
-            $user->name = $request->name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
+            $user = User::find($id);
             if(!empty($request->password) || !empty($request->password_confirmation)){
                 $rules = [
                     'password' => 'required|min:6|confirmed',
                 ];
-                $user->password = bcrypt($request->password);
             }
-            $validator = \Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return ["status" => "danger", "message" => $validator->errors()->all()];
-            }
-            $user->detachRoles( $user->roles );
-            $user->attachRole( $request->role );
-            $user->save();
-        } else {
-            $rules = [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|min:6',
-            ];
-            $validator = \Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return ["status" => "danger", "message" => $validator->errors()->all()];
-            }
+        }else{
             $user = new User();
-            $user->name= $request->name;
-            $user->last_name = $request->last_name;
-            $user->email= $request->email;
-            $user->password= bcrypt($request->password);
-            $user->address= $request->address;
-            $user->society= $request->society;
-            $user->zip_code= $request->zip_code;
-            $user->city= $request->city;
-            $user->country= $request->country;
-            $user->tel= $request->tel;
-            $user->fix= $request->fix;
-            $user->about= $request->about;
-            if($file = $request->hasFile('avatar')) {
-                $file = $request->file('avatar') ;
-                $fileName = time()."_".$file->getClientOriginalName();
-                $destinationPath = public_path('/avatars') ;
-                $file->move($destinationPath,$fileName);
-                $user->avatar = $fileName ;
-            }
-            $user->function= $request->function;
-            $user->service= $request->service;
-            $user->qualification= $request->qualification;
-            $user->status= $request->status == "on" ? 1 : 0;
-            $user->user_id= $request->user_id;
-            $user->save();
-            $user->attachRole($request->role);
         }
-        // if($user->save()) {
-        //     return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-        // } else {
-        //     return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
-        // }
-        return redirect('users');
+        $validator = \Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return ["status" => "danger", "message" => $validator->errors()->all()];
+        }
+        $user->name= $request->name;
+        $user->last_name = $request->last_name;
+        $user->email= $request->email;
+        $user->password= bcrypt($request->password);
+        $user->address= $request->address;
+        $user->society= $request->society;
+        $user->zip_code= $request->zip_code;
+        $user->city= $request->city;
+        $user->country= $request->country;
+        $user->tel= $request->tel;
+        $user->fix= $request->fix;
+        $user->about= $request->about;
+        if($file = $request->hasFile('avatar')) {
+            $file = $request->file('avatar') ;
+            $fileName = time()."_".$file->getClientOriginalName();
+            $destinationPath = public_path('/avatars') ;
+            $file->move($destinationPath,$fileName);
+            $user->avatar = $fileName ;
+        }
+        $user->function= $request->function;
+        $user->service= $request->service;
+        $user->qualification= $request->qualification;
+        $user->status= $request->status == "on" ? 1 : 0;
+        $user->user_id= $request->user_id;
+        $user->save();
+        $user->detachRoles($user->roles);
+        $user->roles()->attach($request->roles);
+        if($user->save()) {
+            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+        } else {
+            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+        }
 
     }
 
     public function editUser($id){
         ob_start();
         $user = User::find($id);
+        $users = User::select('id','email')->get();
         $roles_ids = [];
         if($user->roles){
             foreach($user->roles as $role){
@@ -151,7 +143,7 @@ class UserController extends Controller
             }
         }
         $roles = Role::all();
-        echo view('users.edit', compact('user', 'roles','roles_ids'));
+        echo view('users.form', compact('user', 'users', 'roles','roles_ids'));
         $content = ob_get_clean();
         return ['title' => 'Modifier un utilisateur', 'content' => $content];
     }

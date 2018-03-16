@@ -31,7 +31,7 @@
                                             <ul class="list-group">
                                                 @foreach($g->questions as $q)
                                                     <li class="list-group-item">
-                                                        <a href="{{url('groupes/'.$g->id.'/questions/'.$q->id)}}">{{ $q->titre }}</a>
+                                                        <a href="{{url('surveys/'.$sid.'/groupes/'.$g->id.'/questions/'.$q->id)}}">{{ $q->titre }}</a>
                                                     </li>
                                                 @endforeach
                                             </ul>

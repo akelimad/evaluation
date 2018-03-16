@@ -1,42 +1,38 @@
 @extends('layouts.app')
 @section('content')
-    <section class="content users">
+    <section class="content showQuestion">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-3">
                 <div class="box box-primary">
-                    <div class="box-header">
-                        <h3 class="box-title">La liste des questions groupe <span class="badge">{{$groupes->total()}}</span></h3>
-                        <div class="box-tools mb40">
-                            <a href="javascript:void(0)" onclick="return chmGroupe.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
+                    <div class="box-body">
+                        <p class="lead"> <a href="{{ url('surveys/'.$survey->id.'/preview') }}"> <i class="fa fa-eye"></i> preview </a> </p>
+                        <div class="accordion" id="accordion2">
+                            <div class="accordion-group">
+                                <div class="accordion-heading">
+                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{$groupe->id}}" aria-expanded="true">
+                                    {{ $groupe->name }}
+                                    </a>
+                                    <a href="javascript:void(0)" onclick="return chmQuestion.create({gid: {{$groupe->id}} })" class="icon-add-question" data-toggle="tooltip" title="Ajouter une question pour ce groupe"> <i class="fa fa-plus circle-icon"></i> </a>
+                                </div>
+                                <div id="collapse{{$groupe->id}}" class="accordion-body collapse in">
+                                    <div class="accordion-inner">
+                                        
+                                        @if(count($groupe->questions)>0)
+                                            <ul class="list-group">
+                                                @foreach($groupe->questions as $q)
+                                                    <li class="list-group-item">
+                                                        <a href="{{url('surveys/'.$survey->id.'/groupes/'.$groupe->id.'/questions/'.$q->id)}}">{{ $q->titre }}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            <p class="help-block"> Aucune question </p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    @if(count($groupes)>0)
-                        <div class="box-body table-responsive no-padding mb40">
-                            <table class="table table-hover table-bordered">
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Nom</th>
-                                    <th>Description</th>
-                                    <th class="text-center">Actions</th>
-                                </tr>
-                                @foreach($groupes as $key => $g)
-                                <tr>
-                                    <td> {{ $key+1 }} </td>
-                                    <td> {{ $g->name }} </td>
-                                    <td> {{ $g->description }} </td>
-                                    <td class="text-center">  
-                                        <a href="javascript:void(0)" onclick="return chmGroupe.edit({id: {{$g->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
-
-                                        <a href="javascript:void(0)" onclick="return chmQuestion.create({id: {{$g->id}} })" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions groupe"> <i class="fa fa-question"></i> </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </table>
-                            {{ $groupes->links() }}
-                        </div>
-                    @else
-                        @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
-                    @endif
                 </div>
             </div>
         </div>

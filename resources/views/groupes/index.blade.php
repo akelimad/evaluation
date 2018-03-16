@@ -38,6 +38,8 @@
                                         <a href="javascript:void(0)" onclick="return chmGroupe.edit({sid: {{$survey->id}} ,gid: {{$g->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Modifier le groupe"> <i class="glyphicon glyphicon-pencil"></i> </a>
 
                                         <a href="javascript:void(0)" onclick="return chmQuestion.create({sid: {{$sid}} ,gid: {{$g->id}} })" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions au groupe"> <i class="fa fa-question"></i> </a>
+
+                                        <a href="{{ url('surveys/'.$sid.'/groupes/'.$g->id.'/questions') }}" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions au groupe"> <i class="fa fa-list"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

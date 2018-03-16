@@ -2,27 +2,24 @@
 <div class="content">
     <input type="hidden" name="id" value="{{ isset($o->id) ? $o->id : null }}">
     <input type="hidden" name="e_id" value="{{ isset($e->e_id) ? $e->e_id : null }}">
+    <input type="hidden" name="oid" value="{{ isset($oid) ? $oid : null }}">
     {{ csrf_field() }}
     <div class="form-group">
-        <label for="">Titre d'objectifs</label>
+        <label for="">Titre d'objectif</label>
         <input type="text" name="title" required="" class="form-control" placeholder="ex: Relation interne">
     </div>
     <div id="addLine-wrap">
         <div class="form-group">
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-9 col-sm-9">
                     <label class="control-label">Titre du critère </label>
                     <input type="text" class="form-control" name="objectifs[0][subTitle]" placeholder="ex: Travail en équipe" required="" />
                 </div>
-                <div class="col-md-2">
-                    <label class="control-label">note </label>
-                    <input type="text" class="form-control prevu" name="objectifs[0][note]" placeholder="Note" min="0" />
+                <div class="col-md-2 col-sm-2">
+                    <label class="control-label">Ponderation(%) </label>
+                    <input type="number" class="form-control realise" name="objectifs[0][ponderation]" placeholder="ex: 10" min="0" max="100" required="" />
                 </div>
-                <div class="col-md-2">
-                    <label class="control-label">Ponderation </label>
-                    <input type="number" class="form-control realise" name="objectifs[0][ponderation]" placeholder="0%" min="0" max="100" required="" />
-                </div>
-                <div class="col-md-1">
+                <div class="col-md-1 col-sm-1">
                     <label class="control-label"> &nbsp; </label>
                     <button type="button" class="btn btn-info addLine pull-right"><i class="fa fa-plus"></i></button>
                 </div>

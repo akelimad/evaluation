@@ -9,13 +9,11 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">Synthèse</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/evaluations')}}">Evaluations</a></li>
-                            <li><a href="">Carrieres</a></li>
-                            <li><a href="">Formations</a></li>
-                            <li><a href="">Competences</a></li>
-                            <li class="active"><a href="#">Objectifs</a></li>
-                            <li><a href="">Salaires</a></li>
-                            <li><a href="">Commentaires</a></li>
+                            @foreach($evaluations as $evaluation)
+                            <li class="{{ Request::segment(5) == $evaluation->title ? 'active':'' }}">
+                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}">{{ $evaluation->title }}</a>
+                            </li>
+                            @endforeach
                         </ul>
                         <div class="tab-content">
                             @if(count($objectifs)>0)
@@ -25,42 +23,52 @@
                                             <tr>
                                                 <th>Critères d'évaluation</th>
                                                 <th>Note</th>
-                                                <th>Pondération % </th>
+                                                <th>Apréciation</th>
+                                                <th>Pondération(%) </th>
+                                                <th>Objectif N+1 </th>
                                             </tr>
                                             @foreach($objectifs as $objectif)
                                                 <input type="hidden" name="parentObjectif[]" value="{{$objectif->id}}">
                                                 <tr>
-                                                    <td colspan="3" class="objectifTitle"> <b>{{ $objectif->title }}</b> </td>
+                                                    <td colspan="5" class="objectifTitle"> 
+                                                        {{ $objectif->title }} 
+                                                    </td>
                                                 </tr>
                                                 @foreach($objectif->children as $sub)
                                                 <tr>
                                                     <td>{{ $sub->title }}</td>
-                                                    <td class="criteres">
-                                                        <input type="text" id="slider" name="objectifs[{{$objectif->id}}][note][]" data-provide="slider" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="{{ isset($sub->note) ? $sub->note : '' }}" data-slider-tooltip="{{isset($sub->note) && $sub->note > 1 ? 'always' : '' }}" required >
+                                                    <td class="criteres text-center">
+                                                        <input type="text" id="slider" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($sub->id) ? App\Objectif::getObjectif($sub->id)->note : '0' }}" data-slider-tooltip="always" required >
                                                         <input type="hidden" name="subObjectifIds[{{$objectif->id}}][]" value="{{$sub->id}}">
                                                     </td>
                                                     <td>
+                                                        <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" class="form-control" value="{{App\Objectif::getObjectif($sub->id) ? App\Objectif::getObjectif($sub->id)->appreciation : '' }}">
+                                                    </td>
+                                                    <td class="text-center">
                                                         {{ $sub->ponderation }}
-                                                        <input type="hidden" name="objectifs[{{$objectif->id}}][ponderation][]" value="{{$sub->ponderation}}">
+                                                        <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" value="{{$sub->ponderation}}">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="checkbox" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" {{isset(App\Objectif::getObjectif($sub->id)->objNplus1) && App\Objectif::getObjectif($sub->id)->objNplus1 == 1 ? 'checked':''}}>
                                                     </td>
                                                 </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <td colspan="3" class="sousTotal"> 
-                                                        Sous-total  <span class="pull-right">{{$objectif->sousTotal ? $objectif->sousTotal : 0.00}}</span>
+                                                    <td colspan="5" class="sousTotal"> 
+                                                        Sous-total  <span class="badge badge-success pull-right">{{$objectif->sousTotal ? $objectif->sousTotal : 0.00}}</span>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                             <tr>
-                                                <td colspan="3" class="btn-warning">
-                                                    TOTAL DE L'ÉVALUATION  <span class="pull-right">
-                                                        {{ $total }}
-                                                    </span>
+                                                <td colspan="5" class="btn-warning">
+                                                    TOTAL DE L'ÉVALUATION  
+                                                    <span class="btn btn-info pull-right">{{ $total }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="3" class="btn-danger">
-                                                    NOTE FINALE  <span class="pull-right">0.00 %</span>
+                                                <td colspan="5" class="btn-danger">
+                                                    NOTE FINALE  
+                                                    <span class="btn btn-info pull-right"> {{ $total * 10 }} % </span>
                                                 </td>
                                             </tr>
                                         </table>

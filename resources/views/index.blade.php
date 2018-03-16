@@ -67,10 +67,18 @@
                                                 <td>
                                                     <a href="{{ url('entretiens/'.$e->id.'/u/'.Auth::user()->id) }}">{{$e->titre}}</a>
                                                 </td>
-                                                <td>{{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</td>
-                                                <td><span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty"> </span></td>
-                                                <td><span class="label label-danger empty"> </span></td>
-                                                <td><span class="label label-danger empty"> </span></td>
+                                                <td>
+                                                    {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
+                                                </td>
+                                                <td>
+                                                    <span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, Auth::user()->id) ? 'Vous avez rempli votre évaluation':'Vous avez une évaluation à remplir'}}"> </span>
+                                                </td>
+                                                <td>
+                                                    <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validé par votre mentor':'Pas encore validé par votre mentor'}}"> </span>
+                                                </td>
+                                                <td>
+                                                    <span class="label label-danger empty"> </span>
+                                                </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -189,7 +197,7 @@
                                     <table class="table table-hover table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Nom prénom </th>
+                                                <th>Nom & prénom </th>
                                                 <th>Fonction</th>
                                                 <th>Type d'évaluation</th>
                                                 <th>Collaborateur</th>
@@ -201,12 +209,24 @@
                                             @foreach($collaborateurs as $coll)
                                             @foreach($coll->entretiens as $en)
                                             <tr>
-                                                <td><a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a></td>
-                                                <td> {{ $coll->function ? $coll->function : '---'}} </td>
-                                                <td> <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a> </td>
-                                                <td><span class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty"> </span></td>
-                                                <td><span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty"> </span></td>
-                                                <td><span class="label label-danger empty"> </span></td>
+                                                <td>
+                                                    <a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>
+                                                </td>
+                                                <td> 
+                                                    {{ $coll->function ? $coll->function : '---'}} 
+                                                </td>
+                                                <td> 
+                                                    <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a> 
+                                                </td>
+                                                <td>
+                                                    <span class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($en->id, $coll->id) ? 'Rempli par '.$coll->name :'Pas encore rempli par '.$coll->name }}"> </span>
+                                                </td>
+                                                <td>
+                                                    <span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'Vous avez validé l\'évaluation de '.$coll->name :'Veuillez valider l\'évaluation de '.$coll->name}}"> </span>
+                                                </td>
+                                                <td>
+                                                    <span class="label label-danger empty"> </span>
+                                                </td>
                                             </tr>
                                             @endforeach
                                             @endforeach

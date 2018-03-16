@@ -20,7 +20,7 @@ Route::get('profile', 'UserController@profile');
 Route::get('users', 'UserController@indexUsers');
 Route::get('users/filter', 'UserController@filterUsers');
 Route::get('user/create', 'UserController@createUser');
-Route::get('user/{id}/edit', 'UserController@createUser');
+Route::get('user/{id}/edit', 'UserController@editUser');
 Route::post('user/store', 'UserController@storeUser');
 Route::get('user/{id}', 'UserController@show');
 Route::delete('user/{id}/delete', 'UserController@deleteUser');
@@ -52,7 +52,7 @@ Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 
-Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'ActiviteController@index');
+Route::get('entretiens/{e_id}/u/{uid}/Evaluations', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
 Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
 Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
@@ -62,12 +62,19 @@ Route::get('entretiens/{e_id}/skills/create', 'SkillController@create');
 Route::post('entretiens/{e_id}/skills/store', 'SkillController@store');
 Route::get('entretiens/{e_id}/skills/{id}/edit', 'SkillController@edit');
 
-Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
-Route::get('entretiens/{e_id}/objectifs/create', 'ObjectifController@create');
-Route::post('entretiens/{e_id}/objectifs/store', 'ObjectifController@store');
+Route::get('entretiens/{e_id}/u/{uid}/Objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::get('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs');
+
+Route::get('entretienObjectif/{oid}/objectifs/create', 'ObjectifController@create');
+Route::post('entretienObjectif/{oid}/objectifs/store', 'ObjectifController@store');
+
+Route::get('entretienObjectif', 'EntretienObjectifController@index');
+Route::get('entretienObjectif/create', 'EntretienObjectifController@create');
+Route::get('entretienObjectif/{id}/edit', 'EntretienObjectifController@edit');
+Route::post('entretienObjectif/store', 'EntretienObjectifController@store');
+Route::get('entretienObjectif/{oid}', 'EntretienObjectifController@show');
 
 Route::get('entretiens/{e_id}/formations', 'FormationController@index');
 Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');
@@ -113,5 +120,6 @@ Route::get('surveys/{sid}/groupes/{gid}/questions/create', 'QuestionController@c
 Route::post('surveys/{sid}/groupes/{gid}/questions/store', 'QuestionController@store');
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}', 'QuestionController@show');
+Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 
 Route::post('answers/store', 'AnswerController@store');

@@ -448,9 +448,9 @@ ul.user-data li i{
     border: none;
 }
 .objectifTitle{
-    background: #b1b6bf;
-    color: #1f1716;
-    font-size: 20px;
+    background: #405673;
+    color: #ddf5f3;
+    font-size: 19px;
     font-style: italic; 
 }
 .sousTotal{
@@ -464,4 +464,11 @@ ul.user-data li i{
 }
 .tooltip {
     cursor: pointer;
+}
+.checkboxError{
+    display: none;
+}
+.modal-body {
+    max-height: 400px;
+    overflow: auto;
 }

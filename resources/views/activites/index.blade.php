@@ -8,20 +8,18 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">Synthèse</a></li>
-                            <li class="active"><a href="#">Evaluations</a></li>
-                            <li><a href="">Carrieres</a></li>
-                            <li><a href="">Formations</a></li>
-                            <li><a href="">Competences</a></li>
-                            <li ><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/objectifs')}}">Objectifs</a></li>
-                            <li><a href="">Salaires</a></li>
-                            <li><a href="">Commentaires</a></li>
+                            @foreach($evaluations as $evaluation)
+                            <li class="{{ Request::segment(5) == $evaluation->title ? 'active':'' }}">
+                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}">{{ $evaluation->title }}</a>
+                            </li>
+                            @endforeach
                         </ul>
                         <div class="tab-content">
                             <div class="box-body mb40">
-                                @if(count($user->children)>0)
+                                @if(count(Auth::user()->children)>0 && $user->id != Auth::user()->id)
                                     @include('questions/survey2')
                                 @endif
-                                @if(count($user->children)<=0)
+                                @if($user->id == Auth::user()->id)
                                     @include('questions/survey')
                                 @endif
                             </div>

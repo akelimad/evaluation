@@ -22,9 +22,11 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($sid, $gid)
     {
-        //
+        $survey = Survey::find($sid);
+        $groupe = Groupe::find($gid);
+        return view('questions.index', compact('survey','groupe'));
     }
 
     /**
@@ -65,8 +67,8 @@ class QuestionController extends Controller
                 $question->save();
             }
         }
-        $url=url('surveys/'.$request->survey_id.'/groupes/'.$request->groupe_id.'/questions/'.$question->id);
-        $request->session()->flash('success', "La question à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour la consulter</a>");
+        //$url=url('surveys/'.$request->survey_id.'/groupes/'.$request->groupe_id.'/questions/'.$question->id);
+        $request->session()->flash('success', "La question à été ajouté avec suucès");
         if($question->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
             redirect('users');

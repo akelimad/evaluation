@@ -39,12 +39,22 @@
                                                 <div class="checkbox-item text-blue">
                                                     <input type="checkbox" name="choix[{{$evaluation->id}}][evaluation_id]" value="{{ $evaluation->id }}" title="Cochez/decochez si vous voulez que {{ $evaluation->title }} soit visible/invisible lors l'évaluation de cette entretien" data-toggle="tooltip" {{ in_array($evaluation->id, $e->evaluations->pluck('id')->toArray()) ? 'checked': '' }}>
                                                 </div>
-                                                <select name="choix[{{$evaluation->id}}][survey_id]" id="surveySelect" class="form-control" title="Choisissez le questionnaire qui sera affiché pour cette evaluation" data-toggle="tooltip">
-                                                    <option value="">Quest.</option>
+                                                @if($evaluation->title == "Evaluations")
+                                                <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez le questionnaire qui sera affiché pour cette evaluation" data-toggle="tooltip">
+                                                    <option value="">== Choisissez ==</option>
                                                     @foreach($surveys as $survey)
-                                                    <option value="{{$survey->id}}" {{ $survey->id == $evaluation->survey_id ? 'selected':'' }} >{{$survey->title}}</option>
+                                                    <option value="{{$survey->id}}" {{ $survey->id == $e->survey_id ? 'selected':'' }} >{{$survey->title}}</option>
                                                     @endforeach
                                                 </select>
+                                                @endif
+                                                @if($evaluation->title == "Objectifs")
+                                                <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez le questionnaire qui sera affiché pour cette evaluation" data-toggle="tooltip">
+                                                    <option value="">== Choisissez ==</option>
+                                                    @foreach($objectifs as $obj)
+                                                    <option value="{{$obj->id}}" {{ $obj->id == $e->objectif_id ? 'selected':'' }} >{{$obj->title}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @endif
                                             </td>
                                             @endforeach
                                             <td class="text-center">

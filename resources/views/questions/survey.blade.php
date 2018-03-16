@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-12 survey">
         @if(count($groupes)>0)
-        <form action="{{url('answers/store')}}" method="post">
+        <form action="{{url('answers/store')}}" method="post" class="surveyForm">
             <input type="hidden" name="entretien_id" value="{{$e->id}}">
             <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
             {{ csrf_field() }}
@@ -21,6 +21,7 @@
                                 @elseif($q->type == 'textarea')
                                 <textarea name="answers[{{$q->id}}][]" class="form-control" >{{App\Answer::getAnswers($q->id, $user->id) ? App\Answer::getAnswers($q->id, $user->id)->answer : '' }}</textarea>
                                 @elseif($q->type == "checkbox")
+                                    <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                     @foreach($q->children as $child)
                                         <div class="survey-checkbox">
                                             <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ in_array($child->id, App\Answer::getAnswers($q->id, $user->id)) ? 'checked' : '' }}>
@@ -42,7 +43,7 @@
                     </div>
                 @endforeach
             </div>
-            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Valider vos réponses</button>
+            <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Valider vos réponses</button>
         </form>
         @else
             <p class="alert alert-default">Aucune donnée disponible !</p>

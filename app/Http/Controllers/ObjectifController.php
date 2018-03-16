@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use App\Entretien;
 use App\Objectif;
+use Auth;
+use App\EntretienObjectif;
 
 
 class ObjectifController extends Controller
@@ -35,17 +37,19 @@ class ObjectifController extends Controller
     public function index($e_id, $uid)
     {
         $entretien = Entretien::find($e_id);
-        $objectifs = Objectif::where('parent_id', 0)->paginate(10);
+        $evaluations = $entretien->evaluations;
+        $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $entretien->objectif_id)->paginate(10);
         $total = 0;
         foreach ($objectifs as $obj) {
             $total += $obj->sousTotal; 
         }
         $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
         return view('objectifs.index', [
+            'evaluations' => $evaluations,
             'objectifs' => $objectifs, 
             'e'=> $entretien,
             'user'=> $user,
-            'total'=> $total,
+            'total'=> $this->cutNum($total/$objectifs->count()),
         ]);
     }
 
@@ -54,11 +58,10 @@ class ObjectifController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($e_id)
+    public function create($oid)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        echo view('objectifs.form', ['e' => $entretien]);
+        echo view('objectifs.form', ['oid'=> $oid]);
         $content = ob_get_clean();
         return ['title' => 'Ajouter un objectif', 'content' => $content];
     }
@@ -69,7 +72,7 @@ class ObjectifController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($e_id ,Request $request)
+    public function store(Request $request)
     {
         $rules = [];
         $validator = Validator::make($request->all(), $rules);
@@ -88,11 +91,11 @@ class ObjectifController extends Controller
             // }else{
                 $objectif = new Objectif();
                 $objectif->title = $request->title;
+                $objectif->entretienobjectif_id = $request->oid;
                 $objectif->save();
                 foreach ($request->objectifs as $obj) {
                     $subObj = new Objectif();
                     $subObj->title = $obj['subTitle'];
-                    $subObj->note = $obj['note'];
                     $subObj->ponderation = $obj['ponderation'];
                     $subObj->parent_id = $objectif->id;
                     $subObj->save();
@@ -140,25 +143,30 @@ class ObjectifController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    function cutNum($num, $precision = 2){
+        return floor($num).substr($num-floor($num),1,$precision+1);
+    }
+
     public function updateNoteObjectifs(Request $request)
     {
-        foreach ($request->objectifs as $key => $value) {
-            $objectifs[$key] = array_combine($request->subObjectifIds[$key], $request->objectifs[$key]['note']);
-        }
-        foreach ($objectifs as $key => $arrySubObj) {
-            foreach ($arrySubObj as $id => $note) {
-                $obj = Objectif::find($id);
-                $obj->note = $note;
-                $obj->save();
-            }
-        }
-        foreach ($request->objectifs as $key => $objectifs) {
+        $user = Auth::user();
+        foreach ($request->objectifs as $key => $subObjectif) {
             $sousTotal = 0;
-            for ($i=0; $i < count($objectifs['note']); $i++) { 
-                $sousTotal += ((($objectifs['note'][$i])/10) * (($objectifs['ponderation'][$i])/100));
+            $sumPonderation = 0;
+            foreach ($subObjectif as $id => $array) {
+                $user->objectifs()->sync([$id => 
+                    [
+                        'note'=> $array[0], 
+                        'appreciation'=> $array[1],
+                        'objNplus1'=> isset($array[3]) && $array[3] == "on" ? 1 : 0
+                    ]
+                ], false);
+                $sumPonderation += $array[2];
+                $sousTotal +=  ($array[0] * $array[2]);
             }
             $objectif = Objectif::find($key);
-            $objectif->sousTotal = $sousTotal*10;
+            $objectif->sousTotal = $this->cutNum($sousTotal/$sumPonderation, 2);
             $objectif->save(); 
         }
         return redirect()->back();

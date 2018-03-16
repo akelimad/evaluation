@@ -141,18 +141,7 @@
             <li class="active">
                 <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
             </li>
-
-<!--             <li class="treeview">
-                <a href="{{url('/')}}">
-                    <i class="fa fa-comments"></i> <span>Mes entretiens</span>
-                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-long-arrow-right"></i> D'évaluation</a></li>
-                    <li><a href="{{ url('entretiens/professionnels') }}"><i class="fa fa-long-arrow-right"></i> Professionnels</a></li>
-                </ul>
-            </li> -->
-            @role(["ADMIN", "MENTOR"])
+            @role(["RH"])
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-users"></i> <span>Mes collaborateurs</span>
@@ -213,7 +202,7 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                       </a>
                       <ul class="treeview-menu">
-                        <li><a href="{{ url('objectifs') }}"><i class="fa fa-long-arrow-right"></i> Objectifs </a></li>
+                        <li><a href="{{ url('entretienObjectif') }}"><i class="fa fa-long-arrow-right"></i> Objectifs </a></li>
                       </ul>
                     </li>
                 </ul>
@@ -236,7 +225,7 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        <strong>Copyright &copy; <script>document.write(new Date().getFullYear()) </script> </strong> All rights
+        <strong>Copyright &copy; <script>document.write(new Date().getFullYear()) </script> </strong> Lycom All rights
         reserved.
     </footer>
 

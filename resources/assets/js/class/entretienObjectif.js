@@ -1,35 +1,29 @@
 import $ from 'jquery'
 
-export default class chmObjectif {
+export default class chmEntretienObjectif {
 
-  static create (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/objectifs/create')}, {
+  static create () {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/create')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmObjectif.store'
+        callback: 'chmEntretienObjectif.store'
       },
       footer: {
         label: 'Sauvegarder'
-      },
-      width: 700
+      }
     })
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.e_id + '/objectifs/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.sid + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmObjectif.store'
+        callback: 'chmEntretienObjectif.store'
       },
       footer: {
         label: 'Mettre à jour'
-      },
-      width: 700
+      }
     })
-  }
-
-  static show (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/' + params.id)})
   }
 
   static store (event) {
@@ -41,11 +35,10 @@ export default class chmObjectif {
     btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
     var id = $('[name="id"]').val()
-    var oid = $('[name="oid"]').val()
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('entretienObjectif/' + oid + '/objectifs/store'),
+      url: window.chmSite.url('entretienObjectif/store'),
       data: data,
       processData: false,
       contentType: false,
@@ -70,7 +63,7 @@ export default class chmObjectif {
 
   static delete (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('user/' + params.id + '/delete'), data: {'_token': token}}, {
+    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('surveys/' + params.id + '/delete'), data: {'_token': token}}, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')

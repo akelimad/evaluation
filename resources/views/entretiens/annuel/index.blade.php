@@ -48,8 +48,8 @@
                                             @endif
                                         </td>
                                         <td>{{$user->parent ? $user->parent->function : '---'}}</td>
-                                        <td><span class="label label-danger empty"> </span></td>
-                                        <td><span class="label label-danger empty"> </span></td>
+                                        <td><span class="label label-{{App\Entretien::answered($entretien->id, $user->id) ? 'success':'danger'}} empty"> </span></td>
+                                        <td><span class="label label-{{App\Entretien::answeredMentor($entretien->id, $user->id, App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span></td>
                                         <td><span class="label label-danger empty"> </span></td>
                                         <td class="text-center">
                                             <a href="" class="btn-primary icon-fill"> <i class="fa fa-print"></i> </a>
@@ -89,7 +89,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {{ $entretiens->links() }}
+                    {!! $entretiens->render() !!}
                     @else
                         <p class="alert alert-default">Aucune donnée disponible !</p>
                     @endif

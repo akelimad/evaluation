@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Auth;
 use Mail;
 use Session;
+use App\EntretienObjectif;
 
 class EntretienController extends Controller
 {   
@@ -64,8 +65,9 @@ class EntretienController extends Controller
     {
         $evaluations = Evaluation::all();
         $surveys = Survey::select('id', 'title')->get();
+        $objectifs = EntretienObjectif::select('id', 'title')->get();
         $entretiens = Entretien::all();
-        return view('entretiens.listing', compact('entretiens', 'evaluations', 'surveys'));
+        return view('entretiens.listing', compact('entretiens', 'evaluations', 'surveys', 'objectifs'));
     }
 
     /**
@@ -79,7 +81,6 @@ class EntretienController extends Controller
         return view('entretiens/annuel.index', compact('entretiens'));
     }
 
-
     /**
      * Display a listing of the resource.
      *
@@ -89,12 +90,13 @@ class EntretienController extends Controller
     {
         $entretien = Entretien::find($e_id);
         $evaluations = $entretien->evaluations;
-        //dd($evaluations);
+        // $evaluation = Evaluation::where('title', $type)->first();
         $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
         return view('entretiens/annuel.show', [
             'e' => $entretien, 
             'user'=> $user, 
-            'evaluations' => $evaluations
+            'evaluations' => $evaluations,
+            // 'evaluation' => $evaluation
         ]);
     }
 
@@ -130,6 +132,15 @@ class EntretienController extends Controller
         // }else{
         //     $entretien = Entretien::find($request->id);
         // }
+        $rules = [
+            'date'      => 'required',
+            'date_limit' => 'required',
+            'titre'  => 'required|min:3',
+        ];
+        $validator = \Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return ["status" => "danger", "message" => $validator->errors()->all()];
+        }
         $evaluations = Evaluation::pluck('id')->toArray(); //to get ids of all object in one array
         $entretien = new Entretien();
         $entretien->date = Carbon::createFromFormat('d-m-Y', $request->date);
@@ -226,16 +237,17 @@ class EntretienController extends Controller
 
     public function storeEntretienEvals(Request $request)
     {
-        //dd($request->choix);
         $evaluationsIds=[];
         $entretien = Entretien::find($request->entretien_id);
         foreach ($request->choix as $key => $choix) {
             if(isset($choix['evaluation_id'])){
                 $evaluationsIds[]=$choix['evaluation_id'];
             }
-            if(!empty($choix['survey_id'])){
-                Evaluation::find($key)->update(['survey_id'=> $choix['survey_id']]);
-            }
+        }
+        foreach ($request->entretiens as $key => $value) {
+            $entretien->survey_id = $value[0];
+            $entretien->objectif_id = $value[1];
+            $entretien->save();
         }
         $entretien->evaluations()->sync($evaluationsIds);
 
