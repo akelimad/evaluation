@@ -27,7 +27,7 @@
                                     <td class="text-center">  
                                         <a href="javascript:void(0)" onclick="return chmEntretienObjectif.edit({sid: {{$objectif->id}}})" class="btn-primary icon-fill" title="Modifier ce questionnaire" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmObjectif.create({oid: {{$objectif->id}}})" class="btn-warning icon-fill" title="Ajouter des section d'objectifs" data-toggle="tooltip"> <i class="fa fa-plus"></i> </a>
-                                        <a href="{{ url('entretienObjectif/'.$objectif->id) }}"  class="btn-info icon-fill" title="preview" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmEntretienObjectif.show({id: {{$objectif->id}} })" class="btn-info icon-fill" title="preview" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

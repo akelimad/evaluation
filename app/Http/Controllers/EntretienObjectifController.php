@@ -65,8 +65,11 @@ class EntretienObjectifController extends Controller
      */
     public function show($id)
     {
+        ob_start();
         $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $id)->paginate(10);
-        return view('entretienObjectif.show', compact('objectifs'));
+        echo view('entretienObjectif.show', compact('objectifs'));
+        $content = ob_get_clean();
+        return ['title' => 'Visualiser un objectif d entretien', 'content' => $content];
     }
 
     /**

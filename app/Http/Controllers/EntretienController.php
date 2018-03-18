@@ -134,12 +134,18 @@ class EntretienController extends Controller
         // }
         $rules = [
             'date'      => 'required',
-            'date_limit' => 'required',
+            'date_limit' => 'required|after:date',
             'titre'  => 'required|min:3',
         ];
         $validator = \Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return ["status" => "danger", "message" => $validator->errors()->all()];
+        $messages = $validator->errors();
+        $survey = Survey::where('title', 'standard')->first();
+        $objectif = EntretienObjectif::where('title', 'standard')->first();
+        if($survey  == null || $objectif == null){
+            $messages->add('null_survey_obj', "Aucun questionnaire et/ou objectif standard n'a été trouvé ! il faut les créer tout d'abord.");
+        }
+        if(count($messages)>0){
+            return ["status" => "danger", "message" => $messages];
         }
         $evaluations = Evaluation::pluck('id')->toArray(); //to get ids of all object in one array
         $entretien = new Entretien();
@@ -147,6 +153,8 @@ class EntretienController extends Controller
         $entretien->date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit); 
         $entretien->titre = $request->titre;
         $entretien->created_by = Auth::user()->id;
+        $entretien->survey_id = $survey ? $survey->id : 0;
+        $entretien->objectif_id = $objectif ? $objectif->id : 0;
         $entretien->save();
         $entretien->evaluations()->attach($evaluations);
 
@@ -245,8 +253,8 @@ class EntretienController extends Controller
             }
         }
         foreach ($request->entretiens as $key => $value) {
-            $entretien->survey_id = $value[0];
-            $entretien->objectif_id = $value[1];
+            if(isset($value[0])) $entretien->survey_id = $value[0];
+            if(isset($value[1])) $entretien->objectif_id = $value[1];
             $entretien->save();
         }
         $entretien->evaluations()->sync($evaluationsIds);

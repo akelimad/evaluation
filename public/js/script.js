@@ -61,5 +61,17 @@ $(function(){
             return false;
         }
     });
+
+    $(".realise").on('keyup', function(){
+        var id = $(this).data('id')
+        var nMoins1 = $(".nMoins1-"+id).html()
+        var realise = $(this).val()
+        var ecart   = $(".ecart-"+id).html(realise - nMoins1);
+        if(ecart.html() < 0){
+            $(".ecart-"+id).css('color', 'red')
+        }else{
+            $(".ecart-"+id).css('color', 'green')
+        }
+    })
   
 })

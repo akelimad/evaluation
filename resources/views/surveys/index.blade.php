@@ -37,7 +37,7 @@
                                         <a href="javascript:void(0)" onclick="return chmSurvey.edit({sid: {{$survey->id}}})" class="btn-primary icon-fill" title="Modifier ce questionnaire" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmGroupe.create({sid: {{$survey->id}}})" class="btn-warning icon-fill" title="Ajouter un groupe pour ce questionnaire" data-toggle="tooltip"> <i class="fa fa-plus"></i> </a>
                                         <a href="{{ url('surveys/'.$survey->id.'/groupes') }}" class="btn-info icon-fill" title="Liste des groupes du questionnaire" data-toggle="tooltip"> <i class="fa fa-list"></i> </a>
-                                        <a href="{{ url('surveys/'.$survey->id.'/preview') }}" class="btn-danger icon-fill" title="Voir le questionnaire" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$survey->id}} })" class="btn-danger icon-fill" title="Voir le questionnaire" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

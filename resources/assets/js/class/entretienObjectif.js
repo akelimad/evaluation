@@ -26,6 +26,10 @@ export default class chmEntretienObjectif {
     })
   }
 
+  static show (params) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.id)})
+  }
+
   static store (event) {
     event.preventDefault()
     var form = $(event.target)[0]

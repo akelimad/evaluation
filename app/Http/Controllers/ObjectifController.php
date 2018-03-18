@@ -9,7 +9,7 @@ use App\Entretien;
 use App\Objectif;
 use Auth;
 use App\EntretienObjectif;
-
+use App\Objectif_user;
 
 class ObjectifController extends Controller
 {
@@ -150,20 +150,23 @@ class ObjectifController extends Controller
 
     public function updateNoteObjectifs(Request $request)
     {
-        $user = Auth::user();
+        //dd($request->objectifs);
+        $user= Auth::user();
         foreach ($request->objectifs as $key => $subObjectif) {
             $sousTotal = 0;
             $sumPonderation = 0;
             foreach ($subObjectif as $id => $array) {
-                $user->objectifs()->sync([$id => 
+                $user->objectifs()->attach([$id => 
                     [
-                        'note'=> $array[0], 
-                        'appreciation'=> $array[1],
-                        'objNplus1'=> isset($array[3]) && $array[3] == "on" ? 1 : 0
+                        'entretien_id' => $request->entretien_id,
+                        'note'=> isset($array[0]) && $array[0] != "" ? $array[0]: "", 
+                        'realise'=> isset($array[1]) && $array[1] != "" ? $array[1]: "", 
+                        'appreciation'=> $array[2],
+                        'objNplus1'=> isset($array[4]) && $array[4] == "on" ? 1 : 0
                     ]
-                ], false);
-                $sumPonderation += $array[2];
-                $sousTotal +=  ($array[0] * $array[2]);
+                ]);
+                $sumPonderation += $array[3];
+                $sousTotal +=  ($array[0] * $array[3]);
             }
             $objectif = Objectif::find($key);
             $objectif->sousTotal = $this->cutNum($sousTotal/$sumPonderation, 2);

@@ -48,7 +48,7 @@
                                                 </select>
                                                 @endif
                                                 @if($evaluation->title == "Objectifs")
-                                                <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez le questionnaire qui sera affiché pour cette evaluation" data-toggle="tooltip">
+                                                <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez l'objectif qui sera affiché pour cette evaluation" data-toggle="tooltip">
                                                     <option value="">== Choisissez ==</option>
                                                     @foreach($objectifs as $obj)
                                                     <option value="{{$obj->id}}" {{ $obj->id == $e->objectif_id ? 'selected':'' }} >{{$obj->title}}</option>

@@ -87,8 +87,7 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <a href="{{url('/')}}" class="btn btn-default"> Annuler </a>
-                                    <a onclick="return chmEntretien.edit({e_id:{{ $e->id }}})" class="btn btn-success"> Mettre à jour </a>
+                                    <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
                                 </div>
                             </div>
                         </div>

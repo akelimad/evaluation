@@ -217,7 +217,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="#"><i class="fa fa-home"></i> Accueil </a></li>
                 <li class="active">Tableau de board</li>
             </ol>
         </section>

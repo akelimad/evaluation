@@ -108,7 +108,7 @@ Route::get('surveys/create', 'SurveyController@create');
 Route::post('surveys/store', 'SurveyController@store');
 Route::get('surveys/{id}/edit', 'SurveyController@edit');
 Route::delete('surveys/{id}/delete', 'SurveyController@delete');
-Route::get('surveys/{sid}/preview', 'SurveyController@preview');
+Route::get('surveys/{id}', 'SurveyController@show');
 
 Route::get('surveys/{sid}/groupes', 'GroupeController@index');
 Route::get('surveys/{sid}/groupes/create', 'GroupeController@create');

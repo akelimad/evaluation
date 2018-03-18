@@ -62,23 +62,16 @@ class SurveyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($sid)
     {
-        //
-    }    
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function preview($sid)
-    {
+        ob_start();
         $survey = Survey::find($sid);
         $groupes = $survey->groupes;
-        return view('surveys.preview', compact('groupes', 'sid'));
-    }
+        echo view('surveys.preview', compact('groupes', 'sid'));
+        $content = ob_get_clean();
+        return ['title' => 'Visualiser un questionnaire', 'content' => $content];
+    }    
+
 
     /**
      * Show the form for editing the specified resource.

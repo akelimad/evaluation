@@ -27,8 +27,15 @@ class Objectif extends Model
         return $this->belongsToMany('App\User');
     }
 
-    public static function getObjectif($id){
-        $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $id)->first();
+    public static function getObjectif($eid, $oid){
+        $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('entretien_id', $eid)->where('objectif_id', $oid)->first();
         return $objectif;
     }
+
+    public static function getNmoins1Note($oid){
+        $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $oid)->skip(1)->first();
+        return $objectif;
+    }
+
+
 }

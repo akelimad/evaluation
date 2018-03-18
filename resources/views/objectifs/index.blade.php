@@ -19,6 +19,7 @@
                             @if(count($objectifs)>0)
                                 <div class="box-body table-responsive no-padding mb40">
                                     <form action="{{url('objectifs/updateNoteObjectifs')}}">
+                                        <input type="hidden" name="entretien_id" value="{{$e->id}}">
                                         <table class="table table-hover table-bordered table-inversed-blue">
                                             <tr>
                                                 <th>Critères d'évaluation</th>
@@ -38,18 +39,41 @@
                                                 <tr>
                                                     <td>{{ $sub->title }}</td>
                                                     <td class="criteres text-center">
-                                                        <input type="text" id="slider" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($sub->id) ? App\Objectif::getObjectif($sub->id)->note : '0' }}" data-slider-tooltip="always" required >
                                                         <input type="hidden" name="subObjectifIds[{{$objectif->id}}][]" value="{{$sub->id}}">
+                                                        
+                                                        <input type="text" id="slider" placeholder="Votre note" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id, $sub->id) ? App\Objectif::getObjectif($e->id, $sub->id)->note : '0' }}" data-slider-tooltip="" style="display: {{App\Objectif::getObjectif($e->id, $sub->id)  && App\Objectif::getObjectif($e->id, $sub->id)->objNplus1 == 0 ? 'none':'' }}" >
+                                                        
+                                                        <table class="table table-bordered" style="display: {{App\Objectif::getObjectif($e->id, $sub->id)  && App\Objectif::getObjectif($e->id, $sub->id)->objNplus1 == 1 ? 'none':'' }}">
+                                                            <tr>
+                                                                <td>N-1</td>
+                                                                <td>Realisé</td>
+                                                                <td>Ecart</td>
+                                                                <td>N+1</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="nMoins1-{{$sub->id}}" > {{App\Objectif::getNmoins1Note($sub->id) ? App\Objectif::getNmoins1Note($sub->id)->note : ''}} </span>
+                                                                </td>
+                                                                <td >
+                                                                    <input type="text" placeholder="Ex: 10" class="text-center realise" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-id="{{$sub->id}}">
+                                                                </td>
+                                                                <td>
+                                                                    <span class="ecart-{{$sub->id}}"></span>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </table>
+                                                        
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" class="form-control" value="{{App\Objectif::getObjectif($sub->id) ? App\Objectif::getObjectif($sub->id)->appreciation : '' }}">
+                                                        <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" class="form-control" value="{{App\Objectif::getObjectif($e->id, $sub->id) ? App\Objectif::getObjectif($e->id, $sub->id)->appreciation : '' }}" placeholder="Pourquoi cette note ?">
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $sub->ponderation }}
                                                         <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" value="{{$sub->ponderation}}">
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="checkbox" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" {{isset(App\Objectif::getObjectif($sub->id)->objNplus1) && App\Objectif::getObjectif($sub->id)->objNplus1 == 1 ? 'checked':''}}>
+                                                        <input type="checkbox" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" {{isset(App\Objectif::getObjectif($e->id, $sub->id)->objNplus1) && App\Objectif::getObjectif($e->id, $sub->id)->objNplus1 == 1 ? 'checked':''}}>
                                                     </td>
                                                 </tr>
                                                 @endforeach

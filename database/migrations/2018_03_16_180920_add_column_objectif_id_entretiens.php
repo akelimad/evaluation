@@ -13,6 +13,8 @@ class AddColumnObjectifIdEntretiens extends Migration
     public function up()
     {
         Schema::table('entretiens', function (Blueprint $table) {
+            $table->integer('survey_id')->after('created_by')->unsigned();
+            $table->foreign('survey_id')->references('id')->on('surveys');
             $table->integer('objectif_id')->unsigned()->after('survey_id');
             $table->foreign('objectif_id')->references('id')->on('entretienobjectifs')
                 ->onUpdate('cascade')->onDelete('cascade');

@@ -5,6 +5,7 @@
         <h4 class="alert alert-info"> {{ $user->name." ".$user->last_name }} </h4>
         <div class="panel-group">
             @foreach($groupes as $g)
+                @if(count($g->questions)>0)
                 <div class="panel panel-info">
                     <div class="panel-heading">{{ $g->name }}</div>
                     <div class="panel-body">
@@ -37,6 +38,7 @@
                     @endforelse
                     </div>
                 </div>
+                @endif
             @endforeach
         </div>
     </div>
@@ -49,6 +51,7 @@
             {{ csrf_field() }}
             <div class="panel-group">
                 @foreach($groupes as $g)
+                    @if(count($g->questions)>0)
                     <div class="panel panel-info">
                         <div class="panel-heading">{{ $g->name }}</div>
                         <div class="panel-body">
@@ -82,8 +85,10 @@
                         @endforelse
                         </div>
                     </div>
+                    @endif
                 @endforeach
             </div>
+            <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
             <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Valider vos réponses</button>
         </form>
     </div>
