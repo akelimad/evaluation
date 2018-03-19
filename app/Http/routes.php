@@ -62,6 +62,7 @@ Route::get('skills/create', 'SkillController@create');
 Route::post('skills/store', 'SkillController@store');
 Route::get('skills/{id}/edit', 'SkillController@edit');
 Route::get('entretiens/{e_id}/u/{uid}/Competences', 'SkillController@index');
+Route::get('skills/updateUserSkills', 'SkillController@updateUserSkills');
 
 Route::get('entretiens/{e_id}/u/{uid}/Objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');

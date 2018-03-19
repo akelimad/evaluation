@@ -18,7 +18,8 @@
                         <div class="tab-content">
                             @if(count($skills)>0)
                                 <div class="box-body table-responsive no-padding mb40">
-                                    <form action="">
+                                    <form action="{{ url('skills/updateUserSkills') }}">
+                                        <input type="hidden" name="entretien_id" value="{{$e->id}}">
                                         <table class="table table-hover table-bordered table-inversed-blue text-center">
                                             <tr>
                                                 <th>Axe</th>
@@ -37,13 +38,13 @@
                                                 <td> {{ $skill->categorie ? $skill->categorie : '---' }} </td>
                                                 <td> {{ $skill->competence ? $skill->competence : '---' }} </td>
                                                 <td>
-                                                    <input type="number" min="0" max="10">
+                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][objectif]">
                                                 </td><td>
-                                                    <input type="number" min="0" max="10">
+                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][auto]">
                                                 </td><td>
-                                                    <input type="number" min="0" max="10">
+                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][nplus1]">
                                                 </td><td>
-                                                    <input type="number" min="0" max="10">
+                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][ecart]">
                                                 </td>
                                             </tr>
                                             @endforeach

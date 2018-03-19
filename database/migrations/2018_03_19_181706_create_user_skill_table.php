@@ -12,7 +12,7 @@ class CreateUserSkillTable extends Migration
      */
     public function up()
     {
-        Schema::create('skill_user', function (Blueprint $table) {
+        Schema::create('skill_users', function (Blueprint $table) {
             $table->integer('skill_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('entretien_id')->unsigned();
@@ -34,6 +34,6 @@ class CreateUserSkillTable extends Migration
      */
     public function down()
     {
-        Schema::drop('skill_user');
+        Schema::drop('skill_users');
     }
 }

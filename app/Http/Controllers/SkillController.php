@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Entretien;
 use App\Skill;
+use App\Skill_user;
+use Auth;
 
 class SkillController extends Controller
 {
@@ -116,9 +118,20 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateUserSkills(Request $request)
     {
-        //
+        foreach ($request->skills as $key => $value) {
+            $skill = new Skill_user();
+            $skill->skill_id = $key;
+            $skill->user_id = Auth::user()->id;
+            $skill->entretien_id = $request->entretien_id;
+            $skill->objectif = $value['objectif'];
+            $skill->auto = $value['auto'];
+            $skill->nplus1 = $value['nplus1'];
+            $skill->ecart = $value['ecart'];
+            $skill->save();
+        }
+        return redirect()->back();
     }
 
     /**
