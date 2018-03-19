@@ -109,7 +109,7 @@ class EntretienController extends Controller
     {
         ob_start();
         if(Auth::user()->hasRole('ADMIN')){
-            $users = User::select('id', 'email')->where('id', '!=', Auth::user()->id)->get();
+            $users = User::select('id', 'email')->get();
         }else{
             $users = Auth::user()->children;
         }

@@ -150,7 +150,6 @@ class ObjectifController extends Controller
 
     public function updateNoteObjectifs(Request $request)
     {
-        //dd($request->objectifs);
         $user= Auth::user();
         foreach ($request->objectifs as $key => $subObjectif) {
             $sousTotal = 0;

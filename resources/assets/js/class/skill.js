@@ -3,9 +3,7 @@ import $ from 'jquery'
 export default class chmSkill {
 
   static create () {
-    var eid = $('.addBtn').data('id')
-    console.log(eid)
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + eid + '/skills/create')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('skills/create')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmSkill.store'
@@ -18,7 +16,7 @@ export default class chmSkill {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.e_id + '/skills/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('skills/' + params.id + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmSkill.store'
@@ -43,11 +41,10 @@ export default class chmSkill {
     btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
     var id = $('[name="id"]').val()
-    var eid = $('.addBtn').data('id')
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('entretiens/' + eid + '/skills/store'),
+      url: window.chmSite.url('skills/store'),
       data: data,
       processData: false,
       contentType: false,

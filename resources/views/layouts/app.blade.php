@@ -205,6 +205,14 @@
                         <li><a href="{{ url('entretienObjectif') }}"><i class="fa fa-long-arrow-right"></i> Objectifs </a></li>
                       </ul>
                     </li>
+                    <li class="treeview">
+                      <a href="#"><i class="fa fa-help"></i> <span>Compétences</span>  
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                      </a>
+                      <ul class="treeview-menu">
+                        <li><a href="{{ url('skills') }}"><i class="fa fa-long-arrow-right"></i> Compétences </a></li>
+                      </ul>
+                    </li>
                 </ul>
             </li>
             @endrole

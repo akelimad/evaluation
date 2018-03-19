@@ -17,20 +17,26 @@ class Answer extends Model
         return $this->belongsTo('App\User');
     }
 
-    public static function getAnswers($qid, $uid){
-        $question = Question::find($qid);
-        $answers_id = [];
-        if(count($question->children)>0){
-            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->get()->toArray();
-            foreach ($answers as $answer) {
-                foreach ($answer as $a) {
-                    $answers_id[] = $a;
+    public static function getAnswers($qid, $uid, $eid){
+        $issetAnsewrs = Token::where('entretien_id', $eid)->where('user_id', $uid)->first();
+        if($issetAnsewrs){
+            $question = Question::find($qid);
+            $answers_id = [];
+            if(count($question->children)>0){
+                $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->get()->toArray();
+                foreach ($answers as $answer) {
+                    foreach ($answer as $a) {
+                        $answers_id[] = $a;
+                    }
                 }
+                return $answers_id;
+            }else{
+                $answer = Answer::where('question_id', $qid)->where('user_id', $uid)->first();
+                return $answer;
             }
-            return $answers_id;
         }else{
-            $answer = Answer::where('question_id', $qid)->where('user_id', $uid)->first();
-            return $answer;
+            $answers_id = [];
+            return null;
         }
     }
 }

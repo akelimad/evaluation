@@ -45,7 +45,7 @@ class AnswerController extends Controller
                 $a = new Answer();
                 $a->answer      = $answer;
                 $a->question_id = $key;
-                $a->user_id = $request->user_id;
+                $a->user_id = isset($request->mentor_id) && !empty($request->mentor_id) ? $request->mentor_id : $request->user_id;
                 $a->save();
             }
         }

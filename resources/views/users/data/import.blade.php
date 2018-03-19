@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-md-8">
                                 <p>
-                                    <a href="{{asset('data/user_modele.csv')}}" class="btn btn-warning"> Télécharger un modèle au format csv </a>
+                                    <a href="{{ asset('data/modele_user.csv') }}" class="btn btn-warning"> Télécharger un modèle au format csv </a>
                                 </p>
                                 <p class="help-block">
                                     Voici les consignes à respecter pour importer ou mettre à jour la liste de compte :

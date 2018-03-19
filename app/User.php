@@ -29,7 +29,11 @@ class User extends Authenticatable
     public static function getMentor($uid)
     {
         $user = User::findOrFail($uid);
-        return $user->parent;
+        if($user){
+            return $user->parent;
+        }else{
+            return $user;
+        }
     }
 
     public function parent()

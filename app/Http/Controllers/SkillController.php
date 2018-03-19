@@ -25,11 +25,24 @@ class SkillController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id)
+    public function index($e_id, $uid)
     {
-        $entretien = Entretien::find($e_id);
-        $skills = $entretien->skills;
-        return view('skills.index', ['skills' => $skills, 'e'=> $entretien]);
+        $e = Entretien::find($e_id);
+        $evaluations = $e->evaluations;
+        $skills = Skill::paginate(10);
+        $user = $e->users()->where('entretien_user.user_id', $uid)->first();
+        return view('skills.index', compact('e', 'evaluations','skills', 'user'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexAdmin()
+    {
+        $skills = Skill::paginate(10);
+        return view('skills.indexAdmin', compact('skills'));
     }
 
     /**
@@ -37,11 +50,10 @@ class SkillController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($e_id)
+    public function create()
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        echo view('skills.form', ['e' => $entretien]);
+        echo view('skills.form');
         $content = ob_get_clean();
         return ['title' => 'Ajouter une compétence', 'content' => $content];
     }
@@ -52,19 +64,17 @@ class SkillController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($e_id, Request $request)
+    public function store(Request $request)
     {
         if($request->id == null ){
             $skill = new Skill();
         }else{
             $skill =  Skill::find($request->id);
         }
-        $skill->domaine = $request->domaine;
-        $skill->titre = $request->titre;
-        $skill->niveau = $request->niveau;
-        $skill->commentaire = $request->commentaire;
-        $skill->transmit = $request->transmit == "on" ? 1 : 0;
-        $skill->entretien_id = $e_id;
+        $skill->axe = $request->axe;
+        $skill->famille = $request->famille;
+        $skill->categorie = $request->categorie;
+        $skill->competence = $request->competence;
         $skill->save();
         if($skill->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -90,12 +100,11 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($e_id, $id)
+    public function edit($id)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        $skill = Skill::find($id);
-        echo view('skills.form', ['s' => $skill, 'e'=>$entretien]);
+        $s = Skill::find($id);
+        echo view('skills.form', compact('s'));
         $content = ob_get_clean();
         return ['title' => 'Modifier une compétence', 'content' => $content];
     }

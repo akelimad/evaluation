@@ -472,3 +472,16 @@ ul.user-data li i{
     max-height: 400px;
     overflow: auto;
 }
+.slider-selection{
+    background-image: linear-gradient(to bottom,#539885 0,#1a583c99 100%);
+}
+.slider-track-high{
+    background: #0000000d;
+}
+.table-sub-objectif{
+    margin-bottom: 0 !important;
+}
+.skills input[type="number"]{
+    max-width: 3.2em;
+    text-align: center;
+}

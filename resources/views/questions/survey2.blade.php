@@ -15,20 +15,20 @@
                                 <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                             @endif
                             @if($q->type == 'text')
-                                <input type="{{$q->type}}" class="form-control" readonly="" value="{{App\Answer::getAnswers($q->id, $user->id) != null ? App\Answer::getAnswers($q->id, $user->id)->answer : ''}}">
+                                <input type="{{$q->type}}" class="form-control" readonly="" value="{{App\Answer::getAnswers($q->id, $user->id, $e->id) != null ? App\Answer::getAnswers($q->id, $user->id, $e->id)->answer : ''}}">
                             @elseif($q->type == 'textarea')
-                                <textarea class="form-control" readonly="">{{App\Answer::getAnswers($q->id, $user->id) != null ? App\Answer::getAnswers($q->id, $user->id)->answer :''}}</textarea>
+                                <textarea class="form-control" readonly="">{{App\Answer::getAnswers($q->id, $user->id, $e->id) != null ? App\Answer::getAnswers($q->id, $user->id, $e->id)->answer :''}}</textarea>
                             @elseif($q->type == "checkbox")
                                 @foreach($q->children as $child)
                                     <div class="survey-checkbox">
-                                        <input type="{{$q->type}}" value="{{$child->id}}" {{ in_array($child->id, App\Answer::getAnswers($q->id, $user->id)) ? 'checked' : '' }} disabled>
+                                        <input type="{{$q->type}}" value="{{$child->id}}" {{ in_array($child->id, App\Answer::getAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled>
                                         <label >{{ $child->titre }}</label>
                                     </div>
                                 @endforeach
                                 <div class="clearfix"></div>
                             @elseif($q->type == "radio")
                                 @foreach($q->children as $child)
-                                    <input type="{{$q->type}}" value="{{$child->id}}" {{ in_array($child->id, App\Answer::getAnswers($q->id, $user->id)) ? 'checked' : '' }} disabled> 
+                                    <input type="{{$q->type}}" value="{{$child->id}}" {{ in_array($child->id, App\Answer::getAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled> 
                                     <label >{{ $child->titre }}</label>
                                 @endforeach
                             @endif
@@ -46,8 +46,9 @@
         <h4 class="alert alert-info"> {{ App\User::getMentor($user->id)->name." ".App\User::getMentor($user->id)->last_name }} </h4>
         <form action="{{url('answers/store')}}" method="post" id="surveyForm">
             <input type="hidden" name="entretien_id" value="{{$e->id}}">
-            <input type="hidden" name="mentor_id" value="{{Auth::user()->id}}">
+            <input type="hidden" name="mentor_id" value="{{App\User::getMentor($user->id) ? App\User::getMentor($user->id)->id : Auth::user()->id }}">
             <input type="hidden" name="user_id" value="{{$user->id}}">
+            
             {{ csrf_field() }}
             <div class="panel-group">
                 @foreach($groupes as $g)
@@ -89,7 +90,10 @@
                 @endforeach
             </div>
             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
+            @if(App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) == false)
             <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Valider vos réponses</button>
+            @endif
+            
         </form>
     </div>
     @else

@@ -14,7 +14,7 @@ export default class chmModal {
 
     var modalWidth = 600
     if (options.width !== '' && window.outerWidth > options.width) modalWidth = options.width
-    modalTemplate.find('.modal-dialog').css('width', modalWidth)
+    modalTemplate.find('.modal-dialog').css('max-width', modalWidth)
 
     modalTemplate.attr('chm-modal-id', null)
     $.ajax(params).done(function (response, textStatus, jqXHR) {

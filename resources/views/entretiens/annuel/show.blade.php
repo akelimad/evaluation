@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Mentor :</label>
-                                    <div class="col-md-9"> {{Auth::user()->name." ".Auth::user()->last_name}} </div>
+                                    <div class="col-md-9"> {{$user->parent ? $user->parent->name." ".$user->parent->last_name : $user->name." ".$user->last_name}} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

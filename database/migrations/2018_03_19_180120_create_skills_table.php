@@ -14,13 +14,10 @@ class CreateSkillsTable extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('domaine');
-            $table->string('titre');
-            $table->integer('niveau');
-            $table->string('commentaire');
-            $table->tinyInteger('transmit');
-            $table->integer('entretien_id')->unsigned();
-            $table->foreign('entretien_id')->references('id')->on('entretiens')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('axe');
+            $table->string('famille');
+            $table->string('categorie');
+            $table->string('competence');
             $table->timestamps();
         });
     }

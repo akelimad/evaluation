@@ -57,10 +57,11 @@ Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
 Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
 Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
 
-Route::get('entretiens/{e_id}/skills', 'SkillController@index');
-Route::get('entretiens/{e_id}/skills/create', 'SkillController@create');
-Route::post('entretiens/{e_id}/skills/store', 'SkillController@store');
-Route::get('entretiens/{e_id}/skills/{id}/edit', 'SkillController@edit');
+Route::get('skills', 'SkillController@indexAdmin');
+Route::get('skills/create', 'SkillController@create');
+Route::post('skills/store', 'SkillController@store');
+Route::get('skills/{id}/edit', 'SkillController@edit');
+Route::get('entretiens/{e_id}/u/{uid}/Competences', 'SkillController@index');
 
 Route::get('entretiens/{e_id}/u/{uid}/Objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');

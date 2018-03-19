@@ -1,6 +1,26 @@
-Prenom;Nom;Email;Rôle;Mentor email;Adresse;Code postal;Ville;Pays;Telephone fixe;Telephone mobile;Fonction;Service;Qualification
-hamza;mentor;hamza@mentor.com;MENTOR;akel.dev@gmail.com;10, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
-mohamed;coll;mohamed@coll.com;COLLABORATEUR;hamza@mentor.com;1, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
-sabah;coll;sabah@coll.com;COLLABORATEUR;hamza@mentor.com;1, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
-oussama;coll;oussama@coll.com;COLLABORATEUR;hamza@mentor.com;1, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
-salah;coll;salah@coll.com;COLLABORATEUR;hamza@mentor.com;10, rue de Paris;75001;Paris;fr_fr;102030405;607080902;Employe libre service;Rayon frais;Employe
+Prenom;Nom;Email;Rôle;parent;Adresse;Code postal;Ville;Pays;Telephone fixe;Telephone mobile;Fonction;Service;Qualification
+Said;MOULINE;mouline@lycom.ma;MENTOR, RH;;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Mohamed;EL HAOUARI;haouari@lycom.ma;COLLABORATEUR, MENTOR;mouline@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Mourad;HAJJAJI;hajjaji@lycom.ma;COLLABORATEUR, MENTOR;mouline@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Lahcen;FARHAT;farhat@lycom.ma;COLLABORATEUR, MENTOR;mouline@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Mustapha;ENZILI;mustapha@lycom.ma;COLLABORATEUR, MENTOR;haouari@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Mohamed;MAKKAOUI;makkaoui@lycom.ma;COLLABORATEUR, MENTOR;haouari@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Samira;LAKHLIFI;lakhlifi@lycom.ma;COLLABORATEUR, MENTOR;hajjaji@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Fadoua;ELATRACH;elatrach@lycom.ma;COLLABORATEUR, MENTOR;hajjaji@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Safae;BIRROU;safae@lycom.ma;COLLABORATEUR, MENTOR, ADMIN;farhat@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Abdelkrim;EL YACOUBI;elyacoubi@lycom.ma;COLLABORATEUR, MENTOR;farhat@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Fathallah;AFFANI;affani@lycom.ma;COLLABORATEUR;mustapha@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Larbi;DAHBANI;dahbani@lycom.ma;COLLABORATEUR;mustapha@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Abdelhaq;AMAHROUCH;amahrouch@lycom.ma;COLLABORATEUR;mustapha@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Sliman;SMOUH;smouh@lycom.ma;COLLABORATEUR;makkaoui@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Redouan;YESSOUF;yessouf@lycom.ma;COLLABORATEUR;makkaoui@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Ahmed ;TABARANI;tabarani@lycom.ma;COLLABORATEUR;makkaoui@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Abdellah;RHABRAOUI;rhabraoui@lycom.ma;COLLABORATEUR;makkaoui@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Omar;ANKILA;ankila@lycom.ma;COLLABORATEUR;lakhlifi@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Khadija;KASTAL;kastal@lycom.ma;COLLABORATEUR;lakhlifi@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Samir;CHAOUKI;chaouki@lycom.ma;COLLABORATEUR;elatrach@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Omar;BENABDELKADER;benabdelkader@lycom.ma;COLLABORATEUR;safae@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Omar;KHABJANE;khabjan@lycom.ma;COLLABORATEUR;safae@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Lafdali;KHOUY;lafdali@lycom.ma;COLLABORATEUR;safae@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+El Hassan;BOUNA;elhassan@lycom.ma;COLLABORATEUR;elyacoubi@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
+Said;EL MANNI;said@lycom.ma;COLLABORATEUR;elyacoubi@lycom.ma;10, rue de rabat;75001;Rabat;Maroc;505606060;607080902;Employe libre service;Energies renouvelables;Employe
