@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary card">
-                    <h3 class="mb40"> La liste des objectifs </h2>
+                    <h3 class="mb40"> La liste des objectifs pour: {{$e->titre}} </h3>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">Synthèse</a></li>
@@ -40,7 +40,7 @@
                                                     <td>{{ $sub->title }}</td>
                                                     <td class="criteres text-center">
                                                         <input type="hidden" name="subObjectifIds[{{$objectif->id}}][]" value="{{$sub->id}}">
-                                                        @if(App\Objectif::getNmoins1Note($sub->id)  && App\Objectif::getNmoins1Note($sub->id)->objNplus1 == 0 && App\Objectif::getNmoins1Note($sub->id)->realise == "")
+                                                        @if(!App\Objectif::getNmoins1Note($sub->id, $e->id) || (App\Objectif::getNmoins1Note($sub->id, $e->id) == true && App\Objectif::getNmoins1Note($sub->id, $e->id)->objNplus1 == 0 ) )
                                                         <input type="text" id="slider" placeholder="Votre note" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id, $sub->id) ? App\Objectif::getObjectif($e->id, $sub->id)->note : '0' }}" data-slider-tooltip="" >
                                                         <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" value="">
                                                         @else
@@ -54,10 +54,10 @@
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <span class="nMoins1-{{$sub->id}}" > {{App\Objectif::getNmoins1Note($sub->id) ? App\Objectif::getNmoins1Note($sub->id)->note : ''}} </span>
+                                                                    <span class="nMoins1-{{$sub->id}}" > {{App\Objectif::getNmoins1Note($sub->id, $e->id) ? App\Objectif::getNmoins1Note($sub->id, $e->id)->note : ''}} </span>
                                                                 </td>
-                                                                <td >
-                                                                    <input type="number" min="0" max="10" class="text-center realise" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-id="{{$sub->id}}" value="{{App\Objectif::getNmoins1Note($sub->id) ? App\Objectif::getNmoins1Note($sub->id)->realise : ''}}">
+                                                                <td>
+                                                                    <input type="number" min="0" max="10" class="text-center realise" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-id="{{$sub->id}}" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->realise : ''}}">
                                                                 </td>
                                                                 <td>
                                                                     <span class="ecart-{{$sub->id}}"></span>
@@ -98,7 +98,7 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        @if(!App\Objectif::respondObjectifs($e->id, Auth::user()->id))
+                                        @if(!App\Objectif::filledObjectifs($e->id, Auth::user()->id))
                                         <input type="submit" value="Sauvegarder" class="btn btn-success">
                                         @endif
                                     </form>

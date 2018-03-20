@@ -49,7 +49,7 @@
                     <div class="portlet-body">
                         <div class="tab-content">
                             <div class="tab-pane active" id="entretiens">
-                                @if(count($entretiens)>0)
+                                @if(App\User::getMentor(Auth::user()->id) && count($entretiens)>0)
                                 <div class="box-body table-responsive no-padding">
                                     <table class="table table-hover table-bordered">
                                         <thead>
@@ -63,6 +63,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach($entretiens as $e)
+                                            
                                             <tr>
                                                 <td>
                                                     <a href="{{ url('entretiens/'.$e->id.'/u/'.Auth::user()->id) }}">{{$e->titre}}</a>
@@ -86,7 +87,7 @@
                                 </div>
                                 @else
                                     <p class="alert alert-default">Aucune donnée disponible !</p>
-                                @endif
+                                @endif                               
                             </div>
                             <div class="tab-pane" id="objectifs">
                                 <div class="box-body table-responsive no-padding">

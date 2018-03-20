@@ -65,6 +65,14 @@ class User extends Authenticatable
     /**
      * Get the interview for the given user.
      */
+    public function skills()
+    {
+        return $this->belongsToMany('App\Skill');
+    }
+
+    /**
+     * Get the interview for the given user.
+     */
     public function activites()
     {
         return $this->hasMany('App\Activite');

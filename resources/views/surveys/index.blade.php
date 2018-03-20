@@ -19,6 +19,7 @@
                             <a href="javascript:void(0)" onclick="return chmSurvey.create()" class="btn bg-maroon" title="Ajouter un questionnaire" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
                     </div>
+                    <p class="help-block">Ces questionnaires vont vous permettre de les utiliser pour la partie évaluation de l'entretien. <br> vous pouvez créer autant de questionnaires et aller dans <a href="{{ url('entretiens/index') }}" target="_blank">la page des entretiens </a> pour choisir quel questionnaire sera utilisé lors l'évaluation.</p>
                     @if(count($surveys)>0)
                         <div class="box-body table-responsive no-padding mb40">
                             <table class="table table-hover table-bordered table-inversed-blue">

@@ -13,7 +13,7 @@
                             <li class="active"><a href="#" >Synthèse</a></li>
                             @foreach($evaluations as $evaluation)
                             <li>
-                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}">{{ $evaluation->title }}</a>
+                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.App\Evaluation::convert($evaluation->title))}}">{{ $evaluation->title }}</a>
                             </li>
                             @endforeach
 

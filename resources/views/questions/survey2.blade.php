@@ -21,14 +21,14 @@
                             @elseif($q->type == "checkbox")
                                 @foreach($q->children as $child)
                                     <div class="survey-checkbox">
-                                        <input type="{{$q->type}}" value="{{$child->id}}" {{ in_array($child->id, App\Answer::getAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled>
+                                        <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled>
                                         <label >{{ $child->titre }}</label>
                                     </div>
                                 @endforeach
                                 <div class="clearfix"></div>
                             @elseif($q->type == "radio")
                                 @foreach($q->children as $child)
-                                    <input type="{{$q->type}}" value="{{$child->id}}" {{ in_array($child->id, App\Answer::getAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled> 
+                                    <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled> 
                                     <label >{{ $child->titre }}</label>
                                 @endforeach
                             @endif

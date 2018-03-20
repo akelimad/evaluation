@@ -23,13 +23,13 @@
                                 </tr>
                                 @foreach($skills as $key => $skill)
                                 <tr>
-                                    <td> {{ $key }}</td>
+                                    <td> {{ $key+1 }}</td>
                                     <td> {{ $skill->axe ? $skill->axe : '---' }}</td>
                                     <td> {{ $skill->famille ? $skill->famille : '---' }} </td>
                                     <td> {{ $skill->categorie ? $skill->categorie : '---' }} </td>
                                     <td> {{ $skill->competence ? $skill->competence : '---' }} </td>
                                     <td class="text-center">  
-                                        <a href="javascript:void(0)" onclick="return chmSkill.edit({id: {{$skill->id}}})" class="btn-primary icon-fill" title="Modifier cette compétences" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmSkill.edit({id: {{$skill->id}}})" class="btn-warning icon-fill" title="Modifier cette compétences" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

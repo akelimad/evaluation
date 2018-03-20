@@ -20,4 +20,14 @@ class Evaluation extends Model
     {
         return $this->belongsToMany('App\Entretien');
     }
+
+    public static function convert($str) {
+        $unwanted_array = [
+            'é' => 'e',
+            'è' => 'e',
+            'â' => 'a',
+            'ê' => 'e',
+        ];
+        return $str = strtr( $str, $unwanted_array );
+    }
 }

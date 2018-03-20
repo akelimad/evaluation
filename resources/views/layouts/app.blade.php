@@ -190,7 +190,7 @@
                     <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-long-arrow-right"></i> Les évaluations </a></li>
                     <li><a href="{{ url('entretiens/index') }}"><i class="fa fa-long-arrow-right"></i> Les entretiens </a></li>
                     <li class="treeview">
-                      <a href="#"><i class="fa fa-help"></i> <span>Questionnaires</span>  
+                      <a href="#"><i class="fa fa-help"></i> <span>Quests. d'évaluation</span>  
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                       </a>
                       <ul class="treeview-menu">

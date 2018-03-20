@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Entretien;
 use App\Skill;
 use App\Skill_user;
+use App\User;
 use Auth;
 
 class SkillController extends Controller
@@ -120,18 +121,22 @@ class SkillController extends Controller
      */
     public function updateUserSkills(Request $request)
     {
-        foreach ($request->skills as $key => $value) {
-            $skill = new Skill_user();
-            $skill->skill_id = $key;
-            $skill->user_id = Auth::user()->id;
-            $skill->entretien_id = $request->entretien_id;
-            $skill->objectif = $value['objectif'];
-            $skill->auto = $value['auto'];
-            $skill->nplus1 = $value['nplus1'];
-            $skill->ecart = $value['ecart'];
-            $skill->save();
+        //dd($request->skills);
+        foreach ($request->skills as $id => $value) {
+            $user = User::find($request->user_id);
+            $user->skills()->sync([$id => 
+                [
+                    'mentor_id'  => $request->mentor_id,
+                    'entretien_id' => $request->entretien_id,
+                    'objectif' => $value['objectif'] !="" ? $value['objectif'] : 0 ,
+                    'auto'     => $value['auto'] !="" ? $value['auto'] : 0 ,
+                    'nplus1'   => $value['nplus1'] !="" ? $value['nplus1'] : 0 ,
+                    'ecart'    => $value['ecart'] !="" ? $value['ecart'] : 0 ,
+                ]
+            ], false);
+
         }
-        return redirect()->back();
+        return redirect()->back()->with("success_update","Les informations ont été sauvegardées avec succès !");
     }
 
     /**

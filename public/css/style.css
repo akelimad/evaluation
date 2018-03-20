@@ -218,7 +218,7 @@ i{
     border-right-color: #c7bdbd;
     border-left-color: #c7bdbd !important;
 }
-.evaluations .nav-tabs>li>a{
+.nav-tabs>li>a{
     padding: 1em 1.5em;
 }
 .professionels .nav-tabs>li>a{
@@ -473,7 +473,7 @@ ul.user-data li i{
     overflow: auto;
 }
 .slider-selection{
-    background-image: linear-gradient(to bottom,#539885 0,#1a583c99 100%);
+    background-image: linear-gradient(to bottom,#0b8ccd 0,#0d8fd0 100%);
 }
 .slider-track-high{
     background: #0000000d;
@@ -484,4 +484,12 @@ ul.user-data li i{
 .skills input[type="number"]{
     max-width: 3.2em;
     text-align: center;
+    padding-left: 11px;
+}
+.badge{
+    font-weight: normal;
+    font-size: 14px;
+}
+p.help-block{
+    font-style: italic;
 }

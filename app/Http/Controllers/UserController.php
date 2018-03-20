@@ -100,7 +100,7 @@ class UserController extends Controller
         $user->name= $request->name;
         $user->last_name = $request->last_name;
         $user->email= $request->email;
-        $user->password= bcrypt($request->password);
+        if(!$id) $user->password= bcrypt($request->password);
         $user->address= $request->address;
         $user->society= $request->society;
         $user->zip_code= $request->zip_code;
@@ -221,7 +221,7 @@ class UserController extends Controller
                 $user->roles()->attach($this->getRoleByName($row[$fields[3]]));
                 $count++;
             }else{
-                return redirect('users')->with('exist_already', 'Une erreur est survenu lors l\'importation. les utilisateurs existent deja ou bien un des chmaps obligatoire(Prenom, nom, email, role, Parent email) est vide!');;
+                return redirect('users')->with('exist_already', 'Une erreur est survenu lors l\'importation. les utilisateurs existent deja ou bien un des chmaps obligatoire(Prenom, nom, email, role, Parent email) est vide!');
             }
         }
         return redirect('users')->with('import_success', 'Les utilisateurs ont été importés avec succès!');;

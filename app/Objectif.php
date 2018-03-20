@@ -32,18 +32,26 @@ class Objectif extends Model
         return $objectif;
     }
 
-    public static function getNmoins1Note($oid){
-        $objectifs = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $oid)->get();
-        if(count($objectifs)>1){
-            $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $oid)->skip(1)->first();
+    public static function getNmoins1Note($oid, $eid){
+        $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $oid)->where('entretien_id', '<', $eid)->get()->last();
+        //dd($objectif);
+        if($objectif){
+            return $objectif;
         }else{
-            $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $oid)->first();
+            return null;
         }
-        return $objectif;
 
     }
 
-    public static function respondObjectifs($eid, $uid){
+    public static function getRealise($oid, $eid){
+        $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $oid)->where('entretien_id', $eid)->first();
+        if($objectif){
+            return $objectif;
+        }
+
+    }
+
+    public static function filledObjectifs($eid, $uid){
         $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->first();
         if($objectif){
             return $objectif;            

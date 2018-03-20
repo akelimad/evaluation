@@ -66,7 +66,7 @@ class EntretienController extends Controller
         $evaluations = Evaluation::all();
         $surveys = Survey::select('id', 'title')->get();
         $objectifs = EntretienObjectif::select('id', 'title')->get();
-        $entretiens = Entretien::all();
+        $entretiens = Entretien::paginate(15);
         return view('entretiens.listing', compact('entretiens', 'evaluations', 'surveys', 'objectifs'));
     }
 

@@ -73,5 +73,17 @@ $(function(){
             $(".ecart-"+id).css('color', 'green')
         }
     })
+
+    $(".nplus1").on('keyup change', function(){
+        var id = $(this).data('id')
+        var objectif = $("#objectif-"+id).val()
+        var ecart   = $(this).val() - objectif
+        $("#ecart-"+id).val(ecart)
+        if(ecart < 0){
+            $("#ecart-"+id).css('color', 'red')
+        }else{
+            $("#ecart-"+id).css('color', 'green')
+        }
+    })
   
 })
