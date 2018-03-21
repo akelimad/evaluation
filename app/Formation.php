@@ -10,4 +10,9 @@ class Formation extends Model
     {
         return $this->belongsTo('App\Entretien');
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

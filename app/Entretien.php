@@ -9,7 +9,7 @@ class Entretien extends Model
 
     public static function answered($eid, $uid)
     {
-        $answer = Token::where('entretien_id', $eid)->where('user_id', $uid)->first();
+        $answer = Answer::where('entretien_id', $eid)->where('user_id', $uid)->first();
         if($answer) {
             return true;
         }else{
@@ -19,7 +19,7 @@ class Entretien extends Model
     }
     public static function answeredMentor($eid, $uid, $mentor_id)
     {
-        $answer = Token::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', $mentor_id)->first();
+        $answer = Answer::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', $mentor_id)->first();
         if($answer) {
             return true;
         }else{

@@ -4,32 +4,17 @@
     <input type="hidden" name="e_id" value="{{ isset($e->e_id) ? $e->e_id : null }}">
     {{ csrf_field() }}
     <div class="form-group">
-        <label for="titre" class="col-md-3 control-label">Titre de la formation demandée</label>
-        <div class="col-md-9">
-            <input type="text" class="form-control" name="titre" id="titre" placeholder="" value="{{isset($f->titre) ? $f->titre :''}}" >
-        </div>
+        <label for="date" class="control-label">Date <span class="asterisk">*</span></label>
+        <input type="text" class="form-control" name="date" id="datepicker" placeholder="Ex: 01/01/2018" value="{{isset($f->date) ? Carbon\Carbon::parse($f->date)->format('d-m-Y') :''}}" readonly="">
     </div>
     <div class="form-group">
-        <label for="perspective" class="col-md-3 control-label">Perspective attendue</label>
-        <div class="col-md-9">
-            <input type="text" class="form-control" name="perspective" id="perspective" placeholder="" value="{{isset($f->perspective) ? $f->perspective :''}}" >
-        </div>
+        <label for="exercice" class="control-label">Exercice <span class="asterisk">*</span></label>
+        <input type="text" class="form-control" name="exercice" id="exercice" placeholder="Ex: 2018" value="{{isset($f->exercice) ? $f->exercice :''}}" >
     </div>
     <div class="form-group">
-        <label for="date" class="col-md-3 control-label">Date</label>
-        <div class="col-md-9">
-            <input type="text" class="form-control" name="date" id="datepicker" placeholder="" value="{{isset($f->date) ? Carbon\Carbon::parse($f->date)->format('d-m-Y') :''}}" >
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="commentaire" class="col-md-3 control-label">Envie de transmettre</label>
-        <div class="col-md-9">
-            <label class="toggle-check">
-                <input type="checkbox" name="transmit" class="toggle-check-input" {{ isset($f->transmit) && $f->transmit == 1 ? 'checked' :''}}/>
-                <span class="toggle-check-text"></span>
-            </label>
-        </div>
-    </div>   
+        <label for="title" class="control-label">Titre de la formation demandée <span class="asterisk">*</span></label>
+        <input type="text" class="form-control" name="title" id="title" placeholder="Ex: Formation IA" value="{{isset($f->title) ? $f->title :''}}" >
+    </div> 
 </div>
 <script>
     $(function() {

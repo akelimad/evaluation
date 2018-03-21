@@ -10,6 +10,7 @@ use App\Entretien;
 use App\Evaluation;
 use App\Groupe;
 use App\Survey;
+use App\User;
 
 class ActiviteController extends Controller
 {
@@ -28,7 +29,7 @@ class ActiviteController extends Controller
         $evaluations = $entretien->evaluations;
         $survey = Survey::find($entretien->survey_id);
         $groupes = $survey->groupes;
-        $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
+        $user = User::findOrFail($uid);
         return view('activites.index', [
             'evaluations' => $evaluations, 
             'survey' => $survey, 

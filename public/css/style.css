@@ -493,3 +493,13 @@ ul.user-data li i{
 p.help-block{
     font-style: italic;
 }
+.content-callout{
+    vertical-align: middle;
+    margin-left: 5px;
+}
+.callout-info i{
+    vertical-align: middle;
+}
+.callout{
+    padding: 8px 8px;
+}

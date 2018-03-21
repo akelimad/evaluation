@@ -8,6 +8,8 @@ use App\Http\Requests;
 use App\Entretien;
 use App\Formation;
 use Carbon\Carbon; 
+use App\User;
+use Auth;
 
 class FormationController extends Controller
 {
@@ -20,11 +22,13 @@ class FormationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id)
+    public function index($e_id, $uid)
     {
-        $entretien = Entretien::find($e_id);
-        $formations = $entretien->formations;
-        return view('formations.index', ['formations' => $formations, 'e'=> $entretien]);
+        $e = Entretien::find($e_id);
+        $user = User::find($uid);
+        $formations = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->get();
+        $evaluations = $e->evaluations;
+        return view('formations.index', compact('formations', 'e', 'user', 'evaluations') );
     }
 
     /**
@@ -54,11 +58,13 @@ class FormationController extends Controller
         }else{
             $formation =  Formation::find($request->id);
         }
-        $formation->titre = $request->titre;
-        $formation->perspective = $request->perspective;
         $formation->date = Carbon::createFromFormat('d-m-Y', $request->date);
-        $formation->transmit = $request->transmit == "on" ? 1 : 0;
+        $formation->exercice = $request->exercice;
+        $formation->title = $request->title;
+        $formation->status = 0;
+        $formation->done = 0;
         $formation->entretien_id = $e_id;
+        $formation->user_id = Auth::user()->id;
         $formation->save();
         if($formation->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -103,7 +109,11 @@ class FormationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $formation = Formation::findOrFail($id);
+        $formation->status = $request->status;
+        $formation->done = $request->done == "on" ? 1 : 0 ;
+        $formation->save();
+        return redirect()->back()->with("update_formation", "La formation a bien été mise à jour !");
     }
 
     /**

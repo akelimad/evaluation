@@ -21,13 +21,13 @@ class Evaluation extends Model
         return $this->belongsToMany('App\Entretien');
     }
 
-    public static function convert($str) {
+    public static function unaccented($str) {
         $unwanted_array = [
             'é' => 'e',
             'è' => 'e',
             'â' => 'a',
             'ê' => 'e',
         ];
-        return $str = strtr( $str, $unwanted_array );
+        return $str = strtolower(strtr( $str, $unwanted_array ));
     }
 }

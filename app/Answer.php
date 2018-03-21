@@ -17,26 +17,40 @@ class Answer extends Model
         return $this->belongsTo('App\User');
     }
 
-    public static function getAnswers($qid, $uid, $eid){
-        $issetAnsewrs = Token::where('entretien_id', $eid)->where('user_id', $uid)->first();
-        if($issetAnsewrs){
-            $question = Question::find($qid);
-            $answers_id = [];
-            if(count($question->children)>0){
-                $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->get()->toArray();
-                foreach ($answers as $answer) {
-                    foreach ($answer as $a) {
-                        $answers_id[] = $a;
-                    }
+    public static function getCollAnswers($qid, $uid, $eid)
+    {
+        $question = Question::find($qid);
+        $answers_id = [];
+        if(count($question->children)>0){
+            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->get()->toArray();
+            foreach ($answers as $answer) {
+                foreach ($answer as $a) {
+                    $answers_id[] = $a;
                 }
-                return $answers_id;
-            }else{
-                $answer = Answer::where('question_id', $qid)->where('user_id', $uid)->first();
-                return $answer;
             }
+            return $answers_id;
         }else{
-            $answers_id = [];
-            return null;
+            $answer = Answer::where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->first();
+            return $answer;
+        }
+    }
+
+    public static function getMentorAnswers($qid, $uid, $eid)
+    {
+        $user = User::find($uid);
+        $question = Question::find($qid);
+        $answers_id = [];
+        if(count($question->children)>0){
+            $answers = Answer::select('answer')->where('question_id', $qid)->where('mentor_id', $user->parent->id)->where('entretien_id', $eid)->get()->toArray();
+            foreach ($answers as $answer) {
+                foreach ($answer as $a) {
+                    $answers_id[] = $a;
+                }
+            }
+            return $answers_id;
+        }else{
+            $answer = Answer::where('question_id', $qid)->where('mentor_id', $user->parent->id)->where('entretien_id', $eid)->first();
+            return $answer;
         }
     }
 }

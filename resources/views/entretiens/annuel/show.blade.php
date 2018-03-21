@@ -9,21 +9,7 @@
                 <div class="card box box-primary">
                     <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} </h3>
                     <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#" >Synthèse</a></li>
-                            @foreach($evaluations as $evaluation)
-                            <li>
-                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.App\Evaluation::convert($evaluation->title))}}">{{ $evaluation->title }}</a>
-                            </li>
-                            @endforeach
-
-                            <!-- <li ><a href="{{url('entretiens/'.$e->id.'/skills')}}">Carrieres</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/formations')}}">Formations</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/remunerations')}}">Competences</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/objectifs')}}">Objectifs</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/documents')}}">Salaires</a></li>
-                            <li><a href="{{url('entretiens/'.$e->id.'/comments')}}">Commentaires</a></li> -->
-                        </ul>
+                        @include('partials.tabs')
                         <div class="tab-content">
                             <div class="active tab-pane">
                                 <div class="form-group">

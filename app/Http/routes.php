@@ -52,7 +52,7 @@ Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 
-Route::get('entretiens/{e_id}/u/{uid}/Evaluations', 'ActiviteController@index');
+Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
 Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
 Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
@@ -64,7 +64,7 @@ Route::get('skills/{id}/edit', 'SkillController@edit');
 Route::get('entretiens/{e_id}/u/{uid}/Competences', 'SkillController@index');
 Route::get('skills/updateUserSkills', 'SkillController@updateUserSkills');
 
-Route::get('entretiens/{e_id}/u/{uid}/Objectifs', 'ObjectifController@index');
+Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::get('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs');
@@ -78,10 +78,11 @@ Route::get('entretienObjectif/{id}/edit', 'EntretienObjectifController@edit');
 Route::post('entretienObjectif/store', 'EntretienObjectifController@store');
 Route::get('entretienObjectif/{oid}', 'EntretienObjectifController@show');
 
-Route::get('entretiens/{e_id}/formations', 'FormationController@index');
+Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index');
 Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');
 Route::post('entretiens/{e_id}/formations/store', 'FormationController@store');
 Route::get('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit');
+Route::put('entretiens/formations/{id}/mentorUpdate', 'FormationController@update'); //update status & realise
 
 Route::get('entretiens/{e_id}/documents', 'DocumentController@index');
 Route::get('entretiens/{e_id}/documents/create', 'DocumentController@create');

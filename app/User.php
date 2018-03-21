@@ -70,6 +70,8 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Skill');
     }
 
+    
+
     /**
      * Get the interview for the given user.
      */

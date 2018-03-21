@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFormationsTable extends Migration
+class CreateFormationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,15 @@ class CreateFormationsTable extends Migration
     {
         Schema::create('formations', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('titre');
-            $table->string('perspective');
             $table->date('date');
-            $table->tinyInteger('transmit');
-            $table->tinyInteger('statut')->nullable();
+            $table->string('exercice');
+            $table->string('title');
+            $table->tinyInteger('status');
+            $table->tinyInteger('done');
             $table->integer('entretien_id')->unsigned();
             $table->foreign('entretien_id')->references('id')->on('entretiens')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +34,8 @@ class CreateFormationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('formations');
+        Schema::create('formations', function (Blueprint $table) {
+            Schema::drop('formations');
+        });
     }
 }

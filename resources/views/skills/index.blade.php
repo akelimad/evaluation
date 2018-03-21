@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
     <section class="content skills">
         <div class="row">
             <div class="col-md-12">
@@ -10,14 +9,7 @@
                 <div class="box box-primary card">
                     <h3 class="mb40"> La liste des compétences <span class="badge">{{$skills->total()}}</span> pour : {{$e->titre}}</h3>
                     <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <li><a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">Synthèse</a></li>
-                            @foreach($evaluations as $evaluation)
-                            <li class="{{ Request::segment(5) == $evaluation->title ? 'active':'' }}">
-                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id.'/'.$evaluation->title)}}">{{ $evaluation->title }}</a>
-                            </li>
-                            @endforeach
-                        </ul>
+                        @include('partials.tabs')
                         <div class="tab-content">
                             @if(count($skills)>0)
                                 <div class="box-body table-responsive no-padding mb40">
