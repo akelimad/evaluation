@@ -51,6 +51,6 @@ class Answer extends Model
         }else{
             $answer = Answer::where('question_id', $qid)->where('user_id', $user->id)->where('mentor_id', $user->parent->id)->where('entretien_id', $eid)->first();
             return $answer;
-        }
+        } 
     }
 }
