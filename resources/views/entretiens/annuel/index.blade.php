@@ -6,6 +6,9 @@
                 @if (Session::has('success_motif_save'))
                     @include('partials.alerts.success', ['messages' => Session::get('success_motif_save') ])
                 @endif
+                @if(session()->has('relanceMentor'))
+                    @include('partials.alerts.success', ['messages' => session()->get('relanceMentor') ])
+                @endif
                 <div class="box box-primary">
                     <div class="box-header">
                         <h3 class="box-title">La liste des entretiens d'évaluations</h3>
@@ -15,31 +18,42 @@
                     </div>
                     @if(count($entretiens)>0)
                     <div class="box-body table-responsive no-padding">
-                        <table class="table table-hover table-bordered table-inversed-blue">
+                        <table class="table table-hover table-bordered table-inversed-blue table-striped">
                             <thead>
                                 <tr>
-                                    <th>Date </th>
+                                    <th>Date limit </th>
                                     <th>Nom & prénom </th>
                                     <th>Fonction</th>
                                     <th>Type d'eval</th>
                                     <th>Réf</th>
                                     <th>Mentor</th>
                                     <th>Fonction</th>
-                                    <th>Auto eval</th>
+                                    <th>Auto</th>
                                     <th>Visa N+1</th>
                                     <th>Visa N+2</th>
-                                    <th class="text-center"> Action </th>
+                                    <th class="text-center"> Actions </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($entretiens as $entretien)
-                                    @foreach($entretien->users as $key =>$user)
+                                    @foreach($entretien->users()->paginate(10,['*'],'usersPage') as $key =>$user)
                                     <tr class="{{ !empty($user->motif) ? 'has-motif': '' }}">
-                                        <td class="text-blue">{{ Carbon\Carbon::parse($entretien->date_limit)->format('d/m/Y')}}</td>
-                                        <td><b><a href="{{url('user/'.$user->id)}}">{{ $user->name. ' '.$user->last_name  }}</a></b></td>
-                                        <td>{{$user->function ? $user->function : '---'}}</td>
-                                        <td><a href="{{url('entretiens/'.$entretien->id.'/u/'.$user->id)}}">{{$entretien->titre}}</a></td>
-                                        <td>{{$entretien->id}}</td>
+                                        <td class="text-blue">
+                                            {{ Carbon\Carbon::parse($entretien->date_limit)->format('d/m/Y')}}
+                                        </td>
+                                        <td>
+                                            <b><a href="{{url('user/'.$user->id)}}">{{ $user->name. ' '.$user->last_name  }}</a></b>
+                                        </td>
+                                        <td>
+                                            {{$user->function ? str_limit($user->function, $limit = 20, $end = '...') : '---'}}
+                                        </td>
+                                        <td>
+                                            <a href="{{url('entretiens/'.$entretien->id.'/u/'.$user->id)}}">
+                                                {{ str_limit($entretien->titre, $limit = 20, $end = '...') }}</a>
+                                        </td>
+                                        <td>
+                                            {{$entretien->id}}
+                                        </td>
                                         <td>
                                             @if($user->parent)
                                                 <a href="{{url('user/'.$user->parent->id)}}">{{ $user->parent->name.' '. $user->parent->last_name }}</a>
@@ -47,13 +61,30 @@
                                                 ---
                                             @endif
                                         </td>
-                                        <td>{{$user->parent ? $user->parent->function : '---'}}</td>
-                                        <td><span class="label label-{{App\Entretien::answered($entretien->id, $user->id) == true ? 'success':'danger'}} empty"> </span></td>
-                                        <td><span class="label label-{{App\Entretien::answeredMentor($entretien->id, $user->id, App\User::getMentor($user->id) ? App\User::getMentor($user->id)->id : $user->id ) ? 'success':'danger'}} empty"> </span></td>
-                                        <td><span class="label label-danger empty"> </span></td>
+                                        <td>
+                                            {{$user->parent ? str_limit($user->parent->function, $limit = 20, $end = '...') : '---'}}
+                                        </td>
                                         <td class="text-center">
-                                            <a href="" class="btn-primary icon-fill"> <i class="fa fa-print"></i> </a>
-                                            <a href="javascript:void(0)" class="btn-warning icon-fill show-motif" data-toggle="tooltip" data-placement="top" title="Motif de non réaliation" data-id="{{$entretien->id.$key}}"> <i class="glyphicon glyphicon-wrench"></i> </a>
+                                            <span class="label label-{{App\Entretien::answered($entretien->id, $user->id) == true ? 'success':'danger'}} empty"> </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="label label-{{App\Entretien::answeredMentor($entretien->id, $user->id, App\User::getMentor($user->id) ? App\User::getMentor($user->id)->id : $user->id ) ? 'success':'danger'}} empty"> </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="label label-danger empty"> </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a>
+                                            <a href="javascript:void(0)" class="bg-navy icon-fill show-motif" data-toggle="tooltip" title="Motif de non réaliation" data-id="{{$entretien->id.$key}}"> <i class="glyphicon glyphicon-wrench"></i> </a>
+                                            @if(!App\Entretien::answered($entretien->id, $user->id))
+                                            <form action="{{ url('notifyMentorInterview/'.$entretien->id.'/'.$user->id) }}" method="post" style="display: inline-block;">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn-danger icon-fill" data-toggle="tooltip" title="Relancer le mentor pour evaluer {{ $user->name.' '.$user->last_name }}"> <i class="fa fa-bell"></i> </button>
+                                            </form>
+                                            @else
+                                            <button class="btn-danger icon-fill relanceMentor" data-toggle="tooltip" title="Ya pas de relance. le mentor et collaborateur ont déjà fait l'entretien" ><i class="fa fa-bell"></i></button>
+                                            @endif
+                                            <a href="javascript:void(0)" class="bg-purple icon-fill" data-toggle="tooltip" title="Aperçu" onclick="return chmEntretien.apercu({eid: {{$entretien->id}}, uid: {{$user->id}} })"> <i class="fa fa-search"></i> </a>
                                         </td>
                                     </tr>
                                     <tr class="entretien-row">
@@ -85,11 +116,13 @@
                                         </td>
                                     </tr>
                                     @endforeach
+                                    {!! $entretien->users()->paginate(10,['*'],'usersPage')->links() !!}
                                 @endforeach
                             </tbody>
                         </table>
+                        {!! $entretiens->links() !!}
                     </div>
-                    {!! $entretiens->render() !!}
+                    
                     @else
                         <p class="alert alert-default">Aucune donnée disponible !</p>
                     @endif

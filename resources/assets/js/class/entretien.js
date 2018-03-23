@@ -47,6 +47,12 @@ export default class chmEntretien {
     window.chmModal.show({type: 'GET', url: window.chmSite.url('user/' + params.id)})
   }
 
+  static apercu (params) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.uid + '/appercu')}, {
+      width: 800
+    })
+  }
+
   static store (event) {
     event.preventDefault()
     var form = $(event.target)[0]

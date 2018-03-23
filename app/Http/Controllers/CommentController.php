@@ -6,21 +6,34 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Entretien;
+use App\User;
 use App\Comment;
 use Carbon\Carbon; 
 
 class CommentController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id)
+    public function index($eid, $uid)
     {
-        $entretien = Entretien::find($e_id);
-        $comments = $entretien->comments;
-        return view('comments.index', ['comments' => $comments, 'e'=> $entretien]);
+        $e = Entretien::find($eid);
+        $user = User::find($uid);
+        $comments = Comment::where('entretien_id', $eid)->where('user_id', $uid)->get();
+        $evaluations = $e->evaluations;
+        return view('comments.index', compact('comments', 'e', 'user', 'evaluations') );
     }
 
     /**
@@ -28,11 +41,12 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($e_id)
+    public function create($eid, $uid)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        echo view('comments.form', ['e' => $entretien]);
+        $e = Entretien::find($eid);
+        $user = User::find($uid);
+        echo view('comments.form', compact('e', 'user'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter un commentaire', 'content' => $content];
     }
@@ -45,19 +59,21 @@ class CommentController extends Controller
      */
     public function store($e_id, Request $request)
     {
-        if($request->id == null ){
-            $comment = new Comment();
+        $id = $request->id;
+        if($id){
+            $cmt = Comment::find($id);
+            $cmt->userComment = $request->comments[0];
+            $cmt->save();
         }else{
-            $comment = Comment::find($request->id);
+            foreach ($request->comments as $comment) {
+                $cmt = new Comment();
+                $cmt->userComment = $comment;
+                $cmt->user_id = $request->uid;
+                $cmt->entretien_id = $request->eid;
+                $cmt->save();
+            }
         }
-        $comment->is_task = $request->is_task == "on" ? 1 : 0;
-        $comment->destinataire = $request->destinataire;
-        $comment->echeance = Carbon::createFromFormat('d-m-Y', $request->echeance);
-        $comment->is_done = $request->is_done == "on" ? 1 : 0;
-        $comment->comment = $request->comment;
-        $comment->entretien_id = $e_id;
-        $comment->save();
-        if($comment->save()) {
+        if($cmt->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {
             return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
@@ -81,14 +97,15 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($e_id ,$id)
+    public function edit($eid, $uid ,$cid)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        $comment = Comment::find($id);
-        echo view('comments.form', ['c' => $comment, 'e'=>$entretien]);
+        $e = Entretien::find($eid);
+        $user = User::find($uid);
+        $c = Comment::find($cid);
+        echo view('comments.form', compact('e', 'user', 'c'));
         $content = ob_get_clean();
-        return ['title' => 'Modifier un commentaire', 'content' => $content];
+        return ['title' => 'Modifier votre commentaire', 'content' => $content];
     }
 
     /**
@@ -101,6 +118,23 @@ class CommentController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function mentorUpdate(Request $request,$eid, $uid, $cid)
+    {
+        $user = User::find($uid);
+        $comment = Comment::findOrFail($cid);
+        $comment->mentor_id = $request->mentor_id;
+        $comment->mentorComment = $request->mentorComment;
+        $comment->save();
+        return redirect()->back()->with("mentor_comment", "Vous venez de commenter avec succès sur le(la) collaborateur(trice) ".$user->name." ".$user->last_name );
     }
 
     /**

@@ -1,13 +1,12 @@
 import $ from 'jquery'
 
-export default class chmRemuneration {
+export default class chmSalary {
 
-  static create () {
-    var eid = $('.addBtn').data('id')
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + eid + '/remunerations/create')}, {
+  static create (params) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.uid + '/salaires/create')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmRemuneration.store'
+        callback: 'chmSalary.store'
       },
       footer: {
         label: 'Sauvegarder'
@@ -16,10 +15,10 @@ export default class chmRemuneration {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.e_id + '/remunerations/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.uid + '/salaires/' + params.sid + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmRemuneration.store'
+        callback: 'chmSalary.store'
       },
       footer: {
         label: 'Mettre à jour'
@@ -40,11 +39,12 @@ export default class chmRemuneration {
     btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
     var id = $('[name="id"]').val()
-    var eid = $('.addBtn').data('id')
+    var eid = $('[name="eid"]').val()
+    var uid = $('[name="uid"]').val()
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('entretiens/' + eid + '/remunerations/store'),
+      url: window.chmSite.url('entretiens/' + eid + '/u/' + uid + '/salaires/store'),
       data: data,
       processData: false,
       contentType: false,

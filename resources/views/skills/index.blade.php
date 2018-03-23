@@ -39,19 +39,19 @@
                                                 <td> {{ $skill->categorie ? $skill->categorie : '---' }} </td>
                                                 <td> {{ $skill->competence ? $skill->competence : '---' }} </td>
                                                 <td>
-                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][objectif]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->objectif : '' }}" id="objectif-{{ $skill->id }}" data-id="">
+                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][objectif]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->objectif : '' }}" id="objectif-{{ $skill->id }}" data-id="" {{$user->id == Auth::user()->id ? 'readonly':'' }}>
                                                     @php($totalObjectif += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->objectif : 0)
                                                 </td>
                                                 <td>
-                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][auto]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->auto : '' }}" id="auto" data-id="{{ $skill->id }}">
+                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][auto]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->auto : '' }}" id="auto" data-id="{{ $skill->id }}" {{$user->id != Auth::user()->id ? 'readonly':'' }} >
                                                     @php($totalAuto += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->auto : 0)
                                                 </td>
                                                 <td>
-                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][nplus1]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->nplus1 : '' }}" class="nplus1" data-id="{{ $skill->id }}">
+                                                    <input type="number" min="0" max="10" name="skills[{{$skill->id}}][nplus1]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->nplus1 : '' }}" class="nplus1" data-id="{{ $skill->id }}" {{$user->id == Auth::user()->id ? 'readonly':'' }}>
                                                     @php($totalNplus1 += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->nplus1 : 0)
                                                 </td>
                                                 <td>
-                                                    <input type="number" name="skills[{{$skill->id}}][ecart]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->ecart : '' }}" id="ecart-{{ $skill->id }}" data-id="">
+                                                    <input type="number" name="skills[{{$skill->id}}][ecart]" value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->ecart : '' }}" id="ecart-{{ $skill->id }}" data-id="" {{$user->id == Auth::user()->id ? 'readonly':'' }}>
                                                     @php($totalEcart += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->ecart : 0)
                                                 </td>
                                             </tr>

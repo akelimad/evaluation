@@ -141,15 +141,9 @@
             <li class="active">
                 <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
             </li>
-            @role(["RH"])
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-users"></i> <span>Mes collaborateurs</span>
-                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url('entretiens') }}"><i class="fa fa-long-arrow-right"></i> Les entretiens</a></li>
-                </ul>
+            @role(["RH", "MENTOR"])
+            <li>
+                <a href="{{ url('/') }}"><i class="fa fa-users"></i> <span>Mes collaborateurs</span></a>
             </li>
             @endrole
 <!--             <li class="treeview">

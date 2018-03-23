@@ -73,6 +73,11 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="control-label col-md-3">Salaire :</label>
+                                    <div class="col-md-9"> {{ $user->salary ? $user->salary : '---' }} </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
                                     <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
                                 </div>
                             </div>

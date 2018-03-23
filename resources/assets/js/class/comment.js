@@ -2,9 +2,8 @@ import $ from 'jquery'
 
 export default class chmComment {
 
-  static create () {
-    var eid = $('.addBtn').data('id')
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + eid + '/comments/create')}, {
+  static create (params) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.uid + '/commentaires/create')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmComment.store'
@@ -16,7 +15,7 @@ export default class chmComment {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.e_id + '/comments/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.uid + '/commentaires/' + params.cid + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmComment.store'
@@ -40,11 +39,12 @@ export default class chmComment {
     btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
     var id = $('[name="id"]').val()
-    var eid = $('.addBtn').data('id')
+    var eid = $('[name="eid"]').val()
+    var uid = $('[name="uid"]').val()
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('entretiens/' + eid + '/comments/store'),
+      url: window.chmSite.url('entretiens/' + eid + '/u/' + uid + '/commentaires/store'),
       data: data,
       processData: false,
       contentType: false,

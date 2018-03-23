@@ -17,57 +17,106 @@
                     <div class="nav-tabs-custom">
                         @include('partials.tabs')
                         <div class="tab-content">
-                            @if(count($formations)>0)
-                                <div class="box-body table-responsive no-padding mb40">
-                                    <table class="table table-hover table-bordered text-center">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Exercice </th>
-                                                <th>Formation demandée</th>
-                                                <th>Etat</th>
-                                                <th>Réalisé</th>
-                                                <th class="text-center">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($formations as $f)
-                                            <form action="{{url('entretiens/formations/'.$f->id.'/mentorUpdate')}}" method="post">
-                                                <input type="hidden" name="_method" value="PUT">
-                                            {{ csrf_field() }}
-                                            <tr>
-                                                <td> {{$f->date}} </td>
-                                                <td> {{$f->exercice}} </td>
-                                                <td> {{$f->title}} </td>
-                                                <td>
-                                                    <select name="status" id="status" class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" {{$user->id == Auth::user()->id ? 'disabled':'' }} >
-                                                        <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
-                                                        <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
-                                                        <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <input type="checkbox" name="done" {{$f->done == 1 ? 'checked':''}} {{$user->id == Auth::user()->id ? 'disabled':'' }} >
-                                                </td>
-                                                <td class="text-center"> 
-                                                    @if($user->id == Auth::user()->id)
-                                                    <a href="javascript:void(0)" onclick="return chmFormation.edit({e_id: {{$e->id}} , id: {{$f->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
-                                                    @else
-                                                    <button type="submit" class="btn btn-sm btn-flat bg-navy">Mettre à jour</button>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            </form>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                            <div class="panel panel-info">
+                                <div class="panel-heading text-center lead"> Souhaits </div>
+                                <div class="panel-body">
+                                @if(count($formations)>0)
+                                    <div class="box-body table-responsive no-padding mb40">
+                                        <table class="table table-hover table-bordered text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Exercice </th>
+                                                    <th>Formation demandée</th>
+                                                    <th>Etat</th>
+                                                    <th>Réalisé</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($formations as $f)
+                                                <form action="{{url('entretiens/formations/'.$f->id.'/mentorUpdate')}}" method="post">
+                                                    <input type="hidden" name="_method" value="PUT">
+                                                {{ csrf_field() }}
+                                                <tr>
+                                                    <td> {{ Carbon\Carbon::parse($f->date)->format('d/m/Y')}} </td>
+                                                    <td> {{$f->exercice}} </td>
+                                                    <td> {{$f->title}} </td>
+                                                    <td>
+                                                        <select name="status" id="status" class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" {{$user->id == Auth::user()->id ? 'disabled':'' }} >
+                                                            <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
+                                                            <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
+                                                            <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" name="done" {{$f->done == 1 ? 'checked':''}} {{$user->id == Auth::user()->id ? 'disabled':'' }} >
+                                                    </td>
+                                                    <td class="text-center"> 
+                                                        @if($user->id == Auth::user()->id)
+                                                        <a href="javascript:void(0)" onclick="return chmFormation.edit({e_id: {{$e->id}} , id: {{$f->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                                        @else
+                                                        <button type="submit" class="btn btn-sm btn-flat bg-navy">Mettre à jour</button>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                </form>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p class="alert alert-default">Aucune donnée disponible !</p>
+                                @endif
+                                @if($user->id == Auth::user()->id)
+                                <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn"><i class="fa fa-plus"></i> Demander une formation</a>
+                                @endif
                                 </div>
-                            @else
-                                <p class="alert alert-default">Aucune donnée disponible !</p>
-                            @endif
-                            <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Anuuler</a>
-                            @if($user->id == Auth::user()->id)
-                            <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn"><i class="fa fa-plus"></i> Demander une formation</a>
+                            </div>
+                            @if($user->id != Auth::user()->id)
+                            <div class="panel panel-info">
+                                <div class="panel-heading text-center lead"> Historique </div>
+                                <div class="panel-body">
+                                @if(count($historiques)>0)
+                                    <div class="box-body table-responsive no-padding mb40">
+                                        <table class="table table-hover table-bordered text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Exercice </th>
+                                                    <th>Formation demandée</th>
+                                                    <th>Entretien</th>
+                                                    <th>Etat</th>
+                                                    <th>Réalisé</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($historiques as $f)
+                                                <tr>
+                                                    <td> {{ Carbon\Carbon::parse($f->date)->format('d/m/Y')}} </td>
+                                                    <td> {{$f->exercice}} </td>
+                                                    <td> {{$f->title}} </td>
+                                                    <td> {{$f->entretien->titre}} </td>
+                                                    <td>
+                                                        <select name="status" id="status" class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" disabled="" >
+                                                            <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
+                                                            <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
+                                                            <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" name="done" {{$f->done == 1 ? 'checked':''}} disabled >
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p class="alert alert-default">Aucune donnée disponible !</p>
+                                @endif
+                                </div>
+                            </div>
                             @endif
                         </div>
                     </div>

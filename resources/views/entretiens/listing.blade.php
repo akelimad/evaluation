@@ -10,7 +10,7 @@
                     <div class="box-header">
                         <h3 class="box-title">La liste des entretiens <span class="badge">{{$entretiens->total()}}</span></h3>
                         <div class="box-tools">
-                            
+                            <a onclick="return chmEntretien.create('annuel')" class="btn bg-maroon" data-toggle="tooltip" title="Créer un entretien"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
                     </div>
                     <p class="help-block"> Dans cette page vous allez pouvoir personnaliser le questionnaire à affecter pour la partie d'évaluation de l'entretien en question ansi que pour la partie des objectifs. <br> Selectionnez le questionnaire et l'objectif puis cliquer sur Actualiser. </p>

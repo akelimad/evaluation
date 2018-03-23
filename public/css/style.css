@@ -9,11 +9,17 @@ body{
 .mb40{
     margin-bottom: 40px;
 }
-
+input[readonly]{
+    background-color: #f3ecec;
+    border: none;
+}
 textarea { 
    /* will prevent resizing horizontally */
    resize:vertical;
    min-height: 70px;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #efefef;
 }
 .alert a{
     color: #ea5f5f;
@@ -187,13 +193,14 @@ i{
     padding-left: 0;
 }
 .icon-fill{
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
     display: inline-block;
     text-align: center;
     color: white;
     border-radius: 50%;
+    border: none;
 }
 .navbar-nav>.user-menu>.dropdown-menu>.user-footer{
     background: #efeded;
@@ -469,7 +476,7 @@ ul.user-data li i{
     display: none;
 }
 .modal-body {
-    max-height: 400px;
+    max-height: 500px;
     overflow: auto;
 }
 .slider-selection{
@@ -502,4 +509,44 @@ p.help-block{
 }
 .callout{
     padding: 8px 8px;
+}
+.modal-dialog{
+    width: auto;
+}
+.apercu .panel-default>.panel-heading {
+  color: #333;
+  background-color: #fff;
+  border-color: #e4e5e7;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.apercu .panel-default>.panel-heading a {
+    display: block;
+    padding: 10px 15px;
+}
+
+.more-less {
+    float: right;
+    color: #32bae4;
+    font-size: 20px;
+    font-weight: bold;
+}
+.apercu .panel-default>.panel-heading a[aria-expanded="true"] {
+    background-color: #eee;
+}
+.apercu .groupe-heading{
+    border-bottom: 1px solid #22bba5;
+    padding-bottom: 5px;
+}
+.relanceMentor{
+    opacity: .2;
+    cursor: not-allowed;
+}
+.apercu .objectifTitle{
+    background: #f7f9fb;
+    color: #000000;
 }

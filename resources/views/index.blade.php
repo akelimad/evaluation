@@ -56,9 +56,9 @@
                                             <tr>
                                                 <th>Titre </th>
                                                 <th>Limité au</th>
-                                                <th>Collaborateur</th>
-                                                <th>Mentor</th>
-                                                <th>RH</th>
+                                                <th class="text-center">Collaborateur</th>
+                                                <th class="text-center">Mentor</th>
+                                                <th class="text-center">RH</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -71,13 +71,13 @@
                                                 <td>
                                                     {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, Auth::user()->id) ? 'Vous avez rempli votre évaluation':'Vous avez une évaluation à remplir'}}"> </span>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validé par votre mentor':'Pas encore validé par votre mentor'}}"> </span>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <span class="label label-danger empty"> </span>
                                                 </td>
                                             </tr>
@@ -195,15 +195,15 @@
                             <div class="tab-pane active" id="aa">
                                 @if(count($collaborateurs)>0)
                                 <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover table-bordered">
+                                    <table class="table table-hover table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Nom & prénom </th>
                                                 <th>Fonction</th>
                                                 <th>Type d'évaluation</th>
-                                                <th>Collaborateur</th>
-                                                <th>Mentor</th>
-                                                <th>RH</th>
+                                                <th class="text-center">Collaborateur</th>
+                                                <th class="text-center">Mentor</th>
+                                                <th class="text-center">RH</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -219,13 +219,13 @@
                                                 <td> 
                                                     <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a> 
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <span class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($en->id, $coll->id) ? 'Rempli par '.$coll->name :'Pas encore rempli par '.$coll->name }}"> </span>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'Vous avez validé l\'évaluation de '.$coll->name :'Veuillez valider l\'évaluation de '.$coll->name}}"> </span>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <span class="label label-danger empty"> </span>
                                                 </td>
                                             </tr>

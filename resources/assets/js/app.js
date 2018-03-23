@@ -16,7 +16,7 @@ import chmRole from './class/role'
 import chmPermission from './class/permission'
 import chmEntretien from './class/entretien'
 import chmDocument from './class/document'
-import chmRemuneration from './class/remuneration'
+import chmSalary from './class/salary'
 import chmComment from './class/comment'
 import chmDecision from './class/decision'
 import chmSkill from './class/skill'
@@ -40,7 +40,7 @@ window.chmRole = chmRole
 window.chmPermission = chmPermission
 window.chmEntretien = chmEntretien
 window.chmDocument = chmDocument
-window.chmRemuneration = chmRemuneration
+window.chmSalary = chmSalary
 window.chmComment = chmComment
 window.chmDecision = chmDecision
 window.chmSkill = chmSkill

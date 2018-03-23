@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Remuneration extends Model
+class Salary extends Model
 {
     public function entretien()
     {

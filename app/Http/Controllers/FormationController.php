@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use App\Entretien;
 use App\Formation;
@@ -27,8 +27,9 @@ class FormationController extends Controller
         $e = Entretien::find($e_id);
         $user = User::find($uid);
         $formations = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->get();
+        $historiques = Formation::where('user_id', $uid)->where('status', 2)->get();
         $evaluations = $e->evaluations;
-        return view('formations.index', compact('formations', 'e', 'user', 'evaluations') );
+        return view('formations.index', compact('formations', 'historiques', 'e', 'user', 'evaluations') );
     }
 
     /**
@@ -53,6 +54,15 @@ class FormationController extends Controller
      */
     public function store($e_id, Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'date'      => 'required|date',
+            'exercice'  => 'required',
+            'title'     => 'required',
+        ]);
+        if ($validator->fails()) {
+            return ["status" => "danger", "message" => $validator->errors()->all()];
+        }
+
         if($request->id == null ){
             $formation = new Formation();
         }else{

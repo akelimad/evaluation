@@ -51,6 +51,8 @@ Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUse
 Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
+Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
+Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
@@ -61,7 +63,7 @@ Route::get('skills', 'SkillController@indexAdmin');
 Route::get('skills/create', 'SkillController@create');
 Route::post('skills/store', 'SkillController@store');
 Route::get('skills/{id}/edit', 'SkillController@edit');
-Route::get('entretiens/{e_id}/u/{uid}/Competences', 'SkillController@index');
+Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index');
 Route::get('skills/updateUserSkills', 'SkillController@updateUserSkills');
 
 Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
@@ -89,22 +91,16 @@ Route::get('entretiens/{e_id}/documents/create', 'DocumentController@create');
 Route::post('entretiens/{e_id}/documents/store', 'DocumentController@store');
 Route::get('entretiens/{e_id}/documents/{id}/edit', 'DocumentController@edit');
 
-Route::get('entretiens/{e_id}/remunerations', 'RemunerationController@index');
-Route::get('entretiens/{e_id}/remunerations/create', 'RemunerationController@create');
-Route::post('entretiens/{e_id}/remunerations/store', 'RemunerationController@store');
-Route::get('entretiens/{e_id}/remunerations/{id}/edit', 'RemunerationController@edit');
+Route::get('entretiens/{eid}/u/{uid}/salaires', 'SalarieController@index');
+Route::get('entretiens/{eid}/u/{uid}/salaires/create', 'SalarieController@create');
+Route::post('entretiens/{eid}/u/{uid}/salaires/store', 'SalarieController@store');
+Route::get('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edit');
 
-Route::get('entretiens/{e_id}/comments', 'CommentController@index');
-Route::get('entretiens/{e_id}/comments/create', 'CommentController@create');
-Route::post('entretiens/{e_id}/comments/store', 'CommentController@store');
-Route::get('entretiens/{e_id}/comments/{id}/edit', 'CommentController@edit');
-
-
-Route::get('entretiens/{e_id}/decisions', 'DecisionController@index');
-Route::get('entretiens/{e_id}/decisions/create', 'DecisionController@create');
-Route::post('entretiens/{e_id}/decisions/store', 'DecisionController@store');
-Route::get('entretiens/{e_id}/decisions/{id}/edit', 'DecisionController@edit');
-
+Route::get('entretiens/{eid}/u/{uid}/commentaires', 'CommentController@index');
+Route::get('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create');
+Route::post('entretiens/{eid}/u/{uid}/commentaires/store', 'CommentController@store');
+Route::get('entretiens/{eid}/u/{uid}/commentaires/{id}/edit', 'CommentController@edit');
+Route::put('entretiens/{eid}/u/{uid}/commentaires/{cid}/mentorUpdate', 'CommentController@mentorUpdate');
 
 Route::get('surveys', 'SurveyController@index')->name('surveys-list');
 Route::get('surveys/create', 'SurveyController@create');

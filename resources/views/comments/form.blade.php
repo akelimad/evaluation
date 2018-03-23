@@ -1,54 +1,49 @@
 
 <div class="content">
     <input type="hidden" name="id" value="{{ isset($c->id) ? $c->id : null }}">
-    <input type="hidden" name="e_id" value="{{ isset($e->e_id) ? $e->e_id : null }}">
+    <input type="hidden" name="eid" value="{{ isset($e->id) ? $e->id : null }}">
+    <input type="hidden" name="uid" value="{{ isset($user->id) ? $user->id : null }}">
     {{ csrf_field() }}
-    <div class="form-group">
-        <label for="is_task" class="col-md-2 control-label">Tâche ?</label>
-        <div class="col-md-10">
-            <label class="toggle-check">
-                <input type="checkbox" name="is_task" class="toggle-check-input" {{ isset($c->is_task) && $c->is_task == 1 ? 'checked' :''}}/>
-                <span class="toggle-check-text"></span>
-            </label>
+    <div id="addLine-wrap">
+        <div class="form-group" >
+            <div class="col-md-11">
+                <label class="control-label">Commentaire</label>
+                <textarea class="form-control" name="comments[0]" required="required" style="height: 36px;min-height: 0">{{ $c->userComment or '' }}</textarea>
+            </div>
+            @if(!isset($c->id))
+            <div class="col-md-1">
+                <label class="control-label"> &nbsp; </label>
+                <button type="button" class="btn btn-info addLine pull-right"><i class="fa fa-plus"></i></button>
+            </div>
+            @endif
         </div>
     </div>
-    <div class="form-group">
-        <label for="destinataire" class="col-md-2 control-label">Destinataire</label>
-        <div class="col-md-10">
-            <select name="destinataire" id="destinataire" class="form-control">
-                <option value="Collaborateur">Collaborateur</option>
-                <option value="RH">RH</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="fichier" class="col-md-2 control-label">Echéance</label>
-        <div class="col-md-10">
-            <input type="text" name="echeance" id="datepicker" class="form-control" readonly="true" value="{{isset($c->echeance) ? Carbon\Carbon::parse($c->echeance)->format('d-m-Y') : null }}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="is_done" class="col-md-2 control-label">Terminé ?</label>
-        <div class="col-md-10">
-            <label class="toggle-check">
-                <input type="checkbox" name="is_done" class="toggle-check-input" {{ isset($c->is_done) && $c->is_done == 1 ? 'checked' :''}}/>
-                <span class="toggle-check-text"></span>
-            </label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="comment" class="col-md-2 control-label">Commentaire</label>
-        <div class="col-md-10">
-            <textarea name="comment" id="comment" class="form-control">{{ isset($c->comment) ? $c->comment :''}}</textarea>
-        </div>
-    </div>
-
 </div>
+
 <script>
-    $(function() {
-        $('#datepicker').datepicker({
-            autoclose: true,
-            format: 'dd-mm-yyyy'
+    $(function(){
+        function uuidv4() {
+            return ([1e7]+-1e3).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            )
+        }
+        $(".addLine").click(function(event){
+            event.preventDefault()
+            var copy = $('#addLine-wrap').find(".form-group:first").clone()
+            copy.find('textarea').val('')
+            copy.find('button').toggleClass('addLine deleteLine')
+            copy.find('button>i').toggleClass('fa-plus fa-minus')
+            var uid = uuidv4()
+            $.each(copy.find('textarea'), function(){
+                var name = $(this).attr('name')
+                $(this).attr('name', name.replace('[0]', '['+uid+']'))
+            })
+            $('#addLine-wrap').append(copy)
         })
+        $('#addLine-wrap').on('click', '.deleteLine', function(){
+            $(this).closest('.form-group').remove();
+        });
+
+
     })
 </script>

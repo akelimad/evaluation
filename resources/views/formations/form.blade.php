@@ -5,15 +5,19 @@
     {{ csrf_field() }}
     <div class="form-group">
         <label for="date" class="control-label">Date <span class="asterisk">*</span></label>
-        <input type="text" class="form-control" name="date" id="datepicker" placeholder="Ex: 01/01/2018" value="{{isset($f->date) ? Carbon\Carbon::parse($f->date)->format('d-m-Y') :''}}" readonly="">
+        <input type="text" class="form-control" name="date" id="datepicker" placeholder="Ex: 01/01/2018" value="{{isset($f->date) ? Carbon\Carbon::parse($f->date)->format('d-m-Y') :''}}" readonly="" required="">
     </div>
     <div class="form-group">
         <label for="exercice" class="control-label">Exercice <span class="asterisk">*</span></label>
-        <input type="text" class="form-control" name="exercice" id="exercice" placeholder="Ex: 2018" value="{{isset($f->exercice) ? $f->exercice :''}}" >
+        <select name="exercice" id="exercice" class="form-control" required="">
+            @for ($i = date('Y') ; $i <= date('Y') + 6 ; $i++)
+            <option value="{{ $i }}" {{ isset($f->exercice) && $f->exercice == $i ? 'selected' :'' }}> {{ $i }} </option>
+            @endfor               
+        </select>
     </div>
     <div class="form-group">
         <label for="title" class="control-label">Titre de la formation demandée <span class="asterisk">*</span></label>
-        <input type="text" class="form-control" name="title" id="title" placeholder="Ex: Formation IA" value="{{isset($f->title) ? $f->title :''}}" >
+        <input type="text" class="form-control" name="title" id="title" placeholder="Ex: Formation IA" value="{{isset($f->title) ? $f->title :''}}" required="">
     </div> 
 </div>
 <script>

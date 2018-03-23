@@ -6,20 +6,38 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Entretien;
-use App\Remuneration;
+use App\Salary;
+use App\User;
+use Auth;
 
-class RemunerationController extends Controller
+class SalarieController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id)
+    public function index($eid, $uid)
     {
-        $entretien = Entretien::find($e_id);
-        $remunerations = $entretien->remunerations;
-        return view('remunerations.index', ['remunerations' => $remunerations, 'e'=> $entretien]);
+        $e = Entretien::find($eid);
+        $evaluations = $e->evaluations;
+        $user = User::find($uid);
+        if($user->id == Auth::user()->id){
+            $salaries = Salary::where('user_id', $uid)->where('entretien_id', $eid)->paginate(10);
+        }else{
+            $salaries = Salary::where('mentor_id', $user->parent->id)->paginate(10);
+        }
+        return view('salaries.index', compact('e', 'user', 'salaries', 'evaluations'));
     }
 
     /**
@@ -27,11 +45,12 @@ class RemunerationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($e_id)
+    public function create($eid, $uid)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        echo view('remunerations.form', ['e' => $entretien]);
+        $e = Entretien::find($eid);
+        $user = User::find($uid);
+        echo view('salaries.form', compact('e', 'user'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter une rémunération', 'content' => $content];
     }
@@ -42,19 +61,21 @@ class RemunerationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($e_id, Request $request)
+    public function store(Request $request)
     {
         if($request->id == null ){
-            $document = new Remuneration();
+            $salary = new Salary();
         }else{
-            $document = Remuneration::find($request->id);
+            $salary = Salary::find($request->id);
         }
-        $document->type = $request->type;
-        $document->amount = $request->amount;
-        $document->reason = $request->reason;
-        $document->entretien_id = $e_id;
-        $document->save();
-        if($document->save()) {
+        $salary->brut = $request->brut;
+        $salary->prime = $request->prime;
+        $salary->comment = $request->comment;
+        $salary->user_id = $request->uid;
+        $salary->mentor_id = Auth::user()->id;
+        $salary->entretien_id = $request->eid; 
+        $salary->save();
+        if($salary->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {
             return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
@@ -78,12 +99,13 @@ class RemunerationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($e_id, $id)
+    public function edit($eid, $uid, $sid)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        $remuneration = Remuneration::find($id);
-        echo view('remunerations.form', ['r' => $remuneration, 'e'=>$entretien]);
+        $e = Entretien::find($eid);
+        $user = User::find($uid);
+        $s = Salary::find($sid);
+        echo view('salaries.form', compact('e', 'user', 's'));
         $content = ob_get_clean();
         return ['title' => 'Modifier une rémunération', 'content' => $content];
     }
