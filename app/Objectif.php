@@ -27,8 +27,13 @@ class Objectif extends Model
         return $this->belongsToMany('App\User');
     }
 
-    public static function getObjectif($eid, $oid){
-        $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('entretien_id', $eid)->where('objectif_id', $oid)->first();
+    public static function getObjectif($eid, $uid, $oid){
+        $auth = User::find($uid);
+        if($auth->id == $uid){
+            $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('objectif_id', $oid)->first();
+        }else{
+            $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('objectif_id', $oid)->where('mentor_id', Auth::user()->id)->first();
+        }
         return $objectif;
     }
 
@@ -51,13 +56,17 @@ class Objectif extends Model
 
     }
 
-    public static function filledObjectifs($eid, $uid){
-        $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->first();
+    public static function filledObjectifs($eid, $uid, $mentor_id){
+        $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('mentor_id', $mentor_id)->first();
         if($objectif){
             return $objectif;            
         }else{
             return null;
         }
+    }
+
+    public static function  cutNum($num, $precision = 2){
+        return floor($num).substr($num-floor($num),1,$precision+1);
     }
 
 

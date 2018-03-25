@@ -80,7 +80,7 @@ class EntretienController extends Controller
      */
     public function entretiensEval()
     {
-        $entretiens = Entretien::with('users.parent')->paginate(1);
+        $entretiens = Entretien::with('users.parent')->paginate(10);
         return view('entretiens/annuel.index', compact('entretiens'));
     }
 

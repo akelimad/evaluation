@@ -91,11 +91,8 @@
             @endif
         </div>
         <div class="col-md-6">
-            <label for="tel" class="control-label">Statut </label>
-            <label class="toggle-check" style="display: block;">
-                <input type="checkbox" name="status" class="toggle-check-input" {{ isset($user) && $user->status ==1 ? 'checked':'' }}/>
-                <span class="toggle-check-text"></span>
-            </label>
+            <label for="salary" class="control-label">Salaire </label>
+            <input id="salary" type="number" class="form-control" name="salary" placeholder="Salaire" value="{{ isset($user) ? $user->salary : '' }}">
         </div>
     </div>
     <div class="form-group">
@@ -115,6 +112,11 @@
                     <option value="{{$u->id}}" {{isset($user) && $u->id == $user->user_id ? 'selected':''}}> {{$u->email}} </option>
                 @endforeach
             </select>
+            <label for="tel" class="control-label">Statut </label>
+            <label class="toggle-check" style="display: block;">
+                <input type="checkbox" name="status" class="toggle-check-input" {{ isset($user) && $user->status ==1 ? 'checked':'' }}/>
+                <span class="toggle-check-text"></span>
+            </label>
         </div>
     </div>
 </div>

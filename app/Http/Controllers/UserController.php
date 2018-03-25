@@ -121,6 +121,7 @@ class UserController extends Controller
         $user->qualification= $request->qualification;
         $user->status= $request->status == "on" ? 1 : 0;
         $user->user_id= $request->user_id;
+        $user->salary= $request->salary;
         $user->save();
         $user->detachRoles($user->roles);
         $user->roles()->attach($request->roles);

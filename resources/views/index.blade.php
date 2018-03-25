@@ -43,7 +43,6 @@
                             <li class="active"><a href="#entretiens" data-toggle="tab"> Entretiens </a></li>
                             <li><a href="#objectifs" data-toggle="tab"> Objectifs  </a></li>
                             <li><a href="#formations" data-toggle="tab"> Formations </a></li>
-                            <li><a href="#taches" data-toggle="tab"> Tâches à mener  </a></li>
                         </ul>
                     </div>
                     <div class="portlet-body">
@@ -91,88 +90,12 @@
                             </div>
                             <div class="tab-pane" id="objectifs">
                                 <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>User</th>
-                                              <th>Date</th>
-                                              <th>Status</th>
-                                              <th>Reason</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    objectifs
                                 </div>
                             </div>
                             <div class="tab-pane" id="formations">
                                 <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>User</th>
-                                              <th>Date</th>
-                                              <th>Status</th>
-                                              <th>Reason</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="taches">
-                                <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>User</th>
-                                              <th>Date</th>
-                                              <th>Status</th>
-                                              <th>Reason</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    formations
                                 </div>
                             </div>
                         </div>
@@ -185,9 +108,7 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#aa" data-toggle="tab"> Entretiens </a></li>
                             <li><a href="#bb" data-toggle="tab"> Objectifs  </a></li>
-                            <li><a href="#cc" data-toggle="tab"> Formations </a></li>
-                            <li><a href="#dd" data-toggle="tab"> Tâches à mener  </a></li>
-                            
+                            <li><a href="#cc" data-toggle="tab"> Formations </a></li>                            
                         </ul>
                     </div>
                     <div class="portlet-body">
@@ -240,88 +161,12 @@
                             </div>
                             <div class="tab-pane" id="bb">
                                 <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>User</th>
-                                              <th>Date</th>
-                                              <th>Status</th>
-                                              <th>Reason</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>18555</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    objetifs
                                 </div>
                             </div>
                             <div class="tab-pane" id="cc">
                                 <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>User</th>
-                                              <th>Date</th>
-                                              <th>Status</th>
-                                              <th>Reason</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="dd">
-                                <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>User</th>
-                                              <th>Date</th>
-                                              <th>Status</th>
-                                              <th>Reason</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>183</td>
-                                                <td>John Doe</td>
-                                                <td>11-7-2014</td>
-                                                <td><span class="label label-success">Approved</span></td>
-                                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    formation
                                 </div>
                             </div>
                         </div>

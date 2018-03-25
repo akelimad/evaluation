@@ -536,7 +536,8 @@ p.help-block{
     font-weight: bold;
 }
 .apercu .panel-default>.panel-heading a[aria-expanded="true"] {
-    background-color: #eee;
+    background-color: #001f3f !important;
+    color: white;
 }
 .apercu .groupe-heading{
     border-bottom: 1px solid #22bba5;

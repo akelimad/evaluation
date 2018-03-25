@@ -10,6 +10,7 @@ use App\Objectif;
 use Auth;
 use App\EntretienObjectif;
 use App\Objectif_user;
+use App\User;
 
 class ObjectifController extends Controller
 {
@@ -79,28 +80,17 @@ class ObjectifController extends Controller
         $messages = $validator->errors();
 
         if($request->objectifs){
-            // $somme = 0;
-            // foreach ($request->objectifs as $obj) {
-            //     $somme = $somme + $obj['pourcentage'];
-            // }
-            // if($somme < 100) {
-            //     $messages->add('under_100', 'La somme des pourcentage doit être égale à 100 %');
-            // }
-            // if(count($messages)>0){
-            //     return ["status" => "danger", "message" => $messages];
-            // }else{
-                $objectif = new Objectif();
-                $objectif->title = $request->title;
-                $objectif->entretienobjectif_id = $request->oid;
-                $objectif->save();
-                foreach ($request->objectifs as $obj) {
-                    $subObj = new Objectif();
-                    $subObj->title = $obj['subTitle'];
-                    $subObj->ponderation = $obj['ponderation'];
-                    $subObj->parent_id = $objectif->id;
-                    $subObj->save();
-                }
-            // }
+            $objectif = new Objectif();
+            $objectif->title = $request->title;
+            $objectif->entretienobjectif_id = $request->oid;
+            $objectif->save();
+            foreach ($request->objectifs as $obj) {
+                $subObj = new Objectif();
+                $subObj->title = $obj['subTitle'];
+                $subObj->ponderation = $obj['ponderation'];
+                $subObj->parent_id = $objectif->id;
+                $subObj->save();
+            }
         }
         if($objectif->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -150,10 +140,18 @@ class ObjectifController extends Controller
 
     public function updateNoteObjectifs(Request $request)
     {
-        $user= Auth::user();
+        $auth= Auth::user();
+        $user_id = $request->user_id;
+        if($auth->id == $user_id){
+            $user = $auth;
+            $mentor_id = $auth->parent->id;
+        }else{
+            $user = User::find($request->user_id);
+            $mentor_id = $auth->id;
+        }
         foreach ($request->objectifs as $key => $subObjectif) {
-            $sousTotal = 0;
-            $sumPonderation = 0;
+            // $sousTotal = 0;
+            // $sumPonderation = 0;
             foreach ($subObjectif as $id => $array) {
                 $user->objectifs()->attach([$id => 
                     [
@@ -161,15 +159,16 @@ class ObjectifController extends Controller
                         'note'=> isset($array[0]) && $array[0] != "" ? $array[0]: "", 
                         'realise'=> isset($array[1]) && $array[1] != "" ? $array[1]: "", 
                         'appreciation'=> $array[2],
-                        'objNplus1'=> isset($array[4]) && $array[4] == "on" ? 1 : 0
+                        'objNplus1'=> isset($array[4]) && $array[4] == "on" ? 1 : 0,
+                        'mentor_id'=> $mentor_id,
                     ]
                 ]);
-                $sumPonderation += $array[3];
-                $sousTotal +=  ($array[0] * $array[3]);
+                // $sumPonderation += $array[3];
+                // $sousTotal +=  ($array[0] * $array[3]);
             }
-            $objectif = Objectif::find($key);
-            $objectif->sousTotal = $this->cutNum($sousTotal/$sumPonderation, 2);
-            $objectif->save(); 
+            // $objectif = Objectif::find($key);
+            // $objectif->sousTotal = $this->cutNum($sousTotal/$sumPonderation, 2);
+            // $objectif->save(); 
         }
         return redirect()->back();
 
