@@ -7,22 +7,16 @@
                 @if(Session::has('update_formation'))
                     @include('partials.alerts.success', ['messages' => Session::get('update_formation') ])
                 @endif
-                    <h3 class="mb40"> La liste des formations</h2>
-                    <div class="callout callout-info">
-                        <p class="">
-                            <i class="fa fa-info-circle fa-2x"></i> 
-                            <span class="content-callout">Cette page affiche la liste des formations demandées de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
-                        </p>
-                    </div>
+                    <h3 class="mb40"> La liste des formations <span class="badge">{{ $formations->total() }}</span> : {{ $e->titre }} - {{ $user->name." ".$user->last_name }} </h3>
                     <div class="nav-tabs-custom">
                         @include('partials.tabs')
                         <div class="tab-content">
                             <div class="panel panel-info">
-                                <div class="panel-heading text-center lead"> Souhaits </div>
+                                <div class="panel-heading text-center"> Souhaits </div>
                                 <div class="panel-body">
                                 @if(count($formations)>0)
                                     <div class="box-body table-responsive no-padding mb40">
-                                        <table class="table table-hover table-bordered text-center">
+                                        <table class="table table-hover table-striped text-center">
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
@@ -120,6 +114,12 @@
                             @endif
                         </div>
                     </div>
+                <div class="callout callout-info">
+                    <p class="">
+                        <i class="fa fa-info-circle fa-2x"></i> 
+                        <span class="content-callout">Cette page affiche la liste des formations demandées de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                    </p>
+                </div>
                 </div>
             </div>
         </div>

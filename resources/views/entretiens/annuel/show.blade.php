@@ -7,7 +7,7 @@
                     @include('partials.alerts.success', ['messages' => session()->get('message') ])
                 @endif
                 <div class="card box box-primary">
-                    <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} </h3>
+                    <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} - {{ $user->name." ".$user->last_name }} </h3>
                     <div class="nav-tabs-custom">
                         @include('partials.tabs')
                         <div class="tab-content">
@@ -57,7 +57,9 @@
                                     <div class="col-md-9"> 
                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a> 
                                         @role(['MENTOR', 'ADMIN'])
+                                        @if(!App\Entretien::answered($e->id, $user->id))
                                         <a href="{{url('notifyUserInterview', ['entretien'=>$e, 'user'=> $user])}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> envoyez-le un email pour l'informer</a>
+                                        @endif
                                         @endrole
                                     </div>
                                     <div class="clearfix"></div>
@@ -83,6 +85,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

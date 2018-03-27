@@ -75,20 +75,19 @@ class UserController extends Controller
     public function storeUser(Request $request){
         $id = $request->input('id', false);
         $rules = [
-            'name'      => 'required|min:3|max:25',
-            'last_name' => 'required|min:3|max:25',
+            'name'      => 'required|alpha|min:3|max:25',
+            'last_name' => 'required|alpha|min:3|max:25',
+            'email'     => 'required|unique:users,email',
             'password'  => 'required|confirmed|min:6',
+            'tel'       => 'regex:/[0-9]{10}$/',
         ];
         if($id) {
-            $rules = [
-                'name'      => 'required|min:3|max:25',
-                'last_name' => 'required|min:3|max:25',
-            ];
             $user = User::find($id);
+            $rules['email'] = 'required|unique:users,email,'.$user->id;
             if(!empty($request->password) || !empty($request->password_confirmation)){
-                $rules = [
-                    'password' => 'required|min:6|confirmed',
-                ];
+                $rules['password'] = 'required|confirmed|min:6';
+            }else{
+                $rules['password'] = '';
             }
         }else{
             $user = new User();
@@ -119,7 +118,7 @@ class UserController extends Controller
         $user->function= $request->function;
         $user->service= $request->service;
         $user->qualification= $request->qualification;
-        $user->status= $request->status == "on" ? 1 : 0;
+        $user->status= 1;
         $user->user_id= $request->user_id;
         $user->salary= $request->salary;
         $user->save();
@@ -149,7 +148,7 @@ class UserController extends Controller
         return ['title' => 'Modifier un utilisateur', 'content' => $content];
     }
 
-    public function destroyUser(Request $request, $id){
+    public function deleteUser(Request $request, $id){
         $user = User::find($id);
         $user->delete();
         return redirect('users');
@@ -193,11 +192,19 @@ class UserController extends Controller
         $fields = Session::get('session_csv_headers')[0];
         $maxUserId = User::whereRaw('id = (select max(`id`) from users)')->first();
         $count = $maxUserId->id;
+        $added = 0;
+        $updated = 0;
         foreach ($csv_data as $row) {
-            $user = User::where('email', $row[$fields[2]])->first(); // model or null
-            if (!$user && !empty($row[$fields[0]]) && !empty($row[$fields[1]]) && !empty($row[$fields[2]]) && $row[$fields[3]] && !empty($row[$fields[4]]) ) {
-                $user = new User();
-                $user->id= $count+1;
+            if (!empty($row[$fields[0]]) && !empty($row[$fields[1]]) && !empty($row[$fields[2]]) && $row[$fields[3]] && !empty($row[$fields[4]]) || $row[$fields[4]] =="0" ) {
+                $existUser = User::where('email', $row[$fields[2]])->first();
+                if($existUser){
+                    $user = $existUser;
+                    $updated +=1;
+                }else{
+                    $user = new User();
+                    $user->id= $count+1;
+                    $added +=1;
+                }
                 $user->name= $row[$fields[0]];
                 $user->last_name = $row[$fields[1]];
                 $user->email= $row[$fields[2]];
@@ -219,13 +226,13 @@ class UserController extends Controller
                     $user->user_id= 0;
                 }
                 $user->save();
-                $user->roles()->attach($this->getRoleByName($row[$fields[3]]));
+                $user->roles()->sync($this->getRoleByName($row[$fields[3]]));
                 $count++;
             }else{
-                return redirect('users')->with('exist_already', 'Une erreur est survenu lors l\'importation. les utilisateurs existent deja ou bien un des chmaps obligatoire(Prenom, nom, email, role, Parent email) est vide!');
+                return redirect('users')->with('exist_already', 'Une erreur est survenu lors l\'importation. il se peut que un des champs obligatoire(Prénom, nom, email, role, Mentor email) est vide!');
             }
         }
-        return redirect('users')->with('import_success', 'Les utilisateurs ont été importés avec succès!');;
+        return redirect('users')->with('import_success', 'Les utilisateurs ont été importés avec succès avec '.$added.' ajout et '.$updated.' mis à jour !');
 
     }
 

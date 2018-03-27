@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary card">
-                    <h3 class="mb40"> La liste des salaires </h2>
+                    <h3 class="mb40"> La liste des salaires pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }}</h2>
                     <div class="nav-tabs-custom">
                         @include('partials.tabs')
                         <div class="tab-content">
@@ -50,6 +50,12 @@
                             <a onclick="return chmSalary.create({eid: {{$e->id}} , uid: {{$user->id}} })" data-id="{{$e->id}}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un salaire</a>
                             @endif
                         </div>
+                    </div>
+                    <div class="callout callout-info">
+                        <p class="">
+                            <i class="fa fa-info-circle fa-2x"></i> 
+                            <span class="content-callout">Cette page affiche la liste des salaires de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                        </p>
                     </div>
                 </div>
             </div>

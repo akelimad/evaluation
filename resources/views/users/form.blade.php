@@ -4,27 +4,27 @@
     {{ csrf_field() }}
     <div class="form-group">
         <div class="col-md-6">
-            <label for="name" class="control-label">Prénom</label>
+            <label for="name" class="control-label">Prénom <span class="asterisk">*</span></label>
             <input type="text" name="name" class="form-control" id="name" placeholder="Prénom" required="" value="{{ isset($user) ? $user->name : '' }}">
         </div>
         <div class="col-md-6">
-            <label for="last_name" class="control-label">Nom</label>
+            <label for="last_name" class="control-label">Nom <span class="asterisk">*</span></label>
             <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Nom" required="" value="{{ isset($user) ? $user->last_name : ''  }}" >
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <label for="email" class="control-label">Email</label>
+            <label for="email" class="control-label">Email <span class="asterisk">*</span></label>
             <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com" required="" value="{{ isset($user) ? $user->email : ''  }}">
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6"> 
-            <label for="password" class="control-label">Mot de passe</label>
+            <label for="password" class="control-label">Mot de passe <span class="asterisk">*</span></label>
             <input id="password" type="password" class="form-control" name="password" {{ isset($user) ? '':'required' }}>
         </div>
         <div class="col-md-6"> 
-            <label for="password" class="control-label">Confirmez-le</label>
+            <label for="password" class="control-label">Confirmez-le <span class="asterisk">*</span></label>
             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" {{ isset($user) ? '':'required' }}>
         </div>
     </div>
@@ -84,8 +84,15 @@
     </div>
     <div class="form-group">
         <div class="col-md-6"> 
-            <label for="avatar" class="control-label">Photo</label>
-            <input type="file" name="avatar" id="avatar" class="form-control">
+            <label for="photo" class="control-label">Photo </label>
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Parcourir <input type="file" name="avatar" style="display: none;" accept="image/*">
+                    </span>
+                </label>
+                <input type="text" id="avatar" class="form-control" readonly="">
+            </div>
             @if(isset($user))
             <img src="{{ asset('avatars/'.$user->avatar) }}" alt="" width="100" height="100">
             @endif
@@ -94,10 +101,11 @@
             <label for="salary" class="control-label">Salaire </label>
             <input id="salary" type="number" class="form-control" name="salary" placeholder="Salaire" value="{{ isset($user) ? $user->salary : '' }}">
         </div>
+        <div class="clearfix"></div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
-            <label for="role" class="control-label">Rôle </label>
+            <label for="role" class="control-label">Rôle <span class="asterisk">*</span></label>
             <select name="roles[]" id="role" class="form-control" multiple="" required="">
                 @foreach($roles as $role)
                     <option value="{{$role->id}}" {{isset($roles_ids) && in_array($role->id, $roles_ids) ? 'selected':''}}> {{$role->name}} </option>
@@ -106,17 +114,34 @@
         </div>
         <div class="col-md-6">
             <label for="user_id" class="control-label">Mentor </label>
-            <select name="user_id" id="user_id" class="form-control" {{ isset($user) ? '':'required' }}>
+            <select name="user_id" id="user_id" class="form-control" >
                 <option value="">=== Select ===</option>
                 @foreach($users as $u)
                     <option value="{{$u->id}}" {{isset($user) && $u->id == $user->user_id ? 'selected':''}}> {{$u->email}} </option>
                 @endforeach
             </select>
-            <label for="tel" class="control-label">Statut </label>
-            <label class="toggle-check" style="display: block;">
-                <input type="checkbox" name="status" class="toggle-check-input" {{ isset($user) && $user->status ==1 ? 'checked':'' }}/>
-                <span class="toggle-check-text"></span>
-            </label>
         </div>
+        <div class="clearfix"></div>
     </div>
 </div>
+
+<script>
+    $(function(){
+        // to show the choosen filename in input like: avatar.png
+        $(document).on('change', ':file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+        $(document).ready( function() {
+            $(':file').on('fileselect', function(event, numFiles, label) {
+                var input = $(this).parents('.input-group').find(':text'),
+                log = numFiles > 1 ? numFiles + ' files selected' : label;
+                if( input.length ) {
+                    input.val(log);
+                }
+            });
+        });
+    })
+</script>

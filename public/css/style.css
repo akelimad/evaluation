@@ -9,6 +9,10 @@ body{
 .mb40{
     margin-bottom: 40px;
 }
+.disabled{
+    cursor: not-allowed;
+    opacity: .7;
+}
 input[readonly]{
     background-color: #f3ecec;
     border: none;
@@ -17,6 +21,18 @@ textarea {
    /* will prevent resizing horizontally */
    resize:vertical;
    min-height: 70px;
+}
+.has-feedback .form-control{
+    padding-left: 50px;
+    padding-right: 0;
+}
+.form-horizontal .has-feedback .form-control-feedback{
+    left: 0;
+    background: #44a4dc;
+    color: white;
+}
+.table > tbody > tr > td{
+    vertical-align: middle;
 }
 .table-striped>tbody>tr:nth-of-type(odd) {
     background-color: #efefef;
@@ -408,12 +424,13 @@ ul.user-data li i{
 }
 .entretien-row{
     /*border-bottom: 2px solid #a0a0a0;*/
+    display: none;
 }
 .entretien-row>td{
     padding: 0 ;
 }
 .entretien-row form{
-    display: none;
+    /*display: none;*/
 }
 .icon-add-question{
     display: inline-block;
@@ -440,8 +457,8 @@ ul.user-data li i{
     background: #3b3b3c;
     font-size: 13px;
 }
-.has-motif{
-    background: #cc0b0b2e;
+.has-motif, .has-motif:hover{
+    background: #cc0b0b2e !important;
 }
 .survey label.questionTitle{
     display: block;
@@ -550,4 +567,13 @@ p.help-block{
 .apercu .objectifTitle{
     background: #f7f9fb;
     color: #000000;
+}
+.criteresForm{
+    display: none;
+}
+.users .box-header>.box-tools{
+    right: 0;
+}
+.users .box-header{
+    padding: 10px 0;
 }

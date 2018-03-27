@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-primary card">
-                <h3 class="mb40"> La liste des objectifs pour: {{$e->titre}} </h3>
+                <h3 class="mb40"> La liste des objectifs pour: {{$e->titre}} - {{ $user->name." ".$user->last_name }} </h3>
                 <div class="nav-tabs-custom">
                     @include('partials.tabs')
                     <div class="tab-content">
@@ -24,7 +24,6 @@
                                         </tr>
                                         @php($c = 0)
                                         @php($total = 0)
-                                        @php($sousT = 0)
                                         @foreach($objectifs as $objectif)
                                             @php($c+=1)
                                             <input type="hidden" name="parentObjectif[]" value="{{$objectif->id}}">
@@ -36,7 +35,7 @@
                                             @php($sousTotal = 0)
                                             @php($sumPonderation = 0)
                                             @foreach($objectif->children as $sub)
-
+                                                
                                                 @php( $sumPonderation += $sub->ponderation )
                                                 @if(App\Objectif::getObjectif($e->id,$user->id, $sub->id))
                                                     @php( $sousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->note * $sub->ponderation )
@@ -87,22 +86,22 @@
                                             @endforeach
                                             <tr>
                                                 <td colspan="5" class="sousTotal"> 
-                                                    Sous-total  
-                                                    <span class="badge badge-success pull-right">{{number_format($sousTotal/$sumPonderation, 2)}}</span>
+                                                    <span>Sous-total</span>
+                                                    <span class="badge badge-success pull-right">{{App\Objectif::cutNum($sousTotal/$sumPonderation)}}</span>
                                                 </td>
                                             </tr>
-                                            @php( $total += number_format($sousTotal/$sumPonderation, 2) )
+                                            @php( $total += App\Objectif::cutNum($sousTotal/$sumPonderation) )
                                         @endforeach
                                         <tr>
-                                            <td colspan="5" class="btn-warning">
-                                                TOTAL DE L'ÉVALUATION  
-                                                <span class="btn btn-info pull-right">{{ App\Objectif::cutNum($total/$c) }}</span>
+                                            <td colspan="5" class="btn-warning" valign="middle">
+                                                <span>TOTAL DE L'ÉVALUATION</span>  
+                                                <span class="btn-default pull-right badge">{{ App\Objectif::cutNum($total/$c) }}</span>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5" class="btn-danger">
-                                                NOTE FINALE
-                                                <span class="btn btn-info pull-right"> {{ App\Objectif::cutNum($total/$c) *10 }} % </span>
+                                            <td colspan="5" class="btn-success">
+                                                <span>NOTE FINALE</span>
+                                                <span class="btn-default pull-right badge"> {{ App\Objectif::cutNum($total/$c) *10 }} % </span>
                                             </td>
                                         </tr>
                                     </table>
@@ -116,6 +115,12 @@
                             @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
                         @endif
                     </div>
+                </div>
+                <div class="callout callout-info">
+                    <p class="">
+                        <i class="fa fa-info-circle fa-2x"></i> 
+                        <span class="content-callout">Cette page affiche la liste des objectifs de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                    </p>
                 </div>
             </div>
         </div>

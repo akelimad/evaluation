@@ -17,26 +17,27 @@
                             </div>
                             <div class="col-md-8">
                                 <p>
-                                    <a href="{{ asset('data/modele_user.csv') }}" class="btn btn-warning"> Télécharger un modèle au format csv </a>
+                                    <a href="#" class="btn btn-warning"> Télécharger un modèle au format csv </a>
                                 </p>
                                 <p class="help-block">
                                     Voici les consignes à respecter pour importer ou mettre à jour la liste de compte :
                                 </p>
                                 <ul class="list-unstyled user-data">
                                     <li><i class="fa fa-hand-o-right"></i> Le nombre d'utilisateurs est limité à 500 comptes</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> L'adresse email correspond au champ Email</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne prénom correspond au champ prénom</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne nom correspond au champ nom</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne email correspond au champ email</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne rôle correspond au champ rôle</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne mentor email au champ parent_id</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne adresse au champ adresse</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne code postale au champ zip_code</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne ville correspond au champ city</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne pays correspond au champ country</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne tel fix correspond au champ fix</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne tel mobile correspond au champ tel</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne fonction correspond au champ function</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne serivce correspond au champ service</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne qualification correspond au champ qualification</li>
                                 </ul>
 
                             </div>

@@ -30,7 +30,7 @@ class Entretien extends Model
     
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User', 'entretien_user', 'entretien_id', 'user_id');
     }
 
     public function evaluations()

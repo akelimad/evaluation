@@ -14,9 +14,9 @@
                       </div>
                     </div>
                     <form class="form-horizontal" method="POST" action="{{ url('users/import_process') }}">
-                        <div class="box-body table-responsive no-padding mb40">
+                        <div class="box-body table-responsive no-padding mb40 table-inversed-blue">
                             {{ csrf_field() }}
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" style="font-size: 13px">
                                 @if (count($csv_header_fields) > 0)
                                 <tr>
                                     @foreach ($csv_header_fields as $csv_header_field)

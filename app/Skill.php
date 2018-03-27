@@ -25,8 +25,13 @@ class Skill extends Model
         }
     }
 
-    public static function filledSkills($eid, $uid){
-        $skill = Skill_user::where('user_id', $uid)->where('entretien_id', $eid)->first();
+    public static function filledSkills($eid, $uid, $mentor_id){
+        $auth = User::find($uid);
+        if($auth->id == $uid){
+            $skill = Skill_user::where('user_id', $uid)->where('mentor_id', $mentor_id)->where('entretien_id', $eid)->where('auto', '!=' ,0)->first();
+        }else{
+            $skill = Skill_user::where('user_id', $uid)->where('mentor_id', $mentor_id)->where('entretien_id', $eid)->first();
+        }
         if($skill){
             return $skill;            
         }else{

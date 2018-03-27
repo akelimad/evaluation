@@ -51,7 +51,7 @@ class User extends Authenticatable
      */
     public function entretiens()
     {
-        return $this->belongsToMany('App\Entretien');
+        return $this->belongsToMany('App\Entretien', 'entretien_user', 'user_id', 'entretien_id');
     }
 
     /**
@@ -83,6 +83,14 @@ class User extends Authenticatable
     public function answers()
     {
         return $this->hasMany('App\Answer');
+    }
+
+    public static function hasMotif($eid, $uid){
+        $hasMotif = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)->first();
+        if( $hasMotif->motif ){
+            return $hasMotif->motif;
+        }
+        return null;
     }
 
 }

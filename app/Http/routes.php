@@ -13,6 +13,11 @@
 
 Route::auth();
 
+// Route::get('download-userModel-csv',function(){
+//     $file= public_path(). "/data/user_modele.csv";
+//     return Response::download($file ,'user_modele.csv');
+// });
+
 Route::get('/', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');
 
@@ -43,7 +48,8 @@ Route::get('entretiens/index', 'EntretienController@indexEntretien'); //index
 Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretienEvals'); 
 Route::get('entretiens/list', 'EntretienController@entretiensList'); 
 Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens
-Route::put('entretiens/{id}/update', 'EntretienController@update'); //mes entretiens
+Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif'); //mes entretiens
+Route::get('entretiens/filter', 'EntretienController@filterEntretiens');
 
 Route::get('entretiens/{type}/create', 'EntretienController@create');
 Route::post('entretiens/store', 'EntretienController@store');

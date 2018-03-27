@@ -66,7 +66,10 @@
                                                 <td><span class="badge">{{$totalEcart}}</span></td>
                                             </tr>
                                         </table>
+                                        @if(!App\Skill::filledSkills($e->id, $user->id, $user->parent->id))
                                         <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Sauvegarder</button>
+                                        @endif
+                                        {{ $user->id }} parent:{{ $user->parent->id }}
                                     </form>
                                     {{ $skills->links() }}
                                 </div>
@@ -74,6 +77,12 @@
                                 @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
                             @endif
                         </div>
+                    </div>
+                    <div class="callout callout-info">
+                        <p class="">
+                            <i class="fa fa-info-circle fa-2x"></i> 
+                            <span class="content-callout">Cette page affiche la liste des compétences de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                        </p>
                     </div>
                 </div>
             </div>

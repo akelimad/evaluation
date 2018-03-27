@@ -25,7 +25,8 @@
         $('#datepicker').datepicker({
             autoclose: true,
             format: 'dd-mm-yyyy',
-            language: 'fr'
+            language: 'fr',
+            startDate: new Date()
         })
     })
 </script>

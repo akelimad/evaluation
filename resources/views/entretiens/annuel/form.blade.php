@@ -38,7 +38,8 @@
     $(function() {
         $('#datepicker, #datepicker1, #datepicker2').datepicker({
             autoclose: true,
-            format: 'dd-mm-yyyy'
+            format: 'dd-mm-yyyy',
+            language: 'fr'
         })
         $('.select2').select2()
 

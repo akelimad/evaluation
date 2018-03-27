@@ -48,7 +48,7 @@ class HomeController extends Controller
         })->count();
 
         $nbMentors = User::with('roles')->whereHas('roles', function ($query) {
-            $query->where('name', '=', 'Mentor');
+            $query->where('name', '=', 'MENTOR');
         })->count();
 
         return view('dashboard', compact('nbColls', 'nbMentors'));

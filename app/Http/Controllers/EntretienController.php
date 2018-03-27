@@ -19,6 +19,7 @@ use App\EntretienObjectif;
 use App\Formation;
 use App\Skill;
 use App\Objectif;
+use DB;
 
 class EntretienController extends Controller
 {   
@@ -111,7 +112,7 @@ class EntretienController extends Controller
     public function create($type)
     {
         ob_start();
-        if(Auth::user()->hasRole('ADMIN')){
+        if(Auth::user()->hasRole(['ADMIN', 'RH'])){
             $users = User::select('id', 'email')->get();
         }else{
             $users = Auth::user()->children;
@@ -319,11 +320,10 @@ class EntretienController extends Controller
         return ['title' => 'Modifier un entretien', 'content' => $content];
     }
 
-    public function update(Request $request, $id)
+    public function updateMotif(Request $request, $eid, $uid)
     {
-        $user = User::find($id);
-        $user->motif = $request->motif;
-        $user->save();
+        $user = User::find($uid);
+        $user->entretiens()->updateExistingPivot($eid, ['motif' => $request->motif]);
         Session::flash('success_motif_save', "Le motif d'abscence a bien été sauvegardé.");
         return redirect('entretiens/evaluations');
     }
@@ -346,6 +346,43 @@ class EntretienController extends Controller
         echo view('entretiens.apercu', compact('evaluations','e', 'user', 'groupes', 'formations', 'skills','objectifs', 'total'));
         $content = ob_get_clean();
         return ['title' => "Aperçu de l'entretien", 'content' => $content];
+    }
+
+    public function filterEntretiens(Request $request)
+    {
+        $d = $request->d; //date_limit
+        if(!empty($d)) $date = Carbon::createFromFormat('d-m-Y', $d)->toDateString();
+        $t = $request->t; //titre
+        $id = $request->id;  //id entretien
+        $n = $request->n;  //nom user
+        $f = $request->f; //function user
+
+        $entretiens = Entretien::with('users.parent')->paginate(10);
+        $array = Entretien::with('users.parent');
+        // if(!empty($d)){
+        //     $entretiens = Entretien::with('users.parent')->where('date_limit', '=', $date)
+        //     ->where('titre', 'like', '%'.$t.'%')
+        //     ->paginate(15);
+        // }
+
+        if (!empty($date)) {
+            $entretiens = $array->where('date_limit', '=', $date)
+            ->where('titre', 'like', '%'.$t.'%')
+            ->where('id', '=', $id)
+            ->paginate(15);
+        }else{
+            $entretiens = $array->where('titre', 'like', '%'.$t.'%')
+            ->where('id', '=', $id)
+            ->paginate(15);
+        }
+        if ( !empty($n) || !empty($f) ) {
+            $entretiens = Entretien::with('users.parent')->whereHas('users', function($query) use($n, $f){
+                $query->where('name', 'like', '%'.$n.'%')->where('function', 'like', '%'.$f.'%');
+            })->paginate(15);
+
+        }
+
+        return view('entretiens.annuel.index', compact('entretiens', 'd', 't', 'id','n', 'f'));
     }
 
 

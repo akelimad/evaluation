@@ -18,8 +18,8 @@
                 @endif
                 <div class="box box-primary">
                     <div class="filter-box mb40">
-                        <h4>  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez </h4>
-                        <form action="{{ url('users/filter') }}">
+                        <h4 class="help-block">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right showFormBtn"> <i class="fa fa-chevron-down"></i></button></h4>
+                        <form action="{{ url('users/filter') }}" class="criteresForm">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -30,13 +30,13 @@
                                 <div class=" col-md-3">
                                     <div class="form-group">
                                         <label for="service"> Service </label>
-                                        <input type="text" name="service" id="service" class="form-control" value="{{ isset($name) ? $service :'' }}">
+                                        <input type="text" name="service" id="service" class="form-control" value="{{ isset($service) ? $service :'' }}">
                                     </div>
                                 </div>
                                 <div class=" col-md-3">
                                     <div class="form-group">
                                         <label for="function"> Fonction </label>
-                                        <input type="text" name="function" id="function" class="form-control" value="{{ isset($name) ? $function :'' }}">
+                                        <input type="text" name="function" id="function" class="form-control" value="{{ isset($function) ? $function :'' }}">
                                     </div>
                                 </div>
                                 <div class=" col-md-3">
@@ -60,7 +60,7 @@
                         </form>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title">La liste des utilisateurs <span class="badge">{{$users->total()}}</span></h3>
+                        <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> La liste des utilisateurs <span class="badge">{{$users->total()}}</span></h3>
                         <div class="box-tools mb40">
                             <a onclick="return chmUser.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
                         </div>
@@ -78,9 +78,8 @@
                                     <th>Rôle</th>
                                     <th>Service</th>
                                     <th>Mentor</th>
-                                    <th>Date d'embauche</th>
-                                    <th>Statut</th>
-                                    <th>Action</th>
+                                    <th>Créé le</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                                 @foreach($users as $key => $user)
                                 <tr>
@@ -110,12 +109,17 @@
                                         @endif
                                     </td>
                                     <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
-                                    <td> 
-                                        @if($user->status == 0) <span class="label label-danger">Désactivé</span> @else <span class="label label-success">Activé</span> </td>
+                                    <td class="text-center"> 
+                                        {{ csrf_field() }} 
+                                        <a href="{{ url('user/'.$user->id) }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Voir le profile"> <i class="fa fa-eye"></i> 
+                                        </a>
+                                        <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
+                                        </a>
+                                        @if($user->email == env('SYS_ADMIN_EMAIL'))
+                                        <a href="javascript:void(0)" class="btn-danger icon-fill disabled" data-toggle="tooltip" title="System admin ne peut pas être supprimé"> <i class="fa fa-trash" ></i> </a>
+                                        @else
+                                            <a href="javascript:void(0)" class="btn-danger icon-fill delete-user" data-id="{{ $user->id }}" data-toggle="tooltip" title="Supprimer"> <i class="fa fa-trash"></i> </a>
                                         @endif
-                                    <td>  
-                                        <a href="{{ url('user/'.$user->id) }}" class="btn-primary icon-fill"> <i class="fa fa-eye"></i> </a>
-                                        <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{$user->id}}})" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -133,4 +137,14 @@
         </div>
     </section>
 @endsection
-  
+
+@section('javascript')
+<script>
+    $(function() {
+        @if(isset($name))
+            $(".showFormBtn i").toggleClass("fa-chevron-down fa-chevron-up")
+            $(".criteresForm").fadeToggle()
+        @endif
+    })
+</script>
+@endsection

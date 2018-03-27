@@ -26,8 +26,8 @@ class FormationController extends Controller
     {
         $e = Entretien::find($e_id);
         $user = User::find($uid);
-        $formations = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->get();
-        $historiques = Formation::where('user_id', $uid)->where('status', 2)->get();
+        $formations = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->orderBy('id', 'desc')->paginate(10);
+        $historiques = Formation::where('user_id', $uid)->where('status', 2)->paginate(10);
         $evaluations = $e->evaluations;
         return view('formations.index', compact('formations', 'historiques', 'e', 'user', 'evaluations') );
     }
@@ -55,9 +55,9 @@ class FormationController extends Controller
     public function store($e_id, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'date'      => 'required|date',
+            'date'      => 'required',
             'exercice'  => 'required',
-            'title'     => 'required',
+            'title'     => 'required|alpha',
         ]);
         if ($validator->fails()) {
             return ["status" => "danger", "message" => $validator->errors()->all()];
