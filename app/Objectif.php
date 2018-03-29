@@ -56,8 +56,16 @@ class Objectif extends Model
 
     }
 
-    public static function filledObjectifs($eid, $uid, $mentor_id){
-        $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('mentor_id', $mentor_id)->first();
+    public static function userSentGoals($eid, $uid){
+        $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('userNote', '<>', 0)->first();
+        if($objectif){
+            return $objectif;            
+        }else{
+            return null;
+        }
+    }
+    public static function mentorSentGoals($eid, $uid, $mentor_id){
+        $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('mentor_id', $mentor_id)->where('mentorNote', '<>', 0)->first();
         if($objectif){
             return $objectif;            
         }else{

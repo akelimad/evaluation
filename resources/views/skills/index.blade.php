@@ -17,7 +17,7 @@
                                         <input type="hidden" name="entretien_id" value="{{$e->id}}">
                                         <input type="hidden" name="user_id" value="{{$user->id}}">
                                         <input type="hidden" name="mentor_id" value="{{App\User::getMentor($user->id) ? App\User::getMentor($user->id)->id : 0}}">
-                                        <table class="table table-hover table-bordered table-inversed-blue text-center">
+                                        <table class="table table-hover table-striped text-center">
                                             <tr>
                                                 <th>Axe</th>
                                                 <th>Famille</th>

@@ -79,7 +79,14 @@ class UserController extends Controller
             'last_name' => 'required|alpha|min:3|max:25',
             'email'     => 'required|unique:users,email',
             'password'  => 'required|confirmed|min:6',
+            'society'   => 'alpha',
+            'city'      => 'alpha',
+            'country'   => 'alpha',
+            'society'   => 'alpha',
             'tel'       => 'regex:/[0-9]{10}$/',
+            'fix'       => 'regex:/[0-9]{10}$/',
+            'function'  => 'alpha',
+            'service'   => 'alpha',
         ];
         if($id) {
             $user = User::find($id);

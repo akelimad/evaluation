@@ -472,10 +472,11 @@ ul.user-data li i{
     border: none;
 }
 .objectifTitle{
-    background: #405673;
+    background: #4ea9d6;
     color: #ddf5f3;
-    font-size: 19px;
-    font-style: italic; 
+    font-size: 16px;
+    font-style: italic;
+    padding: 6px !important;
 }
 .sousTotal{
     background: #e4cece; 
@@ -503,7 +504,7 @@ ul.user-data li i{
     background: #0000000d;
 }
 .table-sub-objectif{
-    margin-bottom: 0 !important;
+    margin: 10px 0 !important;
 }
 .skills input[type="number"]{
     max-width: 3.2em;
@@ -576,4 +577,26 @@ p.help-block{
 }
 .users .box-header{
     padding: 10px 0;
+}
+.slider.slider-horizontal{
+    width: 117px !important;
+}
+.slider-note{
+    padding: 0 12px !important;
+}
+.disabled{
+    pointer-events: none;
+}
+.carreers #addLine-wrap{
+    counter-reset: carreer-counter;
+}
+.carreers span.badge::before{
+    counter-increment: carreer-counter;
+    content: counter(carreer-counter);
+}
+.carreers span.badge{
+    padding: 1px 5px;
+}
+.footerAddLine{
+    display: none;
 }

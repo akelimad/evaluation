@@ -40,7 +40,7 @@
                                         <div class="clearfix"></div>
                                     @elseif($q->type == "radio")
                                         @foreach($q->children as $child)
-                                            @if(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)  && in_array($child->id, App\Answer::getMentorAnswers($q->id, $user->id, $e->id)))
+                                            @if(App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getMentorAnswers($q->id, $user->id, $e->id)))
                                                 <label for="{{$child->id}}">{{ $child->titre }}</label>
                                             @endif
                                         @endforeach
@@ -207,7 +207,7 @@
 
                                                 @php( $sumPonderation += $sub->ponderation )
                                                 @if(App\Objectif::getObjectif($e->id,$user->id, $sub->id))
-                                                    @php( $sousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->note * $sub->ponderation )
+                                                    @php( $sousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote * $sub->ponderation )
                                                 @endif
                                                 
                                             <tr>
@@ -215,7 +215,7 @@
                                                 <td class="criteres text-center">
                                                     <input type="hidden" name="subObjectifIds[{{$objectif->id}}][]" value="{{$sub->id}}">
                                                     @if(!App\Objectif::getNmoins1Note($sub->id, $e->id) || (App\Objectif::getNmoins1Note($sub->id, $e->id) == true && App\Objectif::getNmoins1Note($sub->id, $e->id)->objNplus1 == 0 ) )
-                                                    <input type="text" id="slider" class="slider" placeholder="Votre note" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->note : '0' }}" data-slider-tooltip="" >
+                                                    <input type="text" id="slider" class="slider" placeholder="Votre note" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}" data-slider-tooltip="always" >
                                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" value="">
                                                     @else
                                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" value="">
@@ -242,7 +242,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->appreciation : '' }}" placeholder="Pourquoi cette note ?">
+                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '' }}" placeholder="Pourquoi cette note ?">
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $sub->ponderation }}
@@ -270,7 +270,7 @@
                                         <tr>
                                             <td colspan="5" class="btn-danger">
                                                 NOTE FINALE
-                                                <span class="btn btn-info pull-right"> {{ App\Objectif::cutNum($total/$c) *10 }} % </span>
+                                                <span class="btn btn-info pull-right"> {{ App\Objectif::cutNum($total/$c) /10 }} % </span>
                                             </td>
                                         </tr>
                                     </table>

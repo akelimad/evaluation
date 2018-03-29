@@ -81,7 +81,13 @@ class EntretienController extends Controller
      */
     public function entretiensEval()
     {
-        $entretiens = Entretien::with('users.parent')->paginate(10);
+        // $entretiens = Entretien::with('users.parent')->paginate(10);
+        $entretiens = DB::table('entretiens as e')
+        ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
+        ->join('users as u', 'u.id', '=', 'eu.user_id')
+        ->select('e.*','e.id as entretienId','u.*', 'u.id as userId')
+        ->paginate(15);
+        // dd($entretiens);
         return view('entretiens/annuel.index', compact('entretiens'));
     }
 
@@ -356,32 +362,28 @@ class EntretienController extends Controller
         $id = $request->id;  //id entretien
         $n = $request->n;  //nom user
         $f = $request->f; //function user
-
-        $entretiens = Entretien::with('users.parent')->paginate(10);
-        $array = Entretien::with('users.parent');
-        // if(!empty($d)){
-        //     $entretiens = Entretien::with('users.parent')->where('date_limit', '=', $date)
-        //     ->where('titre', 'like', '%'.$t.'%')
-        //     ->paginate(15);
-        // }
-
-        if (!empty($date)) {
-            $entretiens = $array->where('date_limit', '=', $date)
-            ->where('titre', 'like', '%'.$t.'%')
-            ->where('id', '=', $id)
+        if(isset($date)){
+            $entretiens = DB::table('entretiens as e')
+            ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
+            ->join('users as u', 'u.id', '=', 'eu.user_id')
+            ->select('e.*','e.id as entretienId','u.*', 'u.id as userId')
+            ->where('e.date_limit', '=', $date)
+            ->where('e.id', 'like', '%'.$id.'%')
+            ->where('e.titre', 'like', '%'.$t.'%')
+            ->where('u.name', 'like', '%'.$n.'%')
+            ->where('u.function', 'like', '%'.$f.'%')
             ->paginate(15);
         }else{
-            $entretiens = $array->where('titre', 'like', '%'.$t.'%')
-            ->where('id', '=', $id)
+            $entretiens = DB::table('entretiens as e')
+            ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
+            ->join('users as u', 'u.id', '=', 'eu.user_id')
+            ->select('e.*','e.id as entretienId','u.*', 'u.id as userId')
+            ->where('e.id', 'like', '%'.$id.'%')
+            ->where('e.titre', 'like', '%'.$t.'%')
+            ->where('u.name', 'like', '%'.$n.'%')
+            ->where('u.function', 'like', '%'.$f.'%')
             ->paginate(15);
         }
-        if ( !empty($n) || !empty($f) ) {
-            $entretiens = Entretien::with('users.parent')->whereHas('users', function($query) use($n, $f){
-                $query->where('name', 'like', '%'.$n.'%')->where('function', 'like', '%'.$f.'%');
-            })->paginate(15);
-
-        }
-
         return view('entretiens.annuel.index', compact('entretiens', 'd', 't', 'id','n', 'f'));
     }
 

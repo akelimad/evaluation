@@ -64,7 +64,7 @@ $(function(){
         }
     });
 
-    $(".realise").on('keyup change', function(){
+    $(".realise").on('keyup change load', function(){
         var id = $(this).data('id')
         var nMoins1 = $(".nMoins1-"+id).html()
         var realise = $(this).val()

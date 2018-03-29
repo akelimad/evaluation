@@ -140,29 +140,52 @@ class ObjectifController extends Controller
 
     public function updateNoteObjectifs(Request $request)
     {
-        $auth= Auth::user();
-        $user_id = $request->user_id;
+        //dd($request->objectifs);
+        $auth= Auth::user(); $user_id = $request->user_id;
         if($auth->id == $user_id){
             $user = $auth;
             $mentor_id = $auth->parent->id;
         }else{
-            $user = User::find($request->user_id);
+            $user = User::find($user_id);
             $mentor_id = $auth->id;
         }
+        // dump($user);
+        // dump($mentor_id);
+        // die();
         foreach ($request->objectifs as $key => $subObjectif) {
             // $sousTotal = 0;
             // $sumPonderation = 0;
             foreach ($subObjectif as $id => $array) {
-                $user->objectifs()->attach([$id => 
-                    [
-                        'entretien_id' => $request->entretien_id,
-                        'note'=> isset($array[0]) && $array[0] != "" ? $array[0]: "", 
-                        'realise'=> isset($array[1]) && $array[1] != "" ? $array[1]: "", 
-                        'appreciation'=> $array[2],
-                        'objNplus1'=> isset($array[4]) && $array[4] == "on" ? 1 : 0,
+                $userHasObjectif = Objectif_user::where('objectif_id', $id)->where('user_id', $user->id)->where('entretien_id',$request->entretien_id)->where('userNote', '<>',0)->first();
+                $mentorHasObjectif = Objectif_user::where('objectif_id', $id)->where('user_id', $user->id)->where('entretien_id',$request->entretien_id)->where('mentor_id', $mentor_id)->first();
+                // dump($userHasObjectif);
+                // dump($mentorHasObjectif);
+                // die();
+                if($userHasObjectif){
+                    Objectif_user::where('objectif_id', $id)->where('user_id', $user->id)->where('entretien_id',$request->entretien_id)->where('userNote', '<>',0)->update([
                         'mentor_id'=> $mentor_id,
-                    ]
-                ]);
+                        'mentorNote'=> isset($array['mentorNote']) ? $array['mentorNote'] : NULL,
+                        'mentorAppreciation'=> isset($array['mentorAppr']) ? $array['mentorAppr'] : NULL,
+                    ]);
+                }else if($mentorHasObjectif){
+                    Objectif_user::where('objectif_id', $id)->where('user_id', $user->id)->where('entretien_id',$request->entretien_id)->where('mentor_id', $mentor_id)->update([
+                        'userNote'=> isset($array['userNote']) ? $array['userNote']: "", 
+                        'userAppreciation'=> isset($array['userAppr']) ? $array['userAppr']: "",
+                    ]);
+                }else{
+                    $user->objectifs()->attach([$id => 
+                        [
+                            'entretien_id' => $request->entretien_id,
+                            'userNote'=> isset($array['userNote']) ? $array['userNote']: "", 
+                            'realise'=> isset($array['realise']) ? $array['realise']: "", 
+                            'userAppreciation'=> isset($array['userAppr']) ? $array['userAppr']: "",
+                            'objNplus1'=> isset($array['objNplus1']) && $array['objNplus1'] == "on" ? 1 : 0,
+                            'mentor_id'=> $mentor_id,
+                            'mentorNote'=> isset($array['mentorNote']) ? $array['mentorNote'] : NULL,
+                            'mentorAppreciation'=> isset($array['mentorAppr']) ? $array['mentorAppr'] : NULL,
+                        ]
+                    ]);
+                }
                 // $sumPonderation += $array[3];
                 // $sousTotal +=  ($array[0] * $array[3]);
             }

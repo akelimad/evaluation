@@ -44,7 +44,7 @@
 			      		<div class="">
 			      			<div class="col-md-12">
 						        <div class="form-group has-feedback">
-						          <input id="email" type="email" class="form-control input-lg" name="email" value="{{ old('email') }}" placeholder="Email" required="">
+						          <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email" required="">
 						          <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 						        </div>
 						    </div>
@@ -53,7 +53,7 @@
 				    	<div class="">
 				    		<div class="col-md-12">
 						        <div class="form-group has-feedback">
-						          <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Password" required="">
+						          <input id="password" type="password" class="form-control" name="password" placeholder="Password" required="">
 						          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
 						        </div>
 						    </div>

@@ -108,6 +108,12 @@ Route::post('entretiens/{eid}/u/{uid}/commentaires/store', 'CommentController@st
 Route::get('entretiens/{eid}/u/{uid}/commentaires/{id}/edit', 'CommentController@edit');
 Route::put('entretiens/{eid}/u/{uid}/commentaires/{cid}/mentorUpdate', 'CommentController@mentorUpdate');
 
+Route::get('entretiens/{eid}/u/{uid}/carrieres', 'CarreerController@index');
+Route::get('entretiens/{eid}/u/{uid}/carrieres/create', 'CarreerController@create');
+Route::post('entretiens/{eid}/u/{uid}/carrieres/store', 'CarreerController@store');
+Route::get('entretiens/{eid}/u/{uid}/carrieres/{id}/edit', 'CarreerController@edit');
+Route::put('entretiens/{eid}/u/{uid}/carrieres/{cid}/mentorUpdate', 'CarreerController@mentorUpdate');
+
 Route::get('surveys', 'SurveyController@index')->name('surveys-list');
 Route::get('surveys/create', 'SurveyController@create');
 Route::post('surveys/store', 'SurveyController@store');

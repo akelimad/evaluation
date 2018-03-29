@@ -208,7 +208,7 @@ export default class chmModal {
       $('.chm-modal').find('.modal-body').prepend('<div class="modal-notif-block"></div>')
     }
     $('.chm-modal').find('.modal-notif-block').empty().html(alert)
-    $('body, html').animate({scrollTop: $('.modal-notif-block').offset().top}, 1000)
+    $('.modal-body').animate({scrollTop: $('.modal-notif-block').offset().top}, 1000)
   }
 
   static setError (modal, message) {

@@ -9,7 +9,7 @@ class Entretien extends Model
 
     public static function answered($eid, $uid)
     {
-        $answer = Answer::where('entretien_id', $eid)->where('user_id', $uid)->first();
+        $answer = Answer::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', NULL)->first();
         if($answer) {
             return true;
         }else{
@@ -30,7 +30,7 @@ class Entretien extends Model
     
     public function users()
     {
-        return $this->belongsToMany('App\User', 'entretien_user', 'entretien_id', 'user_id');
+        return $this->belongsToMany('App\User');
     }
 
     public function evaluations()

@@ -41,7 +41,7 @@
     <div class="form-group">
         <div class="col-md-6">
             <label for="zip_code" class="control-label">Code postale</label>
-            <input type="text" name="zip_code" class="form-control" id="zip_code" placeholder="Code postale" value="{{ isset($user) ? $user->zip_code : ''  }}">
+            <input type="number" name="zip_code" min="0" class="form-control" id="zip_code" placeholder="Code postale" value="{{ isset($user) ? $user->zip_code : ''  }}">
         </div>
         <div class="col-md-3"> 
             <label for="ville" class="control-label">Ville</label>
@@ -99,7 +99,7 @@
         </div>
         <div class="col-md-6">
             <label for="salary" class="control-label">Salaire </label>
-            <input id="salary" type="number" class="form-control" name="salary" placeholder="Salaire" value="{{ isset($user) ? $user->salary : '' }}">
+            <input id="salary" type="number" min="0" class="form-control" name="salary" placeholder="Salaire" value="{{ isset($user) ? $user->salary : '' }}">
         </div>
         <div class="clearfix"></div>
     </div>

@@ -18,6 +18,7 @@ import chmEntretien from './class/entretien'
 import chmDocument from './class/document'
 import chmSalary from './class/salary'
 import chmComment from './class/comment'
+import chmCarreer from './class/carreer'
 import chmDecision from './class/decision'
 import chmSkill from './class/skill'
 import chmActivite from './class/activite'
@@ -42,6 +43,7 @@ window.chmEntretien = chmEntretien
 window.chmDocument = chmDocument
 window.chmSalary = chmSalary
 window.chmComment = chmComment
+window.chmCarreer = chmCarreer
 window.chmDecision = chmDecision
 window.chmSkill = chmSkill
 window.chmActivite = chmActivite

@@ -22,7 +22,7 @@ class Answer extends Model
         $question = Question::find($qid);
         $answers_id = [];
         if(count($question->children)>0){
-            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->get()->toArray();
+            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->where('mentor_id', NULL)->get()->toArray();
             foreach ($answers as $answer) {
                 foreach ($answer as $a) {
                     $answers_id[] = $a;
@@ -30,7 +30,7 @@ class Answer extends Model
             }
             return $answers_id;
         }else{
-            $answer = Answer::where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->first();
+            $answer = Answer::where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->where('mentor_id', NULL)->first();
             return $answer;
         }
     }

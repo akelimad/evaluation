@@ -6,7 +6,6 @@
             <input type="hidden" name="entretien_id" value="{{$e->id}}">
             <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
             <input type="hidden" name="mentor_id" value="NULL">
-
             {{ csrf_field() }}
             <div class="panel-group">
                 @foreach($groupes as $g)

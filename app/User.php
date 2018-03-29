@@ -51,7 +51,7 @@ class User extends Authenticatable
      */
     public function entretiens()
     {
-        return $this->belongsToMany('App\Entretien', 'entretien_user', 'user_id', 'entretien_id');
+        return $this->belongsToMany('App\Entretien');
     }
 
     /**

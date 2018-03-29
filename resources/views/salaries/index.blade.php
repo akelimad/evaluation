@@ -10,7 +10,7 @@
                         <div class="tab-content">
                             @if(count($salaries)>0)
                                 <div class="box-body table-responsive no-padding mb40">
-                                    <table class="table table-hover table-bordered text-center">
+                                    <table class="table table-hover table-striped text-center">
                                         <thead>
                                             <tr>  
                                                 <th>Date </th>
