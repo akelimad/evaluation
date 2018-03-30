@@ -9,7 +9,7 @@
             @foreach($objectifs as $objectif)
                 <input type="hidden" name="parentObjectif[]" value="{{$objectif->id}}">
                 <tr>
-                    <td colspan="3" class="objectifTitle"> <b>{{ $objectif->title }}</b> </td>
+                    <td colspan="3" class="objectifTitle"> {{ $objectif->title }} </td>
                 </tr>
                 @foreach($objectif->children as $sub)
                 <tr>

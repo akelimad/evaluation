@@ -1,5 +1,5 @@
 
-<div class="content">
+<div class="content subQuestions">
     <input type="hidden" name="id" value="{{ isset($g->id) ? $g->id : null }}">
     <input type="hidden" name="survey_id" value="{{$sid}}">
     <input type="hidden" name="groupe_id" value="{{$gid}}">
@@ -26,7 +26,7 @@
     @else
     <div id="addLine-wrap">
         <div class="form-group" >
-            <label class="col-md-2 control-label">Titre</label>
+            <label class="col-md-2 control-label">choix : <span class="badge"> </span></label>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="subQuestions[0]" required="required" />
             </div>

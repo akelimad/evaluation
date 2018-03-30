@@ -19,6 +19,9 @@ use App\EntretienObjectif;
 use App\Formation;
 use App\Skill;
 use App\Objectif;
+use App\Carreer;
+use App\Salary;
+use App\Comment;
 use DB;
 
 class EntretienController extends Controller
@@ -143,9 +146,9 @@ class EntretienController extends Controller
         //     $entretien = Entretien::find($request->id);
         // }
         $rules = [
-            'date'      => 'required',
+            'date'       => 'required',
             'date_limit' => 'required|after:date',
-            'titre'  => 'required|min:3',
+            'titre'      => 'required|min:3|max:50|regex:/^[\pL\s\-]+$/u',
         ];
         $validator = \Validator::make($request->all(), $rules);
         $messages = $validator->errors();
@@ -200,19 +203,19 @@ class EntretienController extends Controller
         }
 
         $user_mentors = array_unique($mentors);
-        // foreach ($user_mentors as $mentor) {
-        //     $password = "admin123";
-        //     $mentor->password = bcrypt($password);
-        //     $mentor->save();
-        //     Mail::send('emails.mentor_invitation', [
-        //         'mentor' => $mentor,
-        //         'password' => $password,
-        //         'endDate' => $entretien->date_limit
-        //     ], function ($m) use ($mentor) {
-        //         $m->from('contact@lycom.ma', 'E-entretien');
-        //         $m->to($mentor->email, $mentor->name)->subject('Invitation pour évaluer vos collaborateurs');
-        //     });
-        // }
+        foreach ($user_mentors as $mentor) {
+            $password = $this->rand_string(8);
+            $mentor->password = bcrypt($password);
+            $mentor->save();
+            Mail::send('emails.mentor_invitation', [
+                'mentor' => $mentor,
+                'password' => $password,
+                'endDate' => $entretien->date_limit
+            ], function ($m) use ($mentor) {
+                $m->from('contact@lycom.ma', 'E-entretien');
+                $m->to($mentor->email, $mentor->name)->subject('Invitation pour évaluer vos collaborateurs');
+            });
+        }
         return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
 
     }
@@ -234,19 +237,19 @@ class EntretienController extends Controller
         $entretien->users()->syncWithoutDetaching($users_id);
 
         $user_mentors = array_unique($mentors);
-        // foreach ($user_mentors as $mentor) {
-        //     $password = "admin123";
-        //     $mentor->password = bcrypt($password);
-        //     $mentor->save();
-        //     Mail::send('emails.mentor_invitation', [
-        //         'mentor' => $mentor,
-        //         'password' => $password,
-        //         'endDate' => $entretien->date_limit
-        //     ], function ($m) use ($mentor) {
-        //         $m->from('contact@lycom.ma', 'E-entretien');
-        //         $m->to($mentor->email, $mentor->name)->subject('Invitation !');
-        //     });
-        // }
+        foreach ($user_mentors as $mentor) {
+            $password = $this->rand_string(8);
+            $mentor->password = bcrypt($password);
+            $mentor->save();
+            Mail::send('emails.mentor_invitation', [
+                'mentor' => $mentor,
+                'password' => $password,
+                'endDate' => $entretien->date_limit
+            ], function ($m) use ($mentor) {
+                $m->from('contact@lycom.ma', 'E-entretien');
+                $m->to($mentor->email, $mentor->name)->subject('Invitation !');
+            });
+        }
         $url=url('entretiens/evaluations');
         $request->session()->flash('attach_users_entretien', "Les utilisateurs ont bien à été ajouté à l'entretien et un email est envoyé à leur mentor. <a href='{$url}'>cliquer ici pour les consulter</a>");
         return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -277,7 +280,7 @@ class EntretienController extends Controller
     {
         $user = User::findOrFail($uid);
         $entretien = Entretien::findOrFail($eid);
-        $password = "admin123";
+        $password = $this->rand_string(8);
         $user->password = bcrypt($password);
         $user->save();
         Mail::send('emails.user_invitation', [
@@ -296,7 +299,7 @@ class EntretienController extends Controller
         $user = User::findOrFail($uid);
         $mentor = $user->parent;
         $entretien = Entretien::findOrFail($eid);
-        $password = "admin123";
+        $password = $this->rand_string(8);
         $user->password = bcrypt($password);
         $user->save();
         Mail::send('emails.mentor_invitation', [
@@ -342,14 +345,17 @@ class EntretienController extends Controller
         $evaluations = $e->evaluations;
         $survey = Survey::find($e->survey_id);
         $groupes = $survey->groupes;
+        $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
         $formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
+        $salaries = Salary::where('mentor_id', $user->parent->id)->paginate(10);
         $skills = Skill::all();
         $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
+        $comments = Comment::where('entretien_id', $eid)->where('user_id', $uid)->get();
         $total = 0;
         foreach ($objectifs as $obj) {
             $total += $obj->sousTotal; 
         }
-        echo view('entretiens.apercu', compact('evaluations','e', 'user', 'groupes', 'formations', 'skills','objectifs', 'total'));
+        echo view('entretiens.apercu', compact('evaluations','e', 'user', 'groupes', 'salaries','carreers','formations', 'skills','objectifs', 'comments', 'total'));
         $content = ob_get_clean();
         return ['title' => "Aperçu de l'entretien", 'content' => $content];
     }

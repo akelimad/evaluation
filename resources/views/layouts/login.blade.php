@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> login | E-entretiens </title>
+    <title> E-entretiens | login </title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -44,8 +44,8 @@
 			      		<div class="">
 			      			<div class="col-md-12">
 						        <div class="form-group has-feedback">
-						          <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email" required="">
-						          <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+						            <input id="email" type="email" class="form-control input-lg" name="email" value="{{ old('email') }}" placeholder="Email" required="">
+						            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 						        </div>
 						    </div>
                             <div class="clearfix"></div>
@@ -53,8 +53,8 @@
 				    	<div class="">
 				    		<div class="col-md-12">
 						        <div class="form-group has-feedback">
-						          <input id="password" type="password" class="form-control" name="password" placeholder="Password" required="">
-						          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+						            <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Password" required="">
+						            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
 						        </div>
 						    </div>
                             <div class="clearfix"></div>

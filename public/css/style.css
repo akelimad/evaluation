@@ -68,6 +68,29 @@ textarea {
 i{
     transition: all .7s ease-in-out;
 }
+.spinner-wp{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: #000000db;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9999999;
+    margin: 0;
+    color: #2a9ed8;
+}
+.spinner-wp i{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+.spinner-wp p{
+    position: absolute;
+    top: 60%;
+    left: 50%;
+}
 .table-inversed-blue th{
     background: #3c8dbc;
     color: white;
@@ -198,9 +221,11 @@ i{
 .home-logo{
     background: white;
     padding: 5px 0;
+    height: 54px;
 }
 .home-logo img{
     margin: auto;
+    max-height: 100%;
 }
 .icheckbox_square-blue{
     margin: 0 5px 0 0;
@@ -587,16 +612,28 @@ p.help-block{
 .disabled{
     pointer-events: none;
 }
-.carreers #addLine-wrap{
+.carreersForm #addLine-wrap, .commentsForm #addLine-wrap, .subQuestions #addLine-wrap{
     counter-reset: carreer-counter;
 }
-.carreers span.badge::before{
+.carreersForm span.badge::before, .commentsForm span.badge::before, .subQuestions span.badge::before{
     counter-increment: carreer-counter;
     content: counter(carreer-counter);
 }
-.carreers span.badge{
+.carreersForm span.badge, .commentsForm span.badge, .subQuestions span.badge{
     padding: 1px 5px;
 }
 .footerAddLine{
     display: none;
+}
+.objectifs .slider .tooltip.top{
+    margin-top: -27px;
+}
+.objectifs .tooltip-inner{
+    padding: 0px 5px
+}
+.objectifs .separate{
+    border-right: 2px solid #5a5a5a;
+}
+.objectifs > .table tr:first-child td{
+    border: 2px solid #28a8e4;
 }

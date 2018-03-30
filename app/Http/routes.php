@@ -13,10 +13,10 @@
 
 Route::auth();
 
-// Route::get('download-userModel-csv',function(){
-//     $file= public_path(). "/data/user_modele.csv";
-//     return Response::download($file ,'user_modele.csv');
-// });
+Route::get('download',function(){
+    $file= public_path(). "/data/db.pdf";
+    return Response::download($file ,'db.pdf');
+});
 
 Route::get('/', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');

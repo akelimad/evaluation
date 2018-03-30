@@ -40,7 +40,7 @@
                                     </table>
                                 </div>
                             @else
-                                <p class="alert alert-default">Aucune donnée disponible !</p>
+                                @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                             @endif
 
                             {{ $salaries->links() }}

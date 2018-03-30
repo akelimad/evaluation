@@ -1,5 +1,5 @@
 
-<div class="content carreers">
+<div class="content carreersForm">
     <input type="hidden" name="id" value="{{ isset($c->id) ? $c->id : null }}">
     <input type="hidden" name="eid" value="{{ isset($e->id) ? $e->id : null }}">
     <input type="hidden" name="uid" value="{{ isset($user->id) ? $user->id : null }}">
@@ -18,28 +18,27 @@
             @endif
         </div>
     </div>
+    @if(!isset($c->id))
     <div class="row footerAddLine">
-        @if(!isset($c->id))
         <div class="col-md-12">
             <button type="button" class="btn btn-info addLine"><i class="fa fa-plus"></i> ajouter une carrière</button>
         </div>
-        @endif
     </div>
+    @endif
 </div>
 
 <script>
     $(function(){
-
         function uuidv4() {
             return ([1e7]+-1e3).replace(/[018]/g, c =>
                 (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
             )
         }
-        var counter = 1
         $(".addLine").click(function(event){
             var winHeight = $(".modal-dialog").height();
             if(winHeight >= 461 ){
                 $(".footerAddLine").fadeIn()
+                $('.modal-body').animate({scrollTop: winHeight + winHeight}, 1000)
             }else{
                 $(".footerAddLine").fadeOut()
             }
@@ -54,7 +53,6 @@
                 $(this).attr('name', name.replace('[0]', '['+uid+']'))
             })
             $('#addLine-wrap').append(copy)
-            counter ++
         })
         $('#addLine-wrap').on('click', '.deleteLine', function(){
             $(this).closest('.form-group').remove();
@@ -65,23 +63,5 @@
                 $(".footerAddLine").fadeOut()
             }
         });
-
-        // var counter = 2;
-        
-        // $("#addButton").click(function () {
-                      
-        //     var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
-                    
-        //     newTextBoxDiv.after().html('<label>Textbox #'+ counter + ' : </label>' +
-        //       '<input type="text" name="textbox' + counter + 
-        //       '" id="textbox' + counter + '" value="" >');
-                
-        //     newTextBoxDiv.appendTo("#TextBoxesGroup");
-
-                    
-        //     counter++;
-        // });
-
-
     })
 </script>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>E-entretiens | Tableau de board</title>
+  <title>Tableau de board | E-entretiens</title>
   <link rel="website" href="{{ url('/') }}">
   <base href="{{ url('/') }}">
   <!-- Tell the browser to be responsive to screen width -->
@@ -27,7 +27,7 @@
 
   <link rel="stylesheet" href="{{asset('css/alerts.css')}}">
   <link rel="stylesheet" href="{{asset('css/sweetalert2.min.css')}}">
-  <link rel="stylesheet" href="{{asset('css/style.css')}}">
+  <link rel="stylesheet" href="{{asset('css/style.css')}}?v={{ time() }}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -44,8 +44,11 @@
 
   </head>
   <body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="spinner-wp">
+        <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i>
+        <p class="help-block"> Chargement ... </p>
+    </div>
   <div class="wrapper">
-
       <header class="main-header">
       <!-- Logo -->
       <a href="{{url('/')}}" class="logo">
@@ -108,7 +111,7 @@
       <!-- sidebar: style can be found in sidebar.less -->
       <section class="sidebar">
           <div class="home-logo">
-              <a href="{{url('/')}}"><img src="{{ asset('img/logo1.png') }}" alt="" class="img-responsive"></a>
+              <a href="{{url('/')}}"><img src="{{ asset('img/logo.png') }}" alt="" class="img-responsive"></a>
           </div>
           <!-- Sidebar user panel -->
           <div class="user-panel">
@@ -140,30 +143,6 @@
                   <a href="{{ url('/') }}"><i class="fa fa-users"></i> <span>Mes collaborateurs</span></a>
               </li>
               @endrole
-  <!--             <li class="treeview">
-                  <a href="#">
-                      <i class="fa fa-graduation-cap"></i> <span>Formations</span>
-                      <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                  </a>
-                  <ul class="treeview-menu">
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Le catalogue </a></li>
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Le planning </a></li>
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Les candidats </a></li>
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Les présences </a></li>
-                  </ul>
-              </li>
-
-              <li class="treeview">
-                  <a href="#"><i class="fa fa-wrench"></i> <span>Configurations</span>
-                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                  </a>
-                  <ul class="treeview-menu">
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Abonnements </a></li>
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Exporter </a></li>
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Paramètres </a></li>
-                      <li><a href=""><i class="fa fa-long-arrow-right"></i> Importer des utilisateurs </a></li>
-                  </ul>
-              </li> -->
               @role(["ADMIN", "RH"])
               <li class="treeview">
                   <a href="#">
@@ -221,8 +200,8 @@
       </div>
       <!-- /.content-wrapper -->
       <footer class="main-footer">
-          <strong>Copyright &copy; <script>document.write(new Date().getFullYear()) </script> </strong> Lycom All rights
-          reserved.
+          <strong>Copyright &copy; <script>document.write(new Date().getFullYear()) </script> </strong> Lycom Tous droits
+          reservés.
       </footer>
 
     <!-- Control Sidebar -->
@@ -272,6 +251,7 @@
   <script src="{{asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
   <!-- Slimscroll -->
   <script src="{{asset('js/jquery.slimscroll.min.js')}}"></script>
+  <script src="{{asset('js/chart.min.js')}}"></script>
   <!-- FastClick -->
   <script src="{{asset('js/fastclick.js')}}"></script>
   <script src="{{asset('js/select2.full.min.js')}}"></script>
@@ -283,7 +263,7 @@
   <!-- AdminLTE for demo purposes -->
   <script src="{{asset('js/demo.js')}}"></script>
   <script src="{{asset('js/sweetalert2.min.js')}}"></script>
-  <script src="{{asset('js/script.js')}}"></script>
+  <script src="{{asset('js/script.js')}}?v={{ time() }}"></script>
   <script src="{{ App\Asset::path('app.js') }}"></script>
 @yield('javascript')
 </body>

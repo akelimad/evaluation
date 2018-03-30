@@ -1,5 +1,7 @@
+$(window).on('load', function() {
+    $('.spinner-wp').fadeOut();
+});
 $(function(){
-
     var baseUrl =  $("base").attr("href")
 
     $('#datepicker, #datepicker1, #datepicker2').datepicker({

@@ -55,11 +55,11 @@
     <div class="form-group">
         <div class="col-md-6">
             <label for="tel" class="control-label">Téléphone mobile</label>
-            <input type="text" name="tel" class="form-control" id="tel" placeholder="0606060606" value="{{ isset($user) ? $user->tel : ''  }}">
+            <input type="text" name="tel" class="form-control" id="tel" placeholder="0606060606 ou 06 06 06 06 06" value="{{ isset($user) ? $user->tel : ''  }}" pattern="^((06)|(07))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
         </div>
         <div class="col-md-6"> 
             <label for="fix" class="control-label">Téléphone fix</label>
-            <input id="fix" type="text" class="form-control" name="fix" placeholder="0505050505" value="{{ isset($user) ? $user->fix : ''  }}">
+            <input id="fix" type="text" class="form-control" name="fix" placeholder="0505050505 ou 05 05 05 05 05" value="{{ isset($user) ? $user->fix : ''  }}" pattern="^((05))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
         </div>
     </div>
     <div class="form-group">

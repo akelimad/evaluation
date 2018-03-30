@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Auth;
 class Skill extends Model
 {
     public function entretien()
@@ -26,11 +26,11 @@ class Skill extends Model
     }
 
     public static function filledSkills($eid, $uid, $mentor_id){
-        $auth = User::find($uid);
+        $auth = Auth::user();
         if($auth->id == $uid){
             $skill = Skill_user::where('user_id', $uid)->where('mentor_id', $mentor_id)->where('entretien_id', $eid)->where('auto', '!=' ,0)->first();
         }else{
-            $skill = Skill_user::where('user_id', $uid)->where('mentor_id', $mentor_id)->where('entretien_id', $eid)->first();
+            $skill = Skill_user::where('user_id', $uid)->where('mentor_id', $mentor_id)->where('entretien_id', $eid)->where('objectif', '<>', 0)->first();
         }
         if($skill){
             return $skill;            

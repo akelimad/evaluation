@@ -75,18 +75,18 @@ class UserController extends Controller
     public function storeUser(Request $request){
         $id = $request->input('id', false);
         $rules = [
-            'name'      => 'required|alpha|min:3|max:25',
-            'last_name' => 'required|alpha|min:3|max:25',
+            'name'      => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
+            'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
             'email'     => 'required|unique:users,email',
             'password'  => 'required|confirmed|min:6',
-            'society'   => 'alpha',
-            'city'      => 'alpha',
-            'country'   => 'alpha',
-            'society'   => 'alpha',
-            'tel'       => 'regex:/[0-9]{10}$/',
-            'fix'       => 'regex:/[0-9]{10}$/',
-            'function'  => 'alpha',
-            'service'   => 'alpha',
+            'society'   => 'regex:/^[\pL\s\-]+$/u',
+            'city'      => 'regex:/^[\pL\s\-]+$/u',
+            'country'   => 'regex:/^[\pL\s\-]+$/u',
+            'society'   => 'regex:/^[\pL\s\-]+$/u',
+            'tel'       => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
+            'fix'       => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
+            'function'  => 'regex:/^[\pL\s\-]+$/u',
+            'service'   => 'regex:/^[\pL\s\-]+$/u',
         ];
         if($id) {
             $user = User::find($id);

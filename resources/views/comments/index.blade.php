@@ -56,7 +56,7 @@
                                     </table>
                                 </div>
                             @else
-                                <p class="alert alert-default">Aucune donnée disponible !</p>
+                                @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                             @endif
                             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
                             @if($user->id == Auth::user()->id)

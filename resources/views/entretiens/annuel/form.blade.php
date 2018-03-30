@@ -37,9 +37,11 @@
 <script>
     $(function() {
         $('#datepicker, #datepicker1, #datepicker2').datepicker({
+            startDate: new Date(),
             autoclose: true,
             format: 'dd-mm-yyyy',
-            language: 'fr'
+            language: 'fr',
+            todayHighlight: true,
         })
         $('.select2').select2()
 

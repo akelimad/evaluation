@@ -61,7 +61,7 @@
                     </div>
                     @if(count($entretiens)>0)
                     <div class="box-body table-responsive no-padding">
-                        <table class="table table-hover table-bordered table-inversed-blue">
+                        <table class="table table-hover table-inversed-blue">
                             <thead>
                                 <tr>
                                     <th>Date limite </th>

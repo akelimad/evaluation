@@ -41,8 +41,10 @@ class ObjectifController extends Controller
         $evaluations = $entretien->evaluations;
         $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $entretien->objectif_id)->paginate(10);
         $total = 0;
-        foreach ($objectifs as $obj) {
-            $total += $obj->sousTotal; 
+        if(count($objectifs)>0){
+            foreach ($objectifs as $obj) {
+                $total += $obj->sousTotal; 
+            }
         }
         $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
         return view('objectifs.index', [

@@ -37,7 +37,7 @@
                                                     <td> {{$f->exercice}} </td>
                                                     <td> {{$f->title}} </td>
                                                     <td>
-                                                        <select name="status" id="status" class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" {{$user->id == Auth::user()->id ? 'disabled':'' }} >
+                                                        <select name="status" id="status" class="label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" {{$user->id == Auth::user()->id ? 'disabled':'' }} >
                                                             <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
                                                             <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
                                                             <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>
@@ -92,7 +92,7 @@
                                                     <td> {{$f->title}} </td>
                                                     <td> {{$f->entretien->titre}} </td>
                                                     <td>
-                                                        <select name="status" id="status" class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" disabled="" >
+                                                        <select name="status" id="status" class="label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" disabled="" >
                                                             <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
                                                             <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
                                                             <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>

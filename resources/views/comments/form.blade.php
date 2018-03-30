@@ -1,5 +1,5 @@
 
-<div class="content">
+<div class="content commentsForm">
     <input type="hidden" name="id" value="{{ isset($c->id) ? $c->id : null }}">
     <input type="hidden" name="eid" value="{{ isset($e->id) ? $e->id : null }}">
     <input type="hidden" name="uid" value="{{ isset($user->id) ? $user->id : null }}">
@@ -7,7 +7,7 @@
     <div id="addLine-wrap">
         <div class="form-group" >
             <div class="col-md-11">
-                <label class="control-label">Commentaire</label>
+                <label class="control-label">Commentaire : <span class="badge"> </span></label>
                 <textarea class="form-control" name="comments[0]" required="required" style="height: 36px;min-height: 0">{{ $c->userComment or '' }}</textarea>
             </div>
             @if(!isset($c->id))
@@ -18,6 +18,13 @@
             @endif
         </div>
     </div>
+    @if(!isset($c->id))
+    <div class="row footerAddLine">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-info addLine"><i class="fa fa-plus"></i> ajouter une carrière</button>
+        </div>
+    </div>
+    @endif
 </div>
 
 <script>
@@ -28,6 +35,15 @@
             )
         }
         $(".addLine").click(function(event){
+            var winHeight = $(".modal-dialog").height();
+            if(winHeight >= 461 ){
+                console.log(" window height "+$(window).height())
+                console.log(" modal height "+ winHeight)
+                $(".footerAddLine").fadeIn()
+                $('.modal-body').animate({scrollTop: winHeight + winHeight}, 1000)
+            }else{
+                $(".footerAddLine").fadeOut()
+            }
             event.preventDefault()
             var copy = $('#addLine-wrap').find(".form-group:first").clone()
             copy.find('textarea').val('')
@@ -42,8 +58,13 @@
         })
         $('#addLine-wrap').on('click', '.deleteLine', function(){
             $(this).closest('.form-group').remove();
+            var winHeight = $(".modal-dialog").height();
+            if(winHeight >= 461 ){
+                $(".footerAddLine").fadeIn()
+            }else{
+                $(".footerAddLine").fadeOut()
+            }
         });
-
 
     })
 </script>

@@ -12,7 +12,7 @@
                     </div>
                     @if(count($skills)>0)
                         <div class="box-body table-responsive no-padding mb40">
-                            <table class="table table-hover table-bordered table-inversed-blue">
+                            <table class="table table-hover table-striped table-inversed-blue">
                                 <tr>
                                     <th>Id</th>
                                     <th>Axe</th>

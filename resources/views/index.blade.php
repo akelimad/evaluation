@@ -20,7 +20,7 @@
                         <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
                     </div>
                 </div>
-                @role('ADMIN')
+                @role(['ADMIN', 'RH'])
                 <div class="box box-primary">
                     <div class="box-header with-border">
                       <h3 class="box-title"> Mes actualités </h3>
@@ -50,7 +50,7 @@
                             <div class="tab-pane active" id="entretiens">
                                 @if(App\User::getMentor(Auth::user()->id) && count($entretiens)>0)
                                 <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover table-bordered">
+                                    <table class="table table-hover table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Titre </th>
@@ -62,7 +62,6 @@
                                         </thead>
                                         <tbody>
                                             @foreach($entretiens as $e)
-                                            
                                             <tr>
                                                 <td>
                                                     <a href="{{ url('entretiens/'.$e->id.'/u/'.Auth::user()->id) }}">{{$e->titre}}</a>
@@ -85,7 +84,7 @@
                                     </table>
                                 </div>
                                 @else
-                                    <p class="alert alert-default">Aucune donnée disponible !</p>
+                                    @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                                 @endif                               
                             </div>
                             <div class="tab-pane" id="objectifs">
@@ -116,7 +115,7 @@
                             <div class="tab-pane active" id="aa">
                                 @if(count($collaborateurs)>0)
                                 <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover table-bordered table-striped">
+                                    <table class="table table-hover table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Nom & prénom </th>
@@ -156,7 +155,7 @@
                                     </table>
                                 </div>
                                 @else
-                                    <p class="alert alert-default">Aucune donnée disponible !</p>
+                                    @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                                 @endif
                             </div>
                             <div class="tab-pane" id="bb">

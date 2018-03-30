@@ -49,7 +49,7 @@ export default class chmEntretien {
 
   static apercu (params) {
     window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.uid + '/appercu')}, {
-      width: 800
+      width: 900
     })
   }
 
@@ -59,7 +59,7 @@ export default class chmEntretien {
     var data = new window.FormData(form)
     var btn = $(event.target).find('[type="submit"]')
     var btnHtml = btn.html()
-    btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
+    btn.html('<i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
     var id = $('[name="id"]').val()
     var ajaxParams = {

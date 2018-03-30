@@ -15,10 +15,20 @@
                                     <input type="hidden" name="entretien_id" value="{{$e->id}}">
                                     <input type="hidden" name="user_id" value="{{$user->id}}">
                                     <table class="table table-hover table-striped">
+                                        @if($user->id != Auth::user()->id)
+                                        <tr>
+                                            <td colspan="3" class="objectifTitle {{ $user->id != Auth::user()->id ? 'separate':'' }}"> 
+                                                {{ $user->name." ".$user->last_name }} 
+                                            </td>
+                                            <td colspan="4" class="objectifTitle"> 
+                                                {{ $user->parent->name." ".$user->parent->last_name }} 
+                                            </td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <th style="width: 27%">Critères d'évaluation</th>
                                             <th >Coll. note(%)</th>
-                                            <th >Apréciation</th>
+                                            <th class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">Apréciation</th>
                                             <th >Pondération(%) </th>
                                             <th >Objectif N+1 </th>
                                             @if($user->id != Auth::user()->id)
@@ -33,7 +43,7 @@
                                             @php($c+=1)
                                             <input type="hidden" name="parentObjectif[]" value="{{$objectif->id}}">
                                             <tr>
-                                                <td colspan="7" class="objectifTitle"> 
+                                                <td colspan="7" class="objectifTitle text-center"> 
                                                     {{ $objectif->title }} 
                                                 </td>
                                             </tr>
@@ -86,14 +96,14 @@
                                                     </table>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">
                                                     <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}" placeholder="Pourquoi cette note ?">
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $sub->ponderation }}
                                                 </td>
                                                 <td class="text-center">
-                                                    <input type="checkbox" name="objectifs[{{$objectif->id}}][{{$sub->id}}][objNplus1]" value="1" {{isset(App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1) && App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1 == 1 ? 'checked':''}}>
+                                                    <input type="checkbox" name="objectifs[{{$objectif->id}}][{{$sub->id}}][objNplus1]" {{isset(App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1) && App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1 == 1 ? 'checked':''}}>
                                                 </td>
                                                 @if($user->id != Auth::user()->id)
                                                 <td class="slider-note">
@@ -117,11 +127,11 @@
                                                     <span class="badge badge-success pull-right">{{App\Objectif::cutNum($usersousTotal/$sumPonderation)}}</span>
                                                 </td>
                                                 @else
-                                                <td colspan="2" class="sousTotal"> 
+                                                <td colspan="3" class="sousTotal {{ $user->id != Auth::user()->id ? 'separate':'' }}"> 
                                                     <span>Sous-total</span>
                                                     <span class="badge badge-success pull-right">{{App\Objectif::cutNum($usersousTotal/$sumPonderation)}}</span>
                                                 </td>
-                                                <td colspan="5" class="sousTotal"> 
+                                                <td colspan="4" class="sousTotal"> 
                                                     <span class="badge badge-success pull-right">{{App\Objectif::cutNum($mentorsousTotal/$sumPonderation)}}</span>
                                                 </td>
                                                 @endif
@@ -138,13 +148,13 @@
                                                 </span>
                                             </td>
                                             @else
-                                            <td colspan="2" class="btn-warning" valign="middle">
+                                            <td colspan="3" class="btn-warning {{ $user->id != Auth::user()->id ? 'separate':'' }}" valign="middle">
                                                 <span>TOTAL DE L'ÉVALUATION</span>  
                                                 <span class="btn-default pull-right badge">
                                                 {{ App\Objectif::cutNum($userTotal/$c) }} %
                                                 </span>
                                             </td>
-                                            <td colspan="5" class="btn-warning" valign="middle">
+                                            <td colspan="4" class="btn-warning" valign="middle">
                                                 <span class="btn-default pull-right badge">
                                                 {{ App\Objectif::cutNum($mentorTotal/$c) }} %
                                                 </span>

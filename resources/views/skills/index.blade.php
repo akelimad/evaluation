@@ -69,7 +69,6 @@
                                         @if(!App\Skill::filledSkills($e->id, $user->id, $user->parent->id))
                                         <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Sauvegarder</button>
                                         @endif
-                                        {{ $user->id }} parent:{{ $user->parent->id }}
                                     </form>
                                     {{ $skills->links() }}
                                 </div>
