@@ -16,4 +16,21 @@ class Survey extends Model
         return $this->belongsToMany('App\Evaluation');
     }
 
+    public static function icompleteSurvey($sid){
+        $survey = Survey::find($sid);
+        $groupes = $survey->groupes;
+        foreach ($groupes as $groupe) {
+            foreach ($groupe->questions as $question) {
+                if( $question->type  == 'checkbox' || $question->type == 'radio' ){
+                    if( count($question->children) <= 0 ){
+                        $incompleteSurvey = true;
+                    }else{
+                        $incompleteSurvey = false;
+                    }
+                }
+            }
+        }
+        return $incompleteSurvey;
+    }
+
 }

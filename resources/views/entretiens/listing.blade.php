@@ -6,6 +6,9 @@
                 @if (Session::has('success_evaluations_save'))
                     @include('partials.alerts.success', ['messages' => Session::get('success_evaluations_save') ])
                 @endif
+                @if (Session::has('incompleteSurvey'))
+                    @include('partials.alerts.warning', ['messages' => Session::get('incompleteSurvey') ])
+                @endif
                 <div class="box box-primary">
                     <div class="box-header">
                         <h3 class="box-title">La liste des entretiens <span class="badge">{{$entretiens->total()}}</span></h3>

@@ -14,8 +14,9 @@
 Route::auth();
 
 Route::get('download',function(){
-    $file= public_path(). "/data/db.pdf";
-    return Response::download($file ,'db.pdf');
+    $file="user_modele.csv";
+    $path= public_path(). "/data/".$file;
+    return Response::download($path ,$file);
 });
 
 Route::get('/', 'HomeController@index');
@@ -50,6 +51,7 @@ Route::get('entretiens/list', 'EntretienController@entretiensList');
 Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens
 Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif'); //mes entretiens
 Route::get('entretiens/filter', 'EntretienController@filterEntretiens');
+Route::get('entretiens/calendar', 'EntretienController@calendar');
 
 Route::get('entretiens/{type}/create', 'EntretienController@create');
 Route::post('entretiens/store', 'EntretienController@store');
@@ -132,5 +134,11 @@ Route::post('surveys/{sid}/groupes/{gid}/questions/store', 'QuestionController@s
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}', 'QuestionController@show');
 Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
-
 Route::post('answers/store', 'AnswerController@store');
+
+Route::get('emails', 'EmailController@index');
+Route::get('emails/create', 'EmailController@create');
+Route::post('emails/store', 'EmailController@store');
+Route::get('emails/{id}', 'EmailController@show');
+Route::get('emails/{id}/edit', 'EmailController@edit');
+Route::delete('emails/{id}/delete', 'EmailController@delete');

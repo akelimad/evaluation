@@ -180,6 +180,7 @@ class ObjectifController extends Controller
                             'entretien_id' => $request->entretien_id,
                             'userNote'=> isset($array['userNote']) ? $array['userNote']: "", 
                             'realise'=> isset($array['realise']) ? $array['realise']: "", 
+                            'ecart'=> isset($array['ecart']) ? $array['ecart']: "", 
                             'userAppreciation'=> isset($array['userAppr']) ? $array['userAppr']: "",
                             'objNplus1'=> isset($array['objNplus1']) && $array['objNplus1'] == "on" ? 1 : 0,
                             'mentor_id'=> $mentor_id,

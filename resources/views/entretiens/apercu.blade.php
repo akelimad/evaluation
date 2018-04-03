@@ -1,5 +1,9 @@
 <div class="apercu">
-    <p class="help-block">Aperçu sur les formations partagées entre {{ $user->name." ".$user->last_name }} et {{ $user->parent->name." ".$user->parent->last_name }} sur l'entretien : {{ $e->titre }}</p>
+    @if($user->parent)
+    <p class="help-block">Aperçu sur les formations partagées entre 
+        {{ $user->name." ".$user->last_name }} et 
+        {{ $user->parent ? $user->parent->name : $user->name }} {{ $user->parent ? $user->parent->last_name : $user->last_name }} sur l'entretien : {{ $e->titre }}
+    </p>
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-evaluations">
@@ -29,20 +33,17 @@
                                         {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->answer : '---'}}
                                     </p>
                                     @elseif($q->type == "checkbox")
-                                        <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                         @foreach($q->children as $child)
                                             <div class="survey-checkbox">
-                                                @if(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)  && in_array($child->id, App\Answer::getMentorAnswers($q->id, $user->id, $e->id)))
-                                                    <span> {{ $child->titre }}</span>
-                                                @endif
+                                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }}>
+                                                <label for="{{$child->titre}}">{{ $child->titre }}</label>
                                             </div>
                                         @endforeach
                                         <div class="clearfix"></div>
                                     @elseif($q->type == "radio")
                                         @foreach($q->children as $child)
-                                            @if(App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getMentorAnswers($q->id, $user->id, $e->id)))
-                                                <span>{{ $child->titre }}</span>
-                                            @endif
+                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }}> 
+                                            <label for="{{$child->id}}">{{ $child->titre }}</label>
                                         @endforeach
                                     @endif
                                 </div>
@@ -78,7 +79,7 @@
                                 <tbody>
                                     @foreach($carreers as $c)
                                     <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/carrieres/'.$c->id.'/mentorUpdate') }}" method="post">
-                                        <input type="hidden" name="mentor_id" value="{{$user->parent->id}}">
+                                        <input type="hidden" name="mentor_id" value="{{$user->parent ? $user->parent->id : $user->id}}">
                                     {{ csrf_field() }}
                                     {{ method_field('PUT') }}
                                     <tr>
@@ -109,7 +110,7 @@
             <div id="collapse-formations" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-formations">
                 <div class="panel-body">
                     <p class="help-block">
-                        La liste des formations souhaitées de la part de {{ $user->name." ".$user->last_name }} acceptées par {{ $user->parent->name." ".$user->parent->last_name }}
+                        La liste des formations souhaitées de la part de {{ $user->name." ".$user->last_name }} acceptées par {{ $user->parent ? $user->parent->name : $user->name  }} {{ $user->parent ? $user->parent->last_name : $user->last_name }}
                     </p>
                     @if(count($formations)>0)
                     <table class="table table-striped">
@@ -216,7 +217,7 @@
                                         {{ $user->name." ".$user->last_name }} 
                                     </td>
                                     <td colspan="4" class="objectifTitle"> 
-                                        {{ $user->parent->name." ".$user->parent->last_name }} 
+                                        {{ $user->parent ? $user->parent->name : $user->name }} {{ $user->parent ? $user->parent->last_name : $user->last_name }} 
                                     </td>
                                 </tr>
                                 @endif
@@ -429,7 +430,6 @@
                                 <tbody>
                                     @foreach($comments as $c)
                                     <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/commentaires/'.$c->id.'/mentorUpdate') }}" method="post">
-                                        <input type="hidden" name="mentor_id" value="{{$user->parent->id}}">
                                     {{ csrf_field() }}
                                     {{ method_field('PUT') }}
                                     <tr>
@@ -449,6 +449,9 @@
             </div>
         </div>
     </div>
+    @else
+        @include('partials.alerts.info', ['messages' => "l'utlisateur ".$user->name." ".$user->last_name." n'a pas de mentor" ])
+    @endif
 </div>
 
 <script>

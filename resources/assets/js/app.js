@@ -28,6 +28,7 @@ import chmGroupe from './class/groupe'
 import chmQuestion from './class/question'
 import chmSurvey from './class/survey'
 import chmEntretienObjectif from './class/entretienObjectif'
+import chmEmail from './class/email'
 
 // Store modules in window
 window.chmSite = chmSite
@@ -53,6 +54,7 @@ window.chmGroupe = chmGroupe
 window.chmQuestion = chmQuestion
 window.chmSurvey = chmSurvey
 window.chmEntretienObjectif = chmEntretienObjectif
+window.chmEmail = chmEmail
 
 // Standart jQuery script
 import './custom'

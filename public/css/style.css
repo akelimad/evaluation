@@ -111,7 +111,7 @@ i{
 }
 .login-box-body{
     box-shadow: -1px -2px 28px 2px #e2dddd;
-    padding: 5em 3em;
+    padding: 2em 3em;
     border-radius: 7px;
 }
 .login-page ul{
@@ -634,6 +634,6 @@ p.help-block{
 .objectifs .separate{
     border-right: 2px solid #5a5a5a;
 }
-.objectifs > .table tr:first-child td{
+.objectifs tr.userMentorInfoRow td {
     border: 2px solid #28a8e4;
 }

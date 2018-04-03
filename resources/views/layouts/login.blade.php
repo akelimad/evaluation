@@ -29,7 +29,7 @@
 	        <div class="col-md-6 col-md-offset-3">
                 <div class="login-box-body ">
     			    <div class="login-logo">
-    			      	<img src="{{ asset('img/logo1.png') }}" alt="" class="img-responsive">
+    			      	<img src="{{ asset('img/logo.png') }}" alt="" class="img-responsive">
     			    </div>
     			    @if ($errors->any())
                         <div class="chm-alerts alert alert-danger alert-white rounded">

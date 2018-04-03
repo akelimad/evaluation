@@ -60,20 +60,19 @@
                                         </table>
                                     </div>
                                 @else
-                                    <p class="alert alert-default">Aucune donnée disponible !</p>
+                                    @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
                                 @endif
                                 @if($user->id == Auth::user()->id)
                                 <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn"><i class="fa fa-plus"></i> Demander une formation</a>
                                 @endif
                                 </div>
                             </div>
-                            @if($user->id != Auth::user()->id)
+                            @if($user->id != Auth::user()->id && count($historiques)>0)
                             <div class="panel panel-info">
                                 <div class="panel-heading text-center lead"> Historique </div>
                                 <div class="panel-body">
-                                @if(count($historiques)>0)
                                     <div class="box-body table-responsive no-padding mb40">
-                                        <table class="table table-hover table-bordered text-center">
+                                        <table class="table table-hover table-striped text-center">
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
@@ -106,9 +105,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                @else
-                                    <p class="alert alert-default">Aucune donnée disponible !</p>
-                                @endif
                                 </div>
                             </div>
                             @endif

@@ -26,7 +26,7 @@
             <select name="usersId[]" id="user_id" class="form-control select2" multiple="multiple" data-placeholder="select " style="width: 100%;" required="">
                 <option value="all"> Tous </option>
                 @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{isset($e->user_id) && $e->user_id == $user->id ? 'selected' : null }} > {{ $user->email }} </option>
+                    <option value="{{ $user->id }}" {{isset($e->user_id) && $e->user_id == $user->id ? 'selected' : null }} > {{ $user->name." ".$user->last_name }} </option>
                 @endforeach
             </select>
         </div>

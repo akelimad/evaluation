@@ -122,7 +122,7 @@ class EntretienController extends Controller
     {
         ob_start();
         if(Auth::user()->hasRole(['ADMIN', 'RH'])){
-            $users = User::select('id', 'email')->get();
+            $users = User::select('id','name','last_name', 'email')->where('email', '<>', 'demo@eentretiens.ma')->get();
         }else{
             $users = Auth::user()->children;
         }
@@ -140,6 +140,8 @@ class EntretienController extends Controller
      */
     public function store(Request $request)
     {
+        $date = Carbon::createFromFormat('d-m-Y', $request->date);
+        $date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit);
         // if($request->id == null ){
         //     $entretien = new Entretien();
         // }else{
@@ -157,13 +159,16 @@ class EntretienController extends Controller
         if($survey  == null || $objectif == null){
             $messages->add('null_survey_obj', "Aucun questionnaire et/ou objectif standard n'a été trouvé ! il faut les créer tout d'abord.");
         }
+        if(Entretien::existInterview($date, $date_limit)){
+            $messages->add('existInterview', "Il ya déjà un entretien programmé dans la période choisie !!");
+        }
         if(count($messages)>0){
             return ["status" => "danger", "message" => $messages];
         }
         $evaluations = Evaluation::pluck('id')->toArray(); //to get ids of all object in one array
         $entretien = new Entretien();
-        $entretien->date = Carbon::createFromFormat('d-m-Y', $request->date);
-        $entretien->date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit); 
+        $entretien->date = $date;
+        $entretien->date_limit = $date_limit; 
         $entretien->titre = $request->titre;
         $entretien->created_by = Auth::user()->id;
         $entretien->survey_id = $survey ? $survey->id : 0;
@@ -187,7 +192,7 @@ class EntretienController extends Controller
             }
             $entretien->users()->attach(array_unique($users_id));
         }else{
-            $users = User::select('id', 'email', 'user_id')->get();
+            $users = User::select('id','name','last_name', 'email')->where('email', '<>', 'demo@eentretiens.ma')->get();
             $users_id = [];
             foreach ($users as $user) {
                 $users_id[]= $user->id;
@@ -204,7 +209,7 @@ class EntretienController extends Controller
 
         $user_mentors = array_unique($mentors);
         foreach ($user_mentors as $mentor) {
-            $password = $this->rand_string(8);
+            $password = $this->rand_string(10);
             $mentor->password = bcrypt($password);
             $mentor->save();
             Mail::send('emails.mentor_invitation', [
@@ -212,7 +217,6 @@ class EntretienController extends Controller
                 'password' => $password,
                 'endDate' => $entretien->date_limit
             ], function ($m) use ($mentor) {
-                $m->from('contact@lycom.ma', 'E-entretien');
                 $m->to($mentor->email, $mentor->name)->subject('Invitation pour évaluer vos collaborateurs');
             });
         }
@@ -238,7 +242,7 @@ class EntretienController extends Controller
 
         $user_mentors = array_unique($mentors);
         foreach ($user_mentors as $mentor) {
-            $password = $this->rand_string(8);
+            $password = $this->rand_string(10);
             $mentor->password = bcrypt($password);
             $mentor->save();
             Mail::send('emails.mentor_invitation', [
@@ -246,7 +250,6 @@ class EntretienController extends Controller
                 'password' => $password,
                 'endDate' => $entretien->date_limit
             ], function ($m) use ($mentor) {
-                $m->from('contact@lycom.ma', 'E-entretien');
                 $m->to($mentor->email, $mentor->name)->subject('Invitation !');
             });
         }
@@ -265,12 +268,17 @@ class EntretienController extends Controller
                 $evaluationsIds[]=$choix['evaluation_id'];
             }
         }
-        foreach ($request->entretiens as $key => $value) {
-            if(isset($value[0])) $entretien->survey_id = $value[0];
-            if(isset($value[1])) $entretien->objectif_id = $value[1];
-            $entretien->save();
-        }
         $entretien->evaluations()->sync($evaluationsIds);
+        foreach ($request->entretiens as $key => $value) {
+            $incompleteSurvey = Survey::icompleteSurvey($value[0]);
+            if($incompleteSurvey == true){
+                Session::flash('incompleteSurvey', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entreteien. veuillez vous rendre attribuer les choix pour les questions multichoix !!");
+            }else{
+                if(isset($value[0])) $entretien->survey_id = $value[0];
+                if(isset($value[1])) $entretien->objectif_id = $value[1];
+                $entretien->save();
+            }
+        }
 
         Session::flash('success_evaluations_save', "Les évaluations de l'entretien ont bien été mises à jour");
         return redirect('entretiens/index');
@@ -280,7 +288,7 @@ class EntretienController extends Controller
     {
         $user = User::findOrFail($uid);
         $entretien = Entretien::findOrFail($eid);
-        $password = $this->rand_string(8);
+        $password = $this->rand_string(10);
         $user->password = bcrypt($password);
         $user->save();
         Mail::send('emails.user_invitation', [
@@ -288,7 +296,6 @@ class EntretienController extends Controller
             'password' => $password,
             'endDate' => $entretien->date_limit
         ], function ($m) use ($user) {
-            $m->from('contact@lycom.ma', 'E-entretien');
             $m->to($user->email, $user->name)->subject('Invitation pour remplir une evaluation');
         });
         return redirect()->back()->with('message', 'Un email est envoyé avec succès à '.$user->name." ".$user->last_name);
@@ -299,15 +306,14 @@ class EntretienController extends Controller
         $user = User::findOrFail($uid);
         $mentor = $user->parent;
         $entretien = Entretien::findOrFail($eid);
-        $password = $this->rand_string(8);
-        $user->password = bcrypt($password);
-        $user->save();
+        $password = $this->rand_string(10);
+        $mentor->password = bcrypt($password);
+        $mentor->save();
         Mail::send('emails.mentor_invitation', [
             'mentor' => $mentor,
             'password' => $password,
             'endDate' => $entretien->date_limit
         ], function ($m) use ($mentor) {
-            $m->from('contact@lycom.ma', 'E-entretien');
             $m->to($mentor->email, $mentor->name)->subject('Invitation pour évaluer votre collaborateur');
         });
         return redirect()->back()->with('relanceMentor', 'Un email de relance est envoyé avec succès à '.$mentor->name." ".$mentor->last_name." pour évaluer ".$user->name." ".$user->last_name);
@@ -347,7 +353,7 @@ class EntretienController extends Controller
         $groupes = $survey->groupes;
         $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
         $formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
-        $salaries = Salary::where('mentor_id', $user->parent->id)->paginate(10);
+        $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
         $skills = Skill::all();
         $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
         $comments = Comment::where('entretien_id', $eid)->where('user_id', $uid)->get();
@@ -391,6 +397,11 @@ class EntretienController extends Controller
             ->paginate(15);
         }
         return view('entretiens.annuel.index', compact('entretiens', 'd', 't', 'id','n', 'f'));
+    }
+
+    public function calendar(){
+        $entretiens = Entretien::all();
+        return view("entretiens.calendar" , compact('entretiens'));
     }
 
 

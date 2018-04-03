@@ -57,7 +57,7 @@ class FormationController extends Controller
         $validator = Validator::make($request->all(), [
             'date'      => 'required',
             'exercice'  => 'required',
-            'title'     => 'required|alpha',
+            'title'     => "required|regex:/^[A-Za-z\/\s\.'-]+$/",
         ]);
         if ($validator->fails()) {
             return ["status" => "danger", "message" => $validator->errors()->all()];

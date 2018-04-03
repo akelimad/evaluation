@@ -93,6 +93,7 @@ class UserController extends Controller
             $rules['email'] = 'required|unique:users,email,'.$user->id;
             if(!empty($request->password) || !empty($request->password_confirmation)){
                 $rules['password'] = 'required|confirmed|min:6';
+                $user->password= bcrypt($request->password);
             }else{
                 $rules['password'] = '';
             }

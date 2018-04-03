@@ -67,9 +67,14 @@ class SurveyController extends Controller
         ob_start();
         $survey = Survey::find($sid);
         $groupes = $survey->groupes;
-        echo view('surveys.preview', compact('groupes', 'sid'));
+        $incompleteSurvey = Survey::icompleteSurvey($sid);
+        echo view('surveys.preview', compact('groupes', 'sid', 'incompleteSurvey'));
         $content = ob_get_clean();
-        return ['title' => 'Visualiser un questionnaire', 'content' => $content];
+        // if($incompleteSurvey == true){
+        //     return ['title' => 'Visualiser un questionnaire', 'content' => "<i class='fa fa-info-circle'></i>le questionnaire est incomplet, vous ne pouvez pas le vésualiser. veuillez attribuer les choix pour les questions multichoix."];
+        // }else{
+            return ['title' => 'Visualiser un questionnaire', 'content' => $content];
+        // }
     }    
 
 

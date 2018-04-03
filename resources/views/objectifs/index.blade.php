@@ -16,7 +16,7 @@
                                     <input type="hidden" name="user_id" value="{{$user->id}}">
                                     <table class="table table-hover table-striped">
                                         @if($user->id != Auth::user()->id)
-                                        <tr>
+                                        <tr class="userMentorInfoRow">
                                             <td colspan="3" class="objectifTitle {{ $user->id != Auth::user()->id ? 'separate':'' }}"> 
                                                 {{ $user->name." ".$user->last_name }} 
                                             </td>
@@ -86,10 +86,10 @@
                                                                 <span class="nMoins1-{{$sub->id}}" > {{App\Objectif::getNmoins1Note($sub->id, $e->id) ? App\Objectif::getNmoins1Note($sub->id, $e->id)->userNote : ''}} </span>
                                                             </td>
                                                             <td>
-                                                                <input type="number" min="0" max="10" class="text-center realise" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]" data-id="{{$sub->id}}" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->realise : ''}}">
+                                                                <input type="number" min="0" max="100" class="text-center realise" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]" data-id="{{$sub->id}}" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->realise : ''}}">
                                                             </td>
                                                             <td>
-                                                                <span class="ecart-{{$sub->id}}"></span>
+                                                                <input type="number" min="0" max="100" class="ecart-{{$sub->id}} text-center" name="objectifs[{{$objectif->id}}][{{$sub->id}}][ecart]" readonly="" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->ecart : ''}}">
                                                             </td>
                                                             <td></td>
                                                         </tr>
@@ -97,7 +97,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">
-                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}" placeholder="Pourquoi cette note ?">
+                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}" placeholder="Pourquoi cette note ?" {{ $user->id != Auth::user()->id ? 'disabled':'' }}>
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $sub->ponderation }}

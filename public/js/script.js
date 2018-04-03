@@ -66,12 +66,12 @@ $(function(){
         }
     });
 
-    $(".realise").on('keyup change load', function(){
+    $(".realise").on('keyup click', function(){
         var id = $(this).data('id')
-        var nMoins1 = $(".nMoins1-"+id).html()
+        var nMoins1 = $(".nMoins1-"+id).text()
         var realise = $(this).val()
-        var ecart   = $(".ecart-"+id).html(realise - nMoins1);
-        if(ecart.html() < 0){
+        var ecart   = $(".ecart-"+id).val(parseInt(realise) - parseInt(nMoins1) );
+        if(ecart.val() < 0){
             $(".ecart-"+id).css('color', 'red')
         }else{
             $(".ecart-"+id).css('color', 'green')

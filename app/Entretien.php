@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use Carbon\Carbon; 
+
 class Entretien extends Model
 {
 
@@ -72,4 +74,24 @@ class Entretien extends Model
     {
         return $this->hasMany('App\Comment');
     }
+
+    public static function existInterview($start, $end){
+        $existInterview = Entretien::where(function ($query) use ($start, $end) {
+            $query->where(function ($q) use ($start, $end) {
+                $q->where('date', '>', $start)
+                   ->where('date', '<', $end);
+            })->orWhere(function ($q) use ($start, $end) {
+                $q->where('date', '<', $start)
+                   ->where('date_limit', '>', $end);
+            })->orWhere(function ($q) use ($start, $end) {
+                $q->where('date_limit', '>', $start)
+                   ->where('date_limit', '<', $end);
+            })->orWhere(function ($q) use ($start, $end) {
+                $q->where('date', '>', $start)
+                   ->where('date_limit', '<', $end);
+            });
+        })->count();
+        return $existInterview;
+    }
+
 }
