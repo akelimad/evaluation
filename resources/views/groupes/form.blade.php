@@ -4,15 +4,11 @@
     <input type="hidden" name="sid" value="{{ isset($sid) ? $sid : null }}">
     {{ csrf_field() }}
     <div class="form-group">
-        <label for="name" class="col-md-2 control-label">Nom</label>
-        <div class="col-md-10">
-            <input type="text" name="name" id="name" class="form-control" value="{{isset($g->name) ? $g->name :''}}">
-        </div>
+        <label for="name" class="control-label">Nom</label>
+        <input type="text" name="name" id="name" class="form-control" value="{{isset($g->name) ? $g->name :''}}" required="">
     </div>
     <div class="form-group">
-        <label for="description" class="col-md-2 control-label">Description</label>
-        <div class="col-md-10">
-            <textarea name="description" id="description" class="form-control">{{ isset($g->description) ? $g->description :''}}</textarea>
-        </div>
+        <label for="description" class="control-label">Description</label>
+        <textarea name="description" id="description" class="form-control">{{ isset($g->description) ? $g->description :''}}</textarea>
     </div>
 </div>

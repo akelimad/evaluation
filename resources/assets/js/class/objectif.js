@@ -16,7 +16,7 @@ export default class chmObjectif {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.e_id + '/objectifs/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/objectifs/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmObjectif.store'
@@ -70,7 +70,11 @@ export default class chmObjectif {
 
   static delete (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('user/' + params.id + '/delete'), data: {'_token': token}}, {
+    var object = window.chmModal.show({
+      type: 'POST',
+      url: window.chmSite.url('entretienObjectif/' + params.oid + '/objectifs/delete'),
+      data: {'_token': token, '_method': 'DELETE'}
+    }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')

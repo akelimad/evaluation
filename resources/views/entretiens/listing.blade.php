@@ -19,7 +19,7 @@
                     <p class="help-block"> Dans cette page vous allez pouvoir personnaliser le questionnaire à affecter pour la partie d'évaluation de l'entretien en question ansi que pour la partie des objectifs. <br> Selectionnez le questionnaire et l'objectif puis cliquer sur Actualiser. </p>
                     @if(count($entretiens)>0)
                     <div class="box-body table-responsive no-padding mb40">
-                        <table class="table table-hover table-bordered text-center">
+                        <table class="table table-hover table-striped text-center table-inversed-blue">
                             <thead>
                                 <tr>
                                     <th>Id </th>

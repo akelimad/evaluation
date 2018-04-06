@@ -17,11 +17,7 @@ class QuestionController extends Controller
     {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index($sid, $gid)
     {
         $survey = Survey::find($sid);
@@ -29,11 +25,6 @@ class QuestionController extends Controller
         return view('questions.index', compact('survey','groupe'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create($sid, $gid, Request $request)
     {
         ob_start();
@@ -43,32 +34,34 @@ class QuestionController extends Controller
         return ['title' => 'Ajouter une question', 'content' => $content];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        if(empty($request->parent_id)){
+        if($request->id == null ){
             $question = new Question();
-            $question->titre = $request->titre;
-            $question->type = $request->type;
-            $question->parent_id = $request->parent_id ? $request->parent_id : 0;
-            $question->groupe_id = $request->groupe_id;
-            $question->save();
+            $action ="ajoutée";
         }else{
-            foreach ($request->subQuestions as $sub_q) {
-                $question = new Question();
-                $question->titre = $sub_q;
-                $question->parent_id = $request->parent_id;
-                $question->groupe_id = $request->groupe_id;
-                $question->save();
+            $question =  Question::find($request->id);
+            $action ="modifiée";
+        }
+        
+        $question->titre = $request->titre;
+        $question->type = $request->type;
+        $question->parent_id =  0;
+        $question->groupe_id = $request->groupe_id;
+        $question->save();
+        if( count($request->subQuestions)>0 ){
+            $question->children()->delete();
+            foreach ($request->subQuestions as $key => $value) {
+                $choice = new Question(); 
+                $choice->titre = $value;
+                $choice->parent_id = $question->id;
+                $choice->groupe_id = $request->groupe_id;
+                $choice->save();
             }
         }
-        //$url=url('surveys/'.$request->survey_id.'/groupes/'.$request->groupe_id.'/questions/'.$question->id);
-        $request->session()->flash('success', "La question à été ajouté avec suucès");
+
+        $url=url('surveys/'.$request->survey_id.'/groupes/'.$request->groupe_id.'/questions/'.$question->id);
+        $request->session()->flash('success', "La question à été ".$action." avec suucès. <a href='$url'>cliquer ici</a> pour la consulter");
         if($question->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
             redirect('users');
@@ -77,12 +70,6 @@ class QuestionController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($sid ,$gid, $qid)
     {
         $survey = Survey::find($sid);
@@ -92,37 +79,25 @@ class QuestionController extends Controller
         return view('questions.show', compact('groupes', 'sid', 'gr', 'qs'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit($sid, $gid, $qid)
     {
-        //
+        ob_start();
+        $q = Question::findOrFail($qid);
+        echo view('questions.form', compact('sid','gid', 'q'));
+        $content = ob_get_clean();
+        return ['title' => 'Modifier la question', 'content' => $content];
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy($sid, $gid, $qid)
     {
-        //
+        $question = Question::findOrFail($qid);
+        $question->delete();
+        $question->children()->delete();
+        return redirect('surveys/'.$sid.'/groupes/'.$gid.'/questions');
     }
 }

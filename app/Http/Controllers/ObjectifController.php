@@ -24,10 +24,11 @@ class ObjectifController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexAdmin()
+    public function indexAdmin($oid)
     {
-        $objectifs = Objectif::where('parent_id', 0)->paginate(10);
-        return view('objectifs.indexAdmin', compact('objectifs'));
+        $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $oid)->paginate(15);
+        $count = Objectif::count();
+        return view('objectifs.indexAdmin', compact('objectifs', 'count', 'oid'));
     }
 
     /**
@@ -64,7 +65,8 @@ class ObjectifController extends Controller
     public function create($oid)
     {
         ob_start();
-        echo view('objectifs.form', ['oid'=> $oid]);
+        $objectif = [''=>''];
+        echo view('objectifs.form', compact('oid', 'objectif'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter un objectif', 'content' => $content];
     }
@@ -80,11 +82,10 @@ class ObjectifController extends Controller
         $rules = [];
         $validator = Validator::make($request->all(), $rules);
         $messages = $validator->errors();
-
-        if($request->objectifs){
-            $objectif = new Objectif();
+        if($request->id){
+            $objectif = Objectif::findOrFail($request->oid);
+            $objectif->children()->delete();
             $objectif->title = $request->title;
-            $objectif->entretienobjectif_id = $request->oid;
             $objectif->save();
             foreach ($request->objectifs as $obj) {
                 $subObj = new Objectif();
@@ -92,6 +93,20 @@ class ObjectifController extends Controller
                 $subObj->ponderation = $obj['ponderation'];
                 $subObj->parent_id = $objectif->id;
                 $subObj->save();
+            }
+        }else{
+            if($request->objectifs){
+                $objectif = new Objectif();
+                $objectif->title = $request->title;
+                $objectif->entretienobjectif_id = $request->oid;
+                $objectif->save();
+                foreach ($request->objectifs as $obj) {
+                    $subObj = new Objectif();
+                    $subObj->title = $obj['subTitle'];
+                    $subObj->ponderation = $obj['ponderation'];
+                    $subObj->parent_id = $objectif->id;
+                    $subObj->save();
+                }
             }
         }
         if($objectif->save()) {
@@ -118,12 +133,11 @@ class ObjectifController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($e_id, $id)
+    public function edit($oid)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        $objectif = Objectif::find($id);
-        echo view('objectifs.form', ['o' => $objectif, 'e'=>$entretien]);
+        $objectif = Objectif::find($oid);
+        echo view('objectifs.form', compact('objectif', 'entretien', 'oid'));
         $content = ob_get_clean();
         return ['title' => 'Modifier un objectif', 'content' => $content];
     }
@@ -206,8 +220,9 @@ class ObjectifController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($oid)
     {
-        //
+        $objectif = Objectif::findOrFail($oid);
+        $objectif->children()->delete();
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use App\Entretien;
 use App\Skill;
@@ -32,7 +32,7 @@ class SkillController extends Controller
     {
         $e = Entretien::find($e_id);
         $evaluations = $e->evaluations;
-        $skills = Skill::paginate(10);
+        $skills = $e->skills()->paginate(15);
         $user = $e->users()->where('entretien_user.user_id', $uid)->first();
         return view('skills.index', compact('e', 'evaluations','skills', 'user'));
     }
@@ -44,8 +44,9 @@ class SkillController extends Controller
      */
     public function indexAdmin()
     {
-        $skills = Skill::paginate(10);
-        return view('skills.indexAdmin', compact('skills'));
+        $interviewSkills = Entretien::with('skills')->paginate(10);
+        $count = Skill::count();
+        return view('skills.indexAdmin', compact('interviewSkills', 'count'));
     }
 
     /**
@@ -56,7 +57,9 @@ class SkillController extends Controller
     public function create()
     {
         ob_start();
-        echo view('skills.form');
+        $entretiens = Entretien::select('id','titre')->get();
+        $skills = [''=>''];
+        echo view('skills.form', compact('entretiens', 'skills'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter une compétence', 'content' => $content];
     }
@@ -69,16 +72,31 @@ class SkillController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->id == null ){
-            $skill = new Skill();
-        }else{
-            $skill =  Skill::find($request->id);
+        $rules = [
+            'skills.*.axe'            => 'required',
+            'skills.*.famille'        => 'required',
+            'skills.*.categorie'      => 'required',
+            'skills.*.competence'     => 'required',
+        ];
+        $validator = \Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return ["status" => "danger", "message" => $validator->errors()->all()];
         }
-        $skill->axe = $request->axe;
-        $skill->famille = $request->famille;
-        $skill->categorie = $request->categorie;
-        $skill->competence = $request->competence;
-        $skill->save();
+        if($request->id){
+            $entretien = Entretien::findOrFail($request->id);
+            $entretien->skills()->delete();
+        }
+        if($request->skills){
+            foreach ($request->skills as $key => $value) {
+                $skill = new Skill();
+                $skill->axe = $value['axe'];
+                $skill->famille = $value['famille'];
+                $skill->categorie = $value['categorie'];
+                $skill->competence = $value['competence'];
+                $skill->entretien_id = $request->entretien_id;
+                $skill->save();
+            }
+        }
         if($skill->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {
@@ -106,10 +124,11 @@ class SkillController extends Controller
     public function edit($id)
     {
         ob_start();
-        $s = Skill::find($id);
-        echo view('skills.form', compact('s'));
+        $entretien = Entretien::find($id);
+        $skills = $entretien->skills;
+        echo view('skills.form', compact('skills', 'entretien'));
         $content = ob_get_clean();
-        return ['title' => 'Modifier une compétence', 'content' => $content];
+        return ['title' => 'Modifier les compétence', 'content' => $content];
     }
 
     /**
@@ -145,8 +164,9 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($eid)
     {
-        //
+        $entretien = Entretien::findOrFail($eid);
+        $entretien->skills()->delete();
     }
 }

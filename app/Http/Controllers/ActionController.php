@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Email;
+use Illuminate\Support\Facades\Validator;
 use App\Action;
+use App\Email;
 use App\Http\Requests;
 
-class EmailController extends Controller
+class ActionController extends Controller
 {
     public function __construct()
     {
@@ -17,40 +17,36 @@ class EmailController extends Controller
 
     public function index()
     {
-        $emails = Email::paginate(10);
-        $emailActions = Action::paginate(10);
-        return view('emails.index', compact('emails', 'emailActions'));
+        
     }
 
     public function create()
     {
         ob_start();
-        echo view('emails.form');
+        echo view('emails.actions.form');
         $content = ob_get_clean();
-        return ['title' => 'Ajouter un email', 'content' => $content];
+        return ['title' => 'Ajouter une action', 'content' => $content];
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'sender'    => 'required',
-            'subject'   => 'required',
-            'message'   => "required",
+            'slug'    => 'required',
+            'name'   => 'required',
         ]);
         if ($validator->fails()) {
             return ["status" => "danger", "message" => $validator->errors()->all()];
         }
 
         if($request->id == null ){
-            $email = new Email();
+            $action = new Action();
         }else{
-            $email =  Email::find($request->id);
+            $action =  Action::find($request->id);
         }
-        $email->sender = $request->sender;
-        $email->subject = $request->subject;
-        $email->message = $request->message;
-        $email->save();
-        if($email->save()) {
+        $action->slug = $request->slug;
+        $action->name = $request->name;
+        $action->save();
+        if($action->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {
             return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
@@ -65,20 +61,21 @@ class EmailController extends Controller
     public function edit($id)
     {
         ob_start();
-        $email = Email::find($id);
-        echo view('emails.form', compact('email'));
+        $action = Action::find($id);
+        echo view('emails.actions.form', compact('action'));
         $content = ob_get_clean();
-        return ['title' => 'Modifier un email', 'content' => $content];
+        return ['title' => 'Modifier une action', 'content' => $content];
     }
 
-    public function update(Request $request, $id)
+    public function attachEmailAtion(Request $request, $actionId)
     {
-        
+        $action = Action::find($actionId);
+        $action->emails()->sync([$request->email_id]);
+        return redirect('emails')->with("attach_emailAction", "");
     }
 
     public function destroy($id)
     {
         //
     }
-
 }

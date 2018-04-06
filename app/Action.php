@@ -10,9 +10,9 @@ class Action extends Model
     /**
      * Get the email that owns the action.
      */
-    public function email()
+    public function emails()
     {
-        return $this->belongsTo('App\Email');
+        return $this->belongsToMany('App\Email');
     }
 
 }

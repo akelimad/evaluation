@@ -23,6 +23,8 @@ use App\Carreer;
 use App\Salary;
 use App\Comment;
 use DB;
+use App\Action;
+use App\Email;
 
 class EntretienController extends Controller
 {   
@@ -208,16 +210,23 @@ class EntretienController extends Controller
         }
 
         $user_mentors = array_unique($mentors);
+        $action = Action::where('slug', 'notify_mentors')->first();
+        $email = $action->emails()->first();
         foreach ($user_mentors as $mentor) {
             $password = $this->rand_string(10);
             $mentor->password = bcrypt($password);
             $mentor->save();
-            Mail::send('emails.mentor_invitation', [
-                'mentor' => $mentor,
+            $message = Email::renderMessage($email->message, [
+                'user_name' => $mentor->name,
+                'date_limit' => $entretien->date_limit,
+                'email'     => $mentor->email,
                 'password' => $password,
-                'endDate' => $entretien->date_limit
-            ], function ($m) use ($mentor) {
-                $m->to($mentor->email, $mentor->name)->subject('Invitation pour évaluer vos collaborateurs');
+            ]);
+            $send = Mail::send([], [], function($m) use ($mentor, $email, $message) {
+                $m->from($email->sender);
+                $m->to($mentor->email);
+                $m->subject($email->subject);
+                $m->setBody($message, 'text/html');
             });
         }
         return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -241,16 +250,23 @@ class EntretienController extends Controller
         $entretien->users()->syncWithoutDetaching($users_id);
 
         $user_mentors = array_unique($mentors);
+        $action = Action::where('slug', 'notify_mentors')->first();
+        $email = $action->emails()->first();
         foreach ($user_mentors as $mentor) {
             $password = $this->rand_string(10);
             $mentor->password = bcrypt($password);
             $mentor->save();
-            Mail::send('emails.mentor_invitation', [
-                'mentor' => $mentor,
+            $message = Email::renderMessage($email->message, [
+                'user_name' => $mentor->name,
+                'date_limit' => $entretien->date_limit,
+                'email'     => $mentor->email,
                 'password' => $password,
-                'endDate' => $entretien->date_limit
-            ], function ($m) use ($mentor) {
-                $m->to($mentor->email, $mentor->name)->subject('Invitation !');
+            ]);
+            $send = Mail::send([], [], function($m) use ($mentor, $email, $message) {
+                $m->from($email->sender);
+                $m->to($mentor->email);
+                $m->subject($email->subject);
+                $m->setBody($message, 'text/html');
             });
         }
         $url=url('entretiens/evaluations');
@@ -286,35 +302,49 @@ class EntretienController extends Controller
 
     public function notifyUserInterview($eid, $uid)
     {
+        $action = Action::where('slug', 'notify_collaborator')->first();
+        $email = $action->emails()->first();
         $user = User::findOrFail($uid);
         $entretien = Entretien::findOrFail($eid);
         $password = $this->rand_string(10);
         $user->password = bcrypt($password);
         $user->save();
-        Mail::send('emails.user_invitation', [
-            'user' => $user,
+        $message = Email::renderMessage($email->message, [
+            'user_name' => $user->name,
+            'date_limit' => $entretien->date_limit,
+            'email'     => $user->email,
             'password' => $password,
-            'endDate' => $entretien->date_limit
-        ], function ($m) use ($user) {
-            $m->to($user->email, $user->name)->subject('Invitation pour remplir une evaluation');
+        ]);
+        $send = Mail::send([], [], function($m) use ($user, $email, $message) {
+            $m->from($email->sender);
+            $m->to($user->email);
+            $m->subject($email->subject);
+            $m->setBody($message, 'text/html');
         });
         return redirect()->back()->with('message', 'Un email est envoyé avec succès à '.$user->name." ".$user->last_name);
     }
 
     public function notifyMentorInterview($eid, $uid)
     {
+        $action = Action::where('slug', 'notify_mentor')->first();
+        $email = $action->emails()->first();
         $user = User::findOrFail($uid);
         $mentor = $user->parent;
         $entretien = Entretien::findOrFail($eid);
         $password = $this->rand_string(10);
         $mentor->password = bcrypt($password);
         $mentor->save();
-        Mail::send('emails.mentor_invitation', [
-            'mentor' => $mentor,
+        $message = Email::renderMessage($email->message, [
+            'user_name' => $mentor->name,
+            'date_limit' => $entretien->date_limit,
+            'email'     => $mentor->email,
             'password' => $password,
-            'endDate' => $entretien->date_limit
-        ], function ($m) use ($mentor) {
-            $m->to($mentor->email, $mentor->name)->subject('Invitation pour évaluer votre collaborateur');
+        ]);
+        $send = Mail::send([], [], function($m) use ($mentor, $email, $message) {
+            $m->from($email->sender);
+            $m->to($mentor->email);
+            $m->subject($email->subject);
+            $m->setBody($message, 'text/html');
         });
         return redirect()->back()->with('relanceMentor', 'Un email de relance est envoyé avec succès à '.$mentor->name." ".$mentor->last_name." pour évaluer ".$user->name." ".$user->last_name);
     }

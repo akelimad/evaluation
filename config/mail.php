@@ -16,7 +16,6 @@ return [
     |
     */
 
-    //'driver' => env('MAIL_DRIVER', 'mail'),
     'driver' => 'mail',
 
     /*
@@ -30,8 +29,7 @@ return [
     |
     */
 
-    //'host' => env('MAIL_HOST', ''),
-    'host' => '',
+    'host' => env('MAIL_HOST', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'contact@lycom.ma', 'name' => 'Lycom'],
+    'from' => ['address' => 'example@mail.com', 'name' => 'example'],
 
     /*
     |--------------------------------------------------------------------------

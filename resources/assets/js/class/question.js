@@ -15,7 +15,7 @@ export default class chmQuestion {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/groupes/' + params.id + '/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/groupes/' + params.gid + '/questions/' + params.qid + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmQuestion.store'
@@ -69,7 +69,11 @@ export default class chmQuestion {
 
   static delete (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('user/' + params.id + '/delete'), data: {'_token': token}}, {
+    var object = window.chmModal.show({
+      type: 'POST',
+      url: window.chmSite.url('surveys/' + params.sid + '/groupes/' + params.gid + '/questions/' + params.qid + '/delete'),
+      data: {'_token': token, '_method': 'DELETE'}
+    }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')

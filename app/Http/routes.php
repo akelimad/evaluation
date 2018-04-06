@@ -71,6 +71,7 @@ Route::get('skills', 'SkillController@indexAdmin');
 Route::get('skills/create', 'SkillController@create');
 Route::post('skills/store', 'SkillController@store');
 Route::get('skills/{id}/edit', 'SkillController@edit');
+Route::delete('skills/{eid}/delete', 'SkillController@destroy');
 Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index');
 Route::get('skills/updateUserSkills', 'SkillController@updateUserSkills');
 
@@ -79,14 +80,18 @@ Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::get('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs');
 
+Route::get('entretienObjectif/{oid}/objectifs', 'ObjectifController@indexAdmin');
 Route::get('entretienObjectif/{oid}/objectifs/create', 'ObjectifController@create');
 Route::post('entretienObjectif/{oid}/objectifs/store', 'ObjectifController@store');
+Route::get('entretienObjectif/{oid}/objectifs/edit', 'ObjectifController@edit');
+Route::delete('entretienObjectif/{oid}/objectifs/delete', 'ObjectifController@destroy');
 
 Route::get('entretienObjectif', 'EntretienObjectifController@index');
 Route::get('entretienObjectif/create', 'EntretienObjectifController@create');
 Route::get('entretienObjectif/{id}/edit', 'EntretienObjectifController@edit');
 Route::post('entretienObjectif/store', 'EntretienObjectifController@store');
-Route::get('entretienObjectif/{oid}', 'EntretienObjectifController@show');
+Route::get('entretienObjectif/{id}', 'EntretienObjectifController@show');
+Route::delete('entretienObjectif/{id}/delete', 'EntretienObjectifController@destroy');
 
 Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index');
 Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');
@@ -120,19 +125,21 @@ Route::get('surveys', 'SurveyController@index')->name('surveys-list');
 Route::get('surveys/create', 'SurveyController@create');
 Route::post('surveys/store', 'SurveyController@store');
 Route::get('surveys/{id}/edit', 'SurveyController@edit');
-Route::delete('surveys/{id}/delete', 'SurveyController@delete');
+Route::delete('surveys/{id}/delete', 'SurveyController@destroy');
 Route::get('surveys/{id}', 'SurveyController@show');
 
 Route::get('surveys/{sid}/groupes', 'GroupeController@index');
 Route::get('surveys/{sid}/groupes/create', 'GroupeController@create');
 Route::post('surveys/{sid}/groupes/store', 'GroupeController@store');
 Route::get('surveys/{sid}/groupes/{gid}/edit', 'GroupeController@edit');
+Route::delete('surveys/{sid}/groupes/{gid}/delete', 'GroupeController@destroy');
 
 Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 Route::get('surveys/{sid}/groupes/{gid}/questions/create', 'QuestionController@create');
 Route::post('surveys/{sid}/groupes/{gid}/questions/store', 'QuestionController@store');
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
 Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}', 'QuestionController@show');
+Route::delete('surveys/{sid}/groupes/{gid}/questions/{qid}/delete', 'QuestionController@destroy');
 Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 Route::post('answers/store', 'AnswerController@store');
 
@@ -142,3 +149,12 @@ Route::post('emails/store', 'EmailController@store');
 Route::get('emails/{id}', 'EmailController@show');
 Route::get('emails/{id}/edit', 'EmailController@edit');
 Route::delete('emails/{id}/delete', 'EmailController@delete');
+
+Route::get('emailActions', 'ActionController@index');
+Route::get('emailActions/create', 'ActionController@create');
+Route::post('emailActions/store', 'ActionController@store');
+Route::get('emailActions/{id}', 'ActionController@show');
+Route::get('emailActions/{id}/edit', 'ActionController@edit');
+Route::delete('emailActions/{id}/delete', 'ActionController@delete');
+
+Route::post('emails/actions/{actionId}/attach', 'ActionController@attachEmailAtion');

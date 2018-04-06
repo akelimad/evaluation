@@ -22,24 +22,24 @@
                     </div>
                     @if(count($groupes)>0)
                         <div class="box-body table-responsive no-padding mb40">
-                            <table class="table table-hover table-bordered table-inversed-blue">
+                            <table class="table table-hover table-striped table-inversed-blue">
                                 <tr>
-                                    <th>Id</th>
                                     <th>Nom</th>
                                     <th>Description</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($groupes as $key => $g)
                                 <tr>
-                                    <td> {{ $key+1 }} </td>
                                     <td> {{ $g->name }} </td>
                                     <td> {{ $g->description }} </td>
-                                    <td class="text-center">  
+                                    <td class="text-center"> 
+                                        {{ csrf_field() }} 
                                         <a href="javascript:void(0)" onclick="return chmGroupe.edit({sid: {{$survey->id}} ,gid: {{$g->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Modifier le groupe"> <i class="glyphicon glyphicon-pencil"></i> </a>
 
                                         <a href="javascript:void(0)" onclick="return chmQuestion.create({sid: {{$sid}} ,gid: {{$g->id}} })" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions au groupe"> <i class="fa fa-question"></i> </a>
 
                                         <a href="{{ url('surveys/'.$sid.'/groupes/'.$g->id.'/questions') }}" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions au groupe"> <i class="fa fa-list"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer le groupe ?', 'Etes-vous sur de vouloir supprimer ce groupe ?','chmGroupe.delete', {sid: {{$sid}} ,gid: {{$g->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer le groupe"> <i class="fa fa-trash"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

@@ -19,6 +19,7 @@ class Survey extends Model
     public static function icompleteSurvey($sid){
         $survey = Survey::find($sid);
         $groupes = $survey->groupes;
+        $incompleteSurvey = false;
         foreach ($groupes as $groupe) {
             foreach ($groupe->questions as $question) {
                 if( $question->type  == 'checkbox' || $question->type == 'radio' ){

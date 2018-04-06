@@ -69,7 +69,11 @@ export default class chmEntretienObjectif {
 
   static delete (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('surveys/' + params.id + '/delete'), data: {'_token': token}}, {
+    var object = window.chmModal.show({
+      type: 'POST',
+      url: window.chmSite.url('entretienObjectif/' + params.id + '/delete'),
+      data: {'_token': token, '_method': 'DELETE'}
+    }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')

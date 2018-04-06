@@ -37,11 +37,15 @@
                                                     <td> {{$f->exercice}} </td>
                                                     <td> {{$f->title}} </td>
                                                     <td>
+                                                        @if($user->id == Auth::user()->id)
+                                                            <span class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif"> @if($f->status == 0)En attente @elseif($f->status == 1)Refusé @elseif($f->status == 2)Accepté @endif </span>
+                                                        @else
                                                         <select name="status" id="status" class="label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" {{$user->id == Auth::user()->id ? 'disabled':'' }} >
                                                             <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
                                                             <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
                                                             <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>
                                                         </select>
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         <input type="checkbox" name="done" {{$f->done == 1 ? 'checked':''}} {{$user->id == Auth::user()->id ? 'disabled':'' }} >

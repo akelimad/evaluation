@@ -7,7 +7,7 @@ body{
     color: white;
 }
 .mb40{
-    margin-bottom: 40px;
+    margin-bottom: 40px !important;
 }
 .disabled{
     cursor: not-allowed;
@@ -305,7 +305,7 @@ i{
     padding: 12px 5px 5px 15px;
 }
 .sidebar-menu>li>a {
-    font-size: 17px;
+    font-size: 14px;
 }
 .box-header {
     margin-bottom: 1em;
@@ -420,7 +420,7 @@ ul.user-data li i{
     display: block;
 }
 .btn span.glyphicon {               
-    opacity: 0;             
+    /*opacity: 0; */
 }
 .btn.active span.glyphicon {                
     opacity: 1;             
@@ -437,14 +437,23 @@ ul.user-data li i{
 .showQuestion .box{
     padding: 0;
 }
+.showQuestion .list-group-item a.circle-icon{
+    display: none;
+}
+.showQuestion .list-group-item:hover a.circle-icon{
+    display: block;
+}
+.groupeQuestions{
+    max-height: 560px;
+    overflow: auto;
+}
 .circle-icon {
-    background: #00a65a;
     width: 20px;
     height: 20px;
     line-height: 20px;
     border-radius: 50%;
     text-align: center;
-    margin: 0;
+    margin: 0 5px 0 0;
     color: white;
 }
 .entretien-row{

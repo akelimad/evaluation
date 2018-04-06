@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Tableau de board | E-entretiens</title>
   <link rel="website" href="{{ url('/') }}">
+  {{ csrf_field() }}
   <base href="{{ url('/') }}">
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">

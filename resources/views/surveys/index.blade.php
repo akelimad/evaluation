@@ -14,7 +14,7 @@
                         @endif
                     @endforeach
                     <div class="box-header">
-                        <h3 class="box-title">La liste des questionnaires <span class="badge">{{$surveys->total()}}</span></h3>
+                        <h3 class="box-title">La liste des questionnaires d'évaluation <span class="badge">{{$surveys->total()}}</span></h3>
                         <div class="box-tools mb40">
                             <a href="javascript:void(0)" onclick="return chmSurvey.create()" class="btn bg-maroon" title="Ajouter un questionnaire" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
@@ -35,10 +35,12 @@
                                     <td> {{ $survey->title }}</td>
                                     <td> {{ $survey->description ? $survey->description : '---' }} </td>
                                     <td class="text-center">  
+                                        
                                         <a href="javascript:void(0)" onclick="return chmSurvey.edit({sid: {{$survey->id}}})" class="btn-primary icon-fill" title="Modifier ce questionnaire" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmGroupe.create({sid: {{$survey->id}}})" class="btn-warning icon-fill" title="Ajouter un groupe pour ce questionnaire" data-toggle="tooltip"> <i class="fa fa-plus"></i> </a>
                                         <a href="{{ url('surveys/'.$survey->id.'/groupes') }}" class="btn-info icon-fill" title="Liste des groupes du questionnaire" data-toggle="tooltip"> <i class="fa fa-list"></i> </a>
-                                        <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$survey->id}} })" class="btn-danger icon-fill" title="Voir le questionnaire" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$survey->id}} })" class="bg-navy icon-fill" title="Voir le questionnaire" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer le questionnaire ?', 'Etes-vous sur de vouloir supprimer ce questionnaire ?','chmSurvey.delete', {sid: {{$survey->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer le groupe"> <i class="fa fa-trash"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

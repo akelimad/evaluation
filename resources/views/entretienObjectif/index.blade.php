@@ -12,7 +12,7 @@
                     </div>
                     @if(count($objectifs)>0)
                         <div class="box-body table-responsive no-padding mb40">
-                            <table class="table table-hover table-bordered table-inversed-blue">
+                            <table class="table table-hover table-striped table-inversed-blue">
                                 <tr>
                                     <th>Id</th>
                                     <th>Titre</th>
@@ -24,10 +24,13 @@
                                     <td> {{ $objectif->id }}</td>
                                     <td> {{ $objectif->title }}</td>
                                     <td> {{ $objectif->description ? $objectif->description : '---' }} </td>
-                                    <td class="text-center">  
+                                    <td class="text-center">
+                                        {{ csrf_field() }}  
                                         <a href="javascript:void(0)" onclick="return chmEntretienObjectif.edit({sid: {{$objectif->id}}})" class="btn-primary icon-fill" title="Modifier ce questionnaire" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmObjectif.create({oid: {{$objectif->id}}})" class="btn-warning icon-fill" title="Ajouter des section d'objectifs" data-toggle="tooltip"> <i class="fa fa-plus"></i> </a>
-                                        <a href="javascript:void(0)" onclick="return chmEntretienObjectif.show({id: {{$objectif->id}} })" class="btn-info icon-fill" title="preview" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
+                                        <a href="{{ url('entretienObjectif/'.$objectif->id.'/objectifs') }}" class="btn-info icon-fill" title="Lister les section d'objectifs" data-toggle="tooltip"> <i class="fa fa-list"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmEntretienObjectif.show({id: {{$objectif->id}} })" class="bg-navy icon-fill" title="preview" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l objectif ?', 'Etes-vous sur de vouloir supprimer cet objectif ?','chmEntretienObjectif.delete', {id: {{$objectif->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer l' objectif"> <i class="fa fa-trash"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach

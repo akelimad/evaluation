@@ -16,7 +16,7 @@ class CreateEmailsTable extends Migration
             $table->increments('id');
             $table->string('sender');
             $table->string('subject');
-            $table->string('message');
+            $table->longText('message');
             $table->timestamps();
         });
 
@@ -27,13 +27,12 @@ class CreateEmailsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('email_action', function (Blueprint $table) {
-            $table->integer('email_id')->unsigned();
+        Schema::create('action_email', function (Blueprint $table) {
             $table->integer('action_id')->unsigned();
+            $table->integer('email_id')->unsigned();
             $table->foreign('email_id')->references('id')->on('emails')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('action_id')->references('id')->on('actions')->onUpdate('cascade')->onDelete('cascade');
             $table->primary(['email_id', 'action_id']);
-            $table->timestamps();
         });
     }
 
@@ -46,6 +45,6 @@ class CreateEmailsTable extends Migration
     {
         Schema::drop('emails');
         Schema::drop('actions');
-        Schema::drop('email_action');
+        Schema::drop('action_email');
     }
 }

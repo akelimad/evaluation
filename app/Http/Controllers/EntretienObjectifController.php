@@ -107,6 +107,7 @@ class EntretienObjectifController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $objectif = EntretienObjectif::findOrFail($id)->delete();
+        $sub = Objectif::where('entretienobjectif_id', $id)->delete();
     }
 }

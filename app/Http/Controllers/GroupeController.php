@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Requests;
@@ -48,6 +49,13 @@ class GroupeController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name'    => 'required|min:2|max:50|regex:/^[\pL\s\-]+$/u',
+        ]);
+        if ($validator->fails()) {
+            return ["status" => "danger", "message" => $validator->errors()->all()];
+        }
+
         if($request->id == null ){
             $groupe = new Groupe();
         }else{
@@ -111,8 +119,10 @@ class GroupeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($sid, $gid)
     {
-        //
+        $groupe = Groupe::findOrFail($gid);
+        $groupe->delete();
+        return redirect('surveys/'.$sid.'/groupes');
     }
 }
