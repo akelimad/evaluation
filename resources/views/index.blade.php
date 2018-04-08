@@ -12,10 +12,10 @@
                         <p class="text-muted text-center"> {{ $mentor->function }} </p>
 
                         <ul class="list-group list-group-unbordered">
-                            <li class="list-group-item"><b>Service: </b> <a class="pull-right">{{ $mentor->service ? $mentor->service : '---' }}</a></li>
-                            <li class="list-group-item"><b>Téléphone fixe: </b> <a class="pull-right">{{ $mentor->fix ? $mentor->fix : '---' }}</a></li>
-                            <li class="list-group-item"><b>Téléphone mobile: </b> <a class="pull-right">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
-                            <li class="list-group-item"><b>Email: </b> <a class="pull-right">{{ $mentor->email }}</a></li>
+                            <li class="list-group-item"><b>Service: </b> <a class="">{{ $mentor->service ? $mentor->service : '---' }}</a></li>
+                            <li class="list-group-item"><b>Téléphone fixe: </b> <a class="">{{ $mentor->fix ? $mentor->fix : '---' }}</a></li>
+                            <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
+                            <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
                         </ul>
                         <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
                     </div>

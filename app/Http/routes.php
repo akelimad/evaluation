@@ -80,18 +80,18 @@ Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::get('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs');
 
-Route::get('entretienObjectif/{oid}/objectifs', 'ObjectifController@indexAdmin');
-Route::get('entretienObjectif/{oid}/objectifs/create', 'ObjectifController@create');
-Route::post('entretienObjectif/{oid}/objectifs/store', 'ObjectifController@store');
-Route::get('entretienObjectif/{oid}/objectifs/edit', 'ObjectifController@edit');
-Route::delete('entretienObjectif/{oid}/objectifs/delete', 'ObjectifController@destroy');
-
 Route::get('entretienObjectif', 'EntretienObjectifController@index');
 Route::get('entretienObjectif/create', 'EntretienObjectifController@create');
 Route::get('entretienObjectif/{id}/edit', 'EntretienObjectifController@edit');
 Route::post('entretienObjectif/store', 'EntretienObjectifController@store');
 Route::get('entretienObjectif/{id}', 'EntretienObjectifController@show');
 Route::delete('entretienObjectif/{id}/delete', 'EntretienObjectifController@destroy');
+
+Route::get('entretienObjectif/{oid}/groupes', 'ObjectifController@indexAdmin');
+Route::get('entretienObjectif/{oid}/groupes/create', 'ObjectifController@create');
+Route::post('entretienObjectif/{oid}/groupes/store', 'ObjectifController@store');
+Route::get('entretienObjectif/{oid}/groupes/{gid}/edit', 'ObjectifController@edit');
+Route::delete('entretienObjectif/{oid}/groupes/{gid}/delete', 'ObjectifController@destroy');
 
 Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index');
 Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');

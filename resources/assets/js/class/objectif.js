@@ -3,7 +3,7 @@ import $ from 'jquery'
 export default class chmObjectif {
 
   static create (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/objectifs/create')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/create')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmObjectif.store'
@@ -16,7 +16,7 @@ export default class chmObjectif {
   }
 
   static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/objectifs/edit')}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/' + params.gid + '/edit')}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmObjectif.store'
@@ -40,12 +40,12 @@ export default class chmObjectif {
     var btnHtml = btn.html()
     btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
     btn.prop('disabled', true)
-    var id = $('[name="id"]').val()
     var oid = $('[name="oid"]').val()
+    var gid = $('[name="gid"]').val()
     var ajaxParams = {
-      id: id,
+      gid: gid,
       type: 'POST',
-      url: window.chmSite.url('entretienObjectif/' + oid + '/objectifs/store'),
+      url: window.chmSite.url('entretienObjectif/' + oid + '/groupes/store'),
       data: data,
       processData: false,
       contentType: false,
@@ -72,7 +72,7 @@ export default class chmObjectif {
     var token = $('input[name="_token"]').val()
     var object = window.chmModal.show({
       type: 'POST',
-      url: window.chmSite.url('entretienObjectif/' + params.oid + '/objectifs/delete'),
+      url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/' + params.gid + '/delete'),
       data: {'_token': token, '_method': 'DELETE'}
     }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'

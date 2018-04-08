@@ -27,8 +27,8 @@
                                             <td></td>
                                             <td></td>
                                             <td class="text-center">  
-                                                <a href="javascript:void(0)" onclick="return chmObjectif.edit({oid: {{$objectif->id}}})" class="btn-warning icon-fill" title="Modifier les sections d'objectif" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
-                                                <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer les objectifs ?', 'Etes-vous sur de vouloir supprimer les objectifs de cette section ?','chmObjectif.delete', {oid: {{$objectif->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer les objectifs de cette section"> <i class="fa fa-trash"></i> </a>
+                                                <a href="javascript:void(0)" onclick="return chmObjectif.edit({oid: {{$oid}}, gid: {{$objectif->id}}})" class="btn-warning icon-fill" title="Modifier les sections d'objectif" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                                <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer les objectifs ?', 'Etes-vous sur de vouloir supprimer les objectifs de cette section ?','chmObjectif.delete', {oid: {{$oid}} , gid: {{$objectif->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer les objectifs de cette section"> <i class="fa fa-trash"></i> </a>
                                             </td>
                                         </tr>
                                         @foreach( $objectif->children as $key => $sub )

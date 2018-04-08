@@ -9,4 +9,11 @@
         <label for="name" class="control-label">Nom <span class="asterisk">*</span></label>
         <input type="text" class="form-control" name="name" placeholder="" required="" value="{{ isset($action) ? $action->name : ''}}">
     </div>
+    <div class="form-group">
+        <label for="type" class="control-label">Type <span class="asterisk">*</span></label>
+        <select name="type" id="type">
+            <option value="0" {{ isset($action) && $action->type == 0 ? 'selected' : ''}}>Manuel</option>
+            <option value="1" {{ isset($action) && $action->type == 1 ? 'selected' : ''}}>Automatique</option>
+        </select>
+    </div>
 </div>

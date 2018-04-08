@@ -82,8 +82,8 @@ class ObjectifController extends Controller
         $rules = [];
         $validator = Validator::make($request->all(), $rules);
         $messages = $validator->errors();
-        if($request->id){
-            $objectif = Objectif::findOrFail($request->oid);
+        if($request->gid){
+            $objectif = Objectif::findOrFail($request->gid);
             $objectif->children()->delete();
             $objectif->title = $request->title;
             $objectif->save();
@@ -133,11 +133,12 @@ class ObjectifController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($oid)
+    public function edit($oid, $gid)
     {
         ob_start();
-        $objectif = Objectif::find($oid);
-        echo view('objectifs.form', compact('objectif', 'entretien', 'oid'));
+        $groupe = Objectif::find($gid);
+        $objectif = $groupe->children;
+        echo view('objectifs.form', compact('objectif','oid', 'groupe'));
         $content = ob_get_clean();
         return ['title' => 'Modifier un objectif', 'content' => $content];
     }
@@ -220,9 +221,9 @@ class ObjectifController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($oid)
+    public function destroy($oid, $gid)
     {
-        $objectif = Objectif::findOrFail($oid);
+        $objectif = Objectif::findOrFail($gid);
         $objectif->children()->delete();
     }
 }

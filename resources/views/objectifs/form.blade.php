@@ -1,14 +1,14 @@
 
 <div class="content">
-    <input type="hidden" name="id" value="{{ isset($objectif) ? $objectif->id : null }}">
     <input type="hidden" name="oid" value="{{ isset($oid) ? $oid : null }}">
+    <input type="hidden" name="gid" value="{{ isset($groupe) ? $groupe->id : null }}">
     {{ csrf_field() }}
     <div class="form-group">
         <label for="">Titre d'objectif</label>
-        <input type="text" name="title" required="" class="form-control" placeholder="ex: Relation interne" value="{{ isset($objectif) ? $objectif->title : '' }}">
+        <input type="text" name="title" required="" class="form-control" placeholder="ex: Relation interne" value="{{ isset($groupe) ? $groupe->title : '' }}">
     </div>
     <div id="addLine-wrap">
-        @foreach($objectif->children as $key => $o)
+        @foreach($objectif as $key => $o)
         <div class="form-group">
             <div class="row">
                 <div class="col-md-9 col-sm-9">

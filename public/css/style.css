@@ -301,6 +301,9 @@ i{
     display: inline-block;
     border-radius: 50%;
 }
+.sidebar {
+    border-top: 1px solid #008d4c;
+}
 .treeview-menu>li>a {
     padding: 12px 5px 5px 15px;
 }
