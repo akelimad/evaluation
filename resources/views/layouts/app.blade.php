@@ -156,42 +156,13 @@
                       <li><a href="{{ url('users') }}"><i class="fa fa-long-arrow-right"></i> Les utilisateurs </a></li>
                       <li><a href="{{ url('users/import') }}"><i class="fa fa-long-arrow-right"></i> Importer les utilisateurs </a></li>
                       <li><a href="{{ url('roles') }}"><i class="fa fa-long-arrow-right"></i> Les rôles </a></li>
-                      <li><a href="{{ url('permissions') }}"><i class="fa fa-long-arrow-right"></i> Les permissions </a></li>
                       <li><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-long-arrow-right"></i> Les évaluations </a></li>
                       <li><a href="{{ url('entretiens/index') }}"><i class="fa fa-long-arrow-right"></i> Les entretiens </a></li>
                       <li><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-long-arrow-right"></i> Le calendrier des entretiens</a></li>
-                      <li class="treeview">
-                        <a href="#"><i class="fa fa-long-arrow-right"></i> <span>Quests. d'évaluation</span>  
-                          <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                        </a>
-                        <ul class="treeview-menu">
-                          <li><a href="{{ url('surveys') }}"> Questionnaires </a></li>
-                        </ul>
-                      </li>
-                      <li class="treeview">
-                        <a href="#"><i class="fa fa-long-arrow-right"></i> <span>Objectifs</span>  
-                          <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                        </a>
-                        <ul class="treeview-menu">
-                          <li><a href="{{ url('entretienObjectif') }}"> Objectifs </a></li>
-                        </ul>
-                      </li>
-                      <li class="treeview">
-                        <a href="#"><i class="fa fa-long-arrow-right"></i> <span>Compétences</span>  
-                          <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                        </a>
-                        <ul class="treeview-menu">
-                          <li><a href="{{ url('skills') }}">Compétences </a></li>
-                        </ul>
-                      </li>
-                      <li class="treeview">
-                        <a href="#"><i class="fa fa-long-arrow-right"></i> <span>Emails</span>  
-                          <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                        </a>
-                        <ul class="treeview-menu">
-                          <li><a href="{{ url('/emails') }}">Emails </a></li>
-                        </ul>
-                      </li>
+                      <li><a href="{{ url('surveys') }}"><i class="fa fa-long-arrow-right"></i> Quests. d'évaluation </a></li>
+                      <li><a href="{{ url('entretienObjectif') }}"><i class="fa fa-long-arrow-right"></i> Objectifs </a></li>
+                      <li><a href="{{ url('skills') }}"><i class="fa fa-long-arrow-right"></i> Compétences </a></li>
+                      <li><a href="{{ url('/emails') }}"><i class="fa fa-long-arrow-right"></i> Emails </a></li>
                   </ul>
               </li>
               @endrole

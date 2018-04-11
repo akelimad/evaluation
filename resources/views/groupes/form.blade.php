@@ -4,7 +4,7 @@
     <input type="hidden" name="sid" value="{{ isset($sid) ? $sid : null }}">
     {{ csrf_field() }}
     <div class="form-group">
-        <label for="name" class="control-label">Nom</label>
+        <label for="name" class="control-label">Type de questions</label>
         <input type="text" name="name" id="name" class="form-control" value="{{isset($g->name) ? $g->name :''}}" required="">
     </div>
     <div class="form-group">

@@ -5,10 +5,14 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Aperçu sur les entretiens en fonction de date  </h3>
+                        <h3 class="box-title">Aperçu sur les entretiens en fonction des dates  </h3>
                     </div>
                     <div class="box-body table-responsive no-padding mb40">
-                        <div id="fullCalendar"></div>
+                        @if( count($entretiens)>0 )
+                            <div id="fullCalendar"></div>
+                        @else
+                            @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
+                        @endif
                     </div>
                 </div>
             </div>

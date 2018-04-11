@@ -47,6 +47,7 @@ class EmailController extends Controller
             $email =  Email::find($request->id);
         }
         $email->sender = $request->sender;
+        $email->name = $request->name;
         $email->subject = $request->subject;
         $email->message = $request->message;
         $email->save();

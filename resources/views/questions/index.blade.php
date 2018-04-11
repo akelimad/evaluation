@@ -7,7 +7,7 @@
                     <div class="box-body">
                         <p class="">
                             <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$survey->id}} })"> <i class="fa fa-eye"></i> preview </a> |
-                            <a href="{{ url('surveys/'.$survey->id.'/groupes') }}" > <i class="fa fa-list"></i> Groupes </a> | 
+                            <a href="{{ url('surveys/'.$survey->id.'/groupes') }}" > <i class="fa fa-list"></i> Types </a> | 
                             <a href="{{ url('surveys') }}"> <i class="fa fa-list"></i> Questionnaires </a> 
                         </p>
                         <div class="accordion" id="accordion2">

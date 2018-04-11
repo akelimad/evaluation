@@ -13,12 +13,6 @@
 
 Route::auth();
 
-Route::get('download',function(){
-    $file="user_modele.csv";
-    $path= public_path(). "/data/".$file;
-    return Response::download($path ,$file);
-});
-
 Route::get('/', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');
 
@@ -60,7 +54,9 @@ Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
 Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
+Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
 Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu');
+Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');

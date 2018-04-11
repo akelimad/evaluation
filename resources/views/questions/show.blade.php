@@ -16,7 +16,7 @@
                     <div class="box-body groupeQuestions">
                         <p class="">
                             <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$sid}} })"> <i class="fa fa-eye"></i> preview </a> |
-                            <a href="{{ url('surveys/'.$sid.'/groupes') }}" > <i class="fa fa-list"></i> Groupes </a> | 
+                            <a href="{{ url('surveys/'.$sid.'/groupes') }}" > <i class="fa fa-list"></i> Types </a> | 
                             <a href="{{ url('surveys') }}"> <i class="fa fa-list"></i> Questionnaires </a> 
                         </p>
                         <div class="accordion" id="accordion2">
@@ -34,14 +34,15 @@
                                         @if(count($g->questions)>0)
                                             <ul class="list-group">
                                                 @foreach($g->questions as $q)
+                                                    @if($q->parent_id == 0)
+                                                    {{ csrf_field() }}
                                                     <li class="list-group-item">
-                                                        <a href="{{url('surveys/'.$sid.'/groupes/'.$g->id.'/questions/'.$q->id)}}">{{ $q->titre }}</a>
-                                                        @if($q->parent_id == 0)
-                                                        {{ csrf_field() }}
+                                                        <a href="{{url('surveys/'.$sid.'/groupes/'.$g->id.'/questions/'.$q->id)}}">{{ str_limit($q->titre, 20) }}</a>
                                                         <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer la question ?', 'Etes-vous sur de vouloir supprimer cette question ?','chmQuestion.delete', {sid: {{$sid}} ,gid: {{$g->id}}, qid:{{$q->id}} }, {width: 450})" class="text-red circle-icon pull-right" data-toggle="tooltip" title="Supprimer"> <i class="fa fa-trash"></i> </a>
                                                         <a href="javascript:void(0)" onclick="return chmQuestion.edit({ sid: {{$sid}}, gid: {{$g->id}}, qid:{{$q->id}} })" class="text-yellow circle-icon pull-right" data-toggle="tooltip" title="Editer"> <i class="glyphicon glyphicon-pencil"></i> </a> 
-                                                        @endif
+                                                        <span class="clearfix"></span>
                                                     </li>
+                                                    @endif
                                                 @endforeach
                                             </ul>
                                         @else
@@ -65,7 +66,7 @@
                             <span class="clearfix"></span>
                         </p>
                         <p>
-                            <label class="col-md-3">Groupe</label> 
+                            <label class="col-md-3">Types</label> 
                             <span class="col-md-7"> {{ $qs->groupe->name }} </span>
                             <span class="clearfix"></span>
                         </p>
@@ -74,11 +75,15 @@
                             <span class="col-md-7"> {{ $qs->titre }} </span>
                             <span class="clearfix"></span>
                         </p>
-                        @if(($qs->type == "checkbox" || $qs->type == "radio") && count($qs->children)<=0 )
+                        @if(($qs->type == "checkbox" || $qs->type == "radio") && count($qs->children)>0 )
                         <p>
-                            <label class="col-md-3">Sous question</label> 
-                            <span class="col-md-7"> <a href="javascript:void(0)" onclick="return chmQuestion.create({gid: {{$qs->groupe->id}}, parent_id: {{$qs->id}} })">N'oubliez pas d'ajouter les sous questions(ou bien les choix)</a> </span>
-                            <span class="clearfix"></span>
+                            <label class="col-md-3">Choix</label>
+                            <div class="col-md-7">
+                                @foreach($qs->children as $choice) 
+                                    <input type="{{$choice->parent->type}}" disabled=""> {{ $choice->titre }}
+                                @endforeach
+                            </div>
+                                <span class="clearfix"></span>
                         </p>
                         @endif
                         <div class="">

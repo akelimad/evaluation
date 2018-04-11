@@ -23,20 +23,5 @@
         </div>
         <div class="clearfix"></div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-md-2">Permissions</label>
-        <div class="col-md-10">
-            <div class="row">
-            @foreach($permissions as $p)
-                <div class="col-sm-3">
-                    <label>
-                        <input type="checkbox" value="{{$p->id}}" name="permissions[]" >{{$p->name}}
-                    </label>
-                </div>
-            @endforeach
-            </div>
-        </div>
-        <div class="clearfix"></div>
-    </div>
 </div>
   

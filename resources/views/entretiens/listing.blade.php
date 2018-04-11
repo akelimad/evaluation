@@ -62,9 +62,11 @@
                                         </td>
                                         @endforeach
                                         <td class="text-center">
-                                            <button type="submit" class="btn btn-success pull-right">
-                                                <i class="fa fa-check"></i> Actualiser
-                                            </button>
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn-success icon-fill" data-toggle="tooltip" title="Mettre à jour">
+                                                <i class="fa fa-refresh"></i>
+                                            </button> 
+                                            <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{$e->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer l'entretien"> <i class="fa fa-trash"></i> </a>
                                             <div class="clearfix"></div>
                                         </td>
                                         </form>
@@ -75,7 +77,7 @@
                     </div>
                     {{ $entretiens->links() }}
                     @else
-                        <p class="alert alert-default">Aucune donnée disponible !</p>
+                        @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                     @endif
                 </div>
             </div>

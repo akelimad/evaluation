@@ -65,7 +65,7 @@ class AnswerController extends Controller
         //     $token->mentor_id = $request->mentor_id;
         //     $token->save();
         // }
-        return redirect('/');
+        return redirect()->back();
     }
 
     /**

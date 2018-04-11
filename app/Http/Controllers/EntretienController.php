@@ -218,12 +218,12 @@ class EntretienController extends Controller
             $mentor->save();
             $message = Email::renderMessage($email->message, [
                 'user_name' => $mentor->name,
-                'date_limit' => $entretien->date_limit,
+                'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
                 'email'     => $mentor->email,
                 'password' => $password,
             ]);
             $send = Mail::send([], [], function($m) use ($mentor, $email, $message) {
-                $m->from($email->sender);
+                $m->from($email->sender, $email->name);
                 $m->to($mentor->email);
                 $m->subject($email->subject);
                 $m->setBody($message, 'text/html');
@@ -258,12 +258,12 @@ class EntretienController extends Controller
             $mentor->save();
             $message = Email::renderMessage($email->message, [
                 'user_name' => $mentor->name,
-                'date_limit' => $entretien->date_limit,
+                'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
                 'email'     => $mentor->email,
                 'password' => $password,
             ]);
             $send = Mail::send([], [], function($m) use ($mentor, $email, $message) {
-                $m->from($email->sender);
+                $m->from($email->sender, $email->name);
                 $m->to($mentor->email);
                 $m->subject($email->subject);
                 $m->setBody($message, 'text/html');
@@ -311,12 +311,12 @@ class EntretienController extends Controller
         $user->save();
         $message = Email::renderMessage($email->message, [
             'user_name' => $user->name,
-            'date_limit' => $entretien->date_limit,
+            'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
             'email'     => $user->email,
             'password' => $password,
         ]);
         $send = Mail::send([], [], function($m) use ($user, $email, $message) {
-            $m->from($email->sender);
+            $m->from($email->sender, $email->name);
             $m->to($user->email);
             $m->subject($email->subject);
             $m->setBody($message, 'text/html');
@@ -336,17 +336,61 @@ class EntretienController extends Controller
         $mentor->save();
         $message = Email::renderMessage($email->message, [
             'user_name' => $mentor->name,
-            'date_limit' => $entretien->date_limit,
+            'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
             'email'     => $mentor->email,
             'password' => $password,
         ]);
         $send = Mail::send([], [], function($m) use ($mentor, $email, $message) {
-            $m->from($email->sender);
+            $m->from($email->sender, $email->name);
             $m->to($mentor->email);
             $m->subject($email->subject);
             $m->setBody($message, 'text/html');
         });
         return redirect()->back()->with('relanceMentor', 'Un email de relance est envoyé avec succès à '.$mentor->name." ".$mentor->last_name." pour évaluer ".$user->name." ".$user->last_name);
+    }
+
+    public function RemoveDuplicate($array, $key)
+    {     
+        $temp_array = array();      
+        $i = 0;      
+        $key_array = array();           
+        foreach($array as $val) {          
+            if (!in_array($val[$key], $key_array)) {
+                $key_array[$i] = $val[$key];              
+                $temp_array[$i] = $val;          
+            }          
+            $i++;      
+        }      
+        return $temp_array;  
+    }
+
+    public function notifyMentorsInterview(Request $request)
+    {
+        $action = Action::where('slug', 'notify_mentors')->first();
+        $email = $action->emails()->first();
+        $array = $this->RemoveDuplicate($request->data, 'mentorId');
+        foreach ($array as $value) {
+            if(count($value)>1){
+                $entretien = Entretien::find($value['entretienId']);
+                $mentor = User::find($value['mentorId']);
+                $password = $this->rand_string(10);
+                $mentor->password = bcrypt($password);
+                $mentor->save();
+                $message = Email::renderMessage($email->message, [
+                    'user_name' => $mentor->name,
+                    'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
+                    'email'     => $mentor->email,
+                    'password' => $password,
+                ]);
+                $send = Mail::send([], [], function($m) use ($mentor, $email, $message) {
+                    $m->from($email->sender, $email->name);
+                    $m->to($mentor->email);
+                    $m->subject($email->subject);
+                    $m->setBody($message, 'text/html');
+                });
+            }
+        }
+        return redirect()->back()->with('relanceMentor', 'Un email de relance a été envoyé avec succès aux mentors. ');
     }
 
     /**
@@ -441,8 +485,10 @@ class EntretienController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($eid)
     {
-        //
+        $entretien = Entretien::findOrFail($eid);
+        $entretien->delete();
+        return redirect('entretiens/index');
     }
 }

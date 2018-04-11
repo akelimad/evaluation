@@ -46,14 +46,14 @@ class UserController extends Controller
         $roles = Role::select('id', 'name')->get();
         $users = User::with('roles')->paginate(15);
         
-        if(!empty($roleSelected))
+        if(!empty($roleSelected)){
             $users = User::with('roles')
             ->where('name', 'like', '%'.$name.'%')
             ->where('service', 'like', '%'.$service.'%')
             ->where('function', 'like', '%'.$function.'%')
             ->whereHas('roles', function ($query) use ($roleSelected) {$query->where('id', '=', $roleSelected); } )
             ->paginate(15);
-        else{
+        }else{
             $users = User::with('roles')
             ->where('name', 'like', '%'.$name.'%')
             ->where('service', 'like', '%'.$service.'%')
@@ -66,7 +66,7 @@ class UserController extends Controller
     public function createUser(){
         ob_start();
         $roles = Role::all();
-        $users = User::select('id','email')->get();
+        $users = User::select('id','email', 'name', 'last_name')->get();
         echo view('users.form', compact('roles', 'users'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter un utilisateur', 'content' => $content];
@@ -75,6 +75,7 @@ class UserController extends Controller
     public function storeUser(Request $request){
         $id = $request->input('id', false);
         $rules = [
+            'avatar'    => 'max:500',
             'name'      => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
             'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
             'email'     => 'required|unique:users,email',
@@ -127,11 +128,12 @@ class UserController extends Controller
         $user->service= $request->service;
         $user->qualification= $request->qualification;
         $user->status= 1;
-        $user->user_id= $request->user_id;
+        if($request->user_id != null) {$user->user_id= $request->user_id; }
         $user->salary= $request->salary;
         $user->save();
-        $user->detachRoles($user->roles);
-        $user->roles()->attach($request->roles);
+        if($request->roles != null ) {
+            $user->roles()->sync($request->roles); 
+        }
         if($user->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {
@@ -143,7 +145,7 @@ class UserController extends Controller
     public function editUser($id){
         ob_start();
         $user = User::find($id);
-        $users = User::select('id','email')->get();
+        $users = User::select('id','email', 'name', 'last_name')->get();
         $roles_ids = [];
         if($user->roles){
             foreach($user->roles as $role){
@@ -344,8 +346,6 @@ class UserController extends Controller
         $content = ob_get_clean();
         return ['title' => 'Modifier une permission', 'content' => $content];
     }
-
-
 
 
 }

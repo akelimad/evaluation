@@ -11,7 +11,7 @@
     </div>
     <div class="form-group">
         <label for="type" class="control-label">Type <span class="asterisk">*</span></label>
-        <select name="type" id="type">
+        <select name="type" id="type" class="form-control">
             <option value="0" {{ isset($action) && $action->type == 0 ? 'selected' : ''}}>Manuel</option>
             <option value="1" {{ isset($action) && $action->type == 1 ? 'selected' : ''}}>Automatique</option>
         </select>

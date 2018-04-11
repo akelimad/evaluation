@@ -3,15 +3,22 @@
     <input type="hidden" name="id" value="{{ isset($email) ? $email->id : null }}">
     {{ csrf_field() }}
     <div class="form-group">
-        <label for="date" class="control-label">Emetteur <span class="asterisk">*</span></label>
-        <input type="text" class="form-control" name="sender" placeholder="contact@lycom.ma" value="contact@lycom.ma" required="" value="{{ isset($email) ? $email->sender : '' }}">
+        <div class="col-md-6">
+            <label for="date" class="control-label">Emetteur <span class="asterisk">*</span></label>
+            <input type="text" class="form-control" name="sender" placeholder="contact@lycom.ma" required="" value="{{ isset($email) ? $email->sender : '' }}">
+        </div>
+        <div class="col-md-6">
+            <label for="name" class="control-label">Nom <span class="asterisk">*</span></label>
+            <input type="text" class="form-control" name="name" placeholder="Lycom" required="" value="{{ isset($email) ? $email->name : '' }}">
+        </div>
+        <div class="clearfix"></div>
     </div>
     <div class="form-group">
         <label for="subject" class="control-label">Object <span class="asterisk">*</span></label>
         <input type="text" class="form-control" name="subject" placeholder="Object" required="" value="{{ isset($email) ? $email->subject : ''}}">
     </div>
     <div class="form-group">
-        <p><label class="control-label">Les variables disponible sont : </label></p>
+        <p><label class="control-label">Les variables disponibles sont : </label></p>
         <label>@{{user_name}}</label>  -
         <label>@{{date_limit}}</label>  -
         <label>@{{email}}</label>  -

@@ -16,6 +16,7 @@
                             <table class="table table-hover table-striped table-inversed-blue">
                                 <tr>
                                     <th style="width: 10%">Emetteur</th>
+                                    <th style="width: 10%">Nom</th>
                                     <th style="width: 30%">Object</th>
                                     <th style="width: 50%">Message</th>
                                     <th style="width: 10%" class="text-center">Action</th>
@@ -23,8 +24,9 @@
                                 @foreach($emails as $key => $email)
                                 <tr>
                                     <td> {{ $email->sender }} </td>
+                                    <td> {{ $email->name }} </td>
                                     <td> {{ $email->subject }} </td>
-                                    <td> {{ $email->message }} </td>
+                                    <td> {{ str_limit($email->message, 80) }} </td>
                                     <td class="text-center"> 
                                         <a href="javascript:void(0)" onclick="return chmEmail.edit({id: {{$email->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
                                         </a>
@@ -53,9 +55,9 @@
                         <div class="box-body table-responsive no-padding mb40">
                             <table class="table table-hover table-striped table-inversed-blue">
                                 <tr>
-                                    <th style="width: 10%">Id</th>
-                                    <th style="width: 10%">Réf</th>
+                                    <th style="width: 10%">Réf action</th>
                                     <th style="width: 40%">Nom</th>
+                                    <th style="width: 10%">type</th>
                                     <th style="width: 30%">email template</th>
                                     <th style="width: 10%" class="text-center">Action</th>
                                 </tr>
@@ -63,9 +65,9 @@
                                 <form action="{{ url('emails/actions/'.$action->id.'/attach') }}" method="post">
                                     {{ csrf_field() }}
                                     <tr>
-                                        <td> {{ $action->id }} </td>
                                         <td> {{ $action->slug }} </td>
                                         <td> {{ $action->name }} </td>
+                                        <td> {{ $action->type == 0 ? 'Manuel':'Automatique' }} </td>
                                         <td>
                                             <select name="email_id" class="form-control">
                                                 @foreach($emails as $email)

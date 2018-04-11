@@ -41,7 +41,7 @@
                         <div class="caption caption-red">Mes entretiens</div>
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#entretiens" data-toggle="tab"> Entretiens </a></li>
-                            <li><a href="#objectifs" data-toggle="tab"> Objectifs  </a></li>
+                            <!-- <li><a href="#objectifs" data-toggle="tab"> Objectifs  </a></li> -->
                             <li><a href="#formations" data-toggle="tab"> Formations </a></li>
                         </ul>
                     </div>
@@ -84,17 +84,48 @@
                                     </table>
                                 </div>
                                 @else
-                                    @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
+                                    @include('partials.alerts.info', ['messages' => "Aucun entretien trouvé ... !!" ])
                                 @endif                               
                             </div>
-                            <div class="tab-pane" id="objectifs">
+                            <!-- <div class="tab-pane" id="objectifs">
                                 <div class="box-body table-responsive no-padding">
                                     objectifs
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="tab-pane" id="formations">
                                 <div class="box-body table-responsive no-padding">
-                                    formations
+                                    @if( count($formations)>0 )
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Entretien </th>
+                                                <th>Date</th>
+                                                <th>Exercice</th>
+                                                <th>Formation</th>
+                                                <th>Statut</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($formations as $formation)
+                                            <tr>
+                                                <td>{{ $formation->entretien->titre }}</td>
+                                                <td>{{ $formation->date }}</td>
+                                                <td>{{ $formation->exercice }}</td>
+                                                <td>{{ $formation->title }}</td>
+                                                <td>{{ $formation->title }}</td>
+                                                <td>
+                                                    @if($formation->status == 0) En attente 
+                                                    @elseif($formation->status == 1) Refusé 
+                                                    @elseif($formation->status == 2) Accepté 
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @else
+                                        @include('partials.alerts.info', ['messages' => "Aucune formation trouvée ... !!" ])
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -106,7 +137,7 @@
                         <div class="caption caption-red">Mes collaborateurs</div>
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#aa" data-toggle="tab"> Entretiens </a></li>
-                            <li><a href="#bb" data-toggle="tab"> Objectifs  </a></li>
+                            <!-- <li><a href="#bb" data-toggle="tab"> Objectifs  </a></li> -->
                             <li><a href="#cc" data-toggle="tab"> Formations </a></li>                            
                         </ul>
                     </div>
@@ -158,14 +189,43 @@
                                     @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                                 @endif
                             </div>
-                            <div class="tab-pane" id="bb">
+                            <!-- <div class="tab-pane" id="bb">
                                 <div class="box-body table-responsive no-padding">
                                     objetifs
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="tab-pane" id="cc">
                                 <div class="box-body table-responsive no-padding">
-                                    formation
+                                    <div class="box-body table-responsive no-padding">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Collaborateur </th>
+                                                <th>Entretien </th>
+                                                <th>Date</th>
+                                                <th>Exercice</th>
+                                                <th>Formation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($collaborateurs as $coll)
+                                                @foreach($coll->entretiens as $en)
+                                                    @foreach($coll->formations as $formation)
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>
+                                                        </td>
+                                                        <td>{{ $en->titre }}</td>
+                                                        <td>{{ Carbon\Carbon::parse($formation->date)->format('d/m/Y')}}</td>
+                                                        <td>{{ $formation->exercice }}</td>
+                                                        <td>{{ $formation->title }}</td>
+                                                    </tr>
+                                                    @endforeach
+                                                @endforeach
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                                 </div>
                             </div>
                         </div>

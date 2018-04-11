@@ -55,11 +55,11 @@
     <div class="form-group">
         <div class="col-md-6">
             <label for="tel" class="control-label">Téléphone mobile</label>
-            <input type="text" name="tel" class="form-control" id="tel" placeholder="0606060606 ou 06 06 06 06 06" value="{{ isset($user) ? $user->tel : ''  }}" pattern="^((06)|(07))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
+            <input type="text" name="tel" class="form-control" id="tel" placeholder="ex: 0606060606" value="{{ isset($user) ? $user->tel : ''  }}" pattern="^((06)|(07))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
         </div>
         <div class="col-md-6"> 
             <label for="fix" class="control-label">Téléphone fix</label>
-            <input id="fix" type="text" class="form-control" name="fix" placeholder="0505050505 ou 05 05 05 05 05" value="{{ isset($user) ? $user->fix : ''  }}" pattern="^((05))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
+            <input id="fix" type="text" class="form-control" name="fix" placeholder="ex: 0505050505" value="{{ isset($user) ? $user->fix : ''  }}" pattern="^((05))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
         </div>
     </div>
     <div class="form-group">
@@ -106,7 +106,7 @@
     <div class="form-group">
         <div class="col-md-6">
             <label for="role" class="control-label">Rôle <span class="asterisk">*</span></label>
-            <select name="roles[]" id="role" class="form-control" multiple="" required="">
+            <select name="roles[]" id="role" class="form-control" multiple="" required="" @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
                 @foreach($roles as $role)
                     <option value="{{$role->id}}" {{isset($roles_ids) && in_array($role->id, $roles_ids) ? 'selected':''}}> {{$role->name}} </option>
                 @endforeach
@@ -114,10 +114,10 @@
         </div>
         <div class="col-md-6">
             <label for="user_id" class="control-label">Mentor </label>
-            <select name="user_id" id="user_id" class="form-control" >
+            <select name="user_id" id="user_id" class="form-control" @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
                 <option value="">=== Select ===</option>
                 @foreach($users as $u)
-                    <option value="{{$u->id}}" {{isset($user) && $u->id == $user->user_id ? 'selected':''}}> {{$u->email}} </option>
+                    <option value="{{$u->id}}" {{isset($user) && $u->id == $user->user_id ? 'selected':''}}> {{$u->name. " ".$u->last_name}} </option>
                 @endforeach
             </select>
         </div>

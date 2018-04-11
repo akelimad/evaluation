@@ -14,7 +14,7 @@
                 </a>
                 </h4>
             </div>
-            <div id="collapse-evaluations" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-evaluations">
+            <div id="collapse-evaluations" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-evaluations">
                 <div class="panel-body">
                     @foreach($groupes as $g)
                         @if(count($g->questions)>0)
@@ -64,7 +64,7 @@
                 </a>
                 </h4>
             </div>
-            <div id="collapse-carrieres" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-carrieres">
+            <div id="collapse-carrieres" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-carrieres">
                 <div class="panel-body">
                     @if(count($carreers)>0)
                         <div class="box-body table-responsive no-padding mb40">
@@ -107,7 +107,7 @@
                 </a>
                 </h4>
             </div>
-            <div id="collapse-formations" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-formations">
+            <div id="collapse-formations" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-formations">
                 <div class="panel-body">
                     <p class="help-block">
                         La liste des formations souhaitées de la part de {{ $user->name." ".$user->last_name }} acceptées par {{ $user->parent ? $user->parent->name : $user->name  }} {{ $user->parent ? $user->parent->last_name : $user->last_name }}
@@ -148,7 +148,7 @@
                 </a>
                 </h4>
             </div>
-            <div id="collapse-skills" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-skills">
+            <div id="collapse-skills" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-skills">
                 <div class="panel-body">
                     <table class="table table-hover">
                         <tr>
@@ -204,7 +204,7 @@
                 </a>
                 </h4>
             </div>
-            <div id="collapse-objectifs" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-objectifs">
+            <div id="collapse-objectifs" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-objectifs">
                 <div class="panel-body objectifs">
                     @if(count($objectifs)>0)
                         <div class="box-body table-responsive no-padding mb40">
@@ -375,7 +375,7 @@
                 </a>
                 </h4>
             </div>
-            <div id="collapse-salary" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-salary">
+            <div id="collapse-salary" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-salary">
                 <div class="panel-body">
                     @if(count($salaries)>0)
                         <div class="box-body table-responsive no-padding mb40">
@@ -415,7 +415,7 @@
                 </a>
                 </h4>
             </div>
-            <div id="collapse-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-comments">
+            <div id="collapse-comments" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-comments">
                 <div class="panel-body">
                     @if(count($comments)>0)
                         <div class="box-body table-responsive no-padding mb40">

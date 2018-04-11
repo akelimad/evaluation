@@ -70,7 +70,10 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Skill');
     }
 
-    
+    public function formations()
+    {
+        return $this->hasMany('App\Formation');
+    }
 
     /**
      * Get the interview for the given user.

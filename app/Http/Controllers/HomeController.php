@@ -6,10 +6,16 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Auth;
 use App\Entretien;
+use App\Answer;
+use App\Formation;
 use App\User;
+use App\Entretien_user;
 
 class HomeController extends Controller
 {
+    public static function  cutNum($num, $precision = 2){
+        return floor($num).substr($num-floor($num),1,$precision+1);
+    }
     /**
      * Create a new controller instance.
      *
@@ -34,23 +40,22 @@ class HomeController extends Controller
             $mentor = $user->parent;
         }
 
-        $entretiens = $user->entretiens;    
+        $entretiens = $user->entretiens;
+        $formations = Formation::where('user_id', Auth::user()->id)->get();
         $collaborateurs = Auth::user()->children;
-        //dd($collaborateurs);
-        return view('index', compact('user', 'mentor', 'entretiens', 'collaborateurs'));
+        return view('index', compact('user', 'mentor', 'entretiens', 'formations', 'collaborateurs'));
     }
 
 
     public function dashboard()
     {
-        $nbColls = User::with('roles')->whereHas('roles', function ($query) {
-            $query->where('name', '=', 'COLLABORATEUR');
-        })->count();
+        $auth = Auth::user();
+        $finished = Answer::where('user_id', '<>', NULL)->where('mentor_id', '<>', NULL)->groupBy('user_id', 'entretien_id', 'mentor_id')->get()->count();
+        $inProgress = Entretien_user::count();
+        $nbColls = $auth->children->count();
+        $nbMentors = $auth->children->count() ;
+        $taux  = $this->cutNum(($finished / $inProgress) * 100);
 
-        $nbMentors = User::with('roles')->whereHas('roles', function ($query) {
-            $query->where('name', '=', 'MENTOR');
-        })->count();
-
-        return view('dashboard', compact('nbColls', 'nbMentors'));
+        return view('dashboard', compact('nbColls', 'nbMentors', 'finished', 'inProgress', 'taux'));
     }
 }

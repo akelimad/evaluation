@@ -6,12 +6,12 @@
                 <div class="card">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#activity" data-toggle="tab">Informations personnelles</a></li>
-                            <li><a href="#timeline" data-toggle="tab">Informations professionnelles</a></li>
+                            <li class="active"><a href="#personels" data-toggle="tab">Informations personnelles</a></li>
+                            <li><a href="#profesionnels" data-toggle="tab">Informations professionnelles</a></li>
                             <li><a href="#settings" data-toggle="tab">Mes préférences</a></li>
                         </ul>
-                        <div class="tab-content">
-                            <div class="active tab-pane" id="activity">
+                        <div class="tab-content mb20">
+                            <div class="active tab-pane" id="personels">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Société</label>
                                     <div class="col-md-9">{{$user->society ? $user->society : '---'}}</div>
@@ -74,7 +74,7 @@
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="timeline">
+                            <div class="tab-pane" id="profesionnels">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Date d'entrée</label>
                                     <div class="col-md-9">
@@ -84,16 +84,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fonction</label>
-                                    <div class="col-md-9">{{ $user->function }}</div>
+                                    <div class="col-md-9">{{ $user->function ? $user->function :'---' }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Service</label>
-                                    <div class="col-md-9">{{ $user->service }}</div>
+                                    <div class="col-md-9">{{ $user->service ? $user->service :'---' }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-
                             <div class="tab-pane" id="settings">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
@@ -112,6 +111,7 @@
                                 </div>
                             </div>
                         </div>
+                        <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{Auth::user()->id}} })" class="btn btn-primary"> <i class="glyphicon glyphicon-pencil"></i> Mettre à jour </a>
                     </div>
                 </div>
             </div>

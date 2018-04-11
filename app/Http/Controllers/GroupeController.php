@@ -38,7 +38,7 @@ class GroupeController extends Controller
         ob_start();
         echo view('groupes.form', compact('sid'));
         $content = ob_get_clean();
-        return ['title' => 'Ajouter un groupe', 'content' => $content];
+        return ['title' => 'Ajouter un type de questions', 'content' => $content];
     }
 
     /**
@@ -66,7 +66,7 @@ class GroupeController extends Controller
         $groupe->survey_id = $request->sid;
         $groupe->save();
         $url=url('surveys/'.$request->sid.'/groupes');
-        $request->session()->flash('success', "La groupe à été ajouté avec suucès.");
+        $request->session()->flash('success', "Le type de questions a été ajouté avec suucès.");
         // $request->session()->flash('success', "La groupe à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour voir la liste des groupe du questionnaire</a>");
         if($groupe->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -98,7 +98,7 @@ class GroupeController extends Controller
         $g = Groupe::find($gid);
         echo view('groupes.form', compact('g', 'sid'));
         $content = ob_get_clean();
-        return ['title' => 'Modifier un groupe', 'content' => $content];
+        return ['title' => 'Modifier le type de questions', 'content' => $content];
     }
 
     /**
