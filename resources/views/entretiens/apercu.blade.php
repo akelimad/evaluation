@@ -448,6 +448,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
     @else
         @include('partials.alerts.info', ['messages' => "l'utlisateur ".$user->name." ".$user->last_name." n'a pas de mentor" ])

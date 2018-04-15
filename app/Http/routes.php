@@ -57,6 +57,7 @@ Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMent
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
 Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu');
 Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
+Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'ActiviteController@index');
 Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');

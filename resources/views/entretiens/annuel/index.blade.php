@@ -127,7 +127,7 @@
                                             <span class="label label-danger empty"> </span>
                                         </td>
                                         <td class="text-center">
-                                            <!-- <a href="" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a> -->
+                                            <a href="{{ url('entretiens/'.$row->entretienId.'/u/'.$row->userId.'/printPdf') }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a>
                                             <a href="javascript:void(0)" class="bg-navy icon-fill show-motif" data-toggle="tooltip" title="Motif de non réaliation" data-id="{{$row->userId}}"> <i class="glyphicon glyphicon-wrench"></i> </a>
                                             @if(!App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId))
                                                 <button type="button" class="btn-danger icon-fill notifyMentor" data-toggle="tooltip" title="Relancer le mentor pour evaluer {{ $row->name.' '.$row->last_name }}" data-entretien-id="{{$row->entretienId}}" data-user-id="{{$row->userId}}"> <i class="fa fa-bell" id="icon-{{$row->userId}}"></i> </button>

@@ -478,6 +478,28 @@ class EntretienController extends Controller
         return view("entretiens.calendar" , compact('entretiens'));
     }
 
+    public function printPdf($eid, $uid)
+    {
+        $e = Entretien::find($eid);
+        $user = User::findOrFail($uid);
+        $evaluations = $e->evaluations;
+        $survey = Survey::find($e->survey_id);
+        $groupes = $survey->groupes;
+        $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
+        $formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
+        $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
+        $skills = Skill::all();
+        $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
+        $comments = Comment::where('entretien_id', $eid)->where('user_id', $uid)->get();
+        $total = 0;
+        foreach ($objectifs as $obj) {
+            $total += $obj->sousTotal; 
+        }
+
+        $pdf = \PDF::loadView('entretiens.apercu', compact('evaluations','e', 'user', 'groupes', 'salaries','carreers','formations', 'skills','objectifs', 'comments', 'total'));
+        return $pdf->download('entretien-synthese.pdf');
+    }
+
 
     /**
      * Remove the specified resource from storage.
