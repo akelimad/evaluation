@@ -50,11 +50,12 @@ class HomeController extends Controller
     public function dashboard()
     {
         $auth = Auth::user();
+        $taux = 0;
         $finished = Answer::where('user_id', '<>', NULL)->where('mentor_id', '<>', NULL)->groupBy('user_id', 'entretien_id', 'mentor_id')->get()->count();
         $inProgress = Entretien_user::count();
         $nbColls = $auth->children->count();
         $nbMentors = $auth->children->count() ;
-        $taux  = $this->cutNum(($finished / $inProgress) * 100);
+        if($inProgress > 0) $taux  = $this->cutNum(($finished / $inProgress) * 100);
 
         return view('dashboard', compact('nbColls', 'nbMentors', 'finished', 'inProgress', 'taux'));
     }

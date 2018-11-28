@@ -12,10 +12,10 @@ class AddUserIdColumnAnswerTable extends Migration
      */
     public function up()
     {
-        Schema::table('answers', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned()->after('question_id');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-        });
+        // Schema::table('answers', function (Blueprint $table) {
+        //     $table->integer('user_id')->unsigned()->after('question_id');
+        //     $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+        // });
     }
 
     /**
