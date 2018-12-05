@@ -1,0 +1,39 @@
+/* For phones */
+@media (max-width: 767px) {
+  /* navbar */
+  .navbar-nav {
+    > li {
+      > a {
+        padding: 8px 15px !important;
+      }
+    }
+  }
+
+  .navbar-toggle {
+    padding: 13px 12px;
+  }
+
+  /* tables */
+  .chmTableBulkActions {
+    margin-bottom: 10px !important;
+  }
+
+
+}
+
+/* For tablets */
+@media (min-width: 768px) and (max-width:991px) {
+
+}
+
+/* For desktops */
+@media (min-width: 992px) {
+
+}
+
+/* big screens */
+@media (min-width: 1200px) {
+    .container {
+        width: 1210px;
+    }
+}
