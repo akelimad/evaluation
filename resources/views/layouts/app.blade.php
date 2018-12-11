@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Tableau de board | E-entretiens</title>
+  <title>Tableau de board | E-EVALUATION</title>
   <link rel="website" href="{{ url('/') }}">
   {{ csrf_field() }}
   <base href="{{ url('/') }}">
@@ -91,7 +91,7 @@
                       <!-- Menu Footer-->
                       <li class="user-footer">
                           <div class="pull-left">
-                            <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> Profile</a>
+                            <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> Profil</a>
                           </div>
                           <div class="pull-right">
                             <a href="{{url('/logout')}}" class="btn btn-info">Déconnexion <i class="fa fa-sign-out"></i></a>
@@ -102,9 +102,10 @@
               <li>
                   <a href="{{url('logout')}}"><i class="fa fa-power-off"></i></a>
               </li>
-              <li>
+              <!-- disable control sidebar skin -->
+              <!-- <li>
                   <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-              </li>
+              </li> -->
           </ul>
         </div>
       </nav>
@@ -138,35 +139,51 @@
           <!-- /.search form -->
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu" data-widget="tree">
+              @role(["ADMIN", "RH"])
               <li class="{{ Request::is('dashboard') ? 'active' : '' }}">
-                  <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
+                <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
               </li>
+              @endrole
               @role(["RH", "MENTOR"])
               <li class="{{ Request::is('/') ? 'active' : '' }}">
                 <a href="{{ url('/') }}"><i class="fa fa-users"></i> <span>Mes collaborateurs</span></a>
               </li>
               @endrole
               @role(["ADMIN"])
-              <li class="{{ Request::is('users') ? 'active' : '' }}"><a href="{{ url('users') }}"><i class="fa fa-long-arrow-right"></i> Les utilisateurs </a></li>
-              <li class="{{ Request::is('users/import') ? 'active' : '' }}"><a href="{{ url('users/import') }}"><i class="fa fa-long-arrow-right"></i> Importer les utilisateurs </a></li>
-              <li class="{{ Request::is('roles') ? 'active' : '' }}"><a href="{{ url('roles') }}"><i class="fa fa-long-arrow-right"></i> Les rôles </a></li>
-              <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-long-arrow-right"></i> Les entretiens </a></li>
-              <li class="{{ Request::is('entretienObjectif') ? 'active' : '' }}"><a href="{{ url('entretienObjectif') }}"><i class="fa fa-long-arrow-right"></i> Objectifs </a></li>
-              <li class="{{ Request::is('skills') ? 'active' : '' }}"><a href="{{ url('skills') }}"><i class="fa fa-long-arrow-right"></i> Compétences </a></li>
-              <li class="{{ Request::is('surveys') ? 'active' : '' }}"><a href="{{ url('surveys') }}"><i class="fa fa-long-arrow-right"></i> Quests. d'évaluation </a></li>
-              <li class="{{ Request::is('emails') ? 'active' : '' }}"><a href="{{ url('emails') }}"><i class="fa fa-long-arrow-right"></i> Emails </a></li>
+              <li class="{{ Request::is('users') ? 'active' : '' }}"><a href="{{ url('users') }}"><i class="fa fa-users"></i> Utilisateurs</a></li>
               @endrole
-              <li class="{{ Request::is('entretiens/evaluations') ? 'active' : '' }}"><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-long-arrow-right"></i> Les évaluations </a></li>
-              @role(["ADMIN", "RH"])
-              <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-long-arrow-right"></i> Le calendrier des entretiens</a></li>
-              <!-- <li class="treeview">
+              @role(["ADMIN", "RH"]) 
+              <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> Entretiens</a></li>
+              <li class="{{ Request::is('entretiens/evaluations') ? 'active' : '' }}"><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-pencil"></i> Evaluations en cours </a></li>
+              <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> Calendrier des entretiens</a></li>
+              @endrole
+              @role(["ADMIN"])
+              <li class="treeview">
                   <a href="#">
-                      <i class="fa fa-gears"></i> <span>Administration</span>
-                      <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    <i class="fa fa-gears"></i> <span>Admin</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                   </a>
-                  <ul class="treeview-menu">
+                  <ul class="treeview-menu" style="{{ Request::is('config*') ? 'display: block;' : '' }}">
+                    <li class="{{ Request::is('config/settings') ? 'active' : '' }}">
+                      <a href="{{ url('config/settings') }}"><i class="fa fa-wrench"></i> Réglages</a>
+                    </li>
+                    <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
+                      <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>
+                    </li>
+                    <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
+                      <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Compétences </a>
+                    </li>
+                    <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
+                      <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> Quests. d'évaluation </a>
+                    </li>
+                    <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
+                      <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Emails </a>
+                    </li>
+                    <li class="{{ Request::is('config/roles') ? 'active' : '' }}">
+                      <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> Rôles </a>
+                    </li>
                   </ul>
-              </li> -->
+              </li>
               @endrole
           </ul>
       </section>

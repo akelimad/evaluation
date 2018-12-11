@@ -31,11 +31,24 @@ class UserController extends Controller
         return view('users.profile', compact('user'));
     }
 
-    public function indexUsers(){
+    public function indexUsers(Request $request){
+        $per_page = $selected = 10;
+        if( isset($request->per_page) && $request->per_page != "all" ){
+            $per_page = $request->per_page;
+            $selected = $per_page;
+        }else if(isset($request->per_page) && $request->per_page == "all"){
+            $per_page = 500;
+            $selected = "all";
+        }
         $entretiens = Entretien::select('id', 'titre')->get();
-        $users = User::with('roles')->orderBy('id', 'DESC')->paginate(5);
+        $users = User::with('roles')->orderBy('id', 'DESC')->paginate($per_page);
         $roles = Role::select('id', 'name')->get();
-        return view('users.index', compact('users', 'roles', 'entretiens'));
+        return view('users.index', [
+            'results'    => $users,
+            'selected'   => $selected,
+            'roles'      => $roles,
+            'entretiens' => $entretiens
+        ]);
     }
 
     public function filterUsers(Request $request){
@@ -45,22 +58,37 @@ class UserController extends Controller
         $roleSelected = $request->role;
         $roles = Role::select('id', 'name')->get();
         $users = User::with('roles')->paginate(15);
-        
+        $per_page = $selected = 10;
+        if( isset($request->per_page) && $request->per_page != "all" ){
+            $per_page = $request->per_page;
+            $selected = $per_page;
+        }else if(isset($request->per_page) && $request->per_page == "all"){
+            $per_page = 500;
+            $selected = "all";
+        }
         if(!empty($roleSelected)){
             $users = User::with('roles')
             ->where('name', 'like', '%'.$name.'%')
             ->where('service', 'like', '%'.$service.'%')
             ->where('function', 'like', '%'.$function.'%')
             ->whereHas('roles', function ($query) use ($roleSelected) {$query->where('id', '=', $roleSelected); } )
-            ->paginate(15);
+            ->paginate($per_page);
         }else{
             $users = User::with('roles')
             ->where('name', 'like', '%'.$name.'%')
             ->where('service', 'like', '%'.$service.'%')
             ->where('function', 'like', '%'.$function.'%')
-            ->paginate(15);
+            ->paginate($per_page);
         }
-        return view('users.index', compact('users', 'roles', 'name', 'service', 'function', 'roleSelected'));
+        return view('users.index', [
+            'results'=> $users,
+            'selected' => $selected,
+            'roles'=> $roles,
+            'name'=> $name,
+            'service'=> $service,
+            'function'=> $function,
+            'roleSelected' => $roleSelected
+        ]);
     }
 
     public function createUser(){

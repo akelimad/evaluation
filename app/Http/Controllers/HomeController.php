@@ -53,8 +53,18 @@ class HomeController extends Controller
         $taux = 0;
         $finished = Answer::where('user_id', '<>', NULL)->where('mentor_id', '<>', NULL)->groupBy('user_id', 'entretien_id', 'mentor_id')->get()->count();
         $inProgress = Entretien_user::count();
-        $nbColls = $auth->children->count();
-        $nbMentors = $auth->children->count();
+        $users = User::all();
+        $nbMentors = 0;
+        $nbColls = 0;
+        foreach ($users as $user) {
+            if( count($user->children) > 0 ){
+                $nbMentors +=1;
+            }
+            if( $user->parent != null ){
+                $nbColls +=1;
+            }
+        }
+
         if($inProgress > 0) $taux  = $this->cutNum(($finished / $inProgress) * 100);
 
         return view('dashboard', compact('nbColls', 'nbMentors', 'finished', 'inProgress', 'taux'));

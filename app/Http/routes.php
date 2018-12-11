@@ -14,6 +14,7 @@
 Route::auth();
 
 Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');
 
 Route::get('profile', 'UserController@profile');
@@ -28,7 +29,7 @@ Route::get('users/import', 'UserController@importUsers');
 Route::post('users/import_parse', 'UserController@parseImport');
 Route::post('users/import_process', 'UserController@processImport');
 
-Route::get('roles', 'UserController@indexRoles');
+Route::get('config/roles', 'UserController@indexRoles');
 Route::get('role/create', 'UserController@createRole');
 Route::post('role/store', 'UserController@storeRole');
 Route::get('role/{id}/edit', 'UserController@editRole');
@@ -64,7 +65,7 @@ Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
 Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
 Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
 
-Route::get('skills', 'SkillController@indexAdmin');
+Route::get('config/skills', 'SkillController@indexAdmin');
 Route::get('skills/create', 'SkillController@create');
 Route::post('skills/store', 'SkillController@store');
 Route::get('skills/{id}/edit', 'SkillController@edit');
@@ -77,7 +78,7 @@ Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::get('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs');
 
-Route::get('entretienObjectif', 'EntretienObjectifController@index');
+Route::get('config/entretienObjectif', 'EntretienObjectifController@index');
 Route::get('entretienObjectif/create', 'EntretienObjectifController@create');
 Route::get('entretienObjectif/{id}/edit', 'EntretienObjectifController@edit');
 Route::post('entretienObjectif/store', 'EntretienObjectifController@store');
@@ -118,7 +119,7 @@ Route::post('entretiens/{eid}/u/{uid}/carrieres/store', 'CarreerController@store
 Route::get('entretiens/{eid}/u/{uid}/carrieres/{id}/edit', 'CarreerController@edit');
 Route::put('entretiens/{eid}/u/{uid}/carrieres/{cid}/mentorUpdate', 'CarreerController@mentorUpdate');
 
-Route::get('surveys', 'SurveyController@index')->name('surveys-list');
+Route::get('config/surveys', 'SurveyController@index')->name('surveys-list');
 Route::get('surveys/create', 'SurveyController@create');
 Route::post('surveys/store', 'SurveyController@store');
 Route::get('surveys/{id}/edit', 'SurveyController@edit');
@@ -140,7 +141,7 @@ Route::delete('surveys/{sid}/groupes/{gid}/questions/{qid}/delete', 'QuestionCon
 Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 Route::post('answers/store', 'AnswerController@store');
 
-Route::get('emails', 'EmailController@index');
+Route::get('config/emails', 'EmailController@index');
 Route::get('emails/create', 'EmailController@create');
 Route::post('emails/store', 'EmailController@store');
 Route::get('emails/{id}', 'EmailController@show');
@@ -153,5 +154,8 @@ Route::post('emailActions/store', 'ActionController@store');
 Route::get('emailActions/{id}', 'ActionController@show');
 Route::get('emailActions/{id}/edit', 'ActionController@edit');
 Route::delete('emailActions/{id}/delete', 'ActionController@delete');
-
 Route::post('emails/actions/{actionId}/attach', 'ActionController@attachEmailAtion');
+
+Route::get('config/settings', 'SettingController@index');
+Route::get('setting/{id}/edit', 'SettingController@edit');
+Route::post('setting/{id}/store', 'SettingController@store');

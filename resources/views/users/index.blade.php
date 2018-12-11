@@ -60,13 +60,14 @@
                         </form>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> La liste des utilisateurs <span class="badge">{{$users->total()}}</span></h3>
+                        <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> La liste des utilisateurs <span class="badge">{{$results->total()}}</span></h3>
                         <div class="box-tools mb40">
                             <a onclick="return chmUser.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
+                            <a href="{{ url('users/import') }}" class="btn bg-maroon"><i class="fa fa-upload"></i> Importer</a>
                         </div>
                     </div>
-                    @if(count($users)>0)
-                        <div class="box-body table-responsive no-padding mb40">
+                    @if(count($results)>0)
+                        <div class="box-body table-responsive no-padding mb20">
                             <table class="table table-hover table-striped table-inversed-blue">
                                 <tr>
                                     <th>
@@ -81,7 +82,7 @@
                                     <th>Créé le</th>
                                     <th class="text-center">Action</th>
                                 </tr>
-                                @foreach($users as $key => $user)
+                                @foreach($results as $key => $user)
                                 <tr>
                                     <td>
                                         <div class="wrap-checkItem">
@@ -111,7 +112,7 @@
                                     <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
                                     <td class="text-center"> 
                                         {{ csrf_field() }} 
-                                        <a href="{{ url('user/'.$user->id) }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Voir le profile"> <i class="fa fa-eye"></i> 
+                                        <a href="{{ url('user/'.$user->id) }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Voir le profil"> <i class="fa fa-eye"></i> 
                                         </a>
                                         <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
                                         </a>
@@ -124,14 +125,18 @@
                                 </tr>
                                 @endforeach
                             </table>
-                            {{ $users->links() }}
                         </div>
+
                         <div class="sendInvitationBtn mb40">
                             <a onclick="return chmEntretien.entretiens()" class="btn btn-success"> <i class="fa fa-send"></i> Envoyer une invitation</a>
                         </div>
+
+                        @include('partials.pagination')
+
                     @else
                         @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
                     @endif
+
                 </div>
             </div>
         </div>

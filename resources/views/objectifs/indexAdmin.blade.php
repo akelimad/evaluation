@@ -43,7 +43,7 @@
                                 @endforeach
                             </table>
                             {{ $objectifs->links() }}
-                            <a href="{{ url('entretienObjectif') }}" class="btn btn-default"> Retour </a>
+                            <a href="{{ url('config/entretienObjectif') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
                         </div>
                     @else
                         @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])

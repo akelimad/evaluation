@@ -5,10 +5,11 @@
         {{ $user->parent ? $user->parent->name : $user->name }} {{ $user->parent ? $user->parent->last_name : $user->last_name }} sur l'entretien : {{ $e->titre }}
     </p>
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        @if(in_array('Evaluations', $entreEvalsTitle))
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-evaluations">
                 <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-evaluations"  aria-controls="collapse-evaluations">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-evaluations"  aria-controls="collapse-evaluations" style="padding: 10px 15px;">
                     <i class="more-less fa fa-angle-right"></i>
                     Evaluations
                 </a>
@@ -55,6 +56,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(in_array('Carrières', $entreEvalsTitle))
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-carrieres">
                 <h4 class="panel-title">
@@ -71,23 +74,18 @@
                             <table class="table table-hover text-center table-striped">
                                 <thead>
                                     <tr>  
-                                        <th style="width: 20%">Date création</th>
-                                        <th style="width: 40%">Carrière</th>
-                                        <th style="width: 40%">Commentaire du mentor</th>
+                                        <th>Date création</th>
+                                        <th>Carrière</th>
+                                        <th>Commentaire du mentor</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($carreers as $c)
-                                    <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/carrieres/'.$c->id.'/mentorUpdate') }}" method="post">
-                                        <input type="hidden" name="mentor_id" value="{{$user->parent ? $user->parent->id : $user->id}}">
-                                    {{ csrf_field() }}
-                                    {{ method_field('PUT') }}
                                     <tr>
                                         <td> {{ Carbon\Carbon::parse($c->created_at)->format('d/m/Y H:i' )}} </td>
                                         <td> {{ $c->userCarreer or "---" }} </td>
                                         <td> {{ $c->mentorComment or "---" }} </td>
                                     </tr>
-                                    </form>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -98,6 +96,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(in_array('Formations', $entreEvalsTitle))
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-formations">
                 <h4 class="panel-title">
@@ -139,6 +139,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(in_array('Compétences', $entreEvalsTitle))
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-skills">
                 <h4 class="panel-title">
@@ -195,6 +197,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(in_array('Objectifs', $entreEvalsTitle))
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-objectifs">
                 <h4 class="panel-title">
@@ -222,7 +226,7 @@
                                 </tr>
                                 @endif
                                 <tr>
-                                    <th style="width: 27%">Critères d'évaluation</th>
+                                    <th >Critères d'évaluation</th>
                                     <th >Coll. note(%)</th>
                                     <th class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">Apréciation</th>
                                     <th >Pondération(%) </th>
@@ -366,6 +370,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(in_array('Salaires', $entreEvalsTitle))
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-salary">
                 <h4 class="panel-title">
@@ -406,6 +412,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(in_array('Commentaires', $entreEvalsTitle))
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-comments">
                 <h4 class="panel-title">
@@ -422,22 +430,18 @@
                             <table class="table table-hover table-striped text-center">
                                 <thead>
                                     <tr>  
-                                        <th style="width: 10%">Date</th>
-                                        <th style="width: 45%">Collaborateur</th>
-                                        <th style="width: 45%">Mentor</th>
+                                        <th>Date</th>
+                                        <th>Collaborateur</th>
+                                        <th>Mentor</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($comments as $c)
-                                    <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/commentaires/'.$c->id.'/mentorUpdate') }}" method="post">
-                                    {{ csrf_field() }}
-                                    {{ method_field('PUT') }}
                                     <tr>
                                         <td> {{ Carbon\Carbon::parse($c->created_at)->format('d/m/Y H:i' )}} </td>
                                         <td> {{ $c->userComment or "---" }} </td>
                                         <td> {{ $c->mentorComment or "---" }} </td>
                                     </tr>
-                                    </form>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -448,7 +452,7 @@
                 </div>
             </div>
         </div>
-        
+        @endif
     </div>
     @else
         @include('partials.alerts.info', ['messages' => "l'utlisateur ".$user->name." ".$user->last_name." n'a pas de mentor" ])
