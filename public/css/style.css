@@ -75,7 +75,7 @@ i{
     position: fixed;
     height: 100%;
     width: 100%;
-    background-color: #000000db;
+    background-color: white;
     top: 0;
     left: 0;
     bottom: 0;
@@ -320,7 +320,7 @@ i{
 .sidebar-menu>li>a {
     font-size: 14px;
 }
-.sidebar-menu>li.active>a, .sidebar-menu .treeview-menu>li.active>a{
+.sidebar-menu>li.active>a{
     color: #1b1b1b !important;
     background: #cdd8e4 !important;
     border-left-color: #3c8dbc;
@@ -328,7 +328,7 @@ i{
 .sidebar-menu>li>.treeview-menu{
     margin: 0 !important;
 }
-.sidebar-menu>li>a , .sidebar-menu .treeview-menu>li>a{
+.sidebar-menu>li>a {
     border-left: 3px solid transparent;
 }
 .box-header {

@@ -84,12 +84,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fonction</label>
-                                    <div class="col-md-9">{{ $user->function ? $user->function :'---' }}</div>
+                                    <div class="col-md-9">
+                                        {{ $user->function ? App\Setting::asList('society.functions', false, true)[$user->function] :'---' }}
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Service</label>
-                                    <div class="col-md-9">{{ $user->service ? $user->service :'---' }}</div>
+                                    <div class="col-md-9">
+                                        {{ $user->service ? App\Setting::asList('society.services', false, true)[$user->service] :'---' }}
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>

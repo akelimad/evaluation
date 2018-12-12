@@ -110,7 +110,7 @@
             <div id="collapse-formations" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-formations">
                 <div class="panel-body">
                     <p class="help-block">
-                        La liste des formations souhaitées de la part de {{ $user->name." ".$user->last_name }} acceptées par {{ $user->parent ? $user->parent->name : $user->name  }} {{ $user->parent ? $user->parent->last_name : $user->last_name }}
+                        Liste des formations souhaitées de la part de {{ $user->name." ".$user->last_name }} acceptées par {{ $user->parent ? $user->parent->name : $user->name  }} {{ $user->parent ? $user->parent->last_name : $user->last_name }}
                     </p>
                     @if(count($formations)>0)
                     <table class="table table-striped">

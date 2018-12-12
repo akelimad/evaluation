@@ -7,29 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
 
-  // /**
-  //  * Get setting by name
-  //  *
-  //  * @param string $name
-  //  * @param string|array $dafault
-  //  *
-  //  * @return string
-  //  **/
-  // public static function getSetting($name = null, $dafault = null) {
-  //   $settings = [];
-  //   $settings = $this::all();
-  //   dd(self::all());
-  //   if(!empty($settings)) : foreach ($settings as $key => $s) :
-  //     $settings[$s->name] = $s->value;
-  //   endforeach; endif;
+  /**
+   * Get setting by name
+   *
+   * @param string $name
+   * @param string|array $dafault
+   *
+   * @return string
+   **/
+  public static function get($name = null, $dafault = null) {
+    // setting is a file in config directory
+    $settings = config('settings');
+    if( empty($settings) ) {
+      foreach (Setting::all() as $key => $s) :
+        $settings[$s->name] = $s->value;
+      endforeach;
+      config('settings', $settings);
+    }
 
-  //   if( is_null($name) ) {
-  //     return $settings;
-  //   } elseif ( isset($settings[$name]) ) {
-  //     return $settings[$name];
-  //   }
-  //   return $dafault;
-  // }
+    if( is_null($name) ) {
+      return $settings;
+    } elseif ( isset($settings[$name]) ) {
+      return $settings[$name];
+    }
+    return $dafault;
+  }
 
 
   /**
@@ -43,15 +45,15 @@ class Setting extends Model
    *
    * @return array $items
    */
-  public static function getSettingAsArray(
+  public static function asList(
     $name, 
     $start_from_1 = false, 
     $with_empty = false, 
     $delimiter = "\r\n", 
     $dafault = [],
     $options = []
-    ) {
-    if ($value = Setting::select('value')->where('name', $name)->get()) {
+  ) {
+    if ($value = self::get($name, false)) {
       $options = array_merge([
         'values_as_keys' => false
       ], $options);
@@ -91,5 +93,10 @@ class Setting extends Model
       }
     }
     return $dafault;
+  }
+
+  public static function findOne($name)
+  {
+    return Setting::where('name', $name)->first();
   }
 }

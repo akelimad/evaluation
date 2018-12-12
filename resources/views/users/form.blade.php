@@ -75,11 +75,19 @@
     <div class="form-group">
         <div class="col-md-6">
             <label for="function" class="control-label">Fonction </label>
-            <input id="function" type="text" class="form-control" name="function" placeholder="Fonction" value="{{ isset($user) ? $user->function : '' }}">
+            <select name="function" id="function" class="form-control">
+                @foreach($functions as $key => $value)
+                <option value="{{ $key }}" {{ (isset($user->function) && $user->function == $key) ? 'selected':'' }}>{{ $value }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="col-md-6"> 
             <label for="service" class="control-label">Service</label>
-            <input id="service" type="text" class="form-control" name="service" placeholder="Service" value="{{ isset($user) ? $user->service : '' }}">
+            <select name="service" id="service" class="form-control">
+                @foreach($services as $key => $value)
+                <option value="{{ $key }}" {{ (isset($user->service) && $user->service == $key) ? 'selected':'' }}>{{ $value }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     <div class="form-group">

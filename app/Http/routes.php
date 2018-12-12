@@ -159,3 +159,5 @@ Route::post('emails/actions/{actionId}/attach', 'ActionController@attachEmailAti
 Route::get('config/settings', 'SettingController@index');
 Route::get('setting/{id}/edit', 'SettingController@edit');
 Route::post('setting/{id}/store', 'SettingController@store');
+
+Route::get('crm', 'UserController@indexCrm');

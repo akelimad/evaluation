@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->hasMany('App\User', 'user_id');
     }
 
+    public function users()
+    {
+        return $this->hasMany('App\User', 'society_id');
+    }
+
     /**
      * Get the interview for the given user.
      */

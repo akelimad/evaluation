@@ -5,9 +5,9 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">La liste des objectifs entretiens <span class="badge">{{$objectifs->total()}}</span></h3>
+                        <h3 class="box-title">Liste des objectifs entretiens <span class="badge">{{$objectifs->total()}}</span></h3>
                         <div class="box-tools mb40">
-                            <a href="javascript:void(0)" onclick="chmObjectif.create({oid: {{$oid}}})" class="btn bg-maroon" title="Ajouter une compétence" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
+                            <a href="javascript:void(0)" onclick="chmObjectif.create({oid: {{$oid}}})" class="btn bg-maroon" title="Ajouter une section" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
                     </div>
                     @if( $count > 0 )

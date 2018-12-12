@@ -14,7 +14,7 @@
                         @endif
                     @endforeach
                     <div class="box-header">  
-                        <h3 class="box-title">La liste des groupes <span class="badge">{{$groupes->total()}}</span> du questionnaire: <i><b>{{ $survey->title }}</b></i></h3>
+                        <h3 class="box-title">Liste des groupes <span class="badge">{{$groupes->total()}}</span> du questionnaire: <i><b>{{ $survey->title }}</b></i></h3>
                         <div class="box-tools mb40">
                             <a href="javascript:void(0)" onclick="return chmGroupe.create({sid: {{$sid}}})" class="btn bg-maroon" data-toggle="tooltip" title="Nouveau type de questions"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>

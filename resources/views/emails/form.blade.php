@@ -2,16 +2,18 @@
 <div class="content">
     <input type="hidden" name="id" value="{{ isset($email) ? $email->id : null }}">
     {{ csrf_field() }}
-    <div class="form-group">
-        <div class="col-md-6">
-            <label for="date" class="control-label">Emetteur <span class="asterisk">*</span></label>
-            <input type="text" class="form-control" name="sender" placeholder="contact@lycom.ma" required="" value="{{ isset($email) ? $email->sender : '' }}">
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-6">
+                <label for="date" class="control-label">Emetteur <span class="asterisk">*</span></label>
+                <input type="text" class="form-control" name="sender" placeholder="contact@lycom.ma" required="" value="{{ isset($email) ? $email->sender : '' }}">
+            </div>
+            <div class="col-md-6">
+                <label for="name" class="control-label">Nom <span class="asterisk">*</span></label>
+                <input type="text" class="form-control" name="name" placeholder="Lycom" required="" value="{{ isset($email) ? $email->name : '' }}">
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="col-md-6">
-            <label for="name" class="control-label">Nom <span class="asterisk">*</span></label>
-            <input type="text" class="form-control" name="name" placeholder="Lycom" required="" value="{{ isset($email) ? $email->name : '' }}">
-        </div>
-        <div class="clearfix"></div>
     </div>
     <div class="form-group">
         <label for="subject" class="control-label">Object <span class="asterisk">*</span></label>

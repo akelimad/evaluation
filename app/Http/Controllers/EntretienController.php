@@ -124,7 +124,7 @@ class EntretienController extends Controller
     {
         ob_start();
         if(Auth::user()->hasRole(['ADMIN', 'RH'])){
-            $users = User::select('id','name','last_name', 'email')->where('email', '<>', 'demo@eentretiens.ma')->get();
+            $users = User::select('id','name','last_name', 'email')->where('email', '<>', 'pca@pca.ma')->get();
         }else{
             $users = Auth::user()->children;
         }
@@ -468,7 +468,7 @@ class EntretienController extends Controller
             $query->where('u.name', 'like', '%'.$n.'%');
         }
         if(!empty($f)){
-            $query->where('u.function', 'like', '%'.$f.'%');
+            $query->where('u.function', '=', $f);
         }
 
         $results = $query->paginate(10);

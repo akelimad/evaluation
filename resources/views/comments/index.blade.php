@@ -7,7 +7,7 @@
                     @include('partials.alerts.success', ['messages' => Session::get('mentor_comment') ])
                 @endif
                 <div class="box box-primary card">
-                    <h3 class="mb40"> La liste des commentaires pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }} </h3>
+                    <h3 class="mb40"> Liste des commentaires pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }} </h3>
                     <div class="nav-tabs-custom">
                         @include('partials.tabs')
                         <div class="tab-content">
@@ -67,7 +67,7 @@
                     <div class="callout callout-info">
                         <p class="">
                             <i class="fa fa-info-circle fa-2x"></i> 
-                            <span class="content-callout">Cette page affiche la liste des commentaires de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                            <span class="content-callout">Cette page affiche Liste des commentaires de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
                         </p>
                     </div>
                 </div>

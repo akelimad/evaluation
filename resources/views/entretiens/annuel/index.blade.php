@@ -40,7 +40,11 @@
                                 <div class=" col-md-3">
                                     <div class="form-group">
                                         <label for="f"> Fonction </label>
-                                        <input type="text" name="f" id="f" class="form-control" value="{{ isset($f) ? $f :'' }}">
+                                        <select name="f" id="f" class="form-control">
+                                            @foreach(App\Setting::asList('society.functions', false, true) as $key => $value)
+                                            <option value="{{ $key }}" {{ (isset($f) && $f == $key) ? 'selected':'' }}>{{ $value }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -53,7 +57,7 @@
                         </form>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title">La liste des entretiens d'évaluations</h3>
+                        <h3 class="box-title">Liste des entretiens d'évaluations</h3>
                         <div class="box-tools">
                             
                         </div>

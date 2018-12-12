@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">La liste des rôles</h3>
+                        <h3 class="box-title">Liste des rôles</h3>
                         <div class="box-tools">
                             <a class="btn bg-maroon" onclick="return chmRole.create()" data-toggle="tooltip" title="Ajouter un rôle"> <i class="fa fa-plus"></i> Ajouter </a>
                       </div>

@@ -30,13 +30,21 @@
                                 <div class=" col-md-3">
                                     <div class="form-group">
                                         <label for="service"> Service </label>
-                                        <input type="text" name="service" id="service" class="form-control" value="{{ isset($service) ? $service :'' }}">
+                                        <select name="service" id="service" class="form-control">
+                                            @foreach(App\Setting::asList('society.services', false, true) as $key => $value)
+                                            <option value="{{ $key }}" {{ (isset($service) && $service == $key) ? 'selected':'' }}>{{ $value }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class=" col-md-3">
                                     <div class="form-group">
                                         <label for="function"> Fonction </label>
-                                        <input type="text" name="function" id="function" class="form-control" value="{{ isset($function) ? $function :'' }}">
+                                        <select name="function" id="function" class="form-control">
+                                            @foreach(App\Setting::asList('society.functions', false, true) as $key => $value)
+                                            <option value="{{ $key }}" {{ (isset($function) && $function == $key) ? 'selected':'' }}>{{ $value }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class=" col-md-3">
@@ -60,7 +68,7 @@
                         </form>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> La liste des utilisateurs <span class="badge">{{$results->total()}}</span></h3>
+                        <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> Liste des utilisateurs <span class="badge">{{$results->total()}}</span></h3>
                         <div class="box-tools mb40">
                             <a onclick="return chmUser.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
                             <a href="{{ url('users/import') }}" class="btn bg-maroon"><i class="fa fa-upload"></i> Importer</a>
@@ -101,7 +109,9 @@
                                             ---
                                         @endif
                                     </td>
-                                    <td>{{ $user->service ? $user->service : '---' }}</td>
+                                    <td>
+                                        {{ App\Setting::asList('society.services', false, true)[$user->service] }}
+                                    </td>
                                     <td> 
                                         @if($user->parent)
                                         <a href="{{url('user/'.$user->parent->id)}}">{{ $user->parent->name." ".$user->parent->last_name }}</a> 

@@ -72,7 +72,7 @@ class ActionController extends Controller
     {
         $action = Action::find($actionId);
         $action->emails()->sync([$request->email_id]);
-        return redirect('emails')->with("attach_emailAction", "");
+        return redirect('config/emails')->with("attach_emailAction", "");
     }
 
     public function destroy($id)
