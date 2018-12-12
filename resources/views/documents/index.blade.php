@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary card">
-                    <h3 class="mb40"> La liste des documents </h2>
+                    <h3 class="mb40"> Liste des documents </h2>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li><a href="{{url('entretiens/'.$e->id)}}">Synthèse</a></li>
@@ -53,7 +53,7 @@
                             @else
                                 <p class="alert alert-default">Aucune donnée disponible !</p>
                             @endif
-                            <a href="{{url('/')}}" class="btn btn-default">Revenir à la liste</a>
+                            <a href="{{url('/')}}" class="btn btn-default">Revenir à Liste</a>
                             <a onclick="return chmDocument.create()" data-id="{{$e->id}}" class="btn btn-success addBtn">Ajouter un document</a>
                         </div>
                     </div>

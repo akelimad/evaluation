@@ -69,4 +69,15 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    public function authenticated($request , $user){
+        $userRoles = [];
+        foreach (\Auth::user()->roles as $key => $role) {
+            $userRoles[] = $role->name;
+        }
+        if ( in_array("ROOT", $userRoles) ) {
+            return redirect('/crm');
+        }
+        return redirect('/');
+    }
 }

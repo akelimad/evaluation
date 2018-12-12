@@ -7,7 +7,7 @@
                     @include('partials.alerts.success', ['messages' => Session::get('success_update') ])
                 @endif
                 <div class="box box-primary card">
-                    <h3 class="mb40"> La liste des compétences <span class="badge">{{$skills->total()}}</span> pour : {{$e->titre}}</h3>
+                    <h3 class="mb40"> Liste des compétences <span class="badge">{{$skills->total()}}</span> pour : {{$e->titre}}</h3>
                     <div class="nav-tabs-custom">
                         @include('partials.tabs')
                         <div class="tab-content">
@@ -80,7 +80,7 @@
                     <div class="callout callout-info">
                         <p class="">
                             <i class="fa fa-info-circle fa-2x"></i> 
-                            <span class="content-callout">Cette page affiche la liste des compétences de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                            <span class="content-callout">Cette page affiche Liste des compétences de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
                         </p>
                     </div>
                 </div>

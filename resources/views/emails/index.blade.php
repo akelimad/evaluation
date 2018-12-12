@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title"><i class="glyphicon glyphicon-envelope"></i> La liste des emails <span class="badge">{{$emails->total()}}</span></h3>
+                        <h3 class="box-title"><i class="glyphicon glyphicon-envelope"></i> Liste des emails <span class="badge">{{$emails->total()}}</span></h3>
                         <div class="box-tools mb40">
                             <a onclick="return chmEmail.create()" class="btn bg-maroon"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
@@ -46,7 +46,7 @@
 
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title"><i class="glyphicon glyphicon-envelope"></i> La liste des actions <span class="badge">{{$emailActions->total()}}</span></h3>
+                        <h3 class="box-title"><i class="glyphicon glyphicon-envelope"></i> Liste des actions <span class="badge">{{$emailActions->total()}}</span></h3>
                         <div class="box-tools mb40">
                             <a onclick="return chmEmailAction.create()" class="btn bg-maroon"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>

@@ -63,7 +63,7 @@
                 events: [
                     @foreach($entretiens as $entretien)
                     {
-                        title: '{{ $entretien->titre }}',
+                        title: "{!! $entretien->titre !!}",
                         start: '{{ $entretien->date }}',
                         end  : '{{ Carbon\Carbon::parse($entretien->date_limit)->addDays(1) }}',
                         allDay: true,

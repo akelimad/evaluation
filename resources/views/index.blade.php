@@ -9,10 +9,15 @@
                         <p>Voici les informations de votre Mentor:</p>
                         <img class="profile-user-img img-responsive img-circle" src="{{ asset('img/avatar.png') }}" alt="User profile picture">
                         <h3 class="profile-username text-center">{{ $mentor->name }} {{ $mentor->last_name }} </h3>
-                        <p class="text-muted text-center"> {{ $mentor->function }} </p>
+                        <p class="text-muted text-center">
+                            {{ $mentor->function ? App\Setting::asList('society.functions', false, true)[$mentor->function] :'---' }}
+                        </p>
 
                         <ul class="list-group list-group-unbordered">
-                            <li class="list-group-item"><b>Service: </b> <a class="">{{ $mentor->service ? $mentor->service : '---' }}</a></li>
+                            <li class="list-group-item"><b>Service: </b> 
+                                <a class="">
+                                {{ $mentor->service ? App\Setting::asList('society.services', false, true)[$mentor->service] :'---' }}</a>
+                            </li>
                             <li class="list-group-item"><b>Téléphone fixe: </b> <a class="">{{ $mentor->fix ? $mentor->fix : '---' }}</a></li>
                             <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
                             <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
@@ -20,7 +25,8 @@
                         <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
                     </div>
                 </div>
-                @role(['ADMIN', 'RH'])
+                <!-- todo -->
+                @if ( 1 == 2 )
                 <div class="box box-primary">
                     <div class="box-header with-border">
                       <h3 class="box-title"> Mes actualités </h3>
@@ -33,7 +39,7 @@
                         </ul>
                     </div>
                 </div>
-                @endrole
+                @endif
             </div>
             <div class="col-md-9">
                 <div class="card portlet box box-primary">

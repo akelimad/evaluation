@@ -75,7 +75,7 @@ i{
     position: fixed;
     height: 100%;
     width: 100%;
-    background-color: #000000db;
+    background-color: white;
     top: 0;
     left: 0;
     bottom: 0;
@@ -116,6 +116,7 @@ i{
     box-shadow: -1px -2px 28px 2px #e2dddd;
     padding: 2em 3em;
     border-radius: 7px;
+    opacity: .9;
 }
 .login-page ul{
     list-style-type: none;
@@ -318,6 +319,17 @@ i{
 }
 .sidebar-menu>li>a {
     font-size: 14px;
+}
+.sidebar-menu>li.active>a{
+    color: #1b1b1b !important;
+    background: #cdd8e4 !important;
+    border-left-color: #3c8dbc;
+}
+.sidebar-menu>li>.treeview-menu{
+    margin: 0 !important;
+}
+.sidebar-menu>li>a {
+    border-left: 3px solid transparent;
 }
 .box-header {
     margin-bottom: 1em;
@@ -670,4 +682,10 @@ p.help-block{
 }
 .bootstrap-wysihtml5-insert-link-target{
     margin-left: -15px !important;
+}
+.pagination-container .pagination {
+    margin: 0 !important;
+}
+.treeview-menu{
+    padding: 0;
 }

@@ -30,6 +30,7 @@ import chmSurvey from './class/survey'
 import chmEntretienObjectif from './class/entretienObjectif'
 import chmEmail from './class/email'
 import chmEmailAction from './class/emailAction'
+import Setting from './class/setting'
 
 // Store modules in window
 window.chmSite = chmSite
@@ -57,6 +58,7 @@ window.chmSurvey = chmSurvey
 window.chmEntretienObjectif = chmEntretienObjectif
 window.chmEmail = chmEmail
 window.chmEmailAction = chmEmailAction
+window.Setting = Setting
 
 // Standart jQuery script
 import './custom'

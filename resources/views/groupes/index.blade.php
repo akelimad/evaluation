@@ -13,9 +13,8 @@
                             </div>
                         @endif
                     @endforeach
-                    <div class="box-header">
-                        <a href="{{ url('surveys') }}" class="lead" title="Revenir à la liste de questionnaires" data-toggle="tooltip"><i class="fa fa-long-arrow-left"></i></a>  
-                        <h3 class="box-title">La liste des groupes <span class="badge">{{$groupes->total()}}</span> du questionnaire: <i><b>{{ $survey->title }}</b></i></h3>
+                    <div class="box-header">  
+                        <h3 class="box-title">Liste des groupes <span class="badge">{{$groupes->total()}}</span> du questionnaire: <i><b>{{ $survey->title }}</b></i></h3>
                         <div class="box-tools mb40">
                             <a href="javascript:void(0)" onclick="return chmGroupe.create({sid: {{$sid}}})" class="btn bg-maroon" data-toggle="tooltip" title="Nouveau type de questions"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
@@ -49,6 +48,8 @@
                     @else
                         @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
                     @endif
+
+                    <a href="{{ url('config/surveys') }}" class="btn btn-default" data-toggle="tooltip"><i class="fa fa-long-arrow-left"></i> Retour</a>
                 </div>
             </div>
         </div>

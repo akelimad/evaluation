@@ -14,34 +14,37 @@
                         <h4 class="help-block">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right showFormBtn"> <i class="fa fa-chevron-down"></i></button></h4>
                         <form action="{{ url('entretiens/filter') }}" class="criteresForm">
                             <div class="row">
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="datepicker"> Date limite </label>
                                         <input type="text" name="d" id="datepicker" class="form-control" value="{{ isset($d) ? $d :'' }}" readonly="" data-date-format="dd-mm-yyyy">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="n"> Nom </label>
                                         <input type="text" name="n" id="n" class="form-control" value="{{ isset($n) ? $n :'' }}">
                                     </div>
                                 </div>
-                                <div class=" col-md-4">
+                                <div class=" col-md-3">
                                     <div class="form-group">
                                         <label for="t"> Type d'évaluation </label>
-                                        <input type="text" name="t" id="t" class="form-control" value="{{ isset($t) ? $t :'' }}">
+                                        <select name="t" id="t" class="form-control">
+                                            <option value=""></option>
+                                            @foreach($entretiens as $e)
+                                            <option value="{{ $e->id }}" {{ isset($t) && $t == $e->id ? 'selected':'' }}>{{ $e->titre }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                <div class=" col-md-2">
-                                    <div class="form-group">
-                                        <label for="id"> Réf </label>
-                                        <input type="number" name="id" id="id" min="1" class="form-control" value="{{ isset($id) ? $id :'' }}">
-                                    </div>
-                                </div>
-                                <div class=" col-md-2">
+                                <div class=" col-md-3">
                                     <div class="form-group">
                                         <label for="f"> Fonction </label>
-                                        <input type="text" name="f" id="f" class="form-control" value="{{ isset($f) ? $f :'' }}">
+                                        <select name="f" id="f" class="form-control">
+                                            @foreach(App\Setting::asList('society.functions', false, true) as $key => $value)
+                                            <option value="{{ $key }}" {{ (isset($f) && $f == $key) ? 'selected':'' }}>{{ $value }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -54,12 +57,12 @@
                         </form>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title">La liste des entretiens d'évaluations</h3>
+                        <h3 class="box-title">Liste des entretiens d'évaluations</h3>
                         <div class="box-tools">
                             
                         </div>
                     </div>
-                    @if(count($entretiens)>0)
+                    @if(count($results)>0)
                     <div class="box-body table-responsive no-padding">
                         <form action="{{ url('notifyMentorsInterview') }}" method="POST">
                         {{ csrf_field() }}
@@ -81,7 +84,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($entretiens as  $k => $row)
+                                @foreach($results as  $k => $row)
                                     <tr class="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'has-motif': 'no-motif' }}" data-toggle="tooltip" title="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'Il ya un motif mentionné pour '.$row->name.''.$row->last_name.'. cliquer sur l\'icon de paramettre pour le voir ou le mettre à jour' : '' }}">
                                         <td>
                                             @if(!App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId))
@@ -165,7 +168,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $entretiens->links() }}
+                        {{ $results->links() }}
                         <div class="sendInvitationBtn mb40">
                             <button type="submit" class="btn btn-success"> <i class="fa fa-envelope"></i> Envoyer l'invitation</button>
                         </div>

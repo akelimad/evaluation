@@ -20,17 +20,17 @@
                                     <a href="{{ asset('data/user_modele.csv') }}" class="btn btn-warning"> Télécharger un modèle au format csv </a>
                                 </p>
                                 <p class="help-block">
-                                    Voici les consignes à respecter pour importer ou mettre à jour la liste de compte :
+                                    Voici les consignes à respecter pour importer ou mettre à jour Liste de compte :
                                 </p>
                                 <ul class="list-unstyled user-data">
                                     <li><i class="fa fa-hand-o-right"></i> Le nombre d'utilisateurs est limité à 500 comptes</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne prénom correspond au champ name</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne nom correspond au champ last_name</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne email correspond au champ email</li>
-                                    <li><i class="fa fa-hand-o-right"></i> La colonne rôle correspond au champ ser à associer les rôles, si l'utilisateur est un collaborateur veuille saisir COLLABORATEUR, s'il est mentor et même temps collaborateur veuillez saisir le 1er rôle suivi d'un (,) puis un espace( ) puis le 2em rôle. ex: COLLABORATEUR, MENTOR. <br> N.B: Voici les rôles disponible : ADMIN, RH, MENTOR, COLLABORATEUR. Il faut les saisir en majuscule.</li>
-                                    <li><i class="fa fa-hand-o-right"></i> La colonne mentor email au champ user_id, il est indesponsable pour récuperer ID du mentor, si l'utilisateur n'as pas un mentor il faut mettre 0 </li>
-                                    <li><i class="fa fa-hand-o-right"></i> La colonne adresse au champ adress</li>
-                                    <li><i class="fa fa-hand-o-right"></i> La colonne code postale au champ zip_code</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne rôle correspond au champ qui sert à associer les rôles, si l'utilisateur est un collaborateur veuillez saisir COLLABORATEUR, s'il est mentor et en même temps collaborateur veuillez saisir le 1er rôle suivi d'un (,) puis un espace( ) puis le 2em rôle. ex: COLLABORATEUR, MENTOR. <br> N.B: Voici les rôles disponible : RH, MENTOR, COLLABORATEUR. Il faut les saisir en majuscule.</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne <b>mentor email</b>, elle est indesponsable pour récuperer ID du mentor, si l'utilisateur n'as pas un mentor il faut mettre 0 </li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne adresse correspond au champ adress</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne code postale correspond au champ zip_code</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne ville correspond au champ city</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne pays correspond au champ country</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne tel fix correspond au champ fix</li>

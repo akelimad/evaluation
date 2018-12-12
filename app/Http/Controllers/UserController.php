@@ -12,6 +12,7 @@ use App\User;
 use App\Role;
 use App\Entretien;
 use App\Permission;
+use App\Setting;
 use Session;
 
 class UserController extends Controller
@@ -31,11 +32,28 @@ class UserController extends Controller
         return view('users.profile', compact('user'));
     }
 
-    public function indexUsers(){
+    public function indexUsers(Request $request){
+        $per_page = $selected = 10;
+        if( isset($request->per_page) && $request->per_page != "all" ){
+            $per_page = $request->per_page;
+            $selected = $per_page;
+        }else if(isset($request->per_page) && $request->per_page == "all"){
+            $per_page = 500;
+            $selected = "all";
+        }
         $entretiens = Entretien::select('id', 'titre')->get();
-        $users = User::with('roles')->orderBy('id', 'DESC')->paginate(10);
-        $roles = Role::select('id', 'name')->get();
-        return view('users.index', compact('users', 'roles', 'entretiens'));
+
+        $users = Auth::user()->users()->paginate($per_page);
+        // dd($societyUsers);
+
+        // $users = User::with('roles')->where('email', '<>', Auth::user()->email)->orderBy('id', 'DESC')->paginate($per_page);
+        $roles = Role::select('id', 'name')->where('name', '<>', 'ADMIN')->get();
+        return view('users.index', [
+            'results'    => $users,
+            'selected'   => $selected,
+            'roles'      => $roles,
+            'entretiens' => $entretiens
+        ]);
     }
 
     public function filterUsers(Request $request){
@@ -45,29 +63,46 @@ class UserController extends Controller
         $roleSelected = $request->role;
         $roles = Role::select('id', 'name')->get();
         $users = User::with('roles')->paginate(15);
-        
+        $per_page = $selected = 10;
+        if( isset($request->per_page) && $request->per_page != "all" ){
+            $per_page = $request->per_page;
+            $selected = $per_page;
+        }else if(isset($request->per_page) && $request->per_page == "all"){
+            $per_page = 500;
+            $selected = "all";
+        }
         if(!empty($roleSelected)){
             $users = User::with('roles')
             ->where('name', 'like', '%'.$name.'%')
-            ->where('service', 'like', '%'.$service.'%')
-            ->where('function', 'like', '%'.$function.'%')
+            ->where('service', '=', $service)
+            ->where('function', '=', $function)
             ->whereHas('roles', function ($query) use ($roleSelected) {$query->where('id', '=', $roleSelected); } )
-            ->paginate(15);
+            ->paginate($per_page);
         }else{
             $users = User::with('roles')
             ->where('name', 'like', '%'.$name.'%')
-            ->where('service', 'like', '%'.$service.'%')
-            ->where('function', 'like', '%'.$function.'%')
-            ->paginate(15);
+            ->where('service', '=', $service)
+            ->where('function', '=', $function)
+            ->paginate($per_page);
         }
-        return view('users.index', compact('users', 'roles', 'name', 'service', 'function', 'roleSelected'));
+        return view('users.index', [
+            'results'=> $users,
+            'selected' => $selected,
+            'roles'=> $roles,
+            'name'=> $name,
+            'service'=> $service,
+            'function'=> $function,
+            'roleSelected' => $roleSelected
+        ]);
     }
 
     public function createUser(){
         ob_start();
-        $roles = Role::all();
+        $roles = Role::select('id', 'name')->where('name', '<>', 'ADMIN')->get();
         $users = User::select('id','email', 'name', 'last_name')->get();
-        echo view('users.form', compact('roles', 'users'));
+        $functions = Setting::asList('society.functions', false, true);
+        $services = Setting::asList('society.services', false, true);
+        echo view('users.form', compact('services', 'functions', 'roles', 'users'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter un utilisateur', 'content' => $content];
     }
@@ -86,8 +121,8 @@ class UserController extends Controller
             'society'   => 'regex:/^[\pL\s\-]+$/u',
             'tel'       => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
             'fix'       => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
-            'function'  => 'regex:/^[\pL\s\-]+$/u',
-            'service'   => 'regex:/^[\pL\s\-]+$/u',
+            'function'  => 'numeric',
+            'service'   => 'numeric',
         ];
         if($id) {
             $user = User::find($id);
@@ -152,8 +187,10 @@ class UserController extends Controller
                 $roles_ids []= $role->id;
             }
         }
-        $roles = Role::all();
-        echo view('users.form', compact('user', 'users', 'roles','roles_ids'));
+        $roles = Role::select('id', 'name')->where('name', '<>', 'ADMIN')->get();
+        $functions = Setting::asList('society.functions', false, true);
+        $services = Setting::asList('society.services', false, true);
+        echo view('users.form', compact('services' ,'functions', 'user', 'users', 'roles','roles_ids'));
         $content = ob_get_clean();
         return ['title' => 'Modifier un utilisateur', 'content' => $content];
     }
@@ -247,7 +284,7 @@ class UserController extends Controller
     }
 
     public function indexRoles(){
-        $roles = Role::paginate(10);
+        $roles = Role::where('name', '<>', 'ADMIN')->get();
         return view('users/roles.index' , ['roles' => $roles]);
     }
     public function createRole(){
@@ -345,6 +382,13 @@ class UserController extends Controller
         echo view('users/permissions.edit' ,['p' => $p]);
         $content = ob_get_clean();
         return ['title' => 'Modifier une permission', 'content' => $content];
+    }
+
+    public function indexCrm(Request $request){
+        $societies = [];
+        return view('crm.index', [
+            'results' => $societies,
+        ]);
     }
 
 

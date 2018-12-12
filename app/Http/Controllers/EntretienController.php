@@ -86,14 +86,14 @@ class EntretienController extends Controller
      */
     public function entretiensEval()
     {
-        // $entretiens = Entretien::with('users.parent')->paginate(10);
-        $entretiens = DB::table('entretiens as e')
+        $entretiens = Entretien::all()->sortBy("titre");
+        $results = DB::table('entretiens as e')
         ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
         ->join('users as u', 'u.id', '=', 'eu.user_id')
         ->select('e.*','e.id as entretienId','u.*', 'u.id as userId')
         ->paginate(15);
         // dd($entretiens);
-        return view('entretiens/annuel.index', compact('entretiens'));
+        return view('entretiens.annuel.index', compact('entretiens','results'));
     }
 
     /**
@@ -124,7 +124,7 @@ class EntretienController extends Controller
     {
         ob_start();
         if(Auth::user()->hasRole(['ADMIN', 'RH'])){
-            $users = User::select('id','name','last_name', 'email')->where('email', '<>', 'demo@eentretiens.ma')->get();
+            $users = User::select('id','name','last_name', 'email')->where('email', '<>', 'pca@pca.ma')->get();
         }else{
             $users = Auth::user()->children;
         }
@@ -152,7 +152,7 @@ class EntretienController extends Controller
         $rules = [
             'date'       => 'required',
             'date_limit' => 'required|after:date',
-            'titre'      => 'required|min:3|max:50|regex:/^[\pL\s\-]+$/u',
+            'titre'      => 'required|min:3|max:50|regex:/^[0-9a-zÀ-ú\s\-_"°^\'’.,:]*$/i',
         ];
         $validator = \Validator::make($request->all(), $rules);
         $messages = $validator->errors();
@@ -423,6 +423,7 @@ class EntretienController extends Controller
         $e = Entretien::find($eid);
         $user = User::findOrFail($uid);
         $evaluations = $e->evaluations;
+        $evalTitle = [];
         $survey = Survey::find($e->survey_id);
         $groupes = $survey->groupes;
         $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
@@ -435,42 +436,44 @@ class EntretienController extends Controller
         foreach ($objectifs as $obj) {
             $total += $obj->sousTotal; 
         }
-        echo view('entretiens.apercu', compact('evaluations','e', 'user', 'groupes', 'salaries','carreers','formations', 'skills','objectifs', 'comments', 'total'));
+        foreach ($evaluations as $eval) {
+            $entreEvalsTitle[] = $eval->title; 
+        }
+        echo view('entretiens.apercu', compact('entreEvalsTitle','e', 'user', 'groupes', 'salaries','carreers','formations', 'skills','objectifs', 'comments', 'total'));
         $content = ob_get_clean();
         return ['title' => "Aperçu de l'entretien", 'content' => $content];
     }
 
     public function filterEntretiens(Request $request)
     {
+        $entretiens = Entretien::all()->sortBy("titre");
         $d = $request->d; //date_limit
         if(!empty($d)) $date = Carbon::createFromFormat('d-m-Y', $d)->toDateString();
         $t = $request->t; //titre
-        $id = $request->id;  //id entretien
         $n = $request->n;  //nom user
         $f = $request->f; //function user
-        if(isset($date)){
-            $entretiens = DB::table('entretiens as e')
-            ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
-            ->join('users as u', 'u.id', '=', 'eu.user_id')
-            ->select('e.*','e.id as entretienId','u.*', 'u.id as userId')
-            ->where('e.date_limit', '=', $date)
-            ->where('e.id', 'like', '%'.$id.'%')
-            ->where('e.titre', 'like', '%'.$t.'%')
-            ->where('u.name', 'like', '%'.$n.'%')
-            ->where('u.function', 'like', '%'.$f.'%')
-            ->paginate(15);
-        }else{
-            $entretiens = DB::table('entretiens as e')
-            ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
-            ->join('users as u', 'u.id', '=', 'eu.user_id')
-            ->select('e.*','e.id as entretienId','u.*', 'u.id as userId')
-            ->where('e.id', 'like', '%'.$id.'%')
-            ->where('e.titre', 'like', '%'.$t.'%')
-            ->where('u.name', 'like', '%'.$n.'%')
-            ->where('u.function', 'like', '%'.$f.'%')
-            ->paginate(15);
+
+        $query = DB::table('entretiens as e')
+        ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
+        ->join('users as u', 'u.id', '=', 'eu.user_id')
+        ->select('e.*','e.id as entretienId','u.*', 'u.id as userId');
+
+        if(!empty($date)){
+            $query->where('e.date_limit', '=', '2018-12-16');
         }
-        return view('entretiens.annuel.index', compact('entretiens', 'd', 't', 'id','n', 'f'));
+        if(!empty($t)){
+            $query->where('e.id', '=', $t);
+        }
+        if(!empty($n)){
+            $query->where('u.name', 'like', '%'.$n.'%');
+        }
+        if(!empty($f)){
+            $query->where('u.function', '=', $f);
+        }
+
+        $results = $query->paginate(10);
+
+        return view('entretiens.annuel.index', compact('entretiens','results', 'd', 't', 'id','n', 'f'));
     }
 
     public function calendar(){

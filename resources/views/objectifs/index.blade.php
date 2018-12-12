@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-primary card">
-                <h3 class="mb40"> La liste des objectifs pour: {{$e->titre}} - {{ $user->name." ".$user->last_name }} </h3>
+                <h3 class="mb40"> Liste des objectifs pour: {{$e->titre}} - {{ $user->name." ".$user->last_name }} </h3>
                 <div class="nav-tabs-custom">
                     @include('partials.tabs')
                     <div class="tab-content">
@@ -180,7 +180,7 @@
                 <div class="callout callout-info">
                     <p class="">
                         <i class="fa fa-info-circle fa-2x"></i> 
-                        <span class="content-callout">Cette page affiche la liste des objectifs de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                        <span class="content-callout">Cette page affiche Liste des objectifs de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
                     </p>
                 </div>
             </div>

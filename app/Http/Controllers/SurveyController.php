@@ -74,6 +74,6 @@ class SurveyController extends Controller
     {
         $survey = Survey::findOrFail($sid);
         $survey->delete();
-        return redirect('surveys');
+        return redirect('config/surveys');
     }
 }
