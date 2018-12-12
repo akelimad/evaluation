@@ -69,7 +69,7 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
-
+    
     public function authenticated($request , $user){
         $userRoles = [];
         foreach (\Auth::user()->roles as $key => $role) {
@@ -80,4 +80,5 @@ class AuthController extends Controller
         }
         return redirect('/');
     }
+
 }
