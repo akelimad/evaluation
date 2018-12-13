@@ -63,8 +63,6 @@ class GroupeController extends Controller
         $groupe->survey_id = $request->sid;
         $groupe->save();
         $url=url('surveys/'.$request->sid.'/groupes');
-        $request->session()->flash('success', "Le type de questions a été ajouté avec suucès.");
-        // $request->session()->flash('success', "La groupe à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour voir la liste des groupe du questionnaire</a>");
         $request->session()->flash('success', "Le type de questions a été ajouté avec succès.");
         // $request->session()->flash('success', "La groupe à été ajouté avec succès. <a href='{$url}'>cliquer ici pour voir la liste des groupe du questionnaire</a>");
         if($groupe->save()) {
