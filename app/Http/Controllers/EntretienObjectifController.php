@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\EntretienObjectif;
 use App\Objectif;
+use Auth;
 
 class EntretienObjectifController extends Controller
 {
@@ -17,7 +18,7 @@ class EntretienObjectifController extends Controller
      */
     public function index()
     {
-        $objectifs = EntretienObjectif::paginate(10);
+        $objectifs = Auth::user()->entretiensObjectifs()->paginate(10);
         return view('entretienObjectif.index', compact('objectifs'));
     }
 
@@ -49,6 +50,7 @@ class EntretienObjectifController extends Controller
         }
         $objectif->title = $request->title;
         $objectif->description = $request->description;
+        $objectif->user_id = Auth::user()->id;
         $objectif->save();
         if($objectif->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];

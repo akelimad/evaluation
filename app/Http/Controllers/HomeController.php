@@ -27,7 +27,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show the application index.
      *
      * @return \Illuminate\Http\Response
      */
@@ -43,7 +43,7 @@ class HomeController extends Controller
         $entretiens = $user->entretiens;
         $formations = Formation::where('user_id', Auth::user()->id)->get();
         $collaborateurs = Auth::user()->children;
-
+        if( in_array('ROOT', Auth::user()->getRoles()) ) return redirect('crm');
         return view('index', compact('user', 'mentor', 'entretiens', 'formations', 'collaborateurs'));
     }
 

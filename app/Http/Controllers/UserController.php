@@ -43,7 +43,7 @@ class UserController extends Controller
         }
         $entretiens = Entretien::select('id', 'titre')->get();
 
-        $users = Auth::user()->users()->paginate($per_page);
+        $users = User::getUsers()->paginate($per_page);
         // dd($societyUsers);
 
         // $users = User::with('roles')->where('email', '<>', Auth::user()->email)->orderBy('id', 'DESC')->paginate($per_page);
@@ -98,8 +98,13 @@ class UserController extends Controller
 
     public function createUser(){
         ob_start();
-        $roles = Role::select('id', 'name')->where('name', '<>', 'ADMIN')->get();
-        $users = User::select('id','email', 'name', 'last_name')->get();
+        $roles = Role::select('id', 'name')
+            ->where('name', '<>', 'ROOT')
+            ->where('name', '<>', 'ADMIN')
+            ->get();
+        $users = User::getUsers()->with('roles')->whereHas('roles', function ($query) {
+            $query->where('name', '=', 'MENTOR');
+        })->get();
         $functions = Setting::asList('society.functions', false, true);
         $services = Setting::asList('society.services', false, true);
         echo view('users.form', compact('services', 'functions', 'roles', 'users'));
@@ -152,20 +157,22 @@ class UserController extends Controller
         $user->tel= $request->tel;
         $user->fix= $request->fix;
         $user->about= $request->about;
-        if($file = $request->hasFile('avatar')) {
-            $file = $request->file('avatar') ;
-            $fileName = time()."_".$file->getClientOriginalName();
-            $destinationPath = public_path('/avatars') ;
-            $file->move($destinationPath,$fileName);
-            $user->avatar = $fileName ;
-        }
         $user->function= $request->function;
         $user->service= $request->service;
         $user->qualification= $request->qualification;
         $user->status= 1;
         if($request->user_id != null) {$user->user_id= $request->user_id; }
         $user->salary= $request->salary;
+        $user->society_id = Auth::user()->id;
         $user->save();
+        if($file = $request->hasFile('avatar')) {
+            $file = $request->file('avatar') ;
+            $fileName = time()."_".$file->getClientOriginalName();
+            $destinationPath = public_path('/uploads/avatars/'.$user->id) ;
+            $file->move($destinationPath,$fileName);
+            $user->avatar = $fileName ;
+            $user->save();
+        }
         if($request->roles != null ) {
             $user->roles()->sync($request->roles); 
         }
@@ -272,6 +279,7 @@ class UserController extends Controller
                 }else{
                     $user->user_id= 0;
                 }
+                $user->society_id = Auth::user()->id;
                 $user->save();
                 $user->roles()->sync($this->getRoleByName($row[$fields[3]]));
                 $count++;
@@ -382,13 +390,6 @@ class UserController extends Controller
         echo view('users/permissions.edit' ,['p' => $p]);
         $content = ob_get_clean();
         return ['title' => 'Modifier une permission', 'content' => $content];
-    }
-
-    public function indexCrm(Request $request){
-        $societies = [];
-        return view('crm.index', [
-            'results' => $societies,
-        ]);
     }
 
 

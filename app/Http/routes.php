@@ -160,4 +160,8 @@ Route::get('config/settings', 'SettingController@index');
 Route::get('setting/{id}/edit', 'SettingController@edit');
 Route::post('setting/{id}/store', 'SettingController@store');
 
-Route::get('crm', 'UserController@indexCrm');
+Route::get('crm', 'CrmController@index');
+Route::get('crm/create', 'CrmController@form');
+Route::get('crm/{id}/edit', 'CrmController@form');
+Route::post('crm/store', 'CrmController@store');
+Route::delete('crm/{id}/delete', 'CrmController@delete');

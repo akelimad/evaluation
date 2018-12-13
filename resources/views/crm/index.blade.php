@@ -24,44 +24,36 @@
                         </form>
                     </div>
                     <div class="box-header">
-                        <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> Liste des sociétés <span class="badge">0</span></h3>
+                        <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> Liste des sociétés <span class="badge">{{ $results->total() }}</span></h3>
                         <div class="box-tools mb40">
-                            <a onclick="return chmUser.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
+                            <a onclick="return Crm.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter</a>
                         </div>
                     </div>
                     @if(count($results)>0)
                         <div class="box-body table-responsive no-padding mb20">
                             <table class="table table-hover table-striped table-inversed-blue">
                                 <tr>
-                                    <th>Nom complet</th>
+                                    <th>Nom de la société</th>
+                                    <th>Prénom du contact</th>
+                                    <th>Nom du contact</th>
                                     <th>Email</th>
-                                    <th>Société</th>
-                                    <th>Créé le</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($results as $key => $user)
                                 <tr>
-                                    <td> <a href="{{url('user/'.$user->id)}}">{{ $user->name." ".$user->last_name }}</a> </td>
+                                    <td> {{ $user->name }} </td>
+                                    <td> {{ $user->first_name }} </td>
+                                    <td> {{ $user->last_name }} </td>
                                     <td> {{ $user->email }} </td>
-                                    <td> {{ $user->society ? $user->society : '---' }} </td>
-                                    <td>
-                                        {{ App\Setting::asList('society.services', false, true)[$user->service] }}
-                                    </td>
-                                    <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
                                     <td class="text-center"> 
                                         {{ csrf_field() }} 
-                                        <a href="{{ url('user/'.$user->id) }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Voir le profil"> <i class="fa fa-eye"></i> 
+                                        <a href="javascript:void(0)" onclick="return Crm.edit({id: {{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
                                         </a>
-                                        <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
-                                        </a>
+                                        <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer le compte ?', 'Etes-vous sur de vouloir supprimer ce compte ?','Crm.delete', {id: {{$user->id}}}, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer"> <i class="fa fa-trash"></i> </a>
                                     </td>
                                 </tr>
                                 @endforeach
                             </table>
-                        </div>
-
-                        <div class="sendInvitationBtn mb40">
-                            <a onclick="return chmEntretien.entretiens()" class="btn btn-success"> <i class="fa fa-send"></i> Envoyer une invitation</a>
                         </div>
 
                         @include('partials.pagination')

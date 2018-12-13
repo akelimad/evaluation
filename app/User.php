@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -49,6 +50,11 @@ class User extends Authenticatable
     public function users()
     {
         return $this->hasMany('App\User', 'society_id');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo('App\User', 'society_id');
     }
 
     /**
@@ -100,5 +106,49 @@ class User extends Authenticatable
         }
         return null;
     }
+
+    public function getRoles()
+    {
+        $userRoles = [];
+        foreach (Auth::user()->roles as $key => $role) {
+            $userRoles[] = $role->name;
+        }
+        return $userRoles;
+    }
+
+
+    public function entretiensObjectifs()
+    {
+        return $this->hasMany('App\EntretienObjectif');
+    }
+
+    public static function logo($id)
+    {
+        $user = User::find($id);
+        if(!empty($user->society_id)){ // this user is not owner
+            $path = $user->owner->id .'/'. $user->owner->logo;
+        } else {
+            $path = $user->id .'/'. $user->logo;
+        }
+
+        $path = 'uploads/logos/'. $path;
+        if (file_exists( public_path($path) )) {
+            return asset($path);
+        } else {
+            return asset('img/logo.png');
+        }
+    }
+
+    public static function getUsers()
+    {
+        $user = Auth::user();
+        if(!empty($user->society_id)){ // this user is not owner
+            $users = $user->owner->users();
+        } else {
+            $users = $user->users();
+        }
+        return $users;
+    }
+
 
 }

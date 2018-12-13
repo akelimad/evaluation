@@ -31,9 +31,7 @@
                                     <div class="form-group">
                                         <label for="service"> Service </label>
                                         <select name="service" id="service" class="form-control">
-                                            @foreach(App\Setting::asList('society.services', false, true) as $key => $value)
-                                            <option value="{{ $key }}" {{ (isset($service) && $service == $key) ? 'selected':'' }}>{{ $value }}</option>
-                                            @endforeach
+                                            <option value=""></option>
                                         </select>
                                     </div>
                                 </div>
@@ -110,7 +108,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ App\Setting::asList('society.services', false, true)[$user->service] }}
+                                        service
                                     </td>
                                     <td> 
                                         @if($user->parent)

@@ -74,4 +74,7 @@ $(document).ready(function () {
 
   // Initialise filter form
   window.chmFilter.init()
+
+  // Initialise select2
+  $('select').select2()
 })

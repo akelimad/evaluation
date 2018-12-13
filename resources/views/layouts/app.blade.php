@@ -118,11 +118,7 @@
       <section class="sidebar">
           <div class="home-logo">
               <a href="{{url('/')}}">
-                @if(App\Setting::findOne('society.logo')->value != '')
-                <img src="{{ asset('logos/'.App\Setting::findOne('society.logo')->value) }}" alt="" class="img-responsive">
-                @else
-                <img src="{{ asset('img/logo.png') }}" alt="" class="img-responsive">
-                @endif
+                <img src="{{ App\User::logo(Auth::user()->id) }}" alt="" class="img-responsive">
               </a>
           </div>
           <!-- Sidebar user panel -->
@@ -157,7 +153,7 @@
                 <a href="{{ url('/') }}"><i class="fa fa-users"></i> <span>Mes collaborateurs</span></a>
               </li>
               @endrole
-              @role(["ADMIN"])
+              @role(["ADMIN", "RH"])
               <li class="{{ Request::is('users') ? 'active' : '' }}"><a href="{{ url('users') }}"><i class="fa fa-users"></i> Utilisateurs</a></li>
               @endrole
               @role(["ADMIN", "RH"]) 
@@ -282,7 +278,7 @@
   <script src="{{asset('js/sweetalert2.min.js')}}"></script>
   <script src="{{asset('js/script.js')}}?v={{ time() }}"></script>
   <script src="{{ App\Asset::path('app.js') }}"></script>
-@yield('javascript')
+  @yield('javascript')
 </body>
 </html>
 

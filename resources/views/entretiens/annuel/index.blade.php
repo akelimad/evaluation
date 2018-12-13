@@ -73,7 +73,7 @@
                                     <th>Date limite </th>
                                     <th>Nom & prénom </th>
                                     <th>Fonction</th>
-                                    <th>Type d'eval</th>
+                                    <th>Type d'évaluation</th>
                                     <th>Réf</th>
                                     <th>Mentor</th>
                                     <th>Fonction</th>
