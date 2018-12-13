@@ -14,15 +14,16 @@
                         </p>
 
                         <ul class="list-group list-group-unbordered">
-                            <li class="list-group-item"><b>Service: </b> 
+                            <li class="list-group-item"><b>Département : </b>
                                 <a class="">
                                 {{ $mentor->service ? App\Setting::asList('society.services', false, true)[$mentor->service] :'---' }}</a>
                             </li>
-                            <li class="list-group-item"><b>Téléphone fixe: </b> <a class="">{{ $mentor->fix ? $mentor->fix : '---' }}</a></li>
                             <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
                             <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
                         </ul>
+                        @role(["RH", "MENTOR", "COLLABORATEUR"])
                         <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
+                        @endrole
                     </div>
                 </div>
                 <!-- todo -->

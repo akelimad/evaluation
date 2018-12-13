@@ -70,16 +70,15 @@
                             <thead>
                                 <tr>
                                     <th> <input type="checkbox" id="checkAll" </th>
-                                    <th>Date limite </th>
-                                    <th>Nom & prénom </th>
-                                    <th>Fonction</th>
-                                    <th>Type d'évaluation</th>
                                     <th>Réf</th>
+                                    <th>Date limite</th>
+                                    <th>Collaborateur</th>
+                                    <th>Type d'évaluation</th>
                                     <th>Mentor</th>
-                                    <th>Fonction</th>
                                     <th>Coll.</th>
                                     <th>Mentor</th>
                                     <th>RH</th>
+                                    <th>Note</th>
                                     <th class="text-center"> Actions </th>
                                 </tr>
                             </thead>
@@ -94,6 +93,9 @@
                                             </div>
                                            @endif
                                         </td>
+                                        <td>
+                                            {{$row->entretienId}}
+                                        </td>
                                         <td class="text-blue">
                                             {{ Carbon\Carbon::parse($row->date_limit)->format('d/m/Y')}}
                                         </td>
@@ -101,14 +103,8 @@
                                             <b><a href="{{url('user/'.$row->userId)}}">{{ $row->name. ' '.$row->last_name  }}</a></b>
                                         </td>
                                         <td>
-                                            {{$row->function ? str_limit($row->function, $limit = 20, $end = '...') : '---'}}
-                                        </td>
-                                        <td>
                                             <a href="{{url('entretiens/'.$row->entretienId.'/u/'.$row->userId)}}">
                                                 {{ str_limit($row->titre, $limit = 20, $end = '...') }}</a>
-                                        </td>
-                                        <td>
-                                            {{$row->entretienId}}
                                         </td>
                                         <td>
                                             @if(App\User::getMentor($row->userId))
@@ -116,9 +112,6 @@
                                             @else
                                                 ---
                                             @endif
-                                        </td>
-                                        <td>
-                                            {{App\User::getMentor($row->userId) && App\User::getMentor($row->userId)->function ? str_limit(App\User::getMentor($row->userId)->function, $limit = 20) : '---'}}
                                         </td>
                                         <td class="text-center">
                                             <span class="label label-{{App\Entretien::answered($row->entretienId, $row->userId) == true ? 'success':'danger'}} empty"> </span>
@@ -128,6 +121,9 @@
                                         </td>
                                         <td class="text-center">
                                             <span class="label label-danger empty"> </span>
+                                        </td>
+                                        <td class="text-center">
+                                            0
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ url('entretiens/'.$row->entretienId.'/u/'.$row->userId.'/printPdf') }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a>

@@ -61,7 +61,7 @@ class QuestionController extends Controller
         }
 
         $url=url('surveys/'.$request->survey_id.'/groupes/'.$request->groupe_id.'/questions/'.$question->id);
-        $request->session()->flash('success', "La question à été ".$action." avec suucès. <a href='$url'>cliquer ici</a> pour la consulter");
+        $request->session()->flash('success', "La question à été ".$action." avec succès. <a href='$url'>cliquer ici</a> pour la consulter");
         if($question->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
             redirect('users');

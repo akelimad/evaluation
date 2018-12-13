@@ -43,9 +43,6 @@ class GroupeController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -68,6 +65,8 @@ class GroupeController extends Controller
         $url=url('surveys/'.$request->sid.'/groupes');
         $request->session()->flash('success', "Le type de questions a été ajouté avec suucès.");
         // $request->session()->flash('success', "La groupe à été ajouté avec suucès. <a href='{$url}'>cliquer ici pour voir la liste des groupe du questionnaire</a>");
+        $request->session()->flash('success', "Le type de questions a été ajouté avec succès.");
+        // $request->session()->flash('success', "La groupe à été ajouté avec succès. <a href='{$url}'>cliquer ici pour voir la liste des groupe du questionnaire</a>");
         if($groupe->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {

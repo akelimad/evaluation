@@ -8,15 +8,9 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#personels" data-toggle="tab">Informations personnelles</a></li>
                             <li><a href="#profesionnels" data-toggle="tab">Informations professionnelles</a></li>
-                            <li><a href="#settings" data-toggle="tab">Mes préférences</a></li>
                         </ul>
                         <div class="tab-content mb20">
                             <div class="active tab-pane" id="personels">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Société</label>
-                                    <div class="col-md-9">{{$user->society ? $user->society : '---'}}</div>
-                                    <div class="clearfix"></div>
-                                </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                     <!-- <label class="control-label">Photo</label> -->
@@ -44,11 +38,6 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Code postale</label>
-                                    <div class="col-md-9">{{ $user->zip_code ? $user->zip_code : '---' }}</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
                                     <label class="control-label col-md-3">Ville</label>
                                     <div class="col-md-9">{{ $user->city ? $user->city : '---' }}</div>
                                     <div class="clearfix"></div>
@@ -56,21 +45,6 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Téléphone mobile</label>
                                     <div class="col-md-9">{{ $user->tel ? $user->tel : '---' }}</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Téléphone fixe</label>
-                                    <div class="col-md-9">{{ $user->fix ? $user->fix : '---' }}</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">A propos de moi</label>
-                                    <div class="col-md-9">{{ $user->about ? $user->about : '---' }}</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Notification par email</label>
-                                    <div class="col-md-9"><span class="label label-success"> Oui</span></div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
@@ -90,32 +64,18 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Service</label>
+                                    <label class="control-label col-md-3">Département</label>
                                     <div class="col-md-9">
                                         {{ $user->service ? App\Setting::asList('society.services', false, true)[$user->service] :'---' }}
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="settings">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Afficher l'aide contextuelle</label>
-                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Recevoir les notifications par email</label>
-                                    <div class="col-md-9"><span class="label label-success pull-right">Oui</span></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Nombre de ligne par page</label>
-                                    <div class="col-md-9"><span class="label label-success pull-right">10</span></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
                         </div>
-                        <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{Auth::user()->id}} })" class="btn btn-primary"> <i class="glyphicon glyphicon-pencil"></i> Mettre à jour </a>
+                        <a href="{{ url()->previous() }}" class="btn btn-info"><i class="fa fa-long-arrow-left"></i> Retour</a>
+                        @if(Auth::user()->id == $user->id)
+                            <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{Auth::user()->id}} })" class="btn btn-primary"> <i class="glyphicon glyphicon-pencil"></i> Mettre à jour </a>
+                        @endif
                     </div>
                 </div>
             </div>

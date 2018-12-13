@@ -69,7 +69,7 @@
                         <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> Liste des utilisateurs <span class="badge">{{$results->total()}}</span></h3>
                         <div class="box-tools mb40">
                             <a onclick="return chmUser.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
-                            <a href="{{ url('users/import') }}" class="btn bg-maroon"><i class="fa fa-upload"></i> Importer</a>
+                            <a href="{{ url('users/import') }}" class="btn btn-success"><i class="fa fa-upload"></i> Importer</a>
                         </div>
                     </div>
                     @if(count($results)>0)
