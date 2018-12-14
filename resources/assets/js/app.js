@@ -31,7 +31,10 @@ import chmEntretienObjectif from './class/entretienObjectif'
 import chmEmail from './class/email'
 import chmEmailAction from './class/emailAction'
 import Setting from './class/setting'
+import Attachment from './class/Attachment'
 import Crm from './class/crm'
+import Fonction from './class/Fonction'
+import Department from './class/Department'
 
 // Store modules in window
 window.chmSite = chmSite
@@ -60,7 +63,10 @@ window.chmEntretienObjectif = chmEntretienObjectif
 window.chmEmail = chmEmail
 window.chmEmailAction = chmEmailAction
 window.Setting = Setting
+window.Attachment = Attachment
 window.Crm = Crm
+window.Fonction = Fonction
+window.Department = Department
 
 // Standart jQuery script
 import './custom'

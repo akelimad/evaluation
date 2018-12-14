@@ -7,6 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
 
+  public static $models = [
+    [
+      'label' => 'Départements',
+      'route' => 'config/setting/departments',
+      'icon'  => 'fa fa-long-arrow-right',
+      'model' => 'App\Department',
+      'active' => 'dep',
+    ],
+    [
+      'label' => 'Fonctions',
+      'route' => 'config/setting/functions',
+      'icon'  => 'fa fa-long-arrow-right',
+      'model' => 'App\Service',
+      'active' => 'func',
+    ]
+  ];
+
   /**
    * Get setting by name
    *

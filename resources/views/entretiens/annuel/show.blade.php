@@ -48,11 +48,6 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Société :</label>
-                                    <div class="col-md-9"> {{ $user->society ? $user->society : '---' }} </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
                                     <label class="control-label col-md-3">Adresse email :</label>
                                     <div class="col-md-9"> 
                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a> 
@@ -70,13 +65,8 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Service :</label>
+                                    <label class="control-label col-md-3">Département :</label>
                                     <div class="col-md-9"> {{ $user->service ? $user->service : '---' }} </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Salaire :</label>
-                                    <div class="col-md-9"> {{ $user->salary ? $user->salary : '---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

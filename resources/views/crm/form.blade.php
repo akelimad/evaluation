@@ -35,19 +35,18 @@
     <div class="form-group">
         <div class="col-md-6"> 
             <label for="photo" class="control-label">Logo</label>
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Parcourir <input type="file" name="logo" style="display: none;" accept="image/*">
+                    </span>
+                </label>
+                <input type="text" id="logo" class="form-control" readonly="">
+            </div>
             @if(isset($user->id) && $user->logo != '')
-                <div class="logo">
+                <div class="logo" style="margin-top: 10px;">
                     <a href="{{ App\User::logo($user->id) }}" target="_blank" class="btn btn-info">Télécharger</a>
-                    <bouton onclick="return chmModal.confirm('', 'Supprimer ?', 'Etes-vous sur de vouloir supprimer ?','Crm.delete', {id: {{$user->id}}}, {width: 450})" class="btn btn-danger">Supprimer</bouton>
-                </div>
-            @else
-                <div class="input-group">
-                    <label class="input-group-btn">
-                        <span class="btn btn-primary">
-                            Parcourir <input type="file" name="logo" style="display: none;" accept="image/*">
-                        </span>
-                    </label>
-                    <input type="text" id="logo" class="form-control" readonly="">
+                    <bouton onclick="return Crm.removeLogo({id: {{ $user->id }} })" class="btn btn-danger">Supprimer</bouton>
                 </div>
             @endif
         </div>

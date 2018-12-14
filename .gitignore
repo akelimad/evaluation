@@ -2,10 +2,10 @@
 /vendor
 /node_modules
 /public/storage
+/public/avatars
 
 Homestead.yaml
 Homestead.json
 .env
-/public/avatars
 .env
 .env.example

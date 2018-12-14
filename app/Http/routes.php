@@ -165,3 +165,14 @@ Route::get('crm/create', 'CrmController@form');
 Route::get('crm/{id}/edit', 'CrmController@form');
 Route::post('crm/store', 'CrmController@store');
 Route::delete('crm/{id}/delete', 'CrmController@delete');
+Route::delete('crm/logo/remove', 'CrmController@removeLogo');
+
+Route::get('config/setting/departments', 'DepartmentController@index');
+Route::get('department/form', 'DepartmentController@form');
+Route::post('department/store', 'DepartmentController@store');
+Route::delete('department/delete', 'DepartmentController@delete');
+
+Route::get('config/setting/functions', 'FonctionController@index');
+Route::get('function/form', 'FonctionController@form');
+Route::post('function/store', 'FonctionController@store');
+Route::delete('function/delete', 'FonctionController@delete');

@@ -94,5 +94,19 @@ class CrmController extends Controller
     $user->delete();
   }
 
+  public function uploadLogo(Request $request){
+    $user = User::find($request->id);
+    $user->logo = "";
+    $user->save();
+
+  }
+
+  public function removeLogo(Request $request){
+    $user = User::find($request->id);
+    $user->logo = "";
+    $user->save();
+
+  }
+
 
 }

@@ -91,7 +91,7 @@
             </div>
             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
              
-            <button type="submit" class="btn btn-success" id="submitAnswers" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}><i class="fa fa-check"></i> Valider vos réponses</button>
+            <button type="submit" class="btn btn-success" id="submitAnswers" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}><i class="fa fa-check"></i>Enregistrer</button>
             
             
         </form>

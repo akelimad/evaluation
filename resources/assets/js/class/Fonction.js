@@ -1,33 +1,17 @@
 import $ from 'jquery'
 
-export default class Crm {
+export default class Fonction {
 
-  static create () {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('crm/create')}, {
+  static form (id = null) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('function/form'), data: {id: id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: 'Crm.store'
+        callback: 'Fonction.store'
       },
       footer: {
-        label: 'Sauvegarder'
+        label: 'Enregistrer'
       }
     })
-  }
-
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('crm/' + params.id + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'Crm.store'
-      },
-      footer: {
-        label: 'Mettre à jour'
-      }
-    })
-  }
-
-  static show (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('crm/' + params.id)})
   }
 
   static store (event) {
@@ -42,7 +26,7 @@ export default class Crm {
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('crm/store'),
+      url: window.chmSite.url('function/store'),
       data: data,
       processData: false,
       contentType: false,
@@ -67,21 +51,14 @@ export default class Crm {
 
   static delete (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('crm/' + params.id + '/delete'), data: {'_token': token}}, {
+    var object = window.chmModal.show({
+      type: 'POST',
+      url: window.chmSite.url('function/delete'),
+      data: {'_token': token, '_method': 'DELETE', id: params.id}
+    }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')
-  }
-
-  static removeLogo (params) {
-    var token = $('input[name="_token"]').val()
-    $.ajax({
-      url: 'crm/logo/remove',
-      type: 'DELETE',
-      data: {'_token': token, id: params.id},
-      success: function (result) {
-        $('.logo').remove()
-      }})
   }
 
 }

@@ -48,7 +48,7 @@
             </div>
             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
             @if(App\Entretien::answered($e->id, Auth::user()->id) == false)
-            <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Valider vos réponses</button>
+            <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i>Enregistrer</button>
             @endif
         </form>
         @else

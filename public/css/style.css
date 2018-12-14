@@ -181,7 +181,7 @@ i{
     line-height: 26px;
     font-weight: bold;
     color: #67b9ea;
-    padding-left: 10px 
+    padding-left: 10px;
     text-transform: uppercase;
 }
 .card{
@@ -646,7 +646,7 @@ p.help-block{
 .disabled{
     pointer-events: none;
 }
-.carreersForm #addLine-wrap, .commentsForm #addLine-wrap, .subQuestions #addLine-wrap{
+.carreersForm #addLine-wrap, .commentsForm #addLine-wrap, .subQuestions #addLine-wrap, .commentsForm #addLine-wrap{
     counter-reset: carreer-counter;
 }
 .carreersForm span.badge::before, .commentsForm span.badge::before, .subQuestions span.badge::before{
@@ -688,4 +688,10 @@ p.help-block{
 }
 .treeview-menu{
     padding: 0;
+}
+.setting .list-group li.active>a{
+    color: white;
+}
+.setting .table>tbody>tr>td{
+    padding: 3px 6px;
 }

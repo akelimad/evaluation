@@ -99,6 +99,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Answer');
     }
 
+    public function departments()
+    {
+        return $this->hasMany('App\Department');
+    }
+
+    public function fonctions()
+    {
+        return $this->hasMany('App\Fonction');
+    }
+
     public static function hasMotif($eid, $uid){
         $hasMotif = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)->first();
         if( $hasMotif->motif ){
