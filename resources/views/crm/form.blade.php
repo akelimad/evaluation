@@ -45,8 +45,8 @@
             </div>
             @if(isset($user->id) && $user->logo != '')
                 <div class="logo" style="margin-top: 10px;">
-                    <a href="{{ App\User::logo($user->id) }}" target="_blank" class="btn btn-info">Télécharger</a>
-                    <bouton onclick="return Crm.removeLogo({id: {{ $user->id }} })" class="btn btn-danger">Supprimer</bouton>
+                    <a href="{{ App\User::logo($user->id) }}" target="_blank" class="btn btn-info btn-flat"><i class="fa fa-download"></i> Télécharger</a>
+                    <bouton onclick="return Crm.removeLogo({id: {{ $user->id }} })" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Supprimer</bouton>
                 </div>
             @endif
         </div>
