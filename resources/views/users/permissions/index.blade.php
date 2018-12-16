@@ -17,7 +17,7 @@
                                 <th>Nom</th>
                                 <th>Le nom d'affichage</th>
                                 <th>Description</th>
-                                <th>Action</th>
+                                <th>Actions</th>
                             </tr>
                             @foreach($permissions as $key => $permission)
                             <tr>

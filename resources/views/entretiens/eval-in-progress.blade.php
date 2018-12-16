@@ -11,38 +11,39 @@
                 @endif
                 <div class="box box-primary">
                     <div class="filter-box mb40">
-                        <h4 class="help-block">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right showFormBtn"> <i class="fa fa-chevron-down"></i></button></h4>
-                        <form action="{{ url('entretiens/filter') }}" class="criteresForm">
+                        <h4 class="help-block showFormBtn">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right"> <i class="fa fa-chevron-down"></i></button></h4>
+                        <form action="{{ url('entretiens/evaluations') }}" class="criteresForm" style="{{ isset($params) && count($params) > 1 ? 'display: block;':'' }}">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="datepicker"> Date limite </label>
-                                        <input type="text" name="d" id="datepicker" class="form-control" value="{{ isset($d) ? $d :'' }}" readonly="" data-date-format="dd-mm-yyyy">
+                                        <input type="text" name="dlimite" id="datepicker" class="form-control" value="{{ isset($dlimite) ? Carbon\Carbon::parse($dlimite)->format('d-m-Y') :'' }}" readonly="" data-date-format="dd-mm-yyyy">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="n"> Nom </label>
-                                        <input type="text" name="n" id="n" class="form-control" value="{{ isset($n) ? $n :'' }}">
+                                        <label for="uname"> Nom </label>
+                                        <input type="text" name="uname" id="uname" class="form-control" value="{{ isset($uname) ? $uname :'' }}">
                                     </div>
                                 </div>
                                 <div class=" col-md-3">
                                     <div class="form-group">
-                                        <label for="t"> Type d'évaluation </label>
-                                        <select name="t" id="t" class="form-control">
+                                        <label for="title"> Type d'évaluation </label>
+                                        <select name="title" id="title" class="form-control">
                                             <option value=""></option>
                                             @foreach($entretiens as $e)
-                                            <option value="{{ $e->id }}" {{ isset($t) && $t == $e->id ? 'selected':'' }}>{{ $e->titre }}</option>
+                                            <option value="{{ $e->id }}" {{ isset($title) && $title == $e->id ? 'selected':'' }}>{{ $e->titre }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class=" col-md-3">
                                     <div class="form-group">
-                                        <label for="f"> Fonction </label>
-                                        <select name="f" id="f" class="form-control">
-                                            @foreach(App\Setting::asList('society.functions', false, true) as $key => $value)
-                                            <option value="{{ $key }}" {{ (isset($f) && $f == $key) ? 'selected':'' }}>{{ $value }}</option>
+                                        <label for="function"> Fonction </label>
+                                        <select name="function" id="function" class="form-control">
+                                            <option value=""></option>
+                                            @foreach($fonctions as $func)
+                                                <option value="{{ $func->id }}" {{ (isset($function) && $function == $func->id) ? 'selected':'' }}>{{ $func->title }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -187,7 +188,7 @@
         // format: 'dd-mm-yyyy',
         language: 'fr'
     })
-    @if(isset($n))
+    @if(isset($uname))
         $(".showFormBtn i").toggleClass("fa-chevron-down fa-chevron-up")
         $(".criteresForm").fadeToggle()
     @endif

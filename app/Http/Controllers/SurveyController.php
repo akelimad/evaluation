@@ -12,7 +12,7 @@ class SurveyController extends Controller
 
     public function index()
     {
-        $surveys = Survey::paginate(10);
+        $surveys = Survey::getAll()->paginate(10);
         return view('surveys.index', compact('surveys'));
     }
 

@@ -10,13 +10,12 @@
                         <img class="profile-user-img img-responsive img-circle" src="{{ asset('img/avatar.png') }}" alt="User profile picture">
                         <h3 class="profile-username text-center">{{ $mentor->name }} {{ $mentor->last_name }} </h3>
                         <p class="text-muted text-center">
-                            {{ $mentor->function ? App\Setting::asList('society.functions', false, true)[$mentor->function] :'---' }}
+                            {{ (!empty($mentor->function)) ? App\Fonction::find($mentor->function)->title : '---' }}
                         </p>
 
                         <ul class="list-group list-group-unbordered">
                             <li class="list-group-item"><b>Département : </b>
-                                <a class="">
-                                {{ $mentor->service ? App\Setting::asList('society.services', false, true)[$mentor->service] :'---' }}</a>
+                                <a class="">{{ (!empty($mentor->service)) ? App\Department::find($mentor->service)->title : '---' }}</a>
                             </li>
                             <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
                             <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
@@ -36,7 +35,7 @@
                         <ul class="list-unstyled news">
                             <li> <i class="fa fa-bell-o"></i> <a href="#"> Lorem ipsum dolor sit. </a> <span class="help-block pull-right">13/02/2018</span></li>
                             <li> <i class="fa fa-bell-o"></i> <a href="#"> Lorem ipsum dolor sit. </a> <span class="help-block pull-right">13/02/2018</span></li>
-                            <li> <i class="fa fa-bell-o"></i> <a href="#"> Lorem ipsum dolor sit. </a> <span class="help-block pull-right">13/02/2018</span></li> 
+                            <li> <i class="fa fa-bell-o"></i> <a href="#"> Lorem ipsum dolor sit. </a> <span class="help-block pull-right">13/02/2018</span></li>
                         </ul>
                     </div>
                 </div>
@@ -49,7 +48,7 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#entretiens" data-toggle="tab"> Entretiens </a></li>
                             <!-- <li><a href="#objectifs" data-toggle="tab"> Objectifs  </a></li> -->
-                            <li><a href="#formations" data-toggle="tab"> Formations </a></li>
+                            {{--<li><a href="#formations" data-toggle="tab"> Formations </a></li>--}}
                         </ul>
                     </div>
                     <div class="portlet-body">
@@ -92,49 +91,49 @@
                                 </div>
                                 @else
                                     @include('partials.alerts.info', ['messages' => "Aucun entretien trouvé ... !!" ])
-                                @endif                               
+                                @endif
                             </div>
                             <!-- <div class="tab-pane" id="objectifs">
                                 <div class="box-body table-responsive no-padding">
                                     objectifs
                                 </div>
                             </div> -->
-                            <div class="tab-pane" id="formations">
-                                <div class="box-body table-responsive no-padding">
-                                    @if( count($formations)>0 )
-                                    <table class="table table-hover table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Entretien </th>
-                                                <th>Date</th>
-                                                <th>Exercice</th>
-                                                <th>Formation</th>
-                                                <th>Statut</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($formations as $formation)
-                                            <tr>
-                                                <td>{{ $formation->entretien->titre }}</td>
-                                                <td>{{ $formation->date }}</td>
-                                                <td>{{ $formation->exercice }}</td>
-                                                <td>{{ $formation->title }}</td>
-                                                <td>{{ $formation->title }}</td>
-                                                <td>
-                                                    @if($formation->status == 0) En attente 
-                                                    @elseif($formation->status == 1) Refusé 
-                                                    @elseif($formation->status == 2) Accepté 
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    @else
-                                        @include('partials.alerts.info', ['messages' => "Aucune formation trouvée ... !!" ])
-                                    @endif
-                                </div>
-                            </div>
+                            {{--<div class="tab-pane" id="formations">--}}
+                                {{--<div class="box-body table-responsive no-padding">--}}
+                                    {{--@if( count($formations)>0 )--}}
+                                    {{--<table class="table table-hover table-striped">--}}
+                                        {{--<thead>--}}
+                                            {{--<tr>--}}
+                                                {{--<th>Entretien </th>--}}
+                                                {{--<th>Date</th>--}}
+                                                {{--<th>Exercice</th>--}}
+                                                {{--<th>Formation</th>--}}
+                                                {{--<th>Statut</th>--}}
+                                            {{--</tr>--}}
+                                        {{--</thead>--}}
+                                        {{--<tbody>--}}
+                                            {{--@foreach($formations as $formation)--}}
+                                            {{--<tr>--}}
+                                                {{--<td>{{ $formation->entretien->titre }}</td>--}}
+                                                {{--<td>{{ $formation->date }}</td>--}}
+                                                {{--<td>{{ $formation->exercice }}</td>--}}
+                                                {{--<td>{{ $formation->title }}</td>--}}
+                                                {{--<td>{{ $formation->title }}</td>--}}
+                                                {{--<td>--}}
+                                                    {{--@if($formation->status == 0) En attente --}}
+                                                    {{--@elseif($formation->status == 1) Refusé --}}
+                                                    {{--@elseif($formation->status == 2) Accepté --}}
+                                                    {{--@endif--}}
+                                                {{--</td>--}}
+                                            {{--</tr>--}}
+                                            {{--@endforeach--}}
+                                        {{--</tbody>--}}
+                                    {{--</table>--}}
+                                    {{--@else--}}
+                                        {{--@include('partials.alerts.info', ['messages' => "Aucune formation trouvée ... !!" ])--}}
+                                    {{--@endif--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                         </div>
                     </div>
                 </div>
@@ -145,7 +144,7 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#aa" data-toggle="tab"> Entretiens </a></li>
                             <!-- <li><a href="#bb" data-toggle="tab"> Objectifs  </a></li> -->
-                            <li><a href="#cc" data-toggle="tab"> Formations </a></li>                            
+                            {{--<li><a href="#cc" data-toggle="tab"> Formations </a></li>                            --}}
                         </ul>
                     </div>
                     <div class="portlet-body">
@@ -171,11 +170,11 @@
                                                 <td>
                                                     <a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>
                                                 </td>
-                                                <td> 
-                                                    {{ $coll->function ? $coll->function : '---'}} 
+                                                <td>
+                                                    {{ $coll->function ? $coll->function : '---'}}
                                                 </td>
-                                                <td> 
-                                                    <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a> 
+                                                <td>
+                                                    <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($en->id, $coll->id) ? 'Rempli par '.$coll->name :'Pas encore rempli par '.$coll->name }}"> </span>
@@ -201,40 +200,40 @@
                                     objetifs
                                 </div>
                             </div> -->
-                            <div class="tab-pane" id="cc">
-                                <div class="box-body table-responsive no-padding">
-                                    <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Collaborateur </th>
-                                                <th>Entretien </th>
-                                                <th>Date</th>
-                                                <th>Exercice</th>
-                                                <th>Formation</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($collaborateurs as $coll)
-                                                @foreach($coll->entretiens as $en)
-                                                    @foreach($coll->formations as $formation)
-                                                    <tr>
-                                                        <td>
-                                                            <a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>
-                                                        </td>
-                                                        <td>{{ $en->titre }}</td>
-                                                        <td>{{ Carbon\Carbon::parse($formation->date)->format('d/m/Y')}}</td>
-                                                        <td>{{ $formation->exercice }}</td>
-                                                        <td>{{ $formation->title }}</td>
-                                                    </tr>
-                                                    @endforeach
-                                                @endforeach
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                </div>
-                            </div>
+                            {{--<div class="tab-pane" id="cc">--}}
+                                {{--<div class="box-body table-responsive no-padding">--}}
+                                    {{--<div class="box-body table-responsive no-padding">--}}
+                                    {{--<table class="table table-hover table-striped">--}}
+                                        {{--<thead>--}}
+                                            {{--<tr>--}}
+                                                {{--<th>Collaborateur </th>--}}
+                                                {{--<th>Entretien </th>--}}
+                                                {{--<th>Date</th>--}}
+                                                {{--<th>Exercice</th>--}}
+                                                {{--<th>Formation</th>--}}
+                                            {{--</tr>--}}
+                                        {{--</thead>--}}
+                                        {{--<tbody>--}}
+                                            {{--@foreach($collaborateurs as $coll)--}}
+                                                {{--@foreach($coll->entretiens as $en)--}}
+                                                    {{--@foreach($coll->formations as $formation)--}}
+                                                    {{--<tr>--}}
+                                                        {{--<td>--}}
+                                                            {{--<a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>--}}
+                                                        {{--</td>--}}
+                                                        {{--<td>{{ $en->titre }}</td>--}}
+                                                        {{--<td>{{ Carbon\Carbon::parse($formation->date)->format('d/m/Y')}}</td>--}}
+                                                        {{--<td>{{ $formation->exercice }}</td>--}}
+                                                        {{--<td>{{ $formation->title }}</td>--}}
+                                                    {{--</tr>--}}
+                                                    {{--@endforeach--}}
+                                                {{--@endforeach--}}
+                                            {{--@endforeach--}}
+                                        {{--</tbody>--}}
+                                    {{--</table>--}}
+                                {{--</div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                         </div>
                     </div>
                 </div>
@@ -244,4 +243,3 @@
         </div>
     </section>
 @endsection
-  

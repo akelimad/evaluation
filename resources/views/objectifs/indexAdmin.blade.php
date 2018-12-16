@@ -17,7 +17,7 @@
                                     <th style="width: 25%">section</th>
                                     <th style="width: 55%">Titre</th>
                                     <th style="width: 10%">Ponderation</th>
-                                    <th style="width: 10%" class="text-center">Action</th>
+                                    <th style="width: 10%" class="text-center">Actions</th>
                                 </tr>
                                 @foreach($objectifs as $key => $objectif)
                                     @if( count($objectif->children)>0 )

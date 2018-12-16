@@ -18,7 +18,7 @@
                                                 <th>Prime</th>
                                                 <th>Commentaire</th>
                                                 @if($user->id != Auth::user()->id)
-                                                <th class="">Action</th>
+                                                <th class="">Actions</th>
                                                 @endif
                                             </tr>
                                         </thead>

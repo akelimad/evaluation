@@ -19,7 +19,7 @@
                                     <th>Famille</th>
                                     <th>Catégorie</th>
                                     <th>Compétence</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($interviewSkills as $key => $entretien)
                                     @if( count($entretien->skills)>0 )

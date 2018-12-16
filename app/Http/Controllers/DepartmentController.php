@@ -15,7 +15,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Auth::user()->departments()->paginate(9);
+        $departments = Department::getAll()->paginate(9);
         return view('departments.index', [
             'results' => $departments,
             'active' => true,

@@ -39,7 +39,7 @@ class CrmController extends Controller
   {
     $id = $request->input('id', false);
     $rules = [
-      'logo'    => 'max:500',
+      'logo'      => 'required|max:500',
       'name'      => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'first_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
@@ -103,10 +103,18 @@ class CrmController extends Controller
 
   public function removeLogo(Request $request){
     $user = User::find($request->id);
+    $logo = $user->logo;
     $user->logo = "";
     $user->save();
-
+    $this->UnlinkImage(public_path('uploads/logos/'.$user->id.'/'.$logo));
   }
+
+    public function UnlinkImage($filepath)
+    {
+      if (file_exists($filepath)) {
+        unlink($filepath);
+      }
+    }
 
 
 }

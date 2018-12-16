@@ -18,8 +18,8 @@
                 @endif
                 <div class="box box-primary">
                     <div class="filter-box mb40">
-                        <h4 class="help-block">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right showFormBtn"> <i class="fa fa-chevron-down"></i></button></h4>
-                        <form action="{{ url('users/filter') }}" class="criteresForm">
+                        <h4 class="help-block showFormBtn">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right"> <i class="fa fa-chevron-down"></i></button></h4>
+                        <form action="{{ url('users') }}" class="criteresForm" style="{{ isset($params) && count($params) > 1 ? 'display: block;':'' }}">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -29,9 +29,12 @@
                                 </div>
                                 <div class=" col-md-3">
                                     <div class="form-group">
-                                        <label for="service"> Service </label>
-                                        <select name="service" id="service" class="form-control">
+                                        <label for="department"> Département</label>
+                                        <select name="department" id="dep" class="form-control">
                                             <option value=""></option>
+                                            @foreach($departments as $dep)
+                                                <option value="{{ $dep->id }}" {{ (isset($department) && $department == $dep->id) ? 'selected':'' }}>{{ $dep->title }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -39,8 +42,9 @@
                                     <div class="form-group">
                                         <label for="function"> Fonction </label>
                                         <select name="function" id="function" class="form-control">
-                                            @foreach(App\Setting::asList('society.functions', false, true) as $key => $value)
-                                            <option value="{{ $key }}" {{ (isset($function) && $function == $key) ? 'selected':'' }}>{{ $value }}</option>
+                                            <option value=""></option>
+                                            @foreach($fonctions as $func)
+                                                <option value="{{ $func->id }}" {{ (isset($function) && $function == $func->id) ? 'selected':'' }}>{{ $func->title }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -50,8 +54,8 @@
                                         <label for="role"> Rôle </label>
                                         <select name="role" id="role" class="form-control">
                                             <option value=""> === Choisissez === </option>
-                                            @foreach($roles as $role)
-                                            <option value="{{$role->id}}" {{ isset($roleSelected) && $roleSelected == $role->id ? 'selected' :'' }} > {{$role->name}} </option>
+                                            @foreach($roles as $r)
+                                            <option value="{{$r->id}}" {{ isset($role) && $role == $r->id ? 'selected' :'' }} > {{$r->name}} </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -68,7 +72,7 @@
                     <div class="box-header">
                         <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> Liste des utilisateurs <span class="badge">{{$results->total()}}</span></h3>
                         <div class="box-tools mb40">
-                            <a onclick="return chmUser.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
+                            <a onclick="return chmUser.form({})" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter </a>
                             <a href="{{ url('users/import') }}" class="btn btn-success"><i class="fa fa-upload"></i> Importer</a>
                         </div>
                     </div>
@@ -81,12 +85,11 @@
                                     </th>
                                     <th>Nom complet</th>
                                     <th>Email</th>
-                                    <th>Société</th>
                                     <th>Rôle</th>
-                                    <th>Service</th>
+                                    <th>Département</th>
                                     <th>Mentor</th>
                                     <th>Créé le</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($results as $key => $user)
                                 <tr>
@@ -97,7 +100,6 @@
                                     </td>
                                     <td> <a href="{{url('user/'.$user->id)}}">{{ $user->name." ".$user->last_name }}</a> </td>
                                     <td> {{ $user->email }} </td>
-                                    <td> {{ $user->society ? $user->society : '---' }} </td>
                                     <td> 
                                         @if(count($user->roles)>0) 
                                             @foreach($user->roles as $role)
@@ -108,7 +110,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        service
+                                        {{ $user->service ? App\Department::find($user->service)->title : '---' }}
                                     </td>
                                     <td> 
                                         @if($user->parent)
@@ -122,7 +124,7 @@
                                         {{ csrf_field() }} 
                                         <a href="{{ url('user/'.$user->id) }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Voir le profil"> <i class="fa fa-eye"></i> 
                                         </a>
-                                        <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
+                                        <a href="javascript:void(0)" onclick="return chmUser.form({{{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                         @if($user->email == env('SYS_ADMIN_EMAIL'))
                                         <a href="javascript:void(0)" class="btn-danger icon-fill disabled" data-toggle="tooltip" title="System admin ne peut pas être supprimé"> <i class="fa fa-trash" ></i> </a>

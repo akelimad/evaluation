@@ -13,9 +13,23 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <label for="email" class="control-label">Email <span class="asterisk">*</span></label>
             <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com" required="" value="{{ isset($user) ? $user->email : ''  }}">
+        </div>
+        <div class="col-md-6">
+            <label for="photo" class="control-label">Photo </label>
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Parcourir <input type="file" name="avatar" style="display: none;" accept="image/*">
+                    </span>
+                </label>
+                <input type="text" id="avatar" class="form-control" readonly="">
+            </div>
+            @if(isset($user))
+                <img src="{{ asset('avatars/'.$user->avatar) }}" alt="" width="100" height="100">
+            @endif
         </div>
     </div>
     <div class="form-group">
@@ -50,38 +64,17 @@
     </div>
     <div class="form-group">
         <div class="col-md-6">
-            <label for="function" class="control-label">Fonction </label>
+            <label for="function" class="control-label">Fonction</label>
             <select name="function" id="function" class="form-control">
-                @foreach($functions as $key => $value)
-                <option value="{{ $key }}" {{ (isset($user->function) && $user->function == $key) ? 'selected':'' }}>{{ $value }}</option>
+                @foreach($fonctions as $func)
+                <option value="{{ $func->id }}" {{ (isset($user->function) && $user->function == $func->id) ? 'selected':'' }}>{{ $func->title }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="col-md-6"> 
+        <div class="col-md-6">
             <label for="service" class="control-label">Département</label>
-            <select name="service" id="service" class="form-control">
-                @foreach($services as $key => $value)
-                <option value="{{ $key }}" {{ (isset($user->service) && $user->service == $key) ? 'selected':'' }}>{{ $value }}</option>
-                @endforeach
-            </select>
+            c
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-6"> 
-            <label for="photo" class="control-label">Photo </label>
-            <div class="input-group">
-                <label class="input-group-btn">
-                    <span class="btn btn-primary">
-                        Parcourir <input type="file" name="avatar" style="display: none;" accept="image/*">
-                    </span>
-                </label>
-                <input type="text" id="avatar" class="form-control" readonly="">
-            </div>
-            @if(isset($user))
-            <img src="{{ asset('avatars/'.$user->avatar) }}" alt="" width="100" height="100">
-            @endif
-        </div>
-        <div class="clearfix"></div>
     </div>
     <div class="form-group">
         <div class="col-md-6">

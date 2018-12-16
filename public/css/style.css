@@ -695,3 +695,7 @@ p.help-block{
 .setting .table>tbody>tr>td{
     padding: 3px 6px;
 }
+.showFormBtn{
+    display: block;
+    cursor: pointer;
+}

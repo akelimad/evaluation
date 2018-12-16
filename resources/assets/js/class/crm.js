@@ -74,14 +74,17 @@ export default class Crm {
   }
 
   static removeLogo (params) {
-    var token = $('input[name="_token"]').val()
-    $.ajax({
-      url: 'crm/logo/remove',
-      type: 'DELETE',
-      data: {'_token': token, id: params.id},
-      success: function (result) {
-        $('.logo').remove()
-      }})
+    let token = $('input[name="_token"]').val()
+    if (window.confirm('etes vous sure ?')) {
+      $.ajax({
+        url: 'crm/logo/remove',
+        type: 'DELETE',
+        data: {'_token': token, id: params.id},
+        success: function (result) {
+          $('.logo').remove()
+        }
+      })
+    }
   }
 
 }

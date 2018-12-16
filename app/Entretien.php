@@ -75,6 +75,22 @@ class Entretien extends Model
         return $this->hasMany('App\Comment');
     }
 
+    public function user()
+    {
+      return $this->belongsTo('App\User');
+    }
+
+    public static function getAll()
+    {
+      $user = \Auth::user();
+      if(!empty($user->society_id)){ // this user is not owner
+        $entretiens = $user->owner->getEntretiens();
+      } else {
+        $entretiens = $user->getEntretiens();
+      }
+      return $entretiens;
+    }
+
     public static function existInterview($start, $end){
         $existInterview = Entretien::where(function ($query) use ($start, $end) {
             $query->where(function ($q) use ($start, $end) {

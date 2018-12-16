@@ -27,7 +27,7 @@
                                     <th>Id</th>
                                     <th>Description</th>
                                     <th>Valeur</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($settings as $key => $setting)
                                 <tr>

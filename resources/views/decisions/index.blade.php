@@ -22,7 +22,7 @@
                                             <tr>  
                                                 <th>Créée le </th>
                                                 <th>Décision</th>
-                                                <th class="">Action</th>
+                                                <th class="">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>

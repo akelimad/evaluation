@@ -19,9 +19,7 @@ Route::get('/dashboard', 'HomeController@dashboard');
 
 Route::get('profile', 'UserController@profile');
 Route::get('users', 'UserController@indexUsers');
-Route::get('users/filter', 'UserController@filterUsers');
-Route::get('user/create', 'UserController@createUser');
-Route::get('user/{id}/edit', 'UserController@editUser');
+Route::get('user/form', 'UserController@formUser');
 Route::post('user/store', 'UserController@storeUser');
 Route::get('user/{id}', 'UserController@show');
 Route::delete('user/{id}/delete', 'UserController@deleteUser');
@@ -39,7 +37,7 @@ Route::get('permission/create', 'UserController@createPermission');
 Route::post('permission/store', 'UserController@storePermission');
 Route::get('permission/{id}/edit', 'UserController@editPermission');
 
-Route::get('entretiens', 'EntretienController@index'); //index
+//Route::get('entretiens', 'EntretienController@index'); //index
 Route::get('entretiens/index', 'EntretienController@indexEntretien'); //index
 Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretienEvals'); 
 Route::get('entretiens/list', 'EntretienController@entretiensList'); 
@@ -48,7 +46,7 @@ Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMo
 Route::get('entretiens/filter', 'EntretienController@filterEntretiens');
 Route::get('entretiens/calendar', 'EntretienController@calendar');
 
-Route::get('entretiens/{type}/create', 'EntretienController@create');
+Route::get('entretiens/form', 'EntretienController@form');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
 Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');

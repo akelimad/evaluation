@@ -19,26 +19,14 @@ export default class chmEntretien {
     })
   }
 
-  static create (type) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + type + '/create')}, {
+  static form (id = null) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/form'), data: {id: id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmEntretien.store'
       },
       footer: {
         label: 'Sauvegarder'
-      }
-    })
-  }
-
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + params.e_id + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmEntretien.store'
-      },
-      footer: {
-        label: 'Mettre à jour'
       }
     })
   }

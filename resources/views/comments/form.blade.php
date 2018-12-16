@@ -6,11 +6,11 @@
     {{ csrf_field() }}
     <div id="addLine-wrap">
         <div class="form-group" >
-            <div class="col-md-11">
-                <label class="control-label">Commentaire : <span class="badge"> </span></label>
-                <textarea class="form-control" name="comments[0]" required="required" style="height: 36px;min-height: 0">{{ $c->userComment or '' }}</textarea>
+            <div class="col-md-12">
+                <label class="control-label">Commentaire : <!-- <span class="badge"> </span> --> </label>
+                <textarea class="form-control" name="comments[0]" required="required" style="height: 200px;min-height: 0">{{ $c->userComment or '' }}</textarea>
             </div>
-            @if(!isset($c->id))
+            @if(1 == 2)
             <div class="col-md-1">
                 <label class="control-label"> &nbsp; </label>
                 <button type="button" class="btn btn-info addLine pull-right"><i class="fa fa-plus"></i></button>

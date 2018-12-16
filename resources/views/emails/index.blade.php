@@ -19,7 +19,7 @@
                                     <th style="width: 10%">Nom</th>
                                     <th style="width: 30%">Object</th>
                                     <th style="width: 50%">Message</th>
-                                    <th style="width: 10%" class="text-center">Action</th>
+                                    <th style="width: 10%" class="text-center">Actions</th>
                                 </tr>
                                 @foreach($emails as $key => $email)
                                 <tr>
@@ -59,7 +59,7 @@
                                     <th style="width: 40%">Nom</th>
                                     <th style="width: 10%">type</th>
                                     <th style="width: 30%">email template</th>
-                                    <th style="width: 10%" class="text-center">Action</th>
+                                    <th style="width: 10%" class="text-center">Actions</th>
                                 </tr>
                                 @foreach($emailActions as $action)
                                 <form action="{{ url('emails/actions/'.$action->id.'/attach') }}" method="post">

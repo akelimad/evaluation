@@ -24,7 +24,7 @@
                                                     <th>Formation demandée</th>
                                                     <th>Etat</th>
                                                     <th>Réalisé</th>
-                                                    <th class="text-center">Action</th>
+                                                    <th class="text-center">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

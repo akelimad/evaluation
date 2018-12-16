@@ -59,14 +59,14 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fonction</label>
                                     <div class="col-md-9">
-                                        {{ $user->function ? App\Setting::asList('society.functions', false, true)[$user->function] :'---' }}
+                                        {{ $user->function ? App\Fonction::find($user->function)->title : '---' }}
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Département</label>
                                     <div class="col-md-9">
-                                        {{ $user->service ? App\Setting::asList('society.services', false, true)[$user->service] :'---' }}
+                                        {{ $user->service ? App\Department::find($user->service)->title : '---' }}
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
@@ -74,7 +74,7 @@
                         </div>
                         <a href="{{ url()->previous() }}" class="btn btn-info"><i class="fa fa-long-arrow-left"></i> Retour</a>
                         @if(Auth::user()->id == $user->id)
-                            <a href="javascript:void(0)" onclick="return chmUser.edit({id: {{Auth::user()->id}} })" class="btn btn-primary"> <i class="glyphicon glyphicon-pencil"></i> Mettre à jour </a>
+                            <a href="javascript:void(0)" onclick="return chmUser.form({{{ $user->id }}})" class="btn btn-primary"> <i class="glyphicon glyphicon-pencil"></i> Mettre à jour </a>
                         @endif
                     </div>
                 </div>
@@ -82,4 +82,3 @@
         </div>
     </section>
 @endsection
-  

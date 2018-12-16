@@ -19,7 +19,7 @@
                                                 <th style="width: 10%">Date création</th>
                                                 <th style="width: 35%">Carrière</th>
                                                 <th style="width: 35%">Commentaire du mentor</th>
-                                                <th style="width: 10%">Action</th>
+                                                <th style="width: 10%">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>

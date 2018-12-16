@@ -34,7 +34,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-6"> 
-            <label for="photo" class="control-label">Logo</label>
+            <label for="photo" class="control-label">Logo<span class="asterisk">*</span></label>
             <div class="input-group">
                 <label class="input-group-btn">
                     <span class="btn btn-primary">
@@ -43,10 +43,10 @@
                 </label>
                 <input type="text" id="logo" class="form-control" readonly="">
             </div>
-            @if(isset($user->id) && $user->logo != '')
+            @if(isset($user->id) && $user->logo != '' && App\User::logo($user->id) != '')
                 <div class="logo" style="margin-top: 10px;">
-                    <a href="{{ App\User::logo($user->id) }}" target="_blank" class="btn btn-info btn-flat"><i class="fa fa-download"></i> Télécharger</a>
-                    <bouton onclick="return Crm.removeLogo({id: {{ $user->id }} })" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Supprimer</bouton>
+                    <a href="{{ App\User::logo($user->id) }}" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fa fa-download"></i> Télécharger</a>
+                    <bouton onclick="return Crm.removeLogo({id: {{ $user->id }} })" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash"></i> Supprimer</bouton>
                 </div>
             @endif
         </div>

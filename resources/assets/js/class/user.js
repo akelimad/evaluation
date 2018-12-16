@@ -2,26 +2,14 @@ import $ from 'jquery'
 
 export default class chmUser {
 
-  static create () {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/create')}, {
+  static form (id = null) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/form'), data: {id: id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmUser.store'
       },
       footer: {
         label: 'Sauvegarder'
-      }
-    })
-  }
-
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/' + params.id + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmUser.store'
-      },
-      footer: {
-        label: 'Mettre à jour'
       }
     })
   }

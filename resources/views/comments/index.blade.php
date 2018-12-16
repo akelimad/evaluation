@@ -19,7 +19,7 @@
                                                 <th style="width: 10%">Date</th>
                                                 <th style="width: 35%">Collaborateur</th>
                                                 <th style="width: 35%">Mentor</th>
-                                                <th style="width: 10%">Action</th>
+                                                <th style="width: 10%">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -59,7 +59,7 @@
                                 @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                             @endif
                             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-                            @if($user->id == Auth::user()->id)
+                            @if($user->id == Auth::user()->id && count($comments) < 1)
                             <a onclick="return chmComment.create({eid: {{$e->id}}, uid:{{$user->id}} })" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un commentaire</a>
                             @endif
                         </div>

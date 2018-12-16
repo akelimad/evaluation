@@ -18,7 +18,7 @@
                                 <th>Nom</th>
                                 <th>Le nom d'affichage</th>
                                 <th>Description</th>
-                                <th class="text-center">Action</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                             @foreach($roles as $key => $role)
                             <tr>

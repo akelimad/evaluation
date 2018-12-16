@@ -30,7 +30,7 @@
                                                 <th>Titre </th>
                                                 <th>Créé le</th>
                                                 <th>Fichier</th>
-                                                <th class="">Action</th>
+                                                <th class="">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>

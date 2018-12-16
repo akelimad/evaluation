@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-1">
+    <div class="col-md-1" style="width: 110px">
         <form> 
             <select name="per_page" id="per_page_select" class="form-control">
                 <option value="5" {{ (isset($selected) && $selected == 5 ? 'selected':'') }}>5</option>

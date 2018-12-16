@@ -17,7 +17,7 @@
                                     <th>Id</th>
                                     <th>Titre</th>
                                     <th>Description</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($objectifs as $key => $objectif)
                                 <tr>

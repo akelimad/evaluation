@@ -82,11 +82,10 @@
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="{{ Auth::user()->avatar ? asset('avatars/'.Auth::user()->avatar) : asset('img/avatar.png') }}" class="img-circle" alt="User Image">
-
                                 <p>
                                     {{ Auth::user()->name." ".Auth::user()->last_name }}
                                     @if( Auth::user()->email != "pca@pca.ma")
-                                        <small> {{ Auth::user()->function ? App\Setting::asList('society.functions', false, true)[Auth::user()->function] :'---' }} </small>
+                                        <small>{{ (!empty(Auth::user()->function)) ? App\Fonction::find(Auth::user()->function)->title : '---' }}</small>
                                     @endif
                                 </p>
                             </li>
@@ -96,7 +95,7 @@
                                     <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> Profil</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="{{url('/logout')}}" class="btn btn-info">Déconnexion <i class="fa fa-sign-out"></i></a>
+                                    <a href="{{url('/logout')}}" class="btn btn-info"><i class="fa fa-sign-out"></i> Déconnexion</a>
                                 </div>
                             </li>
                         </ul>
@@ -148,9 +147,9 @@
                     <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
                 </li>
                 @endrole
-                @role(["RH", "MENTOR"])
+                @role(["RH", "MENTOR", "COLLABORATEUR"])
                 <li class="{{ Request::is('/') ? 'active' : '' }}">
-                    <a href="{{ url('/') }}"><i class="fa fa-users"></i> <span>Mes collaborateurs</span></a>
+                    <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>Mes entretiens</span></a>
                 </li>
                 @endrole
                 @role(["ADMIN", "RH"])
