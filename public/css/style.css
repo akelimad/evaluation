@@ -122,7 +122,7 @@ i{
     list-style-type: none;
 }
 .login-logo img{
-    max-width: 50%;
+    max-width: 100%;
     margin: auto;
 }
 .content{
@@ -698,4 +698,8 @@ p.help-block{
 .showFormBtn{
     display: block;
     cursor: pointer;
+}
+.user-comment {
+    border: 1px solid #ded9d9;
+    padding: 5px;
 }

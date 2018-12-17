@@ -5,7 +5,7 @@
         <form action="{{url('answers/store')}}" method="post" class="surveyForm">
             <input type="hidden" name="entretien_id" value="{{$e->id}}">
             <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
-            <input type="hidden" name="mentor_id" value="NULL">
+            <input type="hidden" name="mentor_id" value="{{ Auth::user()->parent->id }}">
             {{ csrf_field() }}
             <div class="panel-group">
                 @foreach($groupes as $g)
@@ -15,13 +15,14 @@
                         <div class="panel-body">
                         @forelse($g->questions as $q)
                             <div class="form-group">
+                                <input type="hidden" name="answers[{{$q->id}}][]" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->id : '' }}">
                                 @if($q->parent == null)
                                     <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                                 @endif
                                 @if($q->type == 'text')
-                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" required="">
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>
                                 @elseif($q->type == 'textarea')
-                                <textarea name="answers[{{$q->id}}][]" class="form-control" required="">{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</textarea>
+                                <textarea name="answers[{{$q->id}}][]" class="form-control" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</textarea>
                                 @elseif($q->type == "checkbox")
                                     <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                     @foreach($q->children as $child)
@@ -46,9 +47,9 @@
                     @endif
                 @endforeach
             </div>
-            <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-            @if(App\Entretien::answered($e->id, Auth::user()->id) == false)
-            <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i>Enregistrer</button>
+            <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
+            @if(!App\Entretien::answered($e->id, Auth::user()->id))
+            <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Enregistrer</button>
             @endif
         </form>
         @else

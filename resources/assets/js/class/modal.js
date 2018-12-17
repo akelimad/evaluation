@@ -101,7 +101,11 @@ export default class chmModal {
     modal.find('.modal-body').html(message)
 
     // add footer actions
-    var footer = '<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" aria-hidden="true">Annuler</button><button onclick="return ' + action + '" class="btn btn-danger btn-sm pull-right">Supprimer</button>'
+    var btnlabel = 'Supprimer'
+    if (params.btnlabel != null && params.btnlabel !== '') {
+      btnlabel = params.btnlabel
+    }
+    var footer = '<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" aria-hidden="true">Annuler</button><button onclick="return ' + action + '" class="btn btn-danger btn-sm pull-right">' + btnlabel + '</button>'
 
     if (modal.find('.panel-footer').length === 0) {
       modal.find('.modal-content').append('<div class="panel-footer">' + footer + '</div>')

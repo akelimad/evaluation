@@ -123,4 +123,17 @@ export default class chmEntretien {
     object.modal.attr('chm-modal-action', 'reload')
   }
 
+  static submission (params) {
+    $('.btn-danger').css('color', 'red !important')
+    var token = $('input[name="_token"]').val()
+    var object = window.chmModal.show({
+      type: 'POST',
+      url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.user + '/submit'),
+      data: {'_token': token, '_method': 'PUT'}
+    }, {
+      message: '<i class="fa fa-trash"></i>&nbsp;Soumission en cours...'
+    })
+    object.modal.attr('chm-modal-action', 'reload')
+  }
+
 }

@@ -40,19 +40,23 @@ class AnswerController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->mentor_id);
-        foreach ($request->answers as $key => $answers) {
-            foreach ($answers as $answer) {
+//        dd($request->all());
+        foreach ($request->answers as $key => $answer) {
+            if(isset($answer[0]) && is_numeric($answer[0])) {
+                $a = Answer::find($answer[0]);
+            } else {
                 $a = new Answer();
-                $a->answer      = $answer;
-                $a->question_id = $key;
-                $a->user_id = isset($request->user_id) ? $request->user_id : NULL ;
-                if( $request->mentor_id != "NULL" ){
-                    $a->mentor_id = $request->mentor_id ;
-                }
-                $a->entretien_id = $request->entretien_id;
-                $a->save();
             }
+            $a->question_id = $key;
+            if(!empty($request->mentor_id) && isset($request->is_mentor)){
+                $a->mentor_answer = isset($answer[1]) ? $answer[1] : '';
+            } else {
+                $a->answer = isset($answer[1]) ? $answer[1] : '';
+                $a->user_id = isset($request->user_id) ? $request->user_id : '' ;
+            }
+            $a->mentor_id = $request->mentor_id ;
+            $a->entretien_id = $request->entretien_id;
+            $a->save();
         }
         // $token = Token::where('entretien_id', $request->entretien_id)->where('user_id', $request->user_id)->first();
         // if($token){

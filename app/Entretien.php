@@ -11,23 +11,25 @@ class Entretien extends Model
 
     public static function answered($eid, $uid)
     {
-        $answer = Answer::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', NULL)->first();
-        if($answer) {
+        $eu = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)
+            ->where('user_submitted', 1)
+            ->first();
+        if($eu) {
             return true;
-        }else{
+        } else {
             return false;
         }
-
     }
-    public static function answeredMentor($eid, $uid, $mentor_id)
+    public static function answeredMentor($eid, $uid, $mid)
     {
-        $answer = Answer::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', $mentor_id)->first();
-        if($answer) {
+        $eu = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', $mid)
+            ->where('mentor_submitted', 1)
+            ->first();
+        if($eu) {
             return true;
-        }else{
+        } else {
             return false;
         }
-
     }
     
     public function users()

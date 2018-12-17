@@ -58,7 +58,7 @@
                                                 @endforeach
                                             </select>
                                             @endif
-                                            @if($evaluation->title == "Objectifs")
+                                            @if($evaluation->title == "Objectifs" && isset($objectifs))
                                             <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez l'objectif qui sera affiché pour cette evaluation" data-toggle="tooltip">
                                                 <option value="">== Choisissez ==</option>
                                                 @foreach($objectifs as $obj)

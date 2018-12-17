@@ -43,7 +43,7 @@ Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretie
 Route::get('entretiens/list', 'EntretienController@entretiensList'); 
 Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens
 Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif'); //mes entretiens
-Route::get('entretiens/filter', 'EntretienController@filterEntretiens');
+//Route::get('entretiens/filter', 'EntretienController@filterEntretiens');
 Route::get('entretiens/calendar', 'EntretienController@calendar');
 
 Route::get('entretiens/form', 'EntretienController@form');
@@ -116,6 +116,7 @@ Route::get('entretiens/{eid}/u/{uid}/carrieres/create', 'CarreerController@creat
 Route::post('entretiens/{eid}/u/{uid}/carrieres/store', 'CarreerController@store');
 Route::get('entretiens/{eid}/u/{uid}/carrieres/{id}/edit', 'CarreerController@edit');
 Route::put('entretiens/{eid}/u/{uid}/carrieres/{cid}/mentorUpdate', 'CarreerController@mentorUpdate');
+Route::put('entretiens/{eid}/u/{user}/submit', 'EntretienController@submission');
 
 Route::get('config/surveys', 'SurveyController@index')->name('surveys-list');
 Route::get('surveys/create', 'SurveyController@create');
