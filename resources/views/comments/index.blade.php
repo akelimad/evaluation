@@ -11,7 +11,7 @@
                     <div class="nav-tabs-custom">
                         @include('partials.tabs')
                         <div class="tab-content">
-                            @if(count($comment)>0)
+                            @if($comment)
                                 <div class="box-body table-responsive no-padding mb40">
                                     {{ csrf_field() }}
                                     {{--<table class="table table-hover table-striped text-center">--}}
@@ -61,7 +61,7 @@
                                     <div class="col-md-6">
                                         <h4 class="alert alert-info">{{ $user->name." ".$user->last_name }}</h4>
                                         {{ $comment->userComment or '---' }}
-                                        @if($user->id == Auth::user()->id)
+                                        @if($user->id == Auth::user()->id && !App\Entretien::answered($e->id, $user->id))
                                             <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                         @endif
                                     </div>
@@ -81,13 +81,13 @@
                                 @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                             @endif
                             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-                                @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
+                                @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id && $comment)
                                     <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Vous ne pourrez plus la possibilité de modifier ces informations, Etes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
                                 @endif
-                                @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
+                                @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id && $comment)
                                     <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Vous ne pourrez plus la possibilité de modifier ces informations, Etes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
                                 @endif
-                            @if($user->id == Auth::user()->id && count($comment) < 1)
+                            @if($user->id == Auth::user()->id && !$comment)
                                 <a onclick="return chmComment.create({eid: {{$e->id}}, uid:{{$user->id}} })" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un commentaire</a>
                             @endif
                         </div>

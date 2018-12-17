@@ -138,7 +138,7 @@ class EntretienController extends Controller
       $title = "Modifier l'entretien";
     } else {
       $entretien = new Entretien();
-      $title = "Ajouter un l'entretien";
+      $title = "Ajouter un entretien";
     }
     $e_users = [];
     foreach ($entretien->users as $user) {
@@ -156,13 +156,14 @@ class EntretienController extends Controller
    */
   public function store(Request $request)
   {
+    $id = $request->id;
     $date = Carbon::createFromFormat('d-m-Y', $request->date);
     $date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit);
-    // if($request->id == null ){
-    //     $entretien = new Entretien();
-    // }else{
-    //     $entretien = Entretien::find($request->id);
-    // }
+    if (isset($id) && is_numeric($id)) {
+      $entretien = Entretien::find(id);
+    } else {
+      $entretien = new Entretien();
+    }
     $rules = [
       'date' => 'required',
       'date_limit' => 'required|after:date',
@@ -182,7 +183,6 @@ class EntretienController extends Controller
       return ["status" => "danger", "message" => $messages];
     }
     $evaluations = Evaluation::pluck('id')->toArray(); //to get ids of all object in one array
-    $entretien = new Entretien();
     $entretien->date = $date;
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
@@ -195,73 +195,58 @@ class EntretienController extends Controller
     $users_id = $request->usersId;
     $mentors = [];
     $colls = [];
+
+    $mentors_action = Action::where('slug', 'notify_mentors')->first();
+    $colls_action = Action::where('slug', 'notify_collaborator')->first();
+    $mentors_email = $mentors_action->emails()->first();
+    $colls_email = $colls_action->emails()->first();
+
+    $already_sent = [];
     if ($users_id[0] != "all") {
       foreach ($users_id as $uid) {
         $user = User::find($uid);
-        if ($user->parent == null) {
-          $mentors[] = $user;
-        } else {
-          $mentors[] = $user->parent;
-          $colls[] = $user;
+        if ($user->parent == null && count($user->children) > 0 && !in_array($user->id, $already_sent)) { //this is mentor
+          $this->mailSend($user, $entretien, $mentors_email);
+          $already_sent[] = $user->id;
+        } elseif ($user->parent) { // this is coll
+          $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
+          $this->mailSend($user, $entretien, $colls_email);
         }
-        $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
       }
     } else {
       $users = User::getUsers()->get();
       foreach ($users as $user) {
-          if($user) {
-              if ($user->parent == null) {
-                  $mentors[] = $user;
-              } else {
-                  $mentors[] = $user->parent;
-                  $colls[] = $user;
-                  $entretien->users()->attach([$user->id => ['mentor_id' => $user->parent->id]]);
-              }
-          }
+        if ($user->parent == null && count($user->children) && !in_array($user->id, $already_sent)) {
+          $this->mailSend($user, $entretien, $mentors_email);
+          $already_sent[] = $user->id;
+        } elseif ($user->parent) {
+          $entretien->users()->attach([$user->id => ['mentor_id' => $user->parent->id]]);
+          $this->mailSend($user, $entretien, $colls_email);
+        }
       }
     }
 
-    $mentors = array_unique($mentors);
-    $mentors_action = Action::where('slug', 'notify_mentors')->first();
-    $colls_action   = Action::where('slug', 'notify_collaborator')->first();
-    $mentors_email = $mentors_action->emails()->first();
-    $colls_email = $colls_action->emails()->first();
-    foreach ($mentors as $mentor) {
-      $password = $this->rand_string(10);
-      $mentor->password = bcrypt($password);
-      $mentor->save();
-      $message = Email::renderMessage($mentors_email->message, [
-        'user_name' => $mentor->name,
-        'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-        'email' => $mentor->email,
-        'password' => $password,
-      ]);
-      $send = Mail::send([], [], function ($m) use ($mentor, $mentors_email, $message) {
-        $m->from($mentors_email->sender, $mentors_email->name);
-        $m->to($mentor->email);
-        $m->subject($mentors_email->subject);
-        $m->setBody($message, 'text/html');
-      });
-    }
-    foreach ($colls as $coll) {
-      $password = $this->rand_string(10);
-      $coll->password = bcrypt($password);
-      $coll->save();
-      $message = Email::renderMessage($colls_email->message, [
-          'user_name' => $coll->name,
-          'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-          'email' => $mentor->email,
-          'password' => $password,
-      ]);
-      $send = Mail::send([], [], function ($m) use ($mentor, $colls_email, $message) {
-          $m->from($colls_email->sender, $colls_email->name);
-          $m->to($mentor->email);
-          $m->subject($colls_email->subject);
-          $m->setBody($message, 'text/html');
-      });
-    }
     return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
 
+  }
+
+  public function mailSend($user, $entretien, $msg_tpl)
+  {
+    $password = $this->rand_string(10);
+    $user->password = bcrypt($password);
+    $user->save();
+    $body = Email::renderMessage($msg_tpl->message, [
+      'user_name' => $user->name,
+      'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
+      'email' => $user->email,
+      'password' => $password,
+    ]);
+    Mail::send([], [], function ($m) use ($user, $msg_tpl, $body) {
+      $m->from($msg_tpl->sender, $msg_tpl->name);
+      $m->to($user->email);
+      $m->subject($msg_tpl->subject);
+      $m->setBody($body, 'text/html');
+    });
   }
 
   public function storeCheckedUsers(Request $request)
@@ -504,15 +489,15 @@ class EntretienController extends Controller
 
   public function submission(Request $request)
   {
-      if (Auth::user()->id == $request->user) { // this a collaborator
-          \DB::table('entretien_user')
-              ->where('entretien_id', $request->eid)->where('user_id', $request->user)
-              ->update(['user_submitted' => 1]);
-      } else { // this is a mentor
-          \DB::table('entretien_user')
-              ->where('entretien_id', $request->eid)->where('user_id', $request->user)
-              ->update(['mentor_submitted' => 1]);
-      }
+    if (Auth::user()->id == $request->user) { // this a collaborator
+      \DB::table('entretien_user')
+        ->where('entretien_id', $request->eid)->where('user_id', $request->user)
+        ->update(['user_submitted' => 1]);
+    } else { // this is a mentor
+      \DB::table('entretien_user')
+        ->where('entretien_id', $request->eid)->where('user_id', $request->user)
+        ->update(['mentor_submitted' => 1]);
+    }
 
   }
 }
