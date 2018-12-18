@@ -19,11 +19,11 @@ class Answer extends Model
 
     public static function getCollAnswers($qid, $uid, $eid)
     {
-//        var_dump('qid = '. $qid ." uid= ".$uid." eid= ". $eid);
+        //  var_dump('qid = '. $qid ." uid= ".$uid." eid= ". $eid);
         $question = Question::find($qid);
         $answers_id = [];
         if(count($question->children)>0){
-            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->where('mentor_id', NULL)->get()->toArray();
+            $answers = Answer::select('answer')->where('question_id', $qid)->where('user_id', $uid)->where('entretien_id', $eid)->get()->toArray();
             foreach ($answers as $answer) {
                 foreach ($answer as $a) {
                     $answers_id[] = $a;

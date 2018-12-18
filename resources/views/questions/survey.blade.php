@@ -15,6 +15,7 @@
                         <div class="panel-body">
                         @forelse($g->questions as $q)
                             <div class="form-group">
+                                {{--@if(count($q->children)>0)--}}
                                 <input type="hidden" name="answers[{{$q->id}}][]" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->id : '' }}">
                                 @if($q->parent == null)
                                     <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>

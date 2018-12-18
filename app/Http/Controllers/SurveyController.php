@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Survey;
 
@@ -33,6 +34,7 @@ class SurveyController extends Controller
         }
         $survey->title = $request->title;
         $survey->description = $request->description;
+        $survey->user_id = User::getOwner()->id;
         $survey->save();
         if($survey->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];

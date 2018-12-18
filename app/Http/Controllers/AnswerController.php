@@ -40,7 +40,7 @@ class AnswerController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
+        dd($request->all());
         foreach ($request->answers as $key => $answer) {
             if(isset($answer[0]) && is_numeric($answer[0])) {
                 $a = Answer::find($answer[0]);
