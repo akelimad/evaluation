@@ -11,4 +11,11 @@
         <label for="description" class="control-label">Description</label>
         <textarea name="description" id="description" class="form-control">{{ isset($g->description) ? $g->description :''}}</textarea>
     </div>
+    <div class="form-group">
+        <label for="notation_type" class="control-label">Notation par</label>
+        <select name="notation_type" id="notation_type" class="form-control">
+            <option value="section" {{ isset($g->notation_type) && $g->notation_type == 'section' ? 'selected':''}}>Section</option>
+            <option value="item" {{ isset($g->notation_type) && $g->notation_type == 'item' ? 'selected':''}}>Item</option>
+        </select>
+    </div>
 </div>

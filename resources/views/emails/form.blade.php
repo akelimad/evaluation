@@ -21,7 +21,9 @@
     </div>
     <div class="form-group">
         <p><label class="control-label">Les variables disponibles sont : </label></p>
-        <label>@{{user_name}}</label>  -
+        <label>@{{user_fname}}</label>  -
+        <label>@{{mentor_fullname}}</label>  -
+        <label>@{{title}}</label>  -
         <label>@{{date_limit}}</label>  -
         <label>@{{email}}</label>  -
         <label>@{{password}}</label>  

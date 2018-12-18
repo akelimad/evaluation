@@ -13,51 +13,6 @@
                         <div class="tab-content">
                             @if($comment)
                                 <div class="box-body table-responsive no-padding mb40">
-                                    {{ csrf_field() }}
-                                    {{--<table class="table table-hover table-striped text-center">--}}
-                                        {{--<thead>--}}
-                                            {{--<tr>--}}
-                                                {{--<th style="width: 10%">Date</th>--}}
-                                                {{--<th style="width: 50%">Collaborateur</th>--}}
-                                                {{--<th style="width: 50%">Mentor</th>--}}
-                                            {{--</tr>--}}
-                                        {{--</thead>--}}
-                                        {{--<tbody>--}}
-
-                                            {{--<form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/commentaires/'.$comment->id.'/mentorUpdate') }}" method="post">--}}
-                                                {{--<input type="hidden" name="mentor_id" value="{{$user->parent->id}}">--}}
-                                            {{--{{ csrf_field() }}--}}
-                                            {{--{{ method_field('PUT') }}--}}
-                                            {{--<tr>--}}
-                                            {{--<td> {{ Carbon\Carbon::parse($comment->created_at)->format('d/m/Y H:i' )}} </td>--}}
-                                                {{--<td width="50%">--}}
-                                                    {{--<div class="user-comment">--}}
-                                                        {{--{{ $comment->userComment }}--}}
-                                                    {{--</div>--}}
-                                                {{--</td>--}}
-                                                {{--<td width="50%">--}}
-                                                    {{--@if($comment->mentorComment)--}}
-                                                        {{--<div class="user-comment">--}}
-                                                            {{--{{ $comment->mentorComment }}--}}
-                                                        {{--</div>--}}
-                                                    {{--@else--}}
-                                                        {{--@if($user->id == Auth::user()->id)--}}
-                                                        {{-------}}
-                                                        {{--@else--}}
-                                                        {{--<textarea name="mentorComment" class="form-control" style="min-height: 0;height: 110px" required="" maxlength="350"></textarea>--}}
-                                                            {{--@if($user->id == Auth::user()->id)--}}
-                                                                {{--<a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>--}}
-                                                            {{--@else--}}
-                                                                {{--<p></p>--}}
-                                                                {{--<button type="submit" class="btn-info icon-fill pull-right" data-toggle="tooltip" title="Repondez sur le commentaire de votre collaborateur"><i class="fa fa-paper-plane"></i> </button>--}}
-                                                            {{--@endif--}}
-                                                        {{--@endif--}}
-                                                    {{--@endif--}}
-                                                {{--</td>--}}
-                                            {{--</tr>--}}
-                                            {{--</form>--}}
-                                        {{--</tbody>--}}
-                                    {{--</table>--}}
                                     <div class="col-md-6">
                                         <h4 class="alert alert-info">{{ $user->name." ".$user->last_name }}</h4>
                                         {{ $comment->userComment or '---' }}
@@ -67,13 +22,16 @@
                                     </div>
                                     <div class="col-md-6">
                                         <h4 class="alert alert-info">{{ $user->parent->name." ".$user->parent->last_name }}</h4>
-                                        @if($user->id != Auth::user()->id)
+                                        @if($user->id != Auth::user()->id && App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) == false)
                                             <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/commentaires/'.$comment->id.'/mentorUpdate') }}" method="post">
+                                                {{ csrf_field() }}
                                                 {{ method_field('PUT') }}
                                                 <textarea name="mentorComment" class="form-control" required style="min-height: 200px;">{{ $comment->mentorComment }}</textarea>
                                                 <p></p>
                                                 <button type="submit" class="btn-info icon-fill pull-right" data-toggle="tooltip" title="Repondez sur le commentaire de votre collaborateur"><i class="fa fa-paper-plane"></i> </button>
                                             </form>
+                                        @else
+                                        {{ $comment->mentorComment }}
                                         @endif
                                     </div>
                                 </div>
@@ -81,12 +39,12 @@
                                 @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                             @endif
                             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-                                @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id && $comment)
-                                    <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Vous ne pourrez plus la possibilité de modifier ces informations, Etes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
-                                @endif
-                                @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id && $comment)
-                                    <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Vous ne pourrez plus la possibilité de modifier ces informations, Etes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
-                                @endif
+                            @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id && $comment)
+                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Vous ne pourrez plus la possibilité de modifier ces informations, Etes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
+                            @endif
+                            @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id && $comment)
+                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Vous ne pourrez plus la possibilité de modifier ces informations, Etes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
+                            @endif
                             @if($user->id == Auth::user()->id && !$comment)
                                 <a onclick="return chmComment.create({eid: {{$e->id}}, uid:{{$user->id}} })" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un commentaire</a>
                             @endif

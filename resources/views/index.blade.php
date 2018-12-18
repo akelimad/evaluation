@@ -98,7 +98,7 @@
                                     objectifs
                                 </div>
                             </div> -->
-                            {{--<div class="tab-pane" id="formations">--}}
+                            <!-- {{--<div class="tab-pane" id="formations">--}}
                                 {{--<div class="box-body table-responsive no-padding">--}}
                                     {{--@if( count($formations)>0 )--}}
                                     {{--<table class="table table-hover table-striped">--}}
@@ -133,7 +133,7 @@
                                         {{--@include('partials.alerts.info', ['messages' => "Aucune formation trouvée ... !!" ])--}}
                                     {{--@endif--}}
                                 {{--</div>--}}
-                            {{--</div>--}}
+                            {{--</div>--}} -->
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                                                     <a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $coll->function ? $coll->function : '---'}}
+                                                    {{ $coll->function ? App\Fonction::find($coll->function)->title : '---' }}
                                                 </td>
                                                 <td>
                                                     <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a>

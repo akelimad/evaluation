@@ -55,13 +55,13 @@
                 @foreach($groupes as $g)
                     @if(count($g->questions)>0)
                     <div class="panel panel-info">
-                        <div class="panel-heading">{{ $g->name }}</div>
+                        <div class="panel-heading">{{ $g->name }} @if($g->notation_type == 'section')<input type="number" placeholder="Saisir la note">@endif</div>
                         <div class="panel-body">
                         @forelse($g->questions as $q)
                             <div class="form-group">
                                 <input type="hidden" name="answers[{{$q->id}}][]" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->id : '' }}">
                             @if($q->parent == null)
-                                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}} @if($g->notation_type == 'item')<input type="number" placeholder="Saisir la note">@endif</label>
                                 @endif
                                 @if($q->type == 'text')
                                 <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control" required="" value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->answer : ''}}" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>

@@ -93,20 +93,25 @@ class Entretien extends Model
       return $entretiens;
     }
 
-    public static function existInterview($start, $end){
-        $existInterview = Entretien::where(function ($query) use ($start, $end) {
+    public static function existInterview($eid, $user_id, $start, $end){
+        $existInterview = \DB::table('entretiens as e')
+            ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
+            ->select('e.*', 'e.id as entretienId', 'eu.*')
+            ->where('eu.user_id', $user_id)
+            ->where('e.id', '<>', $eid)
+            ->where(function ($query) use ($start, $end) {
             $query->where(function ($q) use ($start, $end) {
-                $q->where('date', '>', $start)
-                   ->where('date', '<', $end);
+                $q->where('e.date', '>', $start)
+                   ->where('e.date', '<', $end);
             })->orWhere(function ($q) use ($start, $end) {
-                $q->where('date', '<', $start)
-                   ->where('date_limit', '>', $end);
+                $q->where('e.date', '<', $start)
+                   ->where('e.date_limit', '>', $end);
             })->orWhere(function ($q) use ($start, $end) {
-                $q->where('date_limit', '>', $start)
-                   ->where('date_limit', '<', $end);
+                $q->where('e.date_limit', '>', $start)
+                   ->where('e.date_limit', '<', $end);
             })->orWhere(function ($q) use ($start, $end) {
-                $q->where('date', '>', $start)
-                   ->where('date_limit', '<', $end);
+                $q->where('e.date', '>', $start)
+                   ->where('e.date_limit', '<', $end);
             });
         })->count();
         return $existInterview;

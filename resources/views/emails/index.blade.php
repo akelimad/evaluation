@@ -69,7 +69,8 @@
                                         <td> {{ $action->name }} </td>
                                         <td> {{ $action->type == 0 ? 'Manuel':'Automatique' }} </td>
                                         <td>
-                                            <select name="email_id" class="form-control">
+                                            <select name="email_id" class="form-control" required>
+                                                <option value=""></option>
                                                 @foreach($emails as $email)
                                                     <option value="{{$email->id}}" {{ in_array($email->id, $action->emails()->pluck('email_id')->toArray()) ? 'selected':'' }}> {{ $email->subject }} </option>
                                                 @endforeach

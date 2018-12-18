@@ -41,7 +41,7 @@
                                                 @endforeach
                                             </ul>
                                         @else
-                                            <p class="help-block"> Aucune question </p>
+                                            <p class="help-block"> Aucune question <a href="javascript:void(0)" onclick="return chmQuestion.create({sid: {{$survey->id}} ,gid: {{$groupe->id}} })" class="icon-add-question" data-toggle="tooltip" title="Ajouter une question pour ce groupe"> <i class="fa fa-plus btn-success circle-icon"></i> </a></p>
                                         @endif
                                     </div>
                                 </div>

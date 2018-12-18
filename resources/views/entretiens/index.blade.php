@@ -52,9 +52,9 @@
                                             </div>
                                             @if($evaluation->title == "Evaluations")
                                             <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez le questionnaire qui sera affiché pour cette evaluation" data-toggle="tooltip" required style="background: none;border-color: #ece8e8">
-                                                <option value="">== Choisissez ==</option>
+                                                <option value="" {{ !$e->survey_id ? 'selected':'' }}>== Choisissez ==</option>
                                                 @foreach($surveys as $survey)
-                                                <option value="{{$survey->id}}" {{ $survey->id == $e->survey_id ? 'selected':'' }} >{{$survey->title}}</option>
+                                                <option value="{{$survey->id}}" {{ $survey->id == $e->survey_id ? 'selected':'' }}>{{$survey->title}}</option>
                                                 @endforeach
                                             </select>
                                             @endif

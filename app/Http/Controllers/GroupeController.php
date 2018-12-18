@@ -60,6 +60,7 @@ class GroupeController extends Controller
         }
         $groupe->name = $request->name;
         $groupe->description = $request->description;
+        $groupe->notation_type = $request->notation_type;
         $groupe->survey_id = $request->sid;
         $groupe->save();
         $url=url('surveys/'.$request->sid.'/groupes');

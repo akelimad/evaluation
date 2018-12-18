@@ -74,4 +74,10 @@ $(document).ready(function () {
 
   // Initialise filter form
   window.chmFilter.init()
+
+  $('body').on('click', '.select2 option[value="all"]', function () {
+    var $select = $(this).closest('select')
+    $($select).find('option').not($(this)).prop('selected', $(this).is(':checked'))
+    $($select).trigger('change')
+  })
 })

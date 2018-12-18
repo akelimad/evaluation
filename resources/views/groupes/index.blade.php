@@ -35,7 +35,7 @@
                                         {{ csrf_field() }} 
                                         <a href="javascript:void(0)" onclick="return chmGroupe.edit({sid: {{$survey->id}} ,gid: {{$g->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Modifier le type de questions"> <i class="glyphicon glyphicon-pencil"></i> </a>
 
-                                        <a href="javascript:void(0)" onclick="return chmQuestion.create({sid: {{$sid}} ,gid: {{$g->id}} })" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions pour ce type"> <i class="fa fa-question"></i> </a>
+                                        <a href="javascript:void(0)" onclick="return chmQuestion.create({sid: {{$sid}} ,gid: {{$g->id}} })" class="btn-info icon-fill" data-toggle="tooltip" title="Ajouter les questions pour ce type"> <i class="fa fa-plus"></i> </a>
 
                                         <a href="{{ url('surveys/'.$sid.'/groupes/'.$g->id.'/questions') }}" class="btn-info icon-fill" data-toggle="tooltip" title="lister les questions"> <i class="fa fa-list"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer ce type de questions ?', 'Etes-vous sur de vouloir supprimer ce type de questions ?','chmGroupe.delete', {sid: {{$sid}} ,gid: {{$g->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer le type de questions"> <i class="fa fa-trash"></i> </a>
