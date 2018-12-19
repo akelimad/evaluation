@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use App\Groupe;
 
 class Answer extends Model
 {
@@ -42,5 +43,21 @@ class Answer extends Model
             return $answer;
         }
         return false;
+    }
+
+    public static function getGrpNote($gid, $uid, $eid)
+    {
+        $group = Groupe::find($gid);
+        $user = User::find($uid);
+        if($group->notation_type == 'section') {
+            $question = $group->questions()->first();
+            $answer = Answer::where('question_id', $question->id)
+                ->where('user_id', $user->id)
+                ->where('mentor_id', $user->parent->id)
+                ->where('entretien_id', $eid)
+                ->first();
+            return $answer->note;
+        }
+        return '';
     }
 }

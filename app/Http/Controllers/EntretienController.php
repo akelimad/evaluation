@@ -218,7 +218,7 @@ class EntretienController extends Controller
       $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
       $this->mailSend($user, $entretien, $colls_email);
       if (!in_array($user->parent->id, $already_sent)) {
-        $this->mailSend($user->parent, $entretien, $mentors_email);
+        //$this->mailSend($user->parent, $entretien, $mentors_email);
         $already_sent[] = $user->parent->id;
       }
     }
@@ -230,7 +230,7 @@ class EntretienController extends Controller
       foreach ($removedUsers as $uid) {
         $user = User::find($uid);
         $entretien->users()->detach($user);
-        $this->mailSend($user, $entretien, $remove_coll_email);
+        //$this->mailSend($user, $entretien, $remove_coll_email);
       }
     }
 
@@ -517,7 +517,7 @@ class EntretienController extends Controller
     $submit_action = Action::where('slug', 'evaluation_submit')->first();
     if($submit_action) {
       $submit_email = $submit_action->emails()->first();
-      $this->mailSend(Auth::user(), $entretien, $submit_email);
+      //$this->mailSend(Auth::user(), $entretien, $submit_email);
     }
   }
 }

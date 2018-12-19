@@ -40,26 +40,28 @@ class AnswerController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
-        foreach ($request->answers as $key => $answer) {
+//        dd($request->all());
+        foreach ($request->answers as $key => $value) {
+            // dd($value['note']);
             $a = Answer::getCollAnswers($key, $request->user_id, $request->entretien_id);
             if(!$a) {
                 $a = new Answer();
             }
 
-            if(isset($answer) and !is_array($answer)) {
-                $ansr = $answer;
+            if(isset($value['ansr']) and !is_array($value['ansr'])) {
+                $ansr = $value['ansr'];
             }else{
-                $ansr = json_encode($answer);
+                $ansr = json_encode($value['ansr']);
             }
             $a->question_id = $key;
             if(!empty($request->mentor_id) && isset($request->is_mentor)){
                 $a->mentor_answer = $ansr;
             } else {
                 $a->answer = $ansr;
-                $a->user_id = isset($request->user_id) ? $request->user_id : '' ;
+                $a->user_id = isset($request->user_id) ? $request->user_id : '';
             }
-            $a->mentor_id = $request->mentor_id ;
+            $a->mentor_id = $request->mentor_id;
+            $a->note = isset($value['note']) ? $value['note'] : '';
             $a->entretien_id = $request->entretien_id;
             $a->save();
         }
