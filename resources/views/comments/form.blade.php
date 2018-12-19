@@ -8,7 +8,7 @@
         <div class="form-group" >
             <div class="col-md-12">
                 <label class="control-label">Commentaire : <!-- <span class="badge"> </span> --> </label>
-                <textarea class="form-control" name="comments[0]" required="required" style="height: 200px;min-height: 0">{{ $c->userComment or '' }}</textarea>
+                <textarea class="form-control" name="comment" required="required" style="height: 200px;min-height: 0">{{ $comment or '' }}</textarea>
             </div>
             @if(1 == 2)
             <div class="col-md-1">

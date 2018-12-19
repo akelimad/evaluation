@@ -15,27 +15,25 @@
                         <div class="panel-body">
                         @forelse($g->questions as $q)
                             <div class="form-group">
-                                {{--@if(count($q->children)>0)--}}
-                                <input type="hidden" name="answers[{{$q->id}}][]" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->id : '' }}">
                                 @if($q->parent == null)
                                     <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                                 @endif
                                 @if($q->type == 'text')
-                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}]" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>
                                 @elseif($q->type == 'textarea')
-                                <textarea name="answers[{{$q->id}}][]" class="form-control" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</textarea>
+                                <textarea name="answers[{{$q->id}}]" class="form-control" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</textarea>
                                 @elseif($q->type == "checkbox")
                                     <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                     @foreach($q->children as $child)
                                         <div class="survey-checkbox">
-                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }}>
+                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }}>
                                             <label for="{{$child->titre}}">{{ $child->titre }}</label>
                                         </div>
                                     @endforeach
                                     <div class="clearfix"></div>
                                 @elseif($q->type == "radio")
                                     @foreach($q->children as $child)
-                                        <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }}> 
+                                        <input type="{{$q->type}}" name="answers[{{$q->id}}]" id="{{$child->id}}" value="{{$child->id}}" required {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}> 
                                         <label for="{{$child->id}}">{{ $child->titre }}</label>
                                     @endforeach
                                 @endif

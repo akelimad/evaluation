@@ -160,6 +160,20 @@ class User extends Authenticatable
     return "";
   }
 
+  public static function avatar($id)
+  {
+    $user = User::find($id);
+    if (!empty($user->avatar)) {
+      $path = $user->id . '/' . $user->avatar;
+      $path = 'uploads/avatars/' . $path;
+      if (file_exists(public_path($path))) {
+        return asset($path);
+      }
+    }
+
+    return asset("img/avatar.png");
+  }
+
   public static function getUsers()
   {
     $user = Auth::user();

@@ -31,7 +31,7 @@
                                             <ul class="list-group">
                                                 @foreach($groupe->questions as $q)
                                                     <li class="list-group-item">
-                                                        <a href="{{url('surveys/'.$survey->id.'/groupes/'.$groupe->id.'/questions/'.$q->id)}}" title="{{ $q->titre }}" class="{{ $q->parent_id == 0 ? 'q-item':'' }}">{{ str_limit($q->titre, 30) }}</a>
+                                                        <a href="{{url('surveys/'.$survey->id.'/groupes/'.$groupe->id.'/questions/'.$q->id)}}" title="{{ $q->titre }}" class="{{ $q->parent_id == 0 ? 'q-item':'' }}">{{ str_limit($q->titre, 25) }}</a>
                                                         @if($q->parent_id == 0)
                                                         {{ csrf_field() }}
                                                         <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer la question ?', 'Etes-vous sur de vouloir supprimer cette question ?','chmQuestion.delete', {sid: {{$survey->id}} ,gid: {{$groupe->id}}, qid:{{$q->id}} }, {width: 450})" class="text-red circle-icon pull-right" data-toggle="tooltip" title="Supprimer"> <i class="fa fa-trash"></i> </a>

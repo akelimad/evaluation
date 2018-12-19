@@ -172,7 +172,7 @@ class UserController extends Controller
       $user->user_id = $request->user_id;
     }
     $user->salary = $request->salary;
-    $user->society_id = Auth::user()->id;
+    $user->society_id = User::getOwner()->id;
     $user->save();
     if ($file = $request->hasFile('avatar')) {
       $file = $request->file('avatar');

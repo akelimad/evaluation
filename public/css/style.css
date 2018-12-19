@@ -553,7 +553,7 @@ ul.user-data li i{
     display: none;
 }
 .modal-body {
-    max-height: 500px;
+    /*max-height: 500px;*/
     overflow: auto;
 }
 .slider-selection{
@@ -699,4 +699,23 @@ p.help-block{
     display: block;
     cursor: pointer;
 }
-
+.apercu .alert{
+    padding: 5px;
+    margin-top: 0 !important;
+}
+.text-background{
+    background: #eeeeee;
+    padding: 5px;
+    border: 1px solid #dadada;
+    overflow: auto;
+}
+.evaluation-survey .mentor-item .panel-heading{
+    position: relative;
+}
+.evaluation-survey .mentor-item .panel-heading .notation{
+    position: absolute;
+    top: 6px;
+    right: 3%;
+    width: 58px;
+    padding-left: 4px;
+}

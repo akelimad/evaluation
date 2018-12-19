@@ -17,42 +17,103 @@
             </div>
             <div id="collapse-evaluations" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-evaluations">
                 <div class="panel-body">
-                    @foreach($groupes as $g)
-                        @if(count($g->questions)>0)
-                        <h3 class="groupe-heading">{{ $g->name }}</h3>
-                            @forelse($g->questions as $q)
-                                <div class="form-group">
-                                    @if($q->parent == null)
-                                        <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
-                                    @endif
-                                    @if($q->type == 'text')
-                                    <p>
-                                        {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->answer : '---'}}
-                                    </p>
-                                    @elseif($q->type == 'textarea')
-                                    <p>
-                                        {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->answer : '---'}}
-                                    </p>
-                                    @elseif($q->type == "checkbox")
-                                        @foreach($q->children as $child)
-                                            <div class="survey-checkbox">
-                                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }}>
-                                                <label for="{{$child->titre}}">{{ $child->titre }}</label>
+                    <div class="row">
+                        @if(count($groupes)>0)
+                        <div class="col-md-6">
+                            <h4 class="alert alert-info"> {{ $user->name." ".$user->last_name }} </h4>
+                            <div class="panel-group">
+                                @foreach($groupes as $g)
+                                    @if(count($g->questions)>0)
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">{{ $g->name }}</div>
+                                        <div class="panel-body">
+                                        @forelse($g->questions as $q)
+                                            <div class="form-group">
+                                                @if($q->parent == null)
+                                                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                                                @endif
+                                                @if($q->type == 'text')
+                                                    <div class="text-background">
+                                                        {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}
+                                                    </div>
+                                                @elseif($q->type == 'textarea')
+                                                    <div class="text-background">
+                                                        {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer :''}}
+                                                    </div>
+                                                @elseif($q->type == "checkbox")
+                                                    @foreach($q->children as $child)
+                                                        <div class="survey-checkbox">
+                                                            <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }} disabled>
+                                                            <label >{{ $child->titre }}</label>
+                                                        </div>
+                                                    @endforeach
+                                                    <div class="clearfix"></div>
+                                                @elseif($q->type == "radio")
+                                                    @foreach($q->children as $child)
+                                                        <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer ? 'checked' : '' }} disabled> 
+                                                        <label >{{ $child->titre }}</label>
+                                                    @endforeach
+                                                @endif
                                             </div>
-                                        @endforeach
-                                        <div class="clearfix"></div>
-                                    @elseif($q->type == "radio")
-                                        @foreach($q->children as $child)
-                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }}> 
-                                            <label for="{{$child->id}}">{{ $child->titre }}</label>
-                                        @endforeach
+                                        @empty
+                                            <p class="help-block"> Aucune question </p>
+                                        @endforelse
+                                        </div>
+                                    </div>
                                     @endif
-                                </div>
-                            @empty
-                                @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
-                            @endforelse
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="alert alert-info"> {{ App\User::getMentor($user->id)->name." ".App\User::getMentor($user->id)->last_name }} </h4>
+                            <div class="panel-group">
+                                @foreach($groupes as $g)
+                                    @if(count($g->questions)>0)
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">{{ $g->name }}</div>
+                                        <div class="panel-body">
+                                        @forelse($g->questions as $q)
+                                            <div class="form-group">
+                                            @if($q->parent == null)
+                                                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                                                @endif
+                                                @if($q->type == 'text')
+                                                    <div class="text-background">
+                                                        {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}
+                                                    </div>
+                                                @elseif($q->type == 'textarea')
+                                                    <div class="text-background">
+                                                        {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}
+                                                    </div>
+                                                @elseif($q->type == "checkbox")
+                                                    <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
+                                                    @foreach($q->children as $child)
+                                                        <div class="survey-checkbox">
+                                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer)) ? 'checked' : '' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                                            <label for="{{$child->titre}}">{{ $child->titre }}</label>
+                                                        </div>
+                                                    @endforeach
+                                                    <div class="clearfix"></div>
+                                                @elseif($q->type == "radio")
+                                                    @foreach($q->children as $child)
+                                                        <input type="{{$q->type}}" name="answers[{{$q->id}}]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}> 
+                                                        <label for="{{$child->id}}">{{ $child->titre }}</label>
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        @empty
+                                            <p class="help-block"> Aucune question </p>
+                                        @endforelse
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endforeach
+                            </div>  
+                        </div>
+                        @else
+                            <p class="alert alert-default">Aucune donnée disponible !</p>
                         @endif
-                    @endforeach
+                    </div>
                 </div>
             </div>
         </div>
@@ -212,8 +273,6 @@
                 <div class="panel-body objectifs">
                     @if(count($objectifs)>0)
                         <div class="box-body table-responsive no-padding mb40">
-                            <input type="hidden" name="entretien_id" value="{{$e->id}}">
-                            <input type="hidden" name="user_id" value="{{$user->id}}">
                             <table class="table table-hover table-striped">
                                 @if($user->id != Auth::user()->id)
                                 <tr>
@@ -271,9 +330,7 @@
                                         <td class="criteres text-center slider-note {{$user->id != Auth::user()->id ? 'disabled':''}}">
                                             @if(!App\Objectif::getNmoins1Note($sub->id, $e->id) || (App\Objectif::getNmoins1Note($sub->id, $e->id) == true && App\Objectif::getNmoins1Note($sub->id, $e->id)->objNplus1 == 0 ) )
                                             <input type="text" class="slider" placeholder="Votre note" required="" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}" data-slider-tooltip="always">
-                                            <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]" value="">
                                             @else
-                                            <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" value="">
                                             <table class="table table-bordered table-sub-objectif">
                                                 <tr>
                                                     <td>N-1</td>
@@ -425,26 +482,32 @@
             </div>
             <div id="collapse-comments" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-comments">
                 <div class="panel-body">
-                    @if(count($comments)>0)
-                        <div class="box-body table-responsive no-padding mb40">
-                            <table class="table table-hover table-striped text-center">
-                                <thead>
-                                    <tr>  
-                                        <th>Date</th>
-                                        <th>Collaborateur</th>
-                                        <th>Mentor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($comments as $c)
-                                    <tr>
-                                        <td> {{ Carbon\Carbon::parse($c->created_at)->format('d/m/Y H:i' )}} </td>
-                                        <td> {{ $c->userComment or "---" }} </td>
-                                        <td> {{ $c->mentorComment or "---" }} </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                    @if($comment)
+                        <div class="direct-chat-messages" style="height: auto;">
+                            <div class="col-md-6">
+                                <div class="direct-chat-msg mb20">
+                                    <div class="direct-chat-info clearfix">
+                                        <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>
+                                        <span class="direct-chat-timestamp pull-right">{{ Carbon\Carbon::parse($comment->created_at)->format('d/m/Y H:i')}}</span>
+                                    </div>
+                                    <img class="direct-chat-img" src="{{ App\User::avatar($user->id) }}" alt="message user image">
+                                    <div class="direct-chat-text">
+                                        {{ $comment->userComment or '---' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="direct-chat-msg right">
+                                    <div class="direct-chat-info clearfix">
+                                        <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>
+                                        <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y H:i') : '' }}</span>
+                                    </div>
+                                    <img class="direct-chat-img" src="{{ App\User::avatar($user->parent->id) }}" alt="message user image">
+                                    <div class="direct-chat-text">
+                                        {{ $comment->mentorComment or '---' }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     @else
                         @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])

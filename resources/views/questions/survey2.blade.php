@@ -1,5 +1,5 @@
 
-<div class="row">
+<div class="row evaluation-survey">
     @if(count($groupes)>0)
     <div class="col-md-6">
         <h4 class="alert alert-info"> {{ $user->name." ".$user->last_name }} </h4>
@@ -21,14 +21,14 @@
                             @elseif($q->type == "checkbox")
                                 @foreach($q->children as $child)
                                     <div class="survey-checkbox">
-                                        <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled>
+                                        <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }} disabled>
                                         <label >{{ $child->titre }}</label>
                                     </div>
                                 @endforeach
                                 <div class="clearfix"></div>
                             @elseif($q->type == "radio")
                                 @foreach($q->children as $child)
-                                    <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getCollAnswers($q->id, $user->id, $e->id)) ? 'checked' : '' }} disabled> 
+                                    <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer ? 'checked' : '' }} disabled> 
                                     <label >{{ $child->titre }}</label>
                                 @endforeach
                             @endif
@@ -42,7 +42,7 @@
             @endforeach
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 mentor-item">
         <h4 class="alert alert-info"> {{ App\User::getMentor($user->id)->name." ".App\User::getMentor($user->id)->last_name }} </h4>
         <form action="{{url('answers/store')}}" method="post" id="surveyForm">
             <input type="hidden" name="entretien_id" value="{{$e->id}}">
@@ -55,30 +55,36 @@
                 @foreach($groupes as $g)
                     @if(count($g->questions)>0)
                     <div class="panel panel-info">
-                        <div class="panel-heading">{{ $g->name }} @if($g->notation_type == 'section')<input type="number" placeholder="Saisir la note">@endif</div>
+                        <div class="panel-heading">
+                            {{ $g->name }} 
+                            <!-- <input type="number" data-group-source="{{$g->id}}" class="notation" min="1" max="5" placeholder="Note"> -->
+                        </div>
                         <div class="panel-body">
                         @forelse($g->questions as $q)
                             <div class="form-group">
-                                <input type="hidden" name="answers[{{$q->id}}][]" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->id : '' }}">
                             @if($q->parent == null)
-                                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}} @if($g->notation_type == 'item')<input type="number" placeholder="Saisir la note">@endif</label>
+                                <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> 
+                                    {{$q->titre}} 
+                                    <!-- <input type="number" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][]" class="notation" min="1" max="5"  @if($g->notation_type == 'section')style="display:none;"@endif>  -->
+                                </label>
+
                                 @endif
                                 @if($q->type == 'text')
-                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control" required="" value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->answer : ''}}" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}][]" class="form-control" required value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
                                 @elseif($q->type == 'textarea')
-                                <textarea name="answers[{{$q->id}}][]" class="form-control" required="" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</textarea>
+                                <textarea name="answers[{{$q->id}}][]" class="form-control" required {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</textarea>
                                 @elseif($q->type == "checkbox")
                                     <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                     @foreach($q->children as $child)
                                         <div class="survey-checkbox">
-                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getMentorAnswers($q->id, $user->id, $e->id)) ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                            <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer)) ? 'checked' : '' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
                                             <label for="{{$child->titre}}">{{ $child->titre }}</label>
                                         </div>
                                     @endforeach
                                     <div class="clearfix"></div>
                                 @elseif($q->type == "radio")
                                     @foreach($q->children as $child)
-                                        <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, App\Answer::getMentorAnswers($q->id, $user->id, $e->id)) ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}> 
+                                        <input type="{{$q->type}}" name="answers[{{$q->id}}]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}> 
                                         <label for="{{$child->id}}">{{ $child->titre }}</label>
                                     @endforeach
                                 @endif
@@ -92,14 +98,26 @@
                 @endforeach
             </div>
             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-             
-            <button type="submit" class="btn btn-success" id="submitAnswers" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}><i class="fa fa-check"></i> Enregistrer</button>
-
-            
+            @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id))
+            <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Enregistrer</button>
+            @endif          
         </form>
     </div>
     @else
         <p class="alert alert-default">Aucune donnée disponible !</p>
     @endif
 </div>
-  
+
+@section('javascript')
+<script>
+    $(document).ready(function(){
+        $('[data-group-source]').on('keyup', function () {
+            $('[data-group-target="'+ $(this).attr('data-group-source') +'"]').val($(this).val())
+        })
+
+        $('[data-group-source]').on('change', function () {
+            $('[data-group-target="'+ $(this).attr('data-group-source') +'"]').val($(this).val())
+        })
+    })
+</script>
+@endsection

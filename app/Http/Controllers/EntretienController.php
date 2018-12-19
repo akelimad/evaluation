@@ -445,15 +445,16 @@ class EntretienController extends Controller
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
     $skills = Skill::all();
     $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
-    $comments = Comment::where('entretien_id', $eid)->where('user_id', $uid)->get();
+    $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $total = 0;
     foreach ($objectifs as $obj) {
       $total += $obj->sousTotal;
     }
+    $entreEvalsTitle = [];
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'objectifs', 'comments', 'total'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'objectifs', 'comment', 'total'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }
@@ -476,13 +477,17 @@ class EntretienController extends Controller
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
     $skills = Skill::all();
     $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
-    $comments = Comment::where('entretien_id', $eid)->where('user_id', $uid)->get();
+    $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $total = 0;
     foreach ($objectifs as $obj) {
       $total += $obj->sousTotal;
     }
+    $entreEvalsTitle = [];
+    foreach ($evaluations as $eval) {
+      $entreEvalsTitle[] = $eval->title;
+    }
 
-    $pdf = \PDF::loadView('entretiens.apercu', compact('evaluations', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'objectifs', 'comments', 'total'));
+    $pdf = \PDF::loadView('entretiens.apercu', compact('entreEvalsTitle', 'evaluations', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'objectifs', 'comment', 'total'));
     return $pdf->download('entretien-synthese.pdf');
   }
 

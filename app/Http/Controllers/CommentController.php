@@ -9,6 +9,7 @@ use App\Entretien;
 use App\User;
 use App\Comment;
 use Carbon\Carbon; 
+use Auth;
 
 class CommentController extends Controller
 {
@@ -62,17 +63,21 @@ class CommentController extends Controller
         $id = $request->id;
         if($id){
             $cmt = Comment::find($id);
-            $cmt->userComment = $request->comments[0];
-            $cmt->save();
         }else{
-            foreach ($request->comments as $comment) {
-                $cmt = new Comment();
-                $cmt->userComment = $comment;
-                $cmt->user_id = $request->uid;
-                $cmt->entretien_id = $request->eid;
-                $cmt->save();
-            }
+            $cmt = new Comment();
         }
+
+        if(Auth::user()->hasRole('MENTOR')) {
+            $cmt->mentor_id = Auth::user()->id;
+            $cmt->mentorComment = $request->comment;
+            $cmt->mentor_updated_at = date('Y-m-d H:i:s');
+        }else {
+            $cmt->userComment = $request->comment;
+            $cmt->user_id = $request->uid;
+            $cmt->entretien_id = $request->eid;
+        }
+        $cmt->save();
+
         if($cmt->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
         } else {
@@ -103,7 +108,13 @@ class CommentController extends Controller
         $e = Entretien::find($eid);
         $user = User::find($uid);
         $c = Comment::find($cid);
-        echo view('comments.form', compact('e', 'user', 'c'));
+        $comment = "";
+        if($user->hasRole('MENTOR')) {
+            $comment = $c->mentorComment;
+        }else{
+            $comment = $c->userComment;
+        }
+        echo view('comments.form', compact('e', 'user', 'c', 'comment'));
         $content = ob_get_clean();
         return ['title' => 'Modifier votre commentaire', 'content' => $content];
     }
@@ -132,7 +143,8 @@ class CommentController extends Controller
         $user = User::find($uid);
         $comment = Comment::findOrFail($cid);
         $comment->mentor_id = $request->mentor_id;
-        $comment->mentorComment = $request->mentorComment;
+        $comment->mentorComment = $request->comment;
+        $comment->mentor_updated_at = date('Y-m-d H:i:s');
         $comment->save();
         return redirect()->back()->with("mentor_comment", "Vous venez de commenter avec succès sur le(la) collaborateur(trice) ".$user->name." ".$user->last_name );
     }

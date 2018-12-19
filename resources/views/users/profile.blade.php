@@ -14,11 +14,7 @@
                                 <div class="form-group">
                                     <div class="col-md-4">
                                     <!-- <label class="control-label">Photo</label> -->
-                                        @if(!empty($user->avatar))
-                                            <img src="{{asset('avatars/'.$user->avatar)}}" alt="" class="user-profile-img img-responsive img-circle">
-                                        @else
-                                            <img src="{{asset('img/avatar.png')}}" alt="" class="user-profile-img img-responsive img-circle">
-                                        @endif
+                                        <img src="{{ App\User::avatar($user->id) }}" alt="" class="user-profile-img img-responsive img-circle">
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

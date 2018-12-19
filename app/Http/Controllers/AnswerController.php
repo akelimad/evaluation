@@ -42,16 +42,21 @@ class AnswerController extends Controller
     {
         dd($request->all());
         foreach ($request->answers as $key => $answer) {
-            if(isset($answer[0]) && is_numeric($answer[0])) {
-                $a = Answer::find($answer[0]);
-            } else {
+            $a = Answer::getCollAnswers($key, $request->user_id, $request->entretien_id);
+            if(!$a) {
                 $a = new Answer();
+            }
+
+            if(isset($answer) and !is_array($answer)) {
+                $ansr = $answer;
+            }else{
+                $ansr = json_encode($answer);
             }
             $a->question_id = $key;
             if(!empty($request->mentor_id) && isset($request->is_mentor)){
-                $a->mentor_answer = isset($answer[1]) ? $answer[1] : '';
+                $a->mentor_answer = $ansr;
             } else {
-                $a->answer = isset($answer[1]) ? $answer[1] : '';
+                $a->answer = $ansr;
                 $a->user_id = isset($request->user_id) ? $request->user_id : '' ;
             }
             $a->mentor_id = $request->mentor_id ;

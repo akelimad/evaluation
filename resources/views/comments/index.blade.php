@@ -12,7 +12,7 @@
                         @include('partials.tabs')
                         <div class="tab-content">
                             @if($comment)
-                                {{--<div class="box-body table-responsive no-padding mb40">--}}
+                                <!-- {{--<div class="box-body table-responsive no-padding mb40">--}}
                                     {{--<div class="col-md-6">--}}
                                         {{--<h4 class="alert alert-info">{{ $user->name." ".$user->last_name }}</h4>--}}
                                         {{--<div class="comment-box coll">{{ $comment->userComment or '---' }}</div>--}}
@@ -35,42 +35,51 @@
                                             {{--<div class="comment-box mentor">{{ $comment->mentorComment }}</div>--}}
                                         {{--@endif--}}
                                     {{--</div>--}}
-                                {{--</div>--}}
+                                {{--</div>--}} -->
                                 <div class="box-body">
-                                    <div class="direct-chat-messages">
-                                        <div class="direct-chat-msg mb20">
-                                            <div class="direct-chat-info clearfix">
-                                                <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>
-                                                <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                                    <div class="direct-chat-messages" style="height: auto;">
+                                        <div class="col-md-6">
+                                            <div class="direct-chat-msg mb20">
+                                                <div class="direct-chat-info clearfix">
+                                                    <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>
+                                                    <span class="direct-chat-timestamp pull-right">{{ Carbon\Carbon::parse($comment->created_at)->format('d/m/Y H:i')}}</span>
+                                                </div>
+                                                <img class="direct-chat-img" src="{{ App\User::avatar($user->id) }}" alt="message user image">
+                                                <div class="direct-chat-text">
+                                                    {{ $comment->userComment or '---' }}
+                                                    @if($user->id == Auth::user()->id && !App\Entretien::answered($e->id, $user->id))
+                                                        <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <img class="direct-chat-img" src="{{ Auth::user()->avatar ? asset('avatars/'.Auth::user()->avatar) : asset('img/avatar.png') }}" alt="message user image">
-                                            <div class="direct-chat-text">
-                                                {{ $comment->userComment or '---' }}
-                                                @if($user->id == Auth::user()->id && !App\Entretien::answered($e->id, $user->id))
-                                                    <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                        </div>
+                                        @if(($user->id == Auth::user()->id && App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id)) or ($user->id != Auth::user()->id))
+                                        <div class="col-md-6">
+                                            <div class="direct-chat-msg right">
+                                                <div class="direct-chat-info clearfix">
+                                                    <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>
+                                                    <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y H:i') : '' }}</span>
+                                                </div>
+                                                <img class="direct-chat-img" src="{{ App\User::avatar($user->parent->id) }}" alt="message user image">
+                                                @if($user->id != Auth::user()->id && $comment->mentorComment == '')
+                                                    <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/commentaires/'.$comment->id.'/mentorUpdate') }}" method="post">
+                                                        {{ csrf_field() }}
+                                                        {{ method_field('PUT') }}
+                                                        <textarea name="comment" class="form-control" required style="min-height: 130px;" placeholder="Ecrivez votre commentaire ...">{{ $comment->mentorComment }}</textarea>
+                                                        <p></p>
+                                                        <button type="submit" class="btn-info icon-fill pull-right" data-toggle="tooltip" title="Repondez sur le commentaire de votre collaborateur"><i class="fa fa-paper-plane"></i> </button>
+                                                    </form>
+                                                @else
+                                                    <div class="direct-chat-text">
+                                                        {{ $comment->mentorComment or '---' }}
+                                                        @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
+                                                            <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->parent->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                                        @endif
+                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="direct-chat-msg right">
-                                            <div class="direct-chat-info clearfix">
-                                                <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>
-                                                <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
-                                            </div>
-                                            <img class="direct-chat-img" src="{{ Auth::user()->avatar ? asset('avatars/'.Auth::user()->avatar) : asset('img/avatar.png') }}" alt="message user image">
-                                            @if($user->id != Auth::user()->id && App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) == false)
-                                                <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/commentaires/'.$comment->id.'/mentorUpdate') }}" method="post">
-                                                    {{ csrf_field() }}
-                                                    {{ method_field('PUT') }}
-                                                    <textarea name="mentorComment" class="form-control" required style="min-height: 200px;">{{ $comment->mentorComment }}</textarea>
-                                                    <p></p>
-                                                    <button type="submit" class="btn-info icon-fill pull-right" data-toggle="tooltip" title="Repondez sur le commentaire de votre collaborateur"><i class="fa fa-paper-plane"></i> </button>
-                                                </form>
-                                            @else
-                                            <div class="direct-chat-text">
-                                                {{ $comment->mentorComment }}
-                                            </div>
-                                            @endif
-                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                             @else
