@@ -15,7 +15,7 @@ class Entretien extends Model
             ->where('user_submitted', 1)
             ->first();
         if($eu) {
-            return true;
+            return $eu;
         } else {
             return false;
         }
@@ -26,7 +26,7 @@ class Entretien extends Model
             ->where('mentor_submitted', 1)
             ->first();
         if($eu) {
-            return true;
+            return $eu;
         } else {
             return false;
         }

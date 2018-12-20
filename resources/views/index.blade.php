@@ -177,10 +177,12 @@
                                                     <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($en->id, $coll->id) ? 'Rempli par '.$coll->name :'Pas encore rempli par '.$coll->name }}"> </span>
+                                                    <span class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($en->id, $coll->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($en->id, $coll->id)->user_updated_at)->format('d/m/Y H:i') :'Pas encore rempli par '.$coll->name }}"> </span>
+
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'Vous avez validé l\'évaluation de '.$coll->name :'Veuillez valider l\'évaluation de '.$coll->name}}"> </span>
+                                                    <span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'Validée le '.Carbon\Carbon::parse(App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y H:i') :'Veuillez valider l\'évaluation de '.$coll->name}}"> </span>
+
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="label label-danger empty"> </span>

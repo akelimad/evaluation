@@ -507,11 +507,17 @@ class EntretienController extends Controller
     if (Auth::user()->id == $request->user) { // this a collaborator
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)
-        ->update(['user_submitted' => 1]);
+        ->update([
+          'user_submitted' => 1,
+          'user_updated_at' => date('Y-m-d H:i:s'),
+        ]);
     } else { // this is a mentor
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)
-        ->update(['mentor_submitted' => 1]);
+        ->update([
+          'mentor_submitted' => 1,
+          'mentor_updated_at' => date('Y-m-d H:i:s'),
+        ]);
     }
     $entretien = Entretien::find($request->eid);
     $submit_action = Action::where('slug', 'evaluation_submit')->first();
