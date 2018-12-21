@@ -101,7 +101,7 @@ class UserController extends Controller
           $roles_ids [] = $role->id;
         }
       }
-      $title = "Modifier l'utilisateur";
+      $title = "Mettre à jour le profil";
     } else {
       $user = new User();
       $title = "Ajouter un utilisateur";
@@ -126,13 +126,8 @@ class UserController extends Controller
       'name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'email' => 'required|unique:users,email',
-      'password' => 'required|confirmed|min:6',
-      'society' => 'regex:/^[\pL\s\-]+$/u',
-      'city' => 'regex:/^[\pL\s\-]+$/u',
-      'country' => 'regex:/^[\pL\s\-]+$/u',
-      'society' => 'regex:/^[\pL\s\-]+$/u',
+      'password' => 'confirmed|min:6',
       'tel' => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
-      'fix' => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
       'function' => 'numeric',
       'service' => 'numeric',
     ];
@@ -155,23 +150,15 @@ class UserController extends Controller
     $user->name = $request->name;
     $user->last_name = $request->last_name;
     $user->email = $request->email;
-    if (!$id) $user->password = bcrypt($request->password);
-    $user->address = $request->address;
-    $user->society = $request->society;
-    $user->zip_code = $request->zip_code;
-    $user->city = $request->city;
-    $user->country = $request->country;
+    $password = !empty($request->password) ? $request->password : "password";
+    if (!$id) $user->password = bcrypt($password);
     $user->tel = $request->tel;
-    $user->fix = $request->fix;
-    $user->about = $request->about;
     $user->function = $request->function;
     $user->service = $request->service;
-    $user->qualification = $request->qualification;
     $user->status = 1;
     if ($request->user_id != null) {
       $user->user_id = $request->user_id;
     }
-    $user->salary = $request->salary;
     $user->society_id = User::getOwner()->id;
     $user->save();
     if ($file = $request->hasFile('avatar')) {
@@ -260,15 +247,7 @@ class UserController extends Controller
         $user->last_name = $row[$fields[1]];
         $user->email = $row[$fields[2]];
         $user->password = bcrypt("password");
-        $user->address = $row[$fields[5]];
-        $user->zip_code = $row[$fields[6]];
-        $user->city = $row[$fields[7]];
-        $user->country = $row[$fields[8]];
-        $user->fix = $row[$fields[9]];
-        $user->tel = $row[$fields[10]];
-        $user->function = $row[$fields[11]];
-        $user->service = $row[$fields[12]];
-        $user->qualification = $row[$fields[13]];
+        $user->tel = $row[$fields[5]];
         $user->status = 1;
         $mentor = User::where('email', '=', $row[$fields[4]])->first();
         if ($mentor != null) {

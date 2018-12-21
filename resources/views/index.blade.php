@@ -4,23 +4,35 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="box box-primary">
-                    <div class="box-body box-profile">
-                        <p>Bienvenue {{ $user->name }} {{ $user->last_name }}</p>
-                        <p>Voici les informations de votre Mentor:</p>
-                        <img class="profile-user-img img-responsive img-circle" src="{{ asset('img/avatar.png') }}" alt="User profile picture">
+                    <div class="box-body box-profile box-widget widget-user">
+                        <h3 class="widget-user-username">Bienvenue {{Auth::user()->displayName()}}</h3>
+                        @if(!Auth::user()->hasRole('ADMIN'))
+                        <p>Voici les informations de votre Mentor :</p>
+                        @endif
+                        @if(Auth::user()->hasRole('ADMIN'))
+                        <div class="home-box-img-profile">
+                            <img src="{{ App\User::logo($user->id) }}" alt="" class="text-center img-responsive">
+                        </div>
+                        @else
+                        <img src="{{ App\User::avatar($mentor->id) }}" alt="" class="profile-user-img img-responsive img-circle">
+                        @endif
+                        @if(!Auth::user()->hasRole('ADMIN'))
                         <h3 class="profile-username text-center">{{ $mentor->name }} {{ $mentor->last_name }} </h3>
                         <p class="text-muted text-center">
                             {{ (!empty($mentor->function)) ? App\Fonction::find($mentor->function)->title : '---' }}
                         </p>
+                        @endif
 
                         <ul class="list-group list-group-unbordered">
+                            @if(!Auth::user()->hasRole('ADMIN'))
                             <li class="list-group-item"><b>Département : </b>
                                 <a class="">{{ (!empty($mentor->service)) ? App\Department::find($mentor->service)->title : '---' }}</a>
                             </li>
                             <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
+                            @endif
                             <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
                         </ul>
-                        @role(["RH", "MENTOR", "COLLABORATEUR"])
+                        @role(["COLLABORATEUR"])
                         <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
                         @endrole
                     </div>
@@ -41,6 +53,7 @@
                 </div>
                 @endif
             </div>
+
             <div class="col-md-9">
                 <div class="card portlet box box-primary">
                     <div class="nav-tabs-custom portlet-title">
@@ -60,7 +73,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Titre </th>
-                                                <th>Limité au</th>
+                                                <th>Clôturé le</th>
                                                 <th class="text-center">Collaborateur</th>
                                                 <th class="text-center">Mentor</th>
                                                 <th class="text-center">RH</th>
@@ -76,10 +89,10 @@
                                                     {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, Auth::user()->id) ? 'Vous avez rempli votre évaluation':'Vous avez une évaluation à remplir'}}"> </span>
+                                                    <span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, Auth::user()->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->user_updated_at)->format('d/m/Y H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validé par votre mentor':'Pas encore validé par votre mentor'}}"> </span>
+                                                    <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par mentor le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y H:i') :'Pas encore validée par votre mentor'}}"> </span>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="label label-danger empty"> </span>
@@ -155,7 +168,7 @@
                                     <table class="table table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Nom & prénom </th>
+                                                <th>Nom et prénom</th>
                                                 <th>Fonction</th>
                                                 <th>Type d'évaluation</th>
                                                 <th class="text-center">Collaborateur</th>
@@ -181,7 +194,7 @@
 
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'Validée le '.Carbon\Carbon::parse(App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y H:i') :'Veuillez valider l\'évaluation de '.$coll->name}}"> </span>
+                                                    <span class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'Validée par mentor le '.Carbon\Carbon::parse(App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y H:i') :'Veuillez valider l\'évaluation de '.$coll->name}}"> </span>
 
                                                 </td>
                                                 <td class="text-center">

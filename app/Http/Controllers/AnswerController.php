@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Answer;
+use App\Groupe;
+use App\Question;
 use App\Token;
 use App\Entretien_user;
+use App\Entretien;
+use App\Survey;
 use Auth;
 
 class AnswerController extends Controller
@@ -40,10 +44,11 @@ class AnswerController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
+        // dd($request->all());
+        $uid = $request->user_id;
+        $eid = $request->entretien_id;
         foreach ($request->answers as $key => $value) {
-            // dd($value['note']);
-            $a = Answer::getCollAnswers($key, $request->user_id, $request->entretien_id);
+            $a = Answer::getCollAnswers($key, $uid, $eid);
             if(!$a) {
                 $a = new Answer();
             }
@@ -58,24 +63,36 @@ class AnswerController extends Controller
                 $a->mentor_answer = $ansr;
             } else {
                 $a->answer = $ansr;
-                $a->user_id = isset($request->user_id) ? $request->user_id : '';
+                $a->user_id = isset($uid) ? $uid : '';
             }
             $a->mentor_id = $request->mentor_id;
             $a->note = isset($value['note']) ? $value['note'] : '';
-            $a->entretien_id = $request->entretien_id;
+            $a->entretien_id = $eid;
             $a->save();
         }
-        // $token = Token::where('entretien_id', $request->entretien_id)->where('user_id', $request->user_id)->first();
-        // if($token){
-        //     $token->mentor_id = $request->mentor_id;
-        //     $token->save();
-        // }else{
-        //     $token = new Token();
-        //     $token->entretien_id = $request->entretien_id;
-        //     $token->user_id = $request->user_id;
-        //     $token->mentor_id = $request->mentor_id;
-        //     $token->save();
-        // }
+        // update entretien_user table note
+        $entretien = Entretien::find($eid);
+        $survey = Survey::find($entretien->survey_id);
+        $grpCount = $survey->groupes()->count();
+
+        $answers = Answer::where('user_id', $uid)->where('entretien_id', $eid)->get();
+        if(isset($answers) && count($answers)>0) {
+            $note = 0;
+            foreach ($answers as $answer) {
+                $q = Question::find($answer->question_id);
+                $g = Groupe::find($q->groupe->id);
+                if($g->notation_type == 'section') {
+                    if($answer->question_id == $g->questions()->first()->id) $note += $answer->note;
+                } else {
+                    $note += $answer->note;
+                }
+            }
+        }
+        $note = $grpCount > 0 ? $note/$grpCount : 0;
+        Entretien_user::where('user_id', $uid)
+            ->where('entretien_id', $eid)
+            ->update(['note' => $note]);
+
         return redirect()->back();
     }
 

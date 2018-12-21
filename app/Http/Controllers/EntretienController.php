@@ -82,7 +82,7 @@ class EntretienController extends Controller
     $query = DB::table('entretiens as e')
       ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
       ->join('users as u', 'u.id', '=', 'eu.user_id')
-      ->select('e.*', 'e.id as entretienId', 'u.*', 'u.id as userId')
+      ->select('e.*', 'e.id as entretienId', 'u.*', 'u.id as userId', 'eu.note')
       ->where('e.user_id', User::getOwner()->id);
     $params = [];
     if (!empty($dlimite)) {
@@ -206,7 +206,7 @@ class EntretienController extends Controller
     $entretien->save();
     if (empty($id)) $entretien->evaluations()->attach($evaluations);
 
-    $mentors_action = Action::where('slug', 'notify_mentors')->first();
+    $mentors_action = Action::where('slug', 'notify_mentor')->first();
     $colls_action = Action::where('slug', 'notify_collaborator')->first();
     $mentors_email = $mentors_action->emails()->first();
     $colls_email = $colls_action->emails()->first();
@@ -218,7 +218,7 @@ class EntretienController extends Controller
       $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
       $this->mailSend($user, $entretien, $colls_email);
       if (!in_array($user->parent->id, $already_sent)) {
-        //$this->mailSend($user->parent, $entretien, $mentors_email);
+        $this->mailSend($user->parent, $entretien, $mentors_email);
         $already_sent[] = $user->parent->id;
       }
     }
@@ -230,7 +230,7 @@ class EntretienController extends Controller
       foreach ($removedUsers as $uid) {
         $user = User::find($uid);
         $entretien->users()->detach($user);
-        //$this->mailSend($user, $entretien, $remove_coll_email);
+        $this->mailSend($user, $entretien, $remove_coll_email);
       }
     }
 
@@ -244,12 +244,14 @@ class EntretienController extends Controller
     $user->password = bcrypt($password);
     $user->save();
     $body = Email::renderMessage($msg_tpl->message, [
-      'user_fname' => $user->name ? $user->name : 'coll_fname',
-      'mentor_fullname' => $user->parent ? $user->parent->name . ' ' . $user->parent->last_name : 'm_fullname',
-      'title' => isset($entretien->titre) ? $entretien->titre : '---',
-      'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-      'email' => $user->email,
-      'password' => $password,
+      'user_fname'      => $user->name ? $user->name : 'coll_fname',
+      'coll_fullname'   => $user ? $user->name .' '. $user->last_name : '',
+      'mentor_fullname' => $user->parent ? $user->parent->name .' '. $user->parent->last_name : '',
+      'title'           => isset($entretien->titre) ? $entretien->titre : '---',
+      'date_limit'      => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
+      'site_url'        => url('/'),
+      'email'           => $user->email,
+      'password'        => $password,
     ]);
     Mail::send([], [], function ($m) use ($user, $msg_tpl, $body) {
       $m->from($msg_tpl->sender, $msg_tpl->name);
@@ -262,41 +264,43 @@ class EntretienController extends Controller
   public function storeCheckedUsers(Request $request)
   {
     $entretien = Entretien::find($request->entretien_id);
-    $users_id = json_decode($request->ids);
-    $mentors = [];
-    foreach ($users_id as $user_id) {
-      $user = User::find($user_id);
-      if ($user->parent == null) {
-        $mentors[] = $user;
-      } else {
-        $mentors[] = $user->parent;
-      }
-      $exist = $user->entretiens->contains($user_id);
-    }
-    $entretien->users()->syncWithoutDetaching($users_id);
+    $selectedUsers = json_decode($request->ids);
+    $date = Carbon::createFromFormat('Y-m-d', $entretien->date);
+    $date_limit = Carbon::createFromFormat('Y-m-d', $entretien->date_limit);
 
-    $user_mentors = array_unique($mentors);
-    $action = Action::where('slug', 'notify_mentors')->first();
-    $email = $action->emails()->first();
-    foreach ($user_mentors as $mentor) {
-      $password = $this->rand_string(10);
-      $mentor->password = bcrypt($password);
-      $mentor->save();
-      $message = Email::renderMessage($email->message, [
-        'user_name' => $mentor->name,
-        'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-        'email' => $mentor->email,
-        'password' => $password,
-      ]);
-      $send = Mail::send([], [], function ($m) use ($mentor, $email, $message) {
-        $m->from($email->sender, $email->name);
-        $m->to($mentor->email);
-        $m->subject($email->subject);
-        $m->setBody($message, 'text/html');
-      });
+    $hasAlreadyInt = [];
+    // dd($selectedUsers);
+    foreach ($selectedUsers as $uid) {
+      if (Entretien::existInterview($entretien->id, $uid, $date, $date_limit)) {
+        $hasAlreadyInt[] = User::find($uid)->name;
+      }
+    }
+    if (count($hasAlreadyInt) > 0) {
+      // $messages->add('existInterview', "Il ya déjà un entretien programmé dans la période choisie pour les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!");
+      return ["status" => "danger", "message" => "Il ya déjà un entretien programmé dans la période choisie pour les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!"];
+    }
+
+    // if (count($messages) > 0) {
+    //   return ["status" => "danger", "message" => $messages];
+    // }
+
+    $mentors_action = Action::where('slug', 'notify_mentor')->first();
+    $colls_action = Action::where('slug', 'notify_collaborator')->first();
+    $mentors_email = $mentors_action->emails()->first();
+    $colls_email = $colls_action->emails()->first();
+    
+    $already_sent = [];
+    foreach ($selectedUsers as $uid) {
+      $user = User::find($uid);
+      $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
+      $this->mailSend($user, $entretien, $colls_email);
+      if (!in_array($user->parent->id, $already_sent)) {
+        $this->mailSend($user->parent, $entretien, $mentors_email);
+        $already_sent[] = $user->parent->id;
+      }
     }
     $url = url('entretiens/evaluations');
-    $request->session()->flash('attach_users_entretien', "Les utilisateurs ont bien à été ajouté à l'entretien et un email est envoyé à leur mentor. <a href='{$url}'>cliquer ici pour les consulter</a>");
+    $request->session()->flash('attach_users_entretien', "Les utilisateurs ont bien été ajoutés à l'entretien et un email a été envoyé à leurs mentors. <a href='{$url}'>cliquer ici pour les consulter</a>");
     return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
 
   }
@@ -339,18 +343,7 @@ class EntretienController extends Controller
     $password = $this->rand_string(10);
     $user->password = bcrypt($password);
     $user->save();
-    $message = Email::renderMessage($email->message, [
-      'user_name' => $user->name,
-      'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-      'email' => $user->email,
-      'password' => $password,
-    ]);
-    $send = Mail::send([], [], function ($m) use ($user, $email, $message) {
-      $m->from($email->sender, $email->name);
-      $m->to($user->email);
-      $m->subject($email->subject);
-      $m->setBody($message, 'text/html');
-    });
+    $this->mailSend($user, $entretien, $email);
     return redirect()->back()->with('message', 'Un email est envoyé avec succès à ' . $user->name . " " . $user->last_name);
   }
 
@@ -364,18 +357,7 @@ class EntretienController extends Controller
     $password = $this->rand_string(10);
     $mentor->password = bcrypt($password);
     $mentor->save();
-    $message = Email::renderMessage($email->message, [
-      'user_name' => $mentor->name,
-      'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-      'email' => $mentor->email,
-      'password' => $password,
-    ]);
-    $send = Mail::send([], [], function ($m) use ($mentor, $email, $message) {
-      $m->from($email->sender, $email->name);
-      $m->to($mentor->email);
-      $m->subject($email->subject);
-      $m->setBody($message, 'text/html');
-    });
+    $this->mailSend($mentor, $entretien, $email);
     return redirect()->back()->with('relanceMentor', 'Un email de relance est envoyé avec succès à ' . $mentor->name . " " . $mentor->last_name . " pour évaluer " . $user->name . " " . $user->last_name);
   }
 
@@ -385,39 +367,31 @@ class EntretienController extends Controller
     $i = 0;
     $key_array = array();
     foreach ($array as $val) {
-      if (!in_array($val[$key], $key_array)) {
-        $key_array[$i] = $val[$key];
-        $temp_array[$i] = $val;
+      if(isset($val[$key])) {
+        if (!in_array($val[$key], $key_array)) {
+          $key_array[$i] = $val[$key];
+          $temp_array[$i] = $val;
+        }
+        $i++;
       }
-      $i++;
     }
     return $temp_array;
   }
 
   public function notifyMentorsInterview(Request $request)
   {
-    $action = Action::where('slug', 'notify_mentors')->first();
+    $mentors = [];
+    $action = Action::where('slug', 'notify_mentor')->first();
     $email = $action->emails()->first();
-    $array = $this->RemoveDuplicate($request->data, 'mentorId');
-    foreach ($array as $value) {
+    $mentors = $this->RemoveDuplicate($request->data, 'mentorId');
+    foreach ($mentors as $value) {
       if (count($value) > 1) {
         $entretien = Entretien::find($value['entretienId']);
         $mentor = User::find($value['mentorId']);
         $password = $this->rand_string(10);
         $mentor->password = bcrypt($password);
         $mentor->save();
-        $message = Email::renderMessage($email->message, [
-          'user_name' => $mentor->name,
-          'date_limit' => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-          'email' => $mentor->email,
-          'password' => $password,
-        ]);
-        $send = Mail::send([], [], function ($m) use ($mentor, $email, $message) {
-          $m->from($email->sender, $email->name);
-          $m->to($mentor->email);
-          $m->subject($email->subject);
-          $m->setBody($message, 'text/html');
-        });
+        $this->mailSend($mentor, $entretien, $email);
       }
     }
     return redirect()->back()->with('relanceMentor', 'Un email de relance a été envoyé avec succès aux mentors. ');
@@ -523,7 +497,7 @@ class EntretienController extends Controller
     $submit_action = Action::where('slug', 'evaluation_submit')->first();
     if($submit_action) {
       $submit_email = $submit_action->emails()->first();
-      //$this->mailSend(Auth::user(), $entretien, $submit_email);
+      $this->mailSend(Auth::user(), $entretien, $submit_email);
     }
   }
 }

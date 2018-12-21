@@ -49,7 +49,7 @@
                             @if($user->id != Auth::user()->id)
                             <a onclick="return chmSalary.create({eid: {{$e->id}} , uid: {{$user->id}} })" data-id="{{$e->id}}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un salaire</a>
                             @endif
-                        </div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, sint.
+                        </div>
                     </div>
                     <div class="callout callout-info">
                         <p class="">

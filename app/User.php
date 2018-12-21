@@ -10,6 +10,14 @@ class User extends Authenticatable
 {
   use EntrustUserTrait;
 
+  const SENIORITY = [
+    '<2'  => '0 - 2 ans',
+    '2-4' => '2 - 4 ans',
+    '4-6' => '4 - 6 ans',
+    '6-8' => '6 - 8 ans',
+    '>8'  => '> 8 ans',
+  ];
+
   /**
    * The attributes that are mass assignable.
    *
@@ -193,6 +201,17 @@ class User extends Authenticatable
     } else {
       return $user;
     }
+  }
+
+  public static function displayName()
+  {
+    $user = Auth::user();
+    if($user->hasRole('ADMIN')) {
+      return $user->first_name.' '.$user->last_name;
+    }else{
+      return $user->name.' '.$user->last_name;
+    }
+    return "anonymous";
   }
 
 

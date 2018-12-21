@@ -27,58 +27,52 @@
                 </label>
                 <input type="text" id="avatar" class="form-control" readonly="">
             </div>
-            @if(isset($user))
-                <img src="{{ asset('avatars/'.$user->avatar) }}" alt="" width="100" height="100">
+            @if($user->id != null && $user->avatar != null)
+                <div class="logo" style="margin-top: 10px;">
+                    <a href="{{ App\User::avatar($user->id) }}" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fa fa-download"></i> Télécharger</a>
+                </div>
             @endif
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6"> 
-            <label for="password" class="control-label">Mot de passe <span class="asterisk">*</span></label>
+            <label for="password" class="control-label">Mot de passe</label>
             <input id="password" type="password" class="form-control" name="password" {{ isset($user) ? '':'required' }}>
         </div>
         <div class="col-md-6"> 
-            <label for="password" class="control-label">Confirmation du mot de passe <span class="asterisk">*</span></label>
+            <label for="password" class="control-label">Confirmation du mot de passe</label>
             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" {{ isset($user) ? '':'required' }}>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
-            <label for="adress" class="control-label">Adresse</label>
-            <input type="text" name="address" class="form-control" id="adress" placeholder="Adresse" value="{{ isset($user) ? $user->address : '' }}">
-        </div>
-        <div class="col-md-6"> 
-            <label for="ville" class="control-label">Ville</label>
-            <input id="ville" type="text" class="form-control" name="city" placeholder="Ville" value="{{ isset($user) ? $user->city : ''  }}">
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-6"> 
-            <label for="pays" class="control-label">Pays</label>
-            <input id="pays" type="text" class="form-control" name="country" placeholder="Pays" value="{{ isset($user) ? $user->country : ''  }}">
-        </div>
-        <div class="col-md-6">
             <label for="tel" class="control-label">Téléphone mobile</label>
             <input type="text" name="tel" class="form-control" id="tel" placeholder="ex: 0606060606" value="{{ isset($user) ? $user->tel : ''  }}" pattern="^((06)|(07))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <label for="function" class="control-label">Fonction</label>
             <select name="function" id="function" class="form-control">
+                <option value=""></option>
                 @foreach($fonctions as $func)
                 <option value="{{ $func->id }}" {{ (isset($user->function) && $user->function == $func->id) ? 'selected':'' }}>{{ $func->title }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <label for="service" class="control-label">Département</label>
-            c
+            <select name="service" id="service" class="form-control">
+                <option value=""></option>
+                @foreach($departments as $dep)
+                <option value="{{ $dep->id }}" {{ (isset($user->service) && $user->service == $dep->id) ? 'selected':'' }}>{{ $dep->title }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
+    @role(['ROOT', 'ADMIN', 'RH'])
+    @if(Auth::user()->hasRole('ADMIN') && Auth::user()->id != $user->id)
     <div class="form-group">
         <div class="col-md-6">
-            <label for="role" class="control-label">Rôle <span class="asterisk">*</span></label>
+            <label for="role" class="control-label">Rôle<span class="asterisk">*</span></label>
             <select name="roles[]" id="role" class="form-control" multiple="" required="" @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
                 @foreach($roles as $role)
                     <option value="{{$role->id}}" {{isset($roles_ids) && in_array($role->id, $roles_ids) ? 'selected':''}}> {{$role->name}} </option>
@@ -86,7 +80,7 @@
             </select>
         </div>
         <div class="col-md-6">
-            <label for="user_id" class="control-label">Mentor </label>
+            <label for="user_id" class="control-label">Mentor</label>
             <select name="user_id" id="user_id" class="form-control" @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
                 <option value="">=== Select ===</option>
                 @foreach($users as $u)
@@ -96,6 +90,8 @@
         </div>
         <div class="clearfix"></div>
     </div>
+    @endif
+    @endrole
 </div>
 
 <script>

@@ -8,6 +8,14 @@ use App\Groupe;
 
 class Answer extends Model
 {
+    const NOTE_DEGREE = [
+        1 => ['ref' => 'I', 'title' => "Insuffisant"],
+        2 => ['ref' => 'ED', 'title' => "En dessous des attentes"],
+        3 => ['ref' => 'EL', 'title' => "En ligne avec les attentes"],
+        4 => ['ref' => 'AD', 'title' => "Au-dessus des attentes"],
+        5 => ['ref' => 'R', 'title' => "Remarquable"],
+    ]; 
+
     public function question()
     {
         return $this->belongsTo('App\Question');
@@ -60,4 +68,10 @@ class Answer extends Model
         }
         return '';
     }
+
+    public static function formated($number)
+    {
+        return number_format($number, 0, "", "");
+    }
+
 }

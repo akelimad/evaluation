@@ -55,6 +55,9 @@ class CrmController extends Controller
       }else{
         $rules['password'] = '';
       }
+      if(!empty($user->logo)){
+        $rules['logo'] = 'max:500';
+      }
     }else{
       $user = new User();
     }

@@ -101,6 +101,7 @@
                                                     @endforeach
                                                 @endif
                                             </div>
+
                                         @empty
                                             <p class="help-block"> Aucune question </p>
                                         @endforelse
@@ -110,6 +111,16 @@
                                 @endforeach
                             </div>  
                         </div>
+                        <div class="callout callout-success" style="margin-top:15px">
+                        <p class="">
+                            <i class="fa fa-info-circle fa-2x"></i>
+                            <span class="content-callout h4">Note globale
+                                @foreach(App\Answer::NOTE_DEGREE as $key => $value)
+                                    <span class="fa fa-star {{$key <= App\Entretien::note($e->id, $user->id) ? 'checked':''}}" title="{{$value['title'].' ('.$value['ref'].')'}}" data-toggle="tooltip"></span>
+                                @endforeach
+                            </span>
+                        </p>
+                    </div>
                         @else
                             <p class="alert alert-default">Aucune donnée disponible !</p>
                         @endif

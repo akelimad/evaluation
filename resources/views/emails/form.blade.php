@@ -22,9 +22,11 @@
     <div class="form-group">
         <p><label class="control-label">Les variables disponibles sont : </label></p>
         <label>@{{user_fname}}</label>  -
+        <label>@{{coll_fullname}}</label>  -
         <label>@{{mentor_fullname}}</label>  -
         <label>@{{title}}</label>  -
         <label>@{{date_limit}}</label>  -
+        <label>@{{lien}}</label>  -
         <label>@{{email}}</label>  -
         <label>@{{password}}</label>  
     </div>
@@ -41,6 +43,7 @@
         toolbar: {
             "image": false,
             "html": true,
+            "link" : false
         },
     });
   });

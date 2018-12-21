@@ -12,11 +12,11 @@
                 <div class="box box-primary">
                     <div class="filter-box mb40">
                         <h4 class="help-block showFormBtn">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right"> <i class="fa fa-chevron-down"></i></button></h4>
-                        <form action="{{ url('entretiens/evaluations') }}" class="criteresForm" style="{{ isset($params) && count($params) > 1 ? 'display: block;':'' }}">
+                        <form action="{{ url('entretiens/evaluations') }}" class="criteresForm" style="{{ isset($params) ? 'display: block;':'' }}">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="datepicker"> Date limite </label>
+                                        <label for="datepicker">Clôturé le</label>
                                         <input type="text" name="dlimite" id="datepicker" class="form-control" value="{{ isset($dlimite) ? Carbon\Carbon::parse($dlimite)->format('d-m-Y') :'' }}" readonly="" data-date-format="dd-mm-yyyy">
                                     </div>
                                 </div>
@@ -72,15 +72,15 @@
                                 <tr>
                                     <th> <input type="checkbox" id="checkAll" </th>
                                     <th>Réf</th>
-                                    <th>Date limite</th>
+                                    <th>Clôturé le</th>
                                     <th>Collaborateur</th>
                                     <th>Type d'évaluation</th>
                                     <th>Mentor</th>
-                                    <th>Coll.</th>
-                                    <th>Mentor</th>
-                                    <th>RH</th>
-                                    <th>Note</th>
-                                    <th class="text-center"> Actions </th>
+                                    <th class="text-center">Coll.</th>
+                                    <th class="text-center">Mentor</th>
+                                    <th class="text-center">RH</th>
+                                    <th class="text-center">Note</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -124,15 +124,15 @@
                                             <span class="label label-danger empty"> </span>
                                         </td>
                                         <td class="text-center">
-                                            0
+                                            <span class="badge">{{ $row->note > 0 ? App\Answer::formated($row->note).'/5' : '0/5' }}</span>
                                         </td>
                                         <td class="text-center">
                                             <!-- <a href="{{ url('entretiens/'.$row->entretienId.'/u/'.$row->userId.'/printPdf') }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a> -->
                                             <a href="javascript:void(0)" class="bg-navy icon-fill show-motif" data-toggle="tooltip" title="Motif de non réaliation" data-id="{{$row->userId}}"> <i class="glyphicon glyphicon-wrench"></i> </a>
                                             @if(!App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId))
-                                                <button type="button" class="btn-danger icon-fill notifyMentor" data-toggle="tooltip" title="Relancer le mentor pour evaluer {{ $row->name.' '.$row->last_name }}" data-entretien-id="{{$row->entretienId}}" data-user-id="{{$row->userId}}"> <i class="fa fa-bell" id="icon-{{$row->userId}}"></i> </button>
+                                                <button type="button" class="btn-danger icon-fill notifyMentor" data-toggle="tooltip" title="Relancer le mentor pour évaluer {{ $row->name.' '.$row->last_name }}" data-entretien-id="{{$row->entretienId}}" data-user-id="{{$row->userId}}"> <i class="fa fa-bell" id="icon-{{$row->userId}}"></i> </button>
                                             @else
-                                                <button class="btn-danger icon-fill relanceMentor" data-toggle="tooltip" title="Ya pas de relance. le mentor a déjà rempli son evaluation" ><i class="fa fa-bell"></i></button>
+                                                <button class="btn-danger icon-fill relanceMentor" data-toggle="tooltip" title="Ya pas de relance. le mentor a déjà rempli son évaluation" disabled><i class="fa fa-bell"></i></button>
                                             @endif
                                             <a href="javascript:void(0)" class="bg-purple icon-fill" data-toggle="tooltip" title="Aperçu" onclick="return chmEntretien.apercu({eid: {{$row->entretienId}}, uid: {{$row->userId}} })"> <i class="fa fa-search"></i> </a>
                                         </td>
@@ -188,13 +188,10 @@
         // format: 'dd-mm-yyyy',
         language: 'fr'
     })
-    @if(isset($uname))
-        $(".showFormBtn i").toggleClass("fa-chevron-down fa-chevron-up")
-        $(".criteresForm").fadeToggle()
-    @endif
     $(function(){
         var baseUrl =  $("base").attr("href")
         $(".table").on('click', '.notifyMentor',function () {
+            $(this).addClass('relanceMentor').attr('disabled', true)
             var eid= $(this).data('entretien-id');
             var uid= $(this).data('user-id');
             $(".notifyMentor>i#icon-"+uid).removeClass("fa-bell").addClass("fa-refresh fa-spin");
@@ -216,6 +213,7 @@
                     type: "success" 
                 });
             }).fail(function(){
+                $(this).removeClass('relanceMentor')
                 swal('Oops...', "Il ya quelque chose qui ne va pas ! Il se peut que cet utilisateur fait la coordiantion des cours il faut supprimer tout d'abord ses cours!", 'error');
             });
         });

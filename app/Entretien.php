@@ -93,12 +93,15 @@ class Entretien extends Model
       return $entretiens;
     }
 
-    public static function existInterview($eid, $user_id, $start, $end){
+    public static function existInterview($eid, $user_id, $start, $end, $operator = "<>"){
+        if(\Request::is('entretiens/storeCheckedUsers')){
+            $operator = "=";
+        }
         $existInterview = \DB::table('entretiens as e')
             ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
             ->select('e.*', 'e.id as entretienId', 'eu.*')
             ->where('eu.user_id', $user_id)
-            ->where('e.id', '<>', $eid)
+            ->where('e.id', $operator, $eid)
             ->where(function ($query) use ($start, $end) {
             $query->where(function ($q) use ($start, $end) {
                 $q->where('e.date', '>', $start)
@@ -115,6 +118,12 @@ class Entretien extends Model
             });
         })->count();
         return $existInterview;
+    }
+
+    public static function note($eid, $uid)
+    {
+        $eu = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)->first();
+        return $eu ? $eu->note : 0;
     }
 
 }

@@ -50,11 +50,17 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        $auth = Auth::user();
+        $society = User::getOwner();
         $taux = 0;
-        $finished = Answer::where('user_id', '<>', NULL)->where('mentor_id', '<>', NULL)->groupBy('user_id', 'entretien_id', 'mentor_id')->get()->count();
-        $inProgress = Entretien_user::count();
-        $users = User::all();
+        $inProgress_query = \DB::table('entretiens as e')
+            ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
+            ->select('e.*', 'e.id as entretienId')
+            ->where('e.user_id', $society->id);
+        $inProgress = count($inProgress_query->get());
+
+        $finished = $inProgress_query->where('mentor_submitted', 1)->where('user_submitted', 1);
+        $finished = count($inProgress_query->get());
+        $users = User::getUsers()->get();
         $nbMentors = 0;
         $nbColls = 0;
         foreach ($users as $user) {

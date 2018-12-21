@@ -91,8 +91,9 @@ i{
 }
 .spinner-wp p{
     position: absolute;
-    top: 60%;
-    left: 50%;
+    top: 109%;
+    left: 18%;
+    width: 100%;
 }
 .table-inversed-blue th{
     background: #3c8dbc;
@@ -168,7 +169,15 @@ i{
     background: #fff;
     border: 0;
 }
-
+.user-panel>.info>p{
+    font-weight: normal;
+}
+.home-box-img-profile{
+   padding: 2em; 
+}
+.home-box-img-profile img{
+   margin: auto;
+}
 .profile .nav-tabs-custom, .index .nav-tabs-custom{
     overflow: auto;
     padding: 1em 0 0 0;
@@ -699,7 +708,7 @@ p.help-block{
     display: block;
     cursor: pointer;
 }
-.apercu .alert{
+.apercu .alert, .evaluation-survey h4.alert{
     padding: 5px;
     margin-top: 0 !important;
 }
@@ -719,3 +728,92 @@ p.help-block{
     width: 58px;
     padding-left: 4px;
 }
+.fa.checked{
+    color: orange;
+}
+
+/* spinner looding */
+.looding{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+}
+.looding .reloadDouble{
+    font-size: 50px;
+}
+.reloadDouble {
+  display: inline-block;
+  position: relative;
+  -webkit-animation: rotate 1.5s linear infinite;
+  animation: rotate 1.5s linear infinite;
+  border-color: transparent #47d1da;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 0.125em;
+  height: 1.5em;
+  margin: 0.25em;
+  width: 1.5em;
+}
+.reloadDouble:before, .reloadDouble:after {
+  border-style: solid;
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.reloadDouble:after {
+  border-color: transparent transparent transparent #47d1da;
+  border-width: 0.3125em 0 0.3125em 0.5em;
+  top: -0.3125em;
+  left: 0.0625em;
+}
+.reloadDouble:before {
+  border-color: transparent #47d1da transparent transparent;
+  border-width: 0.3125em 0.5em 0.3125em 0;
+  bottom: -0.3125em;
+  right: 0.0625em;
+}
+
+.reloadSingle {
+  height: 2em;
+  padding: 0.25em;
+  width: 2em;
+}
+.reloadSingle:before, .reloadSingle:after {
+  content: "";
+  display: block;
+}
+.reloadSingle:before {
+  border-color: transparent #47d1da #47d1da #47d1da;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 0.125em;
+  height: 1.5em;
+  width: 1.5em;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.reloadSingle:after {
+  border-color: transparent transparent transparent #47d1da;
+  border-style: solid;
+  border-width: 0.3125em 0 0.3125em 0.5em;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+}
+
+@-webkit-keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
