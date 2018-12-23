@@ -501,7 +501,7 @@
                                 <div class="direct-chat-msg mb20">
                                     <div class="direct-chat-info clearfix">
                                         <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>
-                                        <span class="direct-chat-timestamp pull-right">{{ Carbon\Carbon::parse($comment->created_at)->format('d/m/Y H:i')}}</span>
+                                        <span class="direct-chat-timestamp pull-right">{{ Carbon\Carbon::parse($comment->created_at)->format('d/m/Y à H:i')}}</span>
                                     </div>
                                     <img class="direct-chat-img" src="{{ App\User::avatar($user->id) }}" alt="message user image">
                                     <div class="direct-chat-text">
@@ -513,7 +513,7 @@
                                 <div class="direct-chat-msg right">
                                     <div class="direct-chat-info clearfix">
                                         <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>
-                                        <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y H:i') : '' }}</span>
+                                        <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y à H:i') : '' }}</span>
                                     </div>
                                     <img class="direct-chat-img" src="{{ App\User::avatar($user->parent->id) }}" alt="message user image">
                                     <div class="direct-chat-text">
