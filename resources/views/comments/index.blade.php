@@ -42,7 +42,7 @@
                                             <div class="direct-chat-msg mb20">
                                                 <div class="direct-chat-info clearfix">
                                                     <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>
-                                                    <span class="direct-chat-timestamp pull-right">{{ Carbon\Carbon::parse($comment->created_at)->format('d/m/Y H:i')}}</span>
+                                                    <span class="direct-chat-timestamp pull-right">{{ Carbon\Carbon::parse($comment->created_at)->format('d/m/Y à H:i')}}</span>
                                                 </div>
                                                 <img class="direct-chat-img" src="{{ App\User::avatar($user->id) }}" alt="message user image">
                                                 <div class="direct-chat-text">
@@ -58,7 +58,7 @@
                                             <div class="direct-chat-msg right">
                                                 <div class="direct-chat-info clearfix">
                                                     <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>
-                                                    <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y H:i') : '' }}</span>
+                                                    <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y à H:i') : '' }}</span>
                                                 </div>
                                                 <img class="direct-chat-img" src="{{ App\User::avatar($user->parent->id) }}" alt="message user image">
                                                 @if($user->id != Auth::user()->id && $comment->mentorComment == '')
@@ -73,7 +73,7 @@
                                                     <div class="direct-chat-text">
                                                         {{ $comment->mentorComment or '---' }}
                                                         @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                                                            <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->parent->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                                        <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->parent->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                                         @endif
                                                     </div>
                                                 @endif
@@ -85,14 +85,14 @@
                             @else
                                 @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                             @endif
-                            <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
+                            <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
                             @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
-                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
+                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-danger"><i class="fa fa-check"></i> Soumettre</buton>
                             @endif
                             @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
-                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-success"><i class="fa fa-check"></i> Soumettre</buton>
+                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-danger"><i class="fa fa-check"></i> Soumettre</buton>
                             @endif
-                            @if(!App\Entretien::answered($e->id, $user->id))
+                            @if(!App\Entretien::answered($e->id, $user->id) && !$comment)
                                 <a onclick="return chmComment.create({eid: {{$e->id}}, uid:{{$user->id}} })" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un commentaire</a>
                             @endif
                         </div>

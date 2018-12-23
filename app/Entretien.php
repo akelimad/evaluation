@@ -126,4 +126,18 @@ class Entretien extends Model
         return $eu ? $eu->note : 0;
     }
 
+    public static function countUnanswered()
+    {
+        $society = User::getOwner();
+        $countUnanswred = \DB::table('entretiens as e')
+            ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
+            ->select('e.id')
+            ->where('e.user_id', $society->id)
+            ->where('eu.user_submitted', 1)
+            ->where('eu.mentor_submitted', 0)
+            ->get();
+        return count($countUnanswred);
+    }
+
+
 }

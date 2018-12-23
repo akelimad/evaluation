@@ -13,7 +13,7 @@ class AddColumnNoteAnswersTable extends Migration
     public function up()
     {
         Schema::table('answers', function (Blueprint $table) {
-            $table->integer('note')->after('mentor_answer')->nullable()->comment = 'This can be filled by grp note or by qst note';
+            $table->double('note')->after('mentor_answer')->nullable()->comment = 'This can be filled by grp note or by qst note';
         });
     }
 

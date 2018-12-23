@@ -12,6 +12,15 @@ body{
 .mb20{
     margin-bottom: 20px !important;
 }
+.mb-0{
+    margin-bottom: 0 !important;
+}
+.pt-0{
+    padding-top: 0 !important;
+}
+.pb-0{
+    padding-bottom: 0 !important;
+}
 .disabled{
     cursor: not-allowed;
     opacity: .7;
@@ -95,8 +104,11 @@ i{
     left: 18%;
     width: 100%;
 }
+.table-slim tbody > tr > td{
+    padding: 5px;
+}
 .table-inversed-blue th{
-    background: #3c8dbc;
+    background: #2bb6d8;
     color: white;
     font-weight: normal;
 }

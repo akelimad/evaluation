@@ -89,10 +89,10 @@
                                                     {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, Auth::user()->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->user_updated_at)->format('d/m/Y H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
+                                                    <span class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, Auth::user()->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par mentor le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y H:i') :'Pas encore validée par votre mentor'}}"> </span>
+                                                    <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par mentor le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y à H:i') :'Pas encore validée par votre mentor'}}"> </span>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="label label-danger empty"> </span>
@@ -257,4 +257,21 @@
             <div class="clearfix"></div>
         </div>
     </section>
+@endsection
+
+@section('javascript')
+<script>
+    // this to show popup message for ADMIN only after authentication
+    $(window).on('load', function() {
+        @if(\Auth::user()->hasRole('ADMIN') && session('popup'))
+            swal({
+                title: "Bienvenue", 
+                text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration", 
+                type: "success"
+            }, {
+                @php(session()->forget('popup'))
+            });
+        @endif
+    });
+</script>
 @endsection

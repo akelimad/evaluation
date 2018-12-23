@@ -56,12 +56,26 @@ $(function(){
     });
 
     $('#submitAnswers').click(function() {
-        checked = $("#surveyForm input[type=checkbox]:checked").length;
-        if(checked<0) {
-            $(".checkboxError").fadeIn();
-            var errorDiv = $('.checkboxError:visible').first();
-            var scrollPos = errorDiv.offset().top;
-            $(window).scrollTop(scrollPos);
+        $('.form-group').find('input[type="checkbox"]')
+        var check = true;
+        $(".form-group").each(function(){
+            checkboxLength = $(this).find('input[type="checkbox"]').length
+            radiosLength = $(this).find('input[type="radio"]').length
+            if(checkboxLength > 0) {
+                var checkedCount = $(this).find('input[type="checkbox"]:checked').length
+                if(checkedCount == 0){
+                    check = false;
+                }
+            }
+            if(radiosLength > 0) {
+                var checkedRadioCount = $(this).find('input[type="radio"]:checked').length
+                if(checkedRadioCount == 0){
+                    check = false;
+                }
+            }
+        });
+        if(!check){
+            alert('Veuillez selectionner au moins une option.');
             return false;
         }
     });

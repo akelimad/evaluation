@@ -34,6 +34,7 @@ class SurveyController extends Controller
         }
         $survey->title = $request->title;
         $survey->description = $request->description;
+        $survey->type = $request->type;
         $survey->user_id = User::getOwner()->id;
         $survey->save();
         if($survey->save()) {
@@ -54,7 +55,7 @@ class SurveyController extends Controller
         // if($incompleteSurvey == true){
         //     return ['title' => 'Visualiser un questionnaire', 'content' => "<i class='fa fa-info-circle'></i>le questionnaire est incomplet, vous ne pouvez pas le vésualiser. veuillez attribuer les choix pour les questions multichoix."];
         // }else{
-            return ['title' => 'Visualiser un questionnaire', 'content' => $content];
+            return ['title' => 'Visualiser le questionnaire', 'content' => $content];
         // }
     }    
 
@@ -64,7 +65,7 @@ class SurveyController extends Controller
         $s = Survey::find($id);
         echo view('surveys.form', compact('s'));
         $content = ob_get_clean();
-        return ['title' => 'Modifier un questionnaire', 'content' => $content];
+        return ['title' => 'Modifier le questionnaire', 'content' => $content];
     }
 
     public function update(Request $request, $id)

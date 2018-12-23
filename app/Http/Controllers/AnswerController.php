@@ -91,7 +91,7 @@ class AnswerController extends Controller
         $note = $grpCount > 0 ? $note/$grpCount : 0;
         Entretien_user::where('user_id', $uid)
             ->where('entretien_id', $eid)
-            ->update(['note' => $note]);
+            ->update(['note' => Answer::cutNum($note)]);
 
         return redirect()->back();
     }

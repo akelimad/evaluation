@@ -192,7 +192,7 @@
                             <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> Quests. d'évaluation </a>
                         </li>
                         <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
-                            <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Emails </a>
+                            <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Courriers automatiques</a>
                         </li>
                         <li class="{{ Request::is('config/roles') ? 'active' : '' }}">
                             <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> Rôles </a>

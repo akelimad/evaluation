@@ -12,7 +12,7 @@
                 <div class="box box-primary">
                     <div class="filter-box mb40">
                         <h4 class="help-block showFormBtn">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right"> <i class="fa fa-chevron-down"></i></button></h4>
-                        <form action="{{ url('entretiens/evaluations') }}" class="criteresForm" style="{{ isset($params) ? 'display: block;':'' }}">
+                        <form action="{{ url('entretiens/evaluations') }}" class="criteresForm" style="{{ $params ? 'display: block;':'' }}">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -67,10 +67,14 @@
                     <div class="box-body table-responsive no-padding">
                         <form action="{{ url('notifyMentorsInterview') }}" method="POST">
                         {{ csrf_field() }}
-                        <table class="table table-hover table-inversed-blue">
+                        <table class="table table-hover table-striped table-inversed-blue">
                             <thead>
                                 <tr>
-                                    <th> <input type="checkbox" id="checkAll" </th>
+                                    @if(App\Entretien::countUnanswered()>0)
+                                    <th>
+                                        <input type="checkbox" id="checkAll">
+                                    </th>
+                                    @endif
                                     <th>Réf</th>
                                     <th>Clôturé le</th>
                                     <th>Collaborateur</th>
@@ -86,14 +90,16 @@
                             <tbody>
                                 @foreach($results as  $k => $row)
                                     <tr class="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'has-motif': 'no-motif' }}" data-toggle="tooltip" title="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'Il ya un motif mentionné pour '.$row->name.''.$row->last_name.'. cliquer sur l\'icon de paramettre pour le voir ou le mettre à jour' : '' }}">
+                                        @if(App\Entretien::countUnanswered()>0)
                                         <td>
                                             @if(!App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId))
-                                           <div class="wrap-checkItem">
+                                            <div class="wrap-checkItem">
                                                 <input type="checkbox" name="data[{{$k}}][mentorId]" class="usersId checkItem" autocomplete="off" value="{{ App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id: $row->userId }}" >
                                                 <input type="hidden" name="data[{{$k}}][entretienId]" value="{{ $row->entretienId }}">
                                             </div>
-                                           @endif
+                                            @endif
                                         </td>
+                                        @endif
                                         <td>
                                             {{$row->entretienId}}
                                         </td>
@@ -115,10 +121,10 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <span class="label label-{{App\Entretien::answered($row->entretienId, $row->userId) == true ? 'success':'danger'}} empty"> </span>
+                                            <span class="label label-{{App\Entretien::answered($row->entretienId, $row->userId) == true ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, $row->userId) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $row->userId)->user_updated_at)->format('d/m/Y à H:i') : ''}}"> </span>
                                         </td>
                                         <td class="text-center">
-                                            <span class="label label-{{App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId ) ? 'success':'danger'}} empty"> </span>
+                                            <span class="label label-{{App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId ) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, $row->userId, App\User::getMentor($row->userId)->id) ? 'Validée par mentor le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $row->userId)->mentor_updated_at)->format('d/m/Y H:i') :''}}"> </span>
                                         </td>
                                         <td class="text-center">
                                             <span class="label label-danger empty"> </span>
@@ -167,7 +173,7 @@
                         </table>
                         {{ $results->links() }}
                         <div class="sendInvitationBtn mb40">
-                            <button type="submit" class="btn btn-success"> <i class="fa fa-envelope"></i> Envoyer l'invitation</button>
+                            <button type="submit" class="btn btn-success"> <i class="fa fa-envelope"></i> Relancer le(s) mentor(s)</button>
                         </div>
                         </form>
                     </div>
@@ -206,11 +212,14 @@
                     "_token": token,
                 },
             }).done(function(response){
-                $(".notifyMentor>i#icon-"+uid).removeClass("fa-spin").addClass("fa-bell");
                 swal({ 
                     title: "Envoyé!", 
                     text: "Un email a bien été envoyé au mentor !", 
                     type: "success" 
+                }).then(function() {
+                    $(".notifyMentor>i#icon-"+uid).removeClass("fa-spin").addClass("fa-bell");
+                    $(".notifyMentor").removeClass('relanceMentor');
+                    $(".notifyMentor").removeAttr('disabled');
                 });
             }).fail(function(){
                 $(this).removeClass('relanceMentor')

@@ -14,4 +14,13 @@
             <textarea name="description" id="description" class="form-control">{{ isset($s->description) ? $s->description :''}}</textarea>
         </div>
     </div>
+    <div class="form-group">
+        <label for="description" class="col-md-2 control-label">Type</label>
+        <div class="col-md-10">
+            <select name="type" class="form-control">
+                <option value="0" {{ isset($s->type) && $s->type == 0 ? 'selected':''}}>Standard</option>
+                <option value="1" {{ isset($s->type) && $s->type == 1 ? 'selected':''}}>Personnalisé</option>
+            </select>
+        </div>
+    </div>
 </div>

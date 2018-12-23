@@ -99,7 +99,7 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
+        'date_limit' => [
             'rule-name' => 'custom-message',
         ],
     ],

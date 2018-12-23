@@ -70,7 +70,9 @@
                                 @foreach($groupes as $g)
                                     @if(count($g->questions)>0)
                                     <div class="panel panel-info">
-                                        <div class="panel-heading">{{ $g->name }}</div>
+                                        <div class="panel-heading">{{ $g->name }}
+                                            <span class="pull-right"> Note : {{App\Answer::getGrpNote($g->id, $user->id, $e->id)}}</span>
+                                        </div>
                                         <div class="panel-body">
                                         @forelse($g->questions as $q)
                                             <div class="form-group">
@@ -110,17 +112,17 @@
                                     @endif
                                 @endforeach
                             </div>  
+                            <div class="callout callout-success" style="margin-top:15px">
+                                <p class="">
+                                    <i class="fa fa-info-circle fa-2x"></i>
+                                    <span class="content-callout h4"><b style="margin-right: 1em;">Note globale : {{App\Entretien::note($e->id, $user->id)}}</b>
+                                        @foreach(App\Answer::NOTE_DEGREE as $key => $value)
+                                            <span class="fa fa-star {{$key <= App\Entretien::note($e->id, $user->id) ? 'checked':''}}" title="{{$value['title'].' ('.$value['ref'].')'}}" data-toggle="tooltip"></span>
+                                        @endforeach
+                                    </span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="callout callout-success" style="margin-top:15px">
-                        <p class="">
-                            <i class="fa fa-info-circle fa-2x"></i>
-                            <span class="content-callout h4">Note globale
-                                @foreach(App\Answer::NOTE_DEGREE as $key => $value)
-                                    <span class="fa fa-star {{$key <= App\Entretien::note($e->id, $user->id) ? 'checked':''}}" title="{{$value['title'].' ('.$value['ref'].')'}}" data-toggle="tooltip"></span>
-                                @endforeach
-                            </span>
-                        </p>
-                    </div>
                         @else
                             <p class="alert alert-default">Aucune donnée disponible !</p>
                         @endif

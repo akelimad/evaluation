@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Email;
 use App\Action;
-use App\Http\Requests;
+use App\User;
 
 class EmailController extends Controller
 {
@@ -17,35 +17,56 @@ class EmailController extends Controller
 
     public function index()
     {
-        $emails = Email::paginate(10);
-        $emailActions = Action::paginate(10);
-        return view('emails.index', compact('emails', 'emailActions'));
+        $emails = Email::getAll()->paginate(10);
+        return view('emails.index', compact('emails'));
     }
 
-    public function create()
+    public function form(Request $request)
     {
+        $id = $request->id;
         ob_start();
-        echo view('emails.form');
+        if(isset($id) && is_numeric($id)) {
+            $email = Email::find($id);
+            $title = "Mettre à jour l'email";
+        } else {
+            $email = new Email();
+            $title = "Ajouter un email";;
+        }
+        echo view('emails.form', compact('email'));
         $content = ob_get_clean();
-        return ['title' => 'Ajouter un email', 'content' => $content];
+        return ['title' => $title, 'content' => $content];
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $id = $request->id;
+        $rules = [
+            'ref'       => 'required',
             'sender'    => 'required',
             'subject'   => 'required',
             'message'   => "required",
-        ]);
-        if ($validator->fails()) {
-            return ["status" => "danger", "message" => $validator->errors()->all()];
+        ];
+
+        $query = Email::where('ref', $request->ref)->where('user_id', User::getOwner()->id);
+        if(isset($id) && is_numeric($id)){
+            $email =  Email::find($id);
+            $exist = $query->where('id', '<>', $id)->count();
+        }else{
+            $email = new Email();
+            $exist = $query->count();
         }
 
-        if($request->id == null ){
-            $email = new Email();
-        }else{
-            $email =  Email::find($request->id);
+        $validator = Validator::make($request->all(), $rules);
+        $messages = $validator->errors();
+
+        if($exist > 0) $messages->add('exist_email', 'La réference existe déjà !');
+
+        if (count($messages) > 0) {
+            return ["status" => "danger", "message" => $messages];
         }
+
+        $email->ref = $request->ref;
+        $email->user_id = User::getOwner()->id;
         $email->sender = $request->sender;
         $email->name = $request->name;
         $email->subject = $request->subject;
@@ -58,28 +79,10 @@ class EmailController extends Controller
         }
     }
 
-    public function show($id)
+    public function delete(Request $request)
     {
-        //
-    }
-
-    public function edit($id)
-    {
-        ob_start();
-        $email = Email::find($id);
-        echo view('emails.form', compact('email'));
-        $content = ob_get_clean();
-        return ['title' => 'Modifier un email', 'content' => $content];
-    }
-
-    public function update(Request $request, $id)
-    {
-        
-    }
-
-    public function destroy($id)
-    {
-        //
+        $email = Email::findOrFail($request->id);
+        if($email) $email->delete();
     }
 
 }

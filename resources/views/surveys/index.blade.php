@@ -16,16 +16,17 @@
                     <div class="box-header">
                         <h3 class="box-title">Liste des questionnaires d'évaluation <span class="badge">{{$surveys->total()}}</span></h3>
                         <div class="box-tools mb40">
-                            <a href="javascript:void(0)" onclick="return chmSurvey.create()" class="btn bg-maroon" title="Ajouter un questionnaire" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
+                            <a href="javascript:void(0)" onclick="return chmSurvey.create()" class="btn bg-maroon" title="" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
                     </div>
-                    <p class="help-block">Ces questionnaires vont vous permettre de les utiliser pour la partie évaluation de l'entretien. <br> vous pouvez créer autant de questionnaires et allez vers <a href="{{ url('entretiens/index') }}" target="_blank">la page des entretiens </a> pour choisir quel questionnaire sera utilisé lors de l'évaluation.</p>
+                    <p class="help-block">Ces questionnaires vont vous permettre de les utiliser pour l'évaluation annuelle.<br> Vous pouvez créer autant de questionnaires et allez vers la page des <a href="{{ url('entretiens/index') }}" target="_blank">entretiens</a> pour choisir quel questionnaire sera utilisé lors de l'évaluation.</p>
                     @if(count($surveys)>0)
                         <div class="box-body table-responsive no-padding mb40">
                             <table class="table table-hover table-strped table-inversed-blue">
                                 <tr>
                                     <th>Id</th>
                                     <th>Titre</th>
+                                    <th>Type</th>
                                     <th>Description</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
@@ -33,6 +34,7 @@
                                 <tr>
                                     <td> {{ $survey->id }}</td>
                                     <td> {{ $survey->title }}</td>
+                                    <td> {{ $survey->type == 0 ? 'Standard':'Personnalisé' }}</td>
                                     <td> {{ $survey->description ? $survey->description : '---' }} </td>
                                     <td class="text-center">  
                                         

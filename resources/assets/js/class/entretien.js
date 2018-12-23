@@ -131,7 +131,7 @@ export default class chmEntretien {
       url: window.chmSite.url('entretiens/' + params.eid + '/u/' + params.user + '/submit'),
       data: {'_token': token, '_method': 'PUT'}
     }, {
-      message: '<i class="fa fa-trash"></i>&nbsp;Soumission en cours...'
+      message: '<i class="fa fa-send"></i>&nbsp;Soumission en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')
   }

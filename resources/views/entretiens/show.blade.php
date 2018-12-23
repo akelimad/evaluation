@@ -53,7 +53,7 @@
                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a> 
                                         @role(['MENTOR', 'ADMIN'])
                                         @if(!App\Entretien::answered($e->id, $user->id))
-                                        <a href="{{url('notifyUserInterview', ['entretien'=>$e, 'user'=> $user])}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> envoyez-le un email pour l'informer</a>
+                                        <a href="{{url('notifyUserInterview', ['entretien'=>$e, 'user'=> $user])}}" class="btn btn-primary"> <i class="fa fa-envelope"></i> Relancer</a>
                                         @endif
                                         @endrole
                                     </div>

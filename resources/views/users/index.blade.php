@@ -19,7 +19,7 @@
                 <div class="box box-primary">
                     <div class="filter-box mb40">
                         <h4 class="help-block showFormBtn">  <i class="fa fa-filter text-info"></i> Choisissez les critères de recherche que vous voulez <button class="btn btn-info btn-sm pull-right"> <i class="fa fa-chevron-down"></i></button></h4>
-                        <form action="{{ url('users') }}" class="criteresForm" style="{{ isset($params) ? 'display: block;':'' }}">
+                        <form action="{{ url('users') }}" class="criteresForm" style="{{ $params ? 'display: block;':'' }}">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">

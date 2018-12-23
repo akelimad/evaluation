@@ -141,19 +141,17 @@ Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 Route::post('answers/store', 'AnswerController@store');
 
 Route::get('config/emails', 'EmailController@index');
-Route::get('emails/create', 'EmailController@create');
+Route::get('emails/form', 'EmailController@form');
 Route::post('emails/store', 'EmailController@store');
-Route::get('emails/{id}', 'EmailController@show');
-Route::get('emails/{id}/edit', 'EmailController@edit');
 Route::delete('emails/{id}/delete', 'EmailController@delete');
 
-Route::get('emailActions', 'ActionController@index');
-Route::get('emailActions/create', 'ActionController@create');
-Route::post('emailActions/store', 'ActionController@store');
-Route::get('emailActions/{id}', 'ActionController@show');
-Route::get('emailActions/{id}/edit', 'ActionController@edit');
-Route::delete('emailActions/{id}/delete', 'ActionController@delete');
-Route::post('emails/actions/{actionId}/attach', 'ActionController@attachEmailAtion');
+// Route::get('emailActions', 'ActionController@index');
+// Route::get('emailActions/create', 'ActionController@create');
+// Route::post('emailActions/store', 'ActionController@store');
+// Route::get('emailActions/{id}', 'ActionController@show');
+// Route::get('emailActions/{id}/edit', 'ActionController@edit');
+// Route::delete('emailActions/{id}/delete', 'ActionController@delete');
+// Route::post('emails/actions/{actionId}/attach', 'ActionController@attachEmailAtion');
 
 Route::get('config/settings', 'SettingController@index');
 Route::get('setting/{id}/edit', 'SettingController@edit');

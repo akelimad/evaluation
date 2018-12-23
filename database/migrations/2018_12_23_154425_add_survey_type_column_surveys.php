@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnSeniorityUsersTable extends Migration
+class AddSurveyTypeColumnSurveys extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddColumnSeniorityUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('seniority')->after('qualification')->nullable();
+        Schema::table('surveys', function (Blueprint $table) {
+            $table->tinyInteger('type')->after('description')->nullable();
         });
     }
 
@@ -24,7 +24,7 @@ class AddColumnSeniorityUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('surveys', function (Blueprint $table) {
             //
         });
     }

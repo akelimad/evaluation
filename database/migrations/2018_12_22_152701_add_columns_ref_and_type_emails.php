@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnEntretienUserTable extends Migration
+class AddColumnsRefAndTypeEmails extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class AddColumnEntretienUserTable extends Migration
      */
     public function up()
     {
-        Schema::table('entretien_user', function (Blueprint $table) {
-            $table->double('note')->after('motif')->nullable();
+        Schema::table('emails', function (Blueprint $table) {
+            $table->string('ref')->after('user_id');
+            $table->string('type')->after('message')->nullable();
         });
     }
 
@@ -24,7 +25,7 @@ class AddColumnEntretienUserTable extends Migration
      */
     public function down()
     {
-        Schema::table('entretien_user', function (Blueprint $table) {
+        Schema::table('emails', function (Blueprint $table) {
             //
         });
     }

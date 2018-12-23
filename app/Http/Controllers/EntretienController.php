@@ -5,8 +5,10 @@ ini_set('max_execution_time', 300); //5 minutes
 
 use App\Fonction;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Http\Mail\MailerController;
+use Auth;
+use Session;
+use DB;
 use App\User;
 use App\Entretien;
 use App\Entretien_user;
@@ -14,9 +16,6 @@ use App\Question;
 use App\Survey;
 use App\Evaluation;
 use Carbon\Carbon;
-use Auth;
-use Mail;
-use Session;
 use App\EntretienObjectif;
 use App\Formation;
 use App\Skill;
@@ -24,7 +23,6 @@ use App\Objectif;
 use App\Carreer;
 use App\Salary;
 use App\Comment;
-use DB;
 use App\Action;
 use App\Email;
 
@@ -34,13 +32,6 @@ class EntretienController extends Controller
   {
     $this->middleware('auth');
   }
-
-  public function rand_string($length)
-  {
-    $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    return substr(str_shuffle($chars), 0, $length);
-  }
-
 
   /**
    * Display a listing of the resource.
@@ -84,23 +75,23 @@ class EntretienController extends Controller
       ->join('users as u', 'u.id', '=', 'eu.user_id')
       ->select('e.*', 'e.id as entretienId', 'u.*', 'u.id as userId', 'eu.note')
       ->where('e.user_id', User::getOwner()->id);
-    $params = [];
+    $params = false;
     if (!empty($dlimite)) {
       $dlimite = Carbon::createFromFormat('d-m-Y', $dlimite)->toDateString();
       $query->where('e.date_limit', '=', $dlimite);
-      $params[] = $dlimite;
+      $params = true;
     }
     if (!empty($title)) {
       $query->where('e.id', '=', $title);
-      $params[] = $title;
+      $params = true;
     }
     if (!empty($uname)) {
       $query->where('u.name', 'like', '%' . $uname . '%');
-      $params[] = $uname;
+      $params = true;
     }
     if (!empty($ufunction)) {
       $query->where('u.function', '=', $ufunction);
-      $params[] = $ufunction;
+      $params = true;
     }
     $results = $query->paginate(10);
 
@@ -159,8 +150,7 @@ class EntretienController extends Controller
     $id = $request->id;
     $selectedUsers = $request->usersId;
     $entretienUsers = $removedUsers = [];
-    $date = Carbon::createFromFormat('d-m-Y', $request->date);
-    $date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit);
+    
     if (isset($id) && is_numeric($id)) {
       $entretien = Entretien::find($id);
       $entretienUsers = $entretien->users()->pluck('id')->toArray();
@@ -175,21 +165,34 @@ class EntretienController extends Controller
       'date_limit' => 'required|after:date',
       'titre' => 'required|min:3|max:50|regex:/^[0-9a-zÀ-ú\s\-_"°^\'’.,:]*$/i',
     ];
-    $validator = \Validator::make($request->all(), $rules);
+    $messages = [
+      'date.required' => "La date de l'entretien est obligatoire",
+      'date_limit.required' => "La date de clôture de l'entretien est obligatoire",
+      'date_limit.after' => "La date de clôture doit être une date postérieure à la date de l'entretien",
+      'titre.required' => "Le titre est obligatoire",
+      'titre.min' => "Le titre ne peut pas contenir moins de :min lettres",
+      'titre.max' => "Le titre ne peut pas contenir plus de :max lettres",
+      'titre.regex' => "Le titre ne peut contenir que les caractères :regex",
+    ];
+    $validator = \Validator::make($request->all(), $rules, $messages);
     $messages = $validator->errors();
-    $survey = Survey::getAll()->where('title', 'like', '%standard%')->first();
+    $survey = Survey::getAll()->where('type', '=', 0)->first();
     $objectif = EntretienObjectif::where('title', 'standard')->first();
     if ($survey == null || $objectif == null) {
-      $messages->add('null_survey_obj', "Aucun questionnaire et/ou objectif standard n'a été trouvé ! il faut les créer tout d'abord.");
+      $messages->add('null_survey_obj', "Aucun questionnaire standard n'a été trouvé ! il faut le créer tout d'abord.");
     }
     $hasAlreadyInt = [];
-    foreach ($selectedUsers as $uid) {
-      if (Entretien::existInterview($entretien->id, $uid, $date, $date_limit)) {
-        $hasAlreadyInt[] = User::find($uid)->name;
+    if(!empty($request->date) && !empty($request->date_limit)) {
+      $date = Carbon::createFromFormat('d-m-Y', $request->date);
+      $date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit);
+      foreach ($selectedUsers as $uid) {
+        if (Entretien::existInterview($entretien->id, $uid, $date, $date_limit)) {
+          $hasAlreadyInt[] = User::find($uid)->name;
+        }
       }
     }
     if (count($hasAlreadyInt) > 0) {
-      $messages->add('existInterview', "Il ya déjà un entretien programmé dans la période choisie pour les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!");
+      $messages->add('existInterview', "Il ya déjà un entretien programmé les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!");
     }
 
     if (count($messages) > 0) {
@@ -206,59 +209,32 @@ class EntretienController extends Controller
     $entretien->save();
     if (empty($id)) $entretien->evaluations()->attach($evaluations);
 
-    $mentors_action = Action::where('slug', 'notify_mentor')->first();
-    $colls_action = Action::where('slug', 'notify_collaborator')->first();
-    $mentors_email = $mentors_action->emails()->first();
-    $colls_email = $colls_action->emails()->first();
+    $mentorEmail = Email::getAll()->where('ref', 'mentor_eval')->first();
+    $collEmail = Email::getAll()->where('ref', 'auto_eval')->first();
 
     $already_sent = [];
 
     foreach ($selectedUsers as $uid) {
       $user = User::find($uid);
       $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
-      $this->mailSend($user, $entretien, $colls_email);
+      MailerController::send($user, $entretien, $collEmail);
       if (!in_array($user->parent->id, $already_sent)) {
-        $this->mailSend($user->parent, $entretien, $mentors_email);
+        MailerController::send($user->parent, $entretien, $mentorEmail);
         $already_sent[] = $user->parent->id;
       }
     }
 
     // handle removed colls in edit action
-    $remove_coll_action = Action::where('slug', 'remove_collaborator')->first();
-    if($remove_coll_action) {
-      $remove_coll_email = $remove_coll_action->emails()->first();
+    $deleteEvalEmail = Email::getAll()->where('ref', 'delete_eval')->first();
+    if($deleteEvalEmail) {
       foreach ($removedUsers as $uid) {
         $user = User::find($uid);
         $entretien->users()->detach($user);
-        $this->mailSend($user, $entretien, $remove_coll_email);
+        MailerController::send($user, $entretien, $deleteEvalEmail);
       }
     }
 
-
     return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-  }
-
-  public function mailSend($user, $entretien, $msg_tpl)
-  {
-    $password = $this->rand_string(10);
-    $user->password = bcrypt($password);
-    $user->save();
-    $body = Email::renderMessage($msg_tpl->message, [
-      'user_fname'      => $user->name ? $user->name : 'coll_fname',
-      'coll_fullname'   => $user ? $user->name .' '. $user->last_name : '',
-      'mentor_fullname' => $user->parent ? $user->parent->name .' '. $user->parent->last_name : '',
-      'title'           => isset($entretien->titre) ? $entretien->titre : '---',
-      'date_limit'      => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
-      'site_url'        => url('/'),
-      'email'           => $user->email,
-      'password'        => $password,
-    ]);
-    Mail::send([], [], function ($m) use ($user, $msg_tpl, $body) {
-      $m->from($msg_tpl->sender, $msg_tpl->name);
-      $m->to($user->email);
-      $m->subject($msg_tpl->subject);
-      $m->setBody($body, 'text/html');
-    });
   }
 
   public function storeCheckedUsers(Request $request)
@@ -284,18 +260,16 @@ class EntretienController extends Controller
     //   return ["status" => "danger", "message" => $messages];
     // }
 
-    $mentors_action = Action::where('slug', 'notify_mentor')->first();
-    $colls_action = Action::where('slug', 'notify_collaborator')->first();
-    $mentors_email = $mentors_action->emails()->first();
-    $colls_email = $colls_action->emails()->first();
+    $mentorEmail = Email::getAll()->where('ref', 'mentor_eval')->first();
+    $collEmail = Email::getAll()->where('ref', 'auto_eval')->first();
     
     $already_sent = [];
     foreach ($selectedUsers as $uid) {
       $user = User::find($uid);
       $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
-      $this->mailSend($user, $entretien, $colls_email);
+      MailerController::send($user, $entretien, $collEmail);
       if (!in_array($user->parent->id, $already_sent)) {
-        $this->mailSend($user->parent, $entretien, $mentors_email);
+        MailerController::send($user->parent, $entretien, $mentorEmail);
         $already_sent[] = $user->parent->id;
       }
     }
@@ -336,28 +310,20 @@ class EntretienController extends Controller
 
   public function notifyUserInterview($eid, $uid)
   {
-    $action = Action::where('slug', 'notify_collaborator')->first();
-    $email = $action->emails()->first();
+    $email = Email::getAll()->where('ref', 'auto_eval')->first();
     $user = User::findOrFail($uid);
     $entretien = Entretien::findOrFail($eid);
-    $password = $this->rand_string(10);
-    $user->password = bcrypt($password);
-    $user->save();
-    $this->mailSend($user, $entretien, $email);
+    MailerController::send($user, $entretien, $email);
     return redirect()->back()->with('message', 'Un email est envoyé avec succès à ' . $user->name . " " . $user->last_name);
   }
 
   public function notifyMentorInterview($eid, $uid)
   {
-    $action = Action::where('slug', 'notify_mentor')->first();
-    $email = $action->emails()->first();
+    $email = Email::getAll()->where('ref', 'mentor_eval')->first();
     $user = User::findOrFail($uid);
     $mentor = $user->parent;
     $entretien = Entretien::findOrFail($eid);
-    $password = $this->rand_string(10);
-    $mentor->password = bcrypt($password);
-    $mentor->save();
-    $this->mailSend($mentor, $entretien, $email);
+    MailerController::send($mentor, $entretien, $email);
     return redirect()->back()->with('relanceMentor', 'Un email de relance est envoyé avec succès à ' . $mentor->name . " " . $mentor->last_name . " pour évaluer " . $user->name . " " . $user->last_name);
   }
 
@@ -381,20 +347,19 @@ class EntretienController extends Controller
   public function notifyMentorsInterview(Request $request)
   {
     $mentors = [];
-    $action = Action::where('slug', 'notify_mentor')->first();
-    $email = $action->emails()->first();
+    $email = Email::getAll()->where('ref', 'mentor_eval')->first();
+    if(!$request->data) return  redirect()->back();
     $mentors = $this->RemoveDuplicate($request->data, 'mentorId');
-    foreach ($mentors as $value) {
-      if (count($value) > 1) {
-        $entretien = Entretien::find($value['entretienId']);
-        $mentor = User::find($value['mentorId']);
-        $password = $this->rand_string(10);
-        $mentor->password = bcrypt($password);
-        $mentor->save();
-        $this->mailSend($mentor, $entretien, $email);
+    if(count($mentors) > 0){
+      foreach ($mentors as $value) {
+        if (count($value) > 1) {
+          $entretien = Entretien::find($value['entretienId']);
+          $mentor = User::find($value['mentorId']);
+          MailerController::send($mentor, $entretien, $email);
+        }
       }
+      return redirect()->back()->with('relanceMentor', 'Un email de relance a été envoyé avec succès aux mentors. ');
     }
-    return redirect()->back()->with('relanceMentor', 'Un email de relance a été envoyé avec succès aux mentors. ');
   }
 
   public function updateMotif(Request $request, $eid, $uid)
@@ -478,6 +443,7 @@ class EntretienController extends Controller
 
   public function submission(Request $request)
   {
+    $entretien = Entretien::find($request->eid);
     if (Auth::user()->id == $request->user) { // this a collaborator
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)
@@ -492,12 +458,17 @@ class EntretienController extends Controller
           'mentor_submitted' => 1,
           'mentor_updated_at' => date('Y-m-d H:i:s'),
         ]);
+      $rh_validate = Email::getAll()->where('ref', 'rh_val')->first();
+      $rhs = User::getUsers()->with('roles')->whereHas('roles', function ($query) {
+        $query->where('name', '=', 'RH');
+      })->get();
+      if($rhs->count() > 0) {
+        foreach ($rhs as $rh) {
+          MailerController::send($rh, $entretien, $rh_validate);
+        }
+      }
     }
-    $entretien = Entretien::find($request->eid);
-    $submit_action = Action::where('slug', 'evaluation_submit')->first();
-    if($submit_action) {
-      $submit_email = $submit_action->emails()->first();
-      $this->mailSend(Auth::user(), $entretien, $submit_email);
-    }
+    $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
+    MailerController::send(Auth::user(), $entretien, $submit_email);
   }
 }

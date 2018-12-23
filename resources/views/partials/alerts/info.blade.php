@@ -6,10 +6,10 @@
     @if(is_array($messages))
         <ul>
         @foreach ($messages as $key => $message)
-            <li><strong>{{ $message }}</strong></li>
+            <li><span>{{ $message }}</span></li>
         @endforeach
         </ul>
     @else
-        <strong>{{ $messages }}</strong>
+        <span>{{ $messages }}</span>
     @endif
 </div>

@@ -128,6 +128,11 @@ class User extends Authenticatable
     return $this->hasMany('App\Survey');
   }
 
+  public function getEmails()
+  {
+    return $this->hasMany('App\Email');
+  }
+
   public static function hasMotif($eid, $uid)
   {
     $hasMotif = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)->first();
@@ -207,7 +212,7 @@ class User extends Authenticatable
   {
     $user = Auth::user();
     if($user->hasRole('ADMIN')) {
-      return $user->first_name.' '.$user->last_name;
+      return $user->name;
     }else{
       return $user->name.' '.$user->last_name;
     }

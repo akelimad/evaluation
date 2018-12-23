@@ -51,24 +51,24 @@ class UserController extends Controller
     }
     $entretiens = Entretien::select('id', 'titre')->get();
     $query = User::getUsers();
-    $params = [];
+    $params = false;
     if (!empty($name)){
       $query->where('name', 'like', '%' . $name . '%');
-      $params[] = $name;
+      $params = true;
     }
     if (!empty($department)){
       $query->where('service', '=', $department);
-      $params[] = $department;
+      $params = true;
     }
     if (!empty($function)){
       $query->where('function', '=', $function);
-      $params[] = $function;
+      $params = true;
     }
     if (!empty($role)){
       $query->whereHas('roles', function ($query) use ($role) {
         $query->where('id', '=', $role);
       });
-      $params[] = $role;
+      $params = true;
     }
     $users = $query->paginate($per_page);
     $fonctions = Fonction::getAll()->get();

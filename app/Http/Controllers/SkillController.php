@@ -44,7 +44,15 @@ class SkillController extends Controller
      */
     public function indexAdmin()
     {
-        $interviewSkills = Entretien::with('skills')->paginate(10);
+        // $interviewSkills = Entretien::getAll()->with('skills')->paginate(10);
+
+        $interviewSkills = \DB::table('entretiens as e')
+            ->join('skills as s', 'e.id', '=', 's.entretien_id')
+            ->select('e.*')
+            ->where('e.user_id', User::getOwner()->id)
+            ->groupBy('s.entretien_id')
+            ->get();
+        // dd($interviewSkills);
         $count = Skill::count();
         return view('skills.indexAdmin', compact('interviewSkills', 'count'));
     }
@@ -57,7 +65,7 @@ class SkillController extends Controller
     public function create()
     {
         ob_start();
-        $entretiens = Entretien::select('id','titre')->get();
+        $entretiens = Entretien::getAll()->select('id','titre')->get();
         $skills = [''=>''];
         echo view('skills.form', compact('entretiens', 'skills'));
         $content = ob_get_clean();

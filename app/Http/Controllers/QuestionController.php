@@ -49,7 +49,7 @@ class QuestionController extends Controller
         $question->parent_id =  0;
         $question->groupe_id = $request->groupe_id;
         $question->save();
-        if( count($request->subQuestions)>0 ){
+        if(isset($request->subQuestions) && count($request->subQuestions)>0 ){
             $question->children()->delete();
             foreach ($request->subQuestions as $key => $value) {
                 $choice = new Question(); 

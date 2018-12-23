@@ -71,7 +71,11 @@ class Answer extends Model
 
     public static function formated($number)
     {
-        return number_format($number, 0, "", "");
+        return number_format($number, 1, ".", "");
+    }
+
+    public static function  cutNum($num, $precision = 1){
+        return floor($num).substr($num-floor($num),1,$precision+1);
     }
 
 }

@@ -9,9 +9,25 @@ class Email extends Model
     /**
      * Get the action record associated with the email.
      */
-    public function actions()
+    // public function actions()
+    // {
+    //     return $this->belongsToMany('App\Action');
+    // }
+
+    public function user()
     {
-        return $this->belongsToMany('App\Action');
+        return $this->belongsTo('App\User');
+    }
+
+    public static function getAll()
+    {
+        $user = \Auth::user();
+        if(!empty($user->society_id)){ // this user is not owner
+          $emailss = $user->owner->getEmails();
+        } else {
+          $emailss = $user->getEmails();
+        }
+        return $emailss;
     }
 
     public static function renderMessage($message, $variables)  {       

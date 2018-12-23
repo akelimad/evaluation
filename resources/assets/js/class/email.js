@@ -2,8 +2,8 @@ import $ from 'jquery'
 
 export default class chmEmail {
 
-  static create () {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('emails/create')}, {
+  static form (id = null) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('emails/form'), data: {id: id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmEmail.store'
@@ -12,22 +12,6 @@ export default class chmEmail {
         label: 'Sauvegarder'
       }
     })
-  }
-
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('emails/' + params.id + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmEmail.store'
-      },
-      footer: {
-        label: 'Mettre à jour'
-      }
-    })
-  }
-
-  static show (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('emails/' + params.id)})
   }
 
   static store (event) {
@@ -65,9 +49,9 @@ export default class chmEmail {
     })
   }
 
-  static delete (params) {
+  static delete (id) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('user/' + params.id + '/delete'), data: {'_token': token}}, {
+    var object = window.chmModal.show({type: 'DELETE', url: window.chmSite.url('emails/' + id + '/delete'), data: {'_token': token}}, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
     object.modal.attr('chm-modal-action', 'reload')

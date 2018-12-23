@@ -3,19 +3,11 @@
     <section class="content entretiens-list">
         <div class="row">
             <div class="col-md-12">
-                {{--@if (Session::has('success_evaluations_save'))--}}
-                    {{--@include('partials.alerts.success', ['messages' => Session::get('success_evaluations_save') ])--}}
-                {{--@endif--}}
-                {{--@if (Session::has('incompleteSurvey'))--}}
-                    {{--@include('partials.alerts.warning', ['messages' => Session::get('incompleteSurvey') ])--}}
-                {{--@endif--}}
-
                     @foreach (['danger', 'warning', 'success', 'info'] as $key)
                         @if(Session::has($key))
                             @include('partials.alerts.'.$key, ['messages' => Session::get($key) ])
                         @endif
                     @endforeach
-
                 <div class="box box-primary">
                     <div class="box-header">
                         <h3 class="box-title">Liste des entretiens <span class="badge">{{$entretiens->total()}}</span></h3>
@@ -23,7 +15,7 @@
                             <a href="javascript:void(0)" onclick="return chmEntretien.form({})" class="btn bg-maroon" data-toggle="tooltip" title="Créer un entretien"> <i class="fa fa-plus"></i> Ajouter</a>
                         </div>
                     </div>
-                    <p class="help-block"> Dans cette page vous allez pouvoir personnaliser le questionnaire à affecter pour la partie d'évaluation de l'entretien en question ansi que pour la partie des objectifs. <br> Selectionnez le questionnaire et l'objectif puis cliquer sur Actualiser. </p>
+                    <p class="help-block"> Dans cette page vous allez pouvoir personnaliser le questionnaire à affecter pour la partie d'évaluation de l'entretien en question <br> Selectionnez le questionnaire et puis cliquez sur Actualiser. </p>
                     @if(count($entretiens)>0)
                     <div class="box-body table-responsive no-padding mb40">
                         <table class="table table-hover table-striped text-center table-inversed-blue">
