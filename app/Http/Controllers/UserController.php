@@ -125,27 +125,31 @@ class UserController extends Controller
       'avatar' => 'max:500',
       'name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
-      'email' => 'required|unique:users,email',
+      'email' => 'required',
       'password' => 'confirmed|min:6',
       'tel' => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
       'function' => 'numeric',
       'service' => 'numeric',
     ];
+    $query = User::where('email', $request->email)->where('society_id', User::getOwner()->id);
     if ($id) {
       $user = User::find($id);
-      $rules['email'] = 'required|unique:users,email,' . $user->id;
       if (!empty($request->password) || !empty($request->password_confirmation)) {
         $rules['password'] = 'required|confirmed|min:6';
         $user->password = bcrypt($request->password);
       } else {
         $rules['password'] = '';
       }
+      $exist = $query->where('id', '<>', $id)->count();
     } else {
+      $exist = $query->count();
       $user = new User();
     }
     $validator = \Validator::make($request->all(), $rules);
-    if ($validator->fails()) {
-      return ["status" => "danger", "message" => $validator->errors()->all()];
+    $messages = $validator->errors();
+    if($exist > 0) $messages->add('exist_email', 'Cet email existe déjà !');
+    if (count($messages) > 0) {
+      return ["status" => "danger", "message" => $messages];
     }
     $user->name = $request->name;
     $user->last_name = $request->last_name;

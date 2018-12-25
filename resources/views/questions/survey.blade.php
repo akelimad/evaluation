@@ -16,7 +16,7 @@
                         @forelse($g->questions as $q)
                             <div class="form-group">
                                 @if(in_array($q->type, ['text', 'textarea', 'radio']))
-                                    <input type="number" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5"  @if($g->notation_type == 'section')style="display:none;"@endif>
+                                    <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5"  @if($g->notation_type == 'section')style="display:none;"@endif>
                                 @endif
                                 @if($q->parent == null)
                                     <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
@@ -26,7 +26,7 @@
                                 @elseif($q->type == 'textarea')
                                 <textarea name="answers[{{$q->id}}][ansr]" class="form-control" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</textarea>
                                 @elseif($q->type == "checkbox")
-                                        <input type="number" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5"  @if($g->notation_type == 'section')style="display:none;"@endif>
+                                        <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5"  @if($g->notation_type == 'section')style="display:none;"@endif>
                                         <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                     @foreach($q->children as $child)
                                         <div class="survey-checkbox">

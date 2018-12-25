@@ -66,7 +66,7 @@ class AnswerController extends Controller
                 $a->user_id = isset($uid) ? $uid : '';
             }
             $a->mentor_id = $request->mentor_id;
-            $a->note = isset($value['note']) ? $value['note'] : '';
+            $a->note = isset($value['note']) ? doubleval($value['note']) : '';
             $a->entretien_id = $eid;
             $a->save();
         }

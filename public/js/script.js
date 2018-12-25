@@ -78,6 +78,18 @@ $(function(){
             alert('Veuillez selectionner au moins une option.');
             return false;
         }
+
+        check = true
+        $(".mentor-item .inputNote").each(function() {
+            var val = $(this).val()
+            if(/^(\d+(?:[\.\,]\d{1})?)$/.test(val) == false || parseFloat(val) < 1 || parseFloat(val) > 5) {
+                check = false; 
+            }
+        })
+        if(!check) {
+           alert("Vuillez entre une note valide entre 1 et 5 !")
+            return false; 
+        }
     });
 
     $(".realise").on('keyup click', function(){
@@ -133,7 +145,7 @@ $(function(){
                 }).done(function(response){
                     swal({ 
                         title: "Supprimé!", 
-                        text: "L'utilisateur a été supprimé ave succès.", 
+                        text: "L'utilisateur a été supprimé avec succès.", 
                         type: "success" 
                     }).then(function(){
                         location.reload(); 

@@ -65,7 +65,7 @@
                             {{ $g->name }}
                             @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) 
 
-                                <input type="number" step="0.1" data-group-source="{{$g->id}}" class="notation" min="1" max="5" placeholder="Note" value="{{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}" required>
+                                <input type="text" data-group-source="{{$g->id}}" class="notation inputNote" min="1" max="5" placeholder="Note" value="{{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}" required>
 
                                 @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
                                     @php($gNote += App\Answer::getGrpNote($g->id, $user->id, $e->id))
@@ -83,7 +83,7 @@
                         @forelse($g->questions as $q)
                             <div class="form-group">
                                 @if(in_array($q->type, ['text', 'textarea', 'radio']))
-                                    <input type="number" step="0.1" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5" value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"  @if($g->notation_type == 'section')style="display:none;"@endif>
+                                    <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5" value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"  @if($g->notation_type == 'section')style="display:none;"@endif>
                                 @endif
                                 @if($q->parent == null)
                                     <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i>
@@ -95,7 +95,7 @@
                                 @elseif($q->type == 'textarea')
                                 <textarea name="answers[{{$q->id}}][ansr]" class="form-control" required {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</textarea>
                                 @elseif($q->type == "checkbox")
-                                        <input type="number" step="0.1" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5" value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"  @if($g->notation_type == 'section')style="display:none;"@endif>
+                                        <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5" value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"  @if($g->notation_type == 'section')style="display:none;"@endif>
                                         <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                                     @foreach($q->children as $child)
                                         <div class="survey-checkbox">
@@ -155,9 +155,6 @@
         $('[data-group-source]').on('click', function () {
             $('[data-group-target="'+ $(this).attr('data-group-source') +'"]').val($(this).val())
         })
-        // $('#submitAnswers').click(function () {
-        //     alert($('[data-group-source]').filter('[value=""]').length)
-        // })
     })
 </script>
 @endsection

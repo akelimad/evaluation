@@ -59,7 +59,7 @@ class EmailController extends Controller
         $validator = Validator::make($request->all(), $rules);
         $messages = $validator->errors();
 
-        if($exist > 0) $messages->add('exist_email', 'La réference existe déjà !');
+        if($exist > 0) $messages->add('exist_ref', 'La réference existe déjà !');
 
         if (count($messages) > 0) {
             return ["status" => "danger", "message" => $messages];
