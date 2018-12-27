@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use App\Survey;
+use App\Evaluation;
 
 use App\Http\Requests;
 
@@ -17,12 +18,21 @@ class SurveyController extends Controller
         return view('surveys.index', compact('surveys'));
     }
 
-    public function create()
+    public function form(Request $request)
     {
+        $id = $request->id;
         ob_start();
-        echo view('surveys.form');
+        if(isset($id) && is_numeric($id)) {
+            $survey = Survey::find($id);
+            $title = "Modifier le questionnaire";
+        } else {
+            $survey = new Survey();
+            $title = "Ajouter un questionnaire";
+        }
+        $evaluations = Evaluation::all();
+        echo view('surveys.form', compact('survey', 'evaluations'));
         $content = ob_get_clean();
-        return ['title' => 'Ajouter un questionnaire', 'content' => $content];
+        return ['title' => $title, 'content' => $content];
     }
 
     public function store(Request $request)
@@ -36,6 +46,7 @@ class SurveyController extends Controller
         $survey->description = $request->description;
         $survey->type = $request->type;
         $survey->user_id = User::getOwner()->id;
+        $survey->evaluation_id = $request->evaluation_id;
         $survey->save();
         if($survey->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
@@ -58,20 +69,6 @@ class SurveyController extends Controller
             return ['title' => 'Visualiser le questionnaire', 'content' => $content];
         // }
     }    
-
-    public function edit($id)
-    {
-        ob_start();
-        $s = Survey::find($id);
-        echo view('surveys.form', compact('s'));
-        $content = ob_get_clean();
-        return ['title' => 'Modifier le questionnaire', 'content' => $content];
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     public function destroy($sid)
     {

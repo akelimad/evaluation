@@ -25,6 +25,7 @@ use App\Salary;
 use App\Comment;
 use App\Action;
 use App\Email;
+use App\Entretien_evaluation;
 
 class EntretienController extends Controller
 {
@@ -52,7 +53,6 @@ class EntretienController extends Controller
   public function indexEntretien()
   {
     $evaluations = Evaluation::all();
-    $surveys = Survey::getAll()->get();
     // $objectifs = EntretienObjectif::select('id', 'title')->get();
     $entretiens = Entretien::getAll()->paginate(15);
     return view('entretiens.index', compact('entretiens', 'evaluations', 'surveys'));
@@ -281,29 +281,42 @@ class EntretienController extends Controller
 
   public function storeEntretienEvals(Request $request)
   {
+    // dd($request->all());
     $evaluationsIds = [];
     $entretien = Entretien::find($request->entretien_id);
-    foreach ($request->choix as $key => $choix) {
-      if (isset($choix['evaluation_id'])) {
-        $evaluationsIds[] = $choix['evaluation_id'];
+    if(count($request->choix) > 0) {
+      foreach ($request->choix as $key => $choix) {
+        $survey_id = isset($choix['survey_id']) ? $choix['survey_id'] : null;
+        if (isset($choix['evaluation_id'])) {
+          $evaluationsIds[] = $choix['evaluation_id'];
+        }
       }
-    }
-    $entretien->evaluations()->sync($evaluationsIds);
-    foreach ($request->entretiens as $key => $value) {
-      if (empty($value[0])) {  // no servey selected
-        Session::flash("warning", "Veuillez choisir un questionnaire d'évaluation !");
-      } else {
-        $incompleteSurvey = Survey::icompleteSurvey($value[0]);
-        if ($incompleteSurvey == true) {
-          Session::flash('warning', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entreteien. veuillez attribuer les choix pour les questions multichoix !!");
-        } else {
-          if (isset($value[0])) $entretien->survey_id = $value[0];
-          if (isset($value[1])) $entretien->objectif_id = $value[1];
-          $entretien->save();
-          Session::flash('success', "Les évaluations de l'entretien ont bien été mises à jour");
+      $entretien->evaluations()->sync($evaluationsIds);
+      foreach ($request->choix as $key => $choix) {
+        $survey_id = isset($choix['survey_id']) ? $choix['survey_id'] : null;
+        if ($survey_id) {
+          Entretien_evaluation::where('entretien_id', $entretien->id)
+          ->where('evaluation_id', $choix['evaluation_id'])->update(['survey_id'=>$survey_id]);
         }
       }
     }
+
+    
+    // foreach ($request->entretiens as $key => $value) {
+    //   if (empty($value[0])) {  // no servey selected
+    //     Session::flash("warning", "Veuillez choisir un questionnaire d'évaluation !");
+    //   } else {
+    //     $incompleteSurvey = Survey::icompleteSurvey($value[0]);
+    //     if ($incompleteSurvey == true) {
+    //       Session::flash('warning', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entreteien. veuillez attribuer les choix pour les questions multichoix !!");
+    //     } else {
+    //       if (isset($value[0])) $entretien->survey_id = $value[0];
+    //       if (isset($value[1])) $entretien->objectif_id = $value[1];
+    //       $entretien->save();
+    //       Session::flash('success', "Les évaluations de l'entretien ont bien été mises à jour");
+    //     }
+    //   }
+    // }
 
     return redirect('entretiens/index');
   }
@@ -400,7 +413,7 @@ class EntretienController extends Controller
 
   public function calendar()
   {
-    $entretiens = Entretien::all();
+    $entretiens = Entretien::getAll()->get();
     return view("entretiens.calendar", compact('entretiens'));
   }
 

@@ -11,9 +11,15 @@ class Survey extends Model
     return $this->hasMany('App\Groupe');
   }
 
+  // todo :: review this relation a
   public function evaluations()
   {
     return $this->belongsToMany('App\Evaluation');
+  }
+
+  public function evaluation()
+  {
+    return $this->belongsTo('App\Evaluation');
   }
 
   public static function icompleteSurvey($sid)

@@ -123,8 +123,8 @@ class UserController extends Controller
     $id = $request->input('id', false);
     $rules = [
       'avatar' => 'max:500',
-      'name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
-      'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
+      'name' => 'required|regex:/^[\pL\s\-]+$/u|min:2|max:25',
+      'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:2|max:25',
       'email' => 'required',
       'password' => 'confirmed|min:6',
       'tel' => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',

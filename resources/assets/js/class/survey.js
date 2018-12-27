@@ -2,26 +2,14 @@ import $ from 'jquery'
 
 export default class chmSurvey {
 
-  static create () {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/create')}, {
+  static form (id = null) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/form'), data: {id: id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmSurvey.store'
       },
       footer: {
         label: 'Sauvegarder'
-      }
-    })
-  }
-
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('surveys/' + params.sid + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmSurvey.store'
-      },
-      footer: {
-        label: 'Mettre à jour'
       }
     })
   }

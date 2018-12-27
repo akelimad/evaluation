@@ -119,9 +119,8 @@ Route::put('entretiens/{eid}/u/{uid}/carrieres/{cid}/mentorUpdate', 'CarreerCont
 Route::put('entretiens/{eid}/u/{user}/submit', 'EntretienController@submission');
 
 Route::get('config/surveys', 'SurveyController@index')->name('surveys-list');
-Route::get('surveys/create', 'SurveyController@create');
+Route::get('surveys/form', 'SurveyController@form');
 Route::post('surveys/store', 'SurveyController@store');
-Route::get('surveys/{id}/edit', 'SurveyController@edit');
 Route::delete('surveys/{id}/delete', 'SurveyController@destroy');
 Route::get('surveys/{id}', 'SurveyController@show');
 
@@ -153,16 +152,15 @@ Route::delete('emails/{id}/delete', 'EmailController@delete');
 // Route::delete('emailActions/{id}/delete', 'ActionController@delete');
 // Route::post('emails/actions/{actionId}/attach', 'ActionController@attachEmailAtion');
 
-Route::get('config/settings', 'SettingController@index');
-Route::get('setting/{id}/edit', 'SettingController@edit');
-Route::post('setting/{id}/store', 'SettingController@store');
-
 Route::get('crm', 'CrmController@index');
 Route::get('crm/create', 'CrmController@form');
 Route::get('crm/{id}/edit', 'CrmController@form');
 Route::post('crm/store', 'CrmController@store');
 Route::delete('crm/{id}/delete', 'CrmController@delete');
 Route::delete('crm/logo/remove', 'CrmController@removeLogo');
+
+Route::get('config/settings', 'SettingController@index');
+Route::post('config/settings/store', 'SettingController@store');
 
 Route::get('config/setting/departments', 'DepartmentController@index');
 Route::get('department/form', 'DepartmentController@form');

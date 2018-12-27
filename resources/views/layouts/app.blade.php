@@ -55,7 +55,8 @@
     </script>
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+@php( $setting = json_decode(Auth::user()->settings) )
+<body class="hold-transition skin-blue sidebar-mini {{isset($settings) && $settings->toggle_sidebar == 1 ? 'sidebar-collapse':''}}">
 <div class="spinner-wp">
     <!-- <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i> -->
     <div class="looding">
@@ -159,7 +160,7 @@
                     <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
                 </li>
                 @endrole
-                @role(["RH", "MENTOR", "COLLABORATEUR"])
+                @role(["MENTOR", "COLLABORATEUR"])
                 <li class="{{ Request::is('/') ? 'active' : '' }}">
                     <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>Mes entretiens</span></a>
                 </li>
@@ -180,7 +181,7 @@
                     </a>
                     <ul class="treeview-menu" style="{{ Request::is('config*') ? 'display: block;' : '' }}">
                         <li class="{{ Request::is('config/settings') ? 'active' : '' }}">
-                            <a href="{{ url('config/settings') }}"><i class="fa fa-wrench"></i> Réglages</a>
+                            <a href="{{ url('config/settings') }}"><i class="fa fa-wrench"></i> Paramètres</a>
                         </li>
                         <!-- <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
                             <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>
@@ -189,13 +190,13 @@
                             <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Compétences </a>
                         </li>
                         <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
-                            <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> Quests. d'évaluation </a>
+                            <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> Questionnaires</a>
                         </li>
                         <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
                             <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Courriers automatiques</a>
                         </li>
                         <li class="{{ Request::is('config/roles') ? 'active' : '' }}">
-                            <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> Rôles </a>
+                            <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> Rôles</a>
                         </li>
                     </ul>
                 </li>

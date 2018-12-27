@@ -528,7 +528,7 @@ ul.user-data li i{
     max-width: 23%;
     display: inline-block;
 }
-.entretiens-list #surveySelect{
+.entretiens-list .surveySelect{
     max-width: 72%;
     display: inline-block;
 }

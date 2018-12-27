@@ -16,6 +16,11 @@ class Evaluation extends Model
         return $this->belongsTo('App\Survey');
     }
 
+    public function surveys()
+    {
+        return $this->hasMany('App\Survey');
+    }
+
     public function entretiens()
     {
         return $this->belongsToMany('App\Entretien');

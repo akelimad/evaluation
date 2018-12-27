@@ -27,7 +27,7 @@ export default class Setting {
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('setting/' + id + '/store'),
+      url: window.chmSite.url('config/settings/store'),
       data: data,
       processData: false,
       contentType: false,

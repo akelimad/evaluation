@@ -14,9 +14,9 @@
                         @endif
                     @endforeach
                     <div class="box-header">
-                        <h3 class="box-title">Liste des questionnaires d'évaluation <span class="badge">{{$surveys->total()}}</span></h3>
+                        <h3 class="box-title">Liste des questionnaires <span class="badge">{{$surveys->total()}}</span></h3>
                         <div class="box-tools mb40">
-                            <a href="javascript:void(0)" onclick="return chmSurvey.create()" class="btn bg-maroon" title="" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
+                            <a href="javascript:void(0)" onclick="return chmSurvey.form({})" class="btn bg-maroon" title="" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
                         </div>
                     </div>
                     <p class="help-block">Ces questionnaires vont vous permettre de les utiliser pour l'évaluation annuelle.<br> Vous pouvez créer autant de questionnaires et allez vers la page des <a href="{{ url('entretiens/index') }}" target="_blank">entretiens</a> pour choisir quel questionnaire sera utilisé lors de l'évaluation.</p>
@@ -24,21 +24,20 @@
                         <div class="box-body table-responsive no-padding mb40">
                             <table class="table table-hover table-strped table-inversed-blue">
                                 <tr>
-                                    <th>Id</th>
                                     <th>Titre</th>
+                                    <th>Section</th>
                                     <th>Type</th>
                                     <th>Description</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($surveys as $key => $survey)
                                 <tr>
-                                    <td> {{ $survey->id }}</td>
                                     <td> {{ $survey->title }}</td>
+                                    <td> {{ is_numeric($survey->evaluation_id) ? App\Evaluation::find($survey->evaluation_id)->title : '' }}</td>
                                     <td> {{ $survey->type == 0 ? 'Standard':'Personnalisé' }}</td>
                                     <td> {{ $survey->description ? $survey->description : '---' }} </td>
-                                    <td class="text-center">  
-                                        
-                                        <a href="javascript:void(0)" onclick="return chmSurvey.edit({sid: {{$survey->id}}})" class="btn-primary icon-fill" title="Modifier" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" onclick="return chmSurvey.form({{{$survey->id}}})" class="btn-primary icon-fill" title="Modifier" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmGroupe.create({sid: {{$survey->id}}})" class="btn-warning icon-fill" title="Ajouter des groupes" data-toggle="tooltip"> <i class="fa fa-plus"></i> </a>
                                         <a href="{{ url('surveys/'.$survey->id.'/groupes') }}" class="btn-info icon-fill" title="Liste des groupes" data-toggle="tooltip"> <i class="fa fa-list"></i> </a>
                                         <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$survey->id}} })" class="bg-navy icon-fill" title="Voir" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>

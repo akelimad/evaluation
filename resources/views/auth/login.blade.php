@@ -76,7 +76,7 @@
                             <strong> Votre email et/ou mot de passe est invalide !! </strong></li>
                         </div>
               @endif
-                    <p class="login-box-msg"> Veuillez entrer votre email et mot de passe pour se connecter à l'application. </p>
+                    <p class="login-box-msg"> Veuillez entrer votre email et mot de passe pour vous connecter à l'application. </p>
                     <form action="{{ url('/login') }}" method="post" class="form-horizontal" role="form">
                         {{ csrf_field() }}
                         <div class="">
@@ -91,7 +91,7 @@
                         <div class="">
                             <div class="col-md-12">
                                 <div class="form-group has-feedback">
-                                    <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Password" required="">
+                                    <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Mot de passe" required="">
                                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                                 </div>
                             </div>

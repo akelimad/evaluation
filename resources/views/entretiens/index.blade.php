@@ -18,10 +18,9 @@
                     <p class="help-block"> Dans cette page vous allez pouvoir personnaliser le questionnaire à affecter pour la partie d'évaluation de l'entretien en question <br> Selectionnez le questionnaire et puis cliquez sur Actualiser. </p>
                     @if(count($entretiens)>0)
                     <div class="box-body table-responsive no-padding mb40">
-                        <table class="table table-hover table-striped text-center table-inversed-blue">
+                        <table class="table table-hover table-striped table-inversed-blue">
                             <thead>
                                 <tr>
-                                    <th>Id </th>
                                     <th>Type</th>
                                     @foreach($evaluations as $evaluation)
                                     <th> {{ $evaluation->title }} </th>
@@ -32,8 +31,7 @@
                             <tbody>
                                 @foreach($entretiens as $e) 
                                     <tr>
-                                        <td>{{ $e->id }}</td>
-                                        <td>{{ $e->titre }}</td>
+                                        <td title="{{$e->titre}}">{{ str_limit($e->titre, 20) }}</td>
                                         @foreach($evaluations as $evaluation)
                                         <form action="{{ url('entretiens/storeEntretienEvals') }}" method="post">
                                         {{ csrf_field() }}
@@ -43,18 +41,18 @@
                                                 <input type="checkbox" name="choix[{{$evaluation->id}}][evaluation_id]" value="{{ $evaluation->id }}" title="Cochez/decochez si vous voulez que {{ $evaluation->title }} soit visible/invisible lors l'évaluation de cette entretien" data-toggle="tooltip" {{ in_array($evaluation->id, $e->evaluations->pluck('id')->toArray()) ? 'checked': '' }}>
                                             </div>
                                             @if($evaluation->title == "Evaluations")
-                                            <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez le questionnaire qui sera affiché pour cette evaluation" data-toggle="tooltip" required style="background: none;border-color: #ece8e8">
-                                                <option value="" {{ !$e->survey_id ? 'selected':'' }}>== Choisissez ==</option>
-                                                @foreach($surveys as $survey)
-                                                <option value="{{$survey->id}}" {{ $survey->id == $e->survey_id ? 'selected':'' }}>{{$survey->title}}</option>
+                                            <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de l'évaluation" data-toggle="tooltip" required style="background: none;border-color: #ece8e8;">
+                                                <option value="" {{ !$e->survey_id ? 'selected':'' }}></option>
+                                                @foreach($evaluation->surveys as $s)
+                                                <option value="{{$s->id}}">{{$s->title}}</option>
                                                 @endforeach
                                             </select>
                                             @endif
-                                            @if($evaluation->title == "Objectifs" && isset($objectifs))
-                                            <select name="entretiens[{{$e->id}}][]" id="surveySelect" class="form-control" title="Choisissez l'objectif qui sera affiché pour cette evaluation" data-toggle="tooltip">
-                                                <option value="">== Choisissez ==</option>
-                                                @foreach($objectifs as $obj)
-                                                <option value="{{$obj->id}}" {{ $obj->id == $e->objectif_id ? 'selected':'' }} >{{$obj->title}}</option>
+                                            @if($evaluation->title == "Carrières")
+                                            <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de la carrière" data-toggle="tooltip" required style="background: none;border-color: #ece8e8;">
+                                                <option value="" {{ !$e->survey_id ? 'selected':'' }}></option>
+                                                @foreach($evaluation->surveys as $s)
+                                                <option value="{{$s->id}}">{{$s->title}}</option>
                                                 @endforeach
                                             </select>
                                             @endif

@@ -9,6 +9,13 @@ class Setting extends Model
 
   public static $models = [
     [
+      'label' => 'Préférences',
+      'route' => 'config/settings',
+      'icon'  => 'fa fa-long-arrow-right',
+      'model' => 'App\Setting',
+      'active' => 'set',
+    ],
+    [
       'label' => 'Départements',
       'route' => 'config/setting/departments',
       'icon'  => 'fa fa-long-arrow-right',
