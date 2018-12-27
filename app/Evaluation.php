@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Entretien_evaluation;
 
 class Evaluation extends Model
 {
@@ -34,5 +35,12 @@ class Evaluation extends Model
             'ê' => 'e',
         ];
         return $str = strtolower(strtr( $str, $unwanted_array ));
+    }
+
+    public static function surveyId($eid, $evalId)
+    {
+        $result =  Entretien_evaluation::select('survey_id')
+        ->where('entretien_id', $eid)->where('evaluation_id', $evalId)->first();
+        return $result ? $result->survey_id : '';
     }
 }

@@ -176,10 +176,12 @@ class EntretienController extends Controller
     ];
     $validator = \Validator::make($request->all(), $rules, $messages);
     $messages = $validator->errors();
-    $survey = Survey::getAll()->where('type', '=', 0)->first();
-    $objectif = EntretienObjectif::where('title', 'standard')->first();
-    if ($survey == null || $objectif == null) {
-      $messages->add('null_survey_obj', "Aucun questionnaire standard n'a été trouvé ! il faut le créer tout d'abord.");
+    $surveyEval = Survey::getAll()
+    ->where('evaluation_id', 1)->where('type', 0)->first();
+    $surveyCarreer = Survey::getAll()
+    ->where('evaluation_id', 2)->where('type', 0)->first();
+    if (!$surveyEval || !$surveyCarreer) {
+      $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation et/ou de carrière n'a été trouvé ! il faut le/les créer tout d'abord.");
     }
     $hasAlreadyInt = [];
     if(!empty($request->date) && !empty($request->date_limit)) {
@@ -192,7 +194,7 @@ class EntretienController extends Controller
       }
     }
     if (count($hasAlreadyInt) > 0) {
-      $messages->add('existInterview', "Il ya déjà un entretien programmé les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!");
+      $messages->add('existInterview', "Il ya déjà un entretien programmé pour les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!");
     }
 
     if (count($messages) > 0) {
@@ -204,10 +206,19 @@ class EntretienController extends Controller
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
     $entretien->user_id = User::getOwner()->id;
-    $entretien->survey_id = $survey ? $survey->id : 0;
-    $entretien->objectif_id = $objectif ? $objectif->id : 0;
+    $entretien->survey_id = 1;
+    $entretien->objectif_id = 1;
     $entretien->save();
-    if (empty($id)) $entretien->evaluations()->attach($evaluations);
+    if (empty($id)) {
+      $entretien->evaluations()->attach($evaluations);
+      $surveyId = null;
+      foreach ($evaluations as $evalId) {
+        if($evalId == 1) $surveyId = $surveyEval->id;
+        if($evalId == 2) $surveyId = $surveyCarreer->id;
+        Entretien_evaluation::where('entretien_id', $entretien->id)
+          ->where('evaluation_id', $evalId)->update(['survey_id'=>$surveyId]);
+      }
+    }
 
     $mentorEmail = Email::getAll()->where('ref', 'mentor_eval')->first();
     $collEmail = Email::getAll()->where('ref', 'auto_eval')->first();

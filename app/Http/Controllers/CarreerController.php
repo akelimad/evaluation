@@ -8,6 +8,8 @@ use App\Http\Requests;
 use App\Entretien;
 use App\User;
 use App\Carreer;
+use App\Evaluation;
+use App\Survey;
 use Carbon\Carbon; 
 
 class CarreerController extends Controller
@@ -29,11 +31,24 @@ class CarreerController extends Controller
      */
     public function index($eid, $uid)
     {
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
-        $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
-        $evaluations = $e->evaluations;
-        return view('carreers.index', compact('carreers', 'e', 'user', 'evaluations') );
+        // $e = Entretien::find($eid);
+        // $user = User::find($uid);
+        // $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
+        // $evaluations = $e->evaluations;
+        // return view('carreers.index', compact('carreers', 'e', 'user', 'evaluations') );
+        $entretien = Entretien::find($eid);
+        $evaluations = $entretien->evaluations;
+        $sid = Evaluation::surveyId($eid, 2);
+        $survey = Survey::find($sid);
+        $groupes = $survey->groupes;
+        $user = User::findOrFail($uid);
+        return view('carreers.index', [
+            'evaluations' => $evaluations, 
+            'survey' => $survey, 
+            'e'=> $entretien,  
+            'groupes' => $groupes, 
+            'user' => $user
+        ]);
     }
 
     /**

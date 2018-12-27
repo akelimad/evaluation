@@ -27,7 +27,8 @@ class ActiviteController extends Controller
     {
         $entretien = Entretien::find($e_id);
         $evaluations = $entretien->evaluations;
-        $survey = Survey::find($entretien->survey_id);
+        $sid = Evaluation::surveyId($e_id, 1);
+        $survey = Survey::find($sid);
         $groupes = $survey->groupes;
         $user = User::findOrFail($uid);
         return view('activites.index', [

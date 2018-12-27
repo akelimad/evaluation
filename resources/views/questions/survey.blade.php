@@ -16,7 +16,7 @@
                         @forelse($g->questions as $q)
                             <div class="form-group">
                                 @if(in_array($q->type, ['text', 'textarea', 'radio']))
-                                    <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5"  @if($g->notation_type == 'section')style="display:none;"@endif>
+                                    <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="5" style="display:none;">
                                 @endif
                                 @if($q->parent == null)
                                     <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
