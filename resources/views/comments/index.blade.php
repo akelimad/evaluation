@@ -61,7 +61,7 @@
                                                     <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y à H:i') : '' }}</span>
                                                 </div>
                                                 <img class="direct-chat-img" src="{{ App\User::avatar($user->parent->id) }}" alt="message user image">
-                                                @if($user->id != Auth::user()->id && $comment->mentorComment == '')
+                                                @if($user->id != Auth::user()->id && $comment->mentorComment == '' && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
                                                     <form action="{{ url('entretiens/'.$e->id.'/u/'.$user->id.'/commentaires/'.$comment->id.'/mentorUpdate') }}" method="post">
                                                         {{ csrf_field() }}
                                                         {{ method_field('PUT') }}
@@ -71,7 +71,7 @@
                                                     </form>
                                                 @else
                                                     <div class="direct-chat-text">
-                                                        {{ $comment->mentorComment or '---' }}
+                                                        {{ $comment->mentorComment ? $comment->mentorComment : '----' }}
                                                         @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
                                                         <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->parent->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                                         @endif

@@ -295,39 +295,38 @@ class EntretienController extends Controller
     // dd($request->all());
     $evaluationsIds = [];
     $entretien = Entretien::find($request->entretien_id);
+    $entretienSkills = $entretien->skills->count();
+    $skillsChecked = false;
     if(count($request->choix) > 0) {
       foreach ($request->choix as $key => $choix) {
-        $survey_id = isset($choix['survey_id']) ? $choix['survey_id'] : null;
         if (isset($choix['evaluation_id'])) {
-          $evaluationsIds[] = $choix['evaluation_id'];
+          if($choix['evaluation_id'] == 4 && $entretienSkills == 0){
+            $skillsChecked = true;
+          } else {
+            $evaluationsIds[] = $choix['evaluation_id'];
+          }
         }
       }
       $entretien->evaluations()->sync($evaluationsIds);
       foreach ($request->choix as $key => $choix) {
         $survey_id = isset($choix['survey_id']) ? $choix['survey_id'] : null;
-        if ($survey_id) {
-          Entretien_evaluation::where('entretien_id', $entretien->id)
-          ->where('evaluation_id', $choix['evaluation_id'])->update(['survey_id'=>$survey_id]);
+        $evaluation_id = isset($choix['evaluation_id']) ? $choix['evaluation_id'] : null;
+        if (is_numeric($survey_id)) {
+          $incompleteSurvey = Survey::icompleteSurvey($survey_id);
+          if($incompleteSurvey) {
+            Session::flash('warning', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entreteien. veuillez attribuer les choix pour les questions multichoix !!");
+          } else {
+            if(is_numeric($evaluation_id) && is_numeric($survey_id)) {
+              Entretien_evaluation::where('entretien_id', $entretien->id)->where('evaluation_id', $evaluation_id)->update(['survey_id'=>$survey_id]);
+              Session::flash('success', "Les informations ont été sauvegardées avec succès.");
+            }
+            if($skillsChecked && $entretienSkills == 0){
+              Session::flash('warning', "Aucune compétence trouvée liée à cet entretien. vous ne pouvez pas activer cette section. veuillez aller dans la configuration et en créer.");
+            }
+          }
         }
       }
     }
-
-    
-    // foreach ($request->entretiens as $key => $value) {
-    //   if (empty($value[0])) {  // no servey selected
-    //     Session::flash("warning", "Veuillez choisir un questionnaire d'évaluation !");
-    //   } else {
-    //     $incompleteSurvey = Survey::icompleteSurvey($value[0]);
-    //     if ($incompleteSurvey == true) {
-    //       Session::flash('warning', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entreteien. veuillez attribuer les choix pour les questions multichoix !!");
-    //     } else {
-    //       if (isset($value[0])) $entretien->survey_id = $value[0];
-    //       if (isset($value[1])) $entretien->objectif_id = $value[1];
-    //       $entretien->save();
-    //       Session::flash('success', "Les évaluations de l'entretien ont bien été mises à jour");
-    //     }
-    //   }
-    // }
 
     return redirect('entretiens/index');
   }

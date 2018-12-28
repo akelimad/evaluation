@@ -50,7 +50,7 @@ export default class chmRole {
       if (response.status !== 'success') {
         window.chmModal.showAlertMessage(response.status, response.message)
       } else {
-        window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'window.location.reload'})
+        window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'window.chmModal.reload'})
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       var message = jqXHR.status + ' - ' + jqXHR.statusText

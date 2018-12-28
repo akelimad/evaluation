@@ -43,7 +43,7 @@
                                             @if($evaluation->title == "Evaluations")
                                             <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de l'évaluation" data-toggle="tooltip" required style="background: none;border-color: #ece8e8;">
                                                 <option value="" {{ !$e->survey_id ? 'selected':'' }}></option>
-                                                @foreach($evaluation->surveys as $s)
+                                                @foreach($evaluation->surveys()->where('evaluation_id', 1)->get() as $s)
                                                 <option value="{{$s->id}}" {{App\Evaluation::surveyId($e->id, $evaluation->id) == $s->id? 'selected':''}}>{{$s->title}}</option>
                                                 @endforeach
                                             </select>
@@ -51,7 +51,7 @@
                                             @if($evaluation->title == "Carrières")
                                             <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de la carrière" data-toggle="tooltip" required style="background: none;border-color: #ece8e8;">
                                                 <option value="" {{ !$e->survey_id ? 'selected':'' }}></option>
-                                                @foreach($evaluation->surveys as $s)
+                                                @foreach($evaluation->surveys()->where('evaluation_id', 2)->get() as $s)
                                                 <option value="{{$s->id}}"  {{App\Evaluation::surveyId($e->id, $evaluation->id) == $s->id? 'selected':''}}>{{$s->title}}</option>
                                                 @endforeach
                                             </select>

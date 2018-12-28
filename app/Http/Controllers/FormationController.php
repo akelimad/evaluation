@@ -75,6 +75,7 @@ class FormationController extends Controller
         $formation->done = 0;
         $formation->entretien_id = $e_id;
         $formation->user_id = Auth::user()->id;
+        $formation->coll_comment = $request->coll_comment;
         $formation->save();
         if($formation->save()) {
             return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];

@@ -22,6 +22,7 @@
                                                     <th>Date</th>
                                                     <th>Exercice </th>
                                                     <th>Formation demandée</th>
+                                                    <th>Description</th>
                                                     <th>Etat</th>
                                                     <th>Réalisé</th>
                                                     <th class="text-center">Actions</th>
@@ -31,11 +32,12 @@
                                                 @foreach($formations as $f)
                                                 <form action="{{url('entretiens/formations/'.$f->id.'/mentorUpdate')}}" method="post">
                                                     <input type="hidden" name="_method" value="PUT">
-                                                {{ csrf_field() }}
+                                                    {{ csrf_field() }}
                                                 <tr>
-                                                    <td> {{ Carbon\Carbon::parse($f->date)->format('d/m/Y')}} </td>
-                                                    <td> {{$f->exercice}} </td>
-                                                    <td> {{$f->title}} </td>
+                                                    <td>{{ Carbon\Carbon::parse($f->date)->format('d/m/Y')}}</td>
+                                                    <td>{{$f->exercice}}</td>
+                                                    <td>{{$f->title}}</td>
+                                                    <td><a title="{{$f->coll_comment}}" data-toggle="tooltip"><i class="fa fa-comment"></i></a></td>
                                                     <td>
                                                         @if($user->id == Auth::user()->id)
                                                             <span class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif"> @if($f->status == 0)En attente @elseif($f->status == 1)Refusé @elseif($f->status == 2)Accepté @endif </span>

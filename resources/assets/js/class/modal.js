@@ -228,4 +228,8 @@ export default class chmModal {
       .replace(/"/g, '&quot;')
   }
 
+  static reload (event) {
+    window.location.reload()
+  }
+
 }
