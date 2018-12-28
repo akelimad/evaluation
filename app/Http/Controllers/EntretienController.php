@@ -405,18 +405,13 @@ class EntretienController extends Controller
     $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
     $formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
-    $skills = Skill::all();
-    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
+    $skills = Skill::where('entretien_id', $eid)->get();
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
-    $total = 0;
-    foreach ($objectifs as $obj) {
-      $total += $obj->sousTotal;
-    }
     $entreEvalsTitle = [];
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'objectifs', 'comment', 'total'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'comment'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }

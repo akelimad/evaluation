@@ -38,20 +38,20 @@
                                         <td>
                                             <input type="hidden" name="entretien_id" value="{{ $e->id }}">
                                             <div class="checkbox-item text-blue">
-                                                <input type="checkbox" name="choix[{{$evaluation->id}}][evaluation_id]" value="{{ $evaluation->id }}" title="Cochez/decochez si vous voulez que {{ $evaluation->title }} soit visible/invisible lors l'évaluation de cette entretien" data-toggle="tooltip" {{ in_array($evaluation->id, $e->evaluations->pluck('id')->toArray()) ? 'checked': '' }}>
+                                                <input type="checkbox" class="checkbox-eval" name="choix[{{$evaluation->id}}][evaluation_id]" value="{{ $evaluation->id }}" title="Cochez/decochez si vous voulez que {{ $evaluation->title }} soit visible/invisible lors l'évaluation de cette entretien" data-toggle="tooltip" {{ in_array($evaluation->id, $e->evaluations->pluck('id')->toArray()) ? 'checked': '' }}>
                                             </div>
                                             @if($evaluation->title == "Evaluations")
-                                            <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de l'évaluation" data-toggle="tooltip" required style="background: none;border-color: #ece8e8;">
+                                            <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de l'évaluation" data-toggle="tooltip" style="background: none;border-color: #ece8e8;">
                                                 <option value="" {{ !$e->survey_id ? 'selected':'' }}></option>
-                                                @foreach($evaluation->surveys()->where('evaluation_id', 1)->get() as $s)
+                                                @foreach(App\Survey::getAll()->where('evaluation_id', 1)->get() as $s)
                                                 <option value="{{$s->id}}" {{App\Evaluation::surveyId($e->id, $evaluation->id) == $s->id? 'selected':''}}>{{$s->title}}</option>
                                                 @endforeach
                                             </select>
                                             @endif
                                             @if($evaluation->title == "Carrières")
-                                            <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de la carrière" data-toggle="tooltip" required style="background: none;border-color: #ece8e8;">
+                                            <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="Questionnaire de la carrière" data-toggle="tooltip" style="background: none;border-color: #ece8e8;">
                                                 <option value="" {{ !$e->survey_id ? 'selected':'' }}></option>
-                                                @foreach($evaluation->surveys()->where('evaluation_id', 2)->get() as $s)
+                                                @foreach(App\Survey::getAll()->where('evaluation_id', 2)->get() as $s)
                                                 <option value="{{$s->id}}"  {{App\Evaluation::surveyId($e->id, $evaluation->id) == $s->id? 'selected':''}}>{{$s->title}}</option>
                                                 @endforeach
                                             </select>
@@ -81,4 +81,18 @@
         </div>
     </section>
 @endsection
-  
+
+@section('javascript')
+<script>
+    $(document).ready(function() {
+        $('.checkbox-eval').change(function() {
+            if(this.checked) {
+                $(this).closest('td').find('select').prop('required', true)
+            } else {
+                $(this).closest('td').find('select').prop('required', false)
+            }
+        })
+        $('.checkbox-eval').change()
+    })
+</script>
+@endsection
