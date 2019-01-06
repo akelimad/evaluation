@@ -11,11 +11,18 @@ use App\Question;
 use App\Token;
 use App\Entretien_user;
 use App\Entretien;
+use App\Evaluation;
 use App\Survey;
 use Auth;
 
 class AnswerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -71,8 +78,8 @@ class AnswerController extends Controller
             $a->save();
         }
         // update entretien_user table note
-        $entretien = Entretien::find($eid);
-        $survey = Survey::find($entretien->survey_id);
+        $sid = Evaluation::surveyId($eid, 1);
+        $survey = Survey::find($sid);
         $grpCount = $survey->groupes()->count();
 
         $answers = Answer::where('user_id', $uid)->where('entretien_id', $eid)->get();

@@ -55,7 +55,7 @@
     </script>
 
 </head>
-@php( $setting = json_decode(Auth::user()->settings) )
+@php( $settings = json_decode(Auth::user()->settings) )
 <body class="hold-transition skin-blue sidebar-mini {{isset($settings) && $settings->toggle_sidebar == 1 ? 'sidebar-collapse':''}}">
 <div class="spinner-wp">
     <!-- <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i> -->

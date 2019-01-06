@@ -17,7 +17,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="datepicker">Clôturé le</label>
-                                        <input type="text" name="dlimite" id="datepicker" class="form-control" value="{{ isset($dlimite) ? Carbon\Carbon::parse($dlimite)->format('d-m-Y') :'' }}" readonly="" data-date-format="dd-mm-yyyy">
+                                        <input type="text" name="dlimite" id="datepicker" class="form-control" value="{{ isset($dlimite) && !empty($dlimite) ? Carbon\Carbon::parse($dlimite)->format('d-m-Y') :'' }}" readonly="" data-date-format="dd-mm-yyyy">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -110,8 +110,7 @@
                                             <b><a href="{{url('user/'.$row->userId)}}">{{ $row->name. ' '.$row->last_name  }}</a></b>
                                         </td>
                                         <td>
-                                            <a href="{{url('entretiens/'.$row->entretienId.'/u/'.$row->userId)}}">
-                                                {{ str_limit($row->titre, $limit = 20, $end = '...') }}</a>
+                                            {{ str_limit($row->titre, $limit = 20, $end = '...') }}
                                         </td>
                                         <td>
                                             @if(App\User::getMentor($row->userId))

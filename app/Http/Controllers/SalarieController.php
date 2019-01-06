@@ -35,7 +35,7 @@ class SalarieController extends Controller
         if($user->id == Auth::user()->id){
             $salaries = Salary::where('user_id', $uid)->where('entretien_id', $eid)->paginate(10);
         }else{
-            $salaries = Salary::where('mentor_id', $user->parent->id)->paginate(10);
+            $salaries = Salary::where('mentor_id', $user->parent->id)->where('entretien_id', $eid)->paginate(10);
         }
         return view('salaries.index', compact('e', 'user', 'salaries', 'evaluations'));
     }

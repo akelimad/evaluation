@@ -10,6 +10,7 @@
                             @if(!$user->hasRole('ADMIN'))
                             <li><a href="#profesionnels" data-toggle="tab">Informations professionnelles</a></li>
                             @endif
+                            <li><a href="#preferences" data-toggle="tab">Préférences</a></li>
                         </ul>
                         <div class="tab-content mb20">
                             <div class="active tab-pane" id="personels">
@@ -71,8 +72,24 @@
                                 </div>
                             </div>
                             @endif
+                            <div class="tab-pane" id="preferences">
+                                @php($settings = json_decode(Auth::user()->settings))
+                                <div class="form-group">
+                                    <form action="{{ url('config/settings/store') }}" method="post" onsubmit="return Setting.store(event)">
+                                        {{ csrf_field() }}
+                                        <div class="col-md-4">
+                                            <input type="checkbox" name="settings[toggle_sidebar]" id="toggle-sidebar" value="1" {{$settings && $settings->toggle_sidebar == 1 ? 'checked' : ''}}> <label for="toggle-sidebar">Toggle side bar</label>
+                                            <p class="help-block">Permet de réduire la taille du side bar.</p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-xs btn-success"><i class="fa fa-save"></i> Enregistrer</button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <a href="{{ url()->previous() }}" class="btn btn-info"><i class="fa fa-long-arrow-left"></i> Retour</a>
+                        <a href="{{ url()->previous() }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
                         @if(Auth::user()->id == $user->id)
                             @if(Auth::user()->hasRole('ADMIN'))
                                 <a href="javascript:void(0)" onclick="return Crm.edit({id: {{$user->id}}})" class="btn btn-primary"> <i class="glyphicon glyphicon-pencil"></i> Mettre à jour </a>

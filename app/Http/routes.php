@@ -18,7 +18,9 @@ Route::get('/home', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');
 
 Route::get('profile', 'UserController@profile');
-Route::get('users', 'UserController@indexUsers');
+Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
+	Route::get('users', 'UserController@indexUsers');
+});
 Route::get('user/form', 'UserController@formUser');
 Route::post('user/store', 'UserController@storeUser');
 Route::get('user/{id}', 'UserController@show');
@@ -50,7 +52,6 @@ Route::get('entretiens/form', 'EntretienController@form');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
 Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
-Route::get('entretiens/{e_id}/edit', 'EntretienController@editEntretien');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
@@ -58,10 +59,7 @@ Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu');
 Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
 
-Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'ActiviteController@index');
-Route::get('entretiens/{e_id}/activites/create', 'ActiviteController@create');
-Route::post('entretiens/{e_id}/activites/store', 'ActiviteController@store');
-Route::get('entretiens/{e_id}/activites/{id}/edit', 'ActiviteController@edit');
+Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'EvaluationController@index');
 
 Route::get('config/skills', 'SkillController@indexAdmin');
 Route::get('skills/create', 'SkillController@create');
@@ -94,11 +92,6 @@ Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');
 Route::post('entretiens/{e_id}/formations/store', 'FormationController@store');
 Route::get('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit');
 Route::put('entretiens/formations/{id}/mentorUpdate', 'FormationController@update'); //update status & realise
-
-Route::get('entretiens/{e_id}/documents', 'DocumentController@index');
-Route::get('entretiens/{e_id}/documents/create', 'DocumentController@create');
-Route::post('entretiens/{e_id}/documents/store', 'DocumentController@store');
-Route::get('entretiens/{e_id}/documents/{id}/edit', 'DocumentController@edit');
 
 Route::get('entretiens/{eid}/u/{uid}/salaires', 'SalarieController@index');
 Route::get('entretiens/{eid}/u/{uid}/salaires/create', 'SalarieController@create');

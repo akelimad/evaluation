@@ -206,8 +206,6 @@ class EntretienController extends Controller
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
     $entretien->user_id = User::getOwner()->id;
-    $entretien->survey_id = 1;
-    $entretien->objectif_id = 1;
     $entretien->save();
     if (empty($id)) {
       $entretien->evaluations()->attach($evaluations);
@@ -400,18 +398,16 @@ class EntretienController extends Controller
     $user = User::findOrFail($uid);
     $evaluations = $e->evaluations;
     $evalTitle = [];
-    $survey = Survey::find($e->survey_id);
-    $groupes = $survey->groupes;
     $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
-    $formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
-    $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
+    $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->where('status', 2)->get();
+    $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->paginate(10);
     $skills = Skill::where('entretien_id', $eid)->get();
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $entreEvalsTitle = [];
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'comment'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'carreers', 'formations', 'skills', 'comment'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }

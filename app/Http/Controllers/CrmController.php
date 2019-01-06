@@ -9,6 +9,12 @@ use App\Role;
 
 class CrmController extends Controller
 {
+
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
   public function index(Request $request)
   {
     $societies = User::with('roles')->whereHas('roles', function ($query) {
@@ -112,12 +118,11 @@ class CrmController extends Controller
     $this->UnlinkImage(public_path('uploads/logos/'.$user->id.'/'.$logo));
   }
 
-    public function UnlinkImage($filepath)
-    {
-      if (file_exists($filepath)) {
-        unlink($filepath);
-      }
+  public function UnlinkImage($filepath)
+  {
+    if (file_exists($filepath)) {
+      unlink($filepath);
     }
-
+  }
 
 }
