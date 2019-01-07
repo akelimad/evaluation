@@ -1,5 +1,5 @@
-
 @extends('layouts.app')
+@section('title', 'Paramètres')
 @section('content')
     <section class="content setting">
         <div class="row">

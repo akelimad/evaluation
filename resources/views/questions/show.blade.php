@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Questions')
 @section('content')
     <section class="content showQuestion">
         @foreach (['danger', 'warning', 'success', 'info'] as $key)

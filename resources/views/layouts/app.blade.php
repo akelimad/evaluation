@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Tableau de board | E-EVALUATION</title>
+    <title>@yield('title', 'Accueil') | E-EVALUATION</title>
     <link rel="website" href="{{ url('/') }}">
     {{ csrf_field() }}
     <base href="{{ url('/') }}">
