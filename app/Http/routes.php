@@ -16,37 +16,91 @@ Route::auth();
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');
-
 Route::get('profile', 'UserController@profile');
+
+Route::get('user/{id}', 'UserController@show');
+
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
 	Route::get('users', 'UserController@indexUsers');
+	Route::get('user/form', 'UserController@formUser');
+	Route::post('user/store', 'UserController@storeUser');
+	Route::delete('user/{id}/delete', 'UserController@deleteUser');
+	Route::get('users/import', 'UserController@importUsers');
+	Route::post('users/import_parse', 'UserController@parseImport');
+	Route::post('users/import_process', 'UserController@processImport');
+	Route::get('entretiens/index', 'EntretienController@indexEntretien');
+	Route::get('entretiens/evaluations', 'EntretienController@entretiensEval');
+	Route::get('entretiens/calendar', 'EntretienController@calendar');
 });
-Route::get('user/form', 'UserController@formUser');
-Route::post('user/store', 'UserController@storeUser');
-Route::get('user/{id}', 'UserController@show');
-Route::delete('user/{id}/delete', 'UserController@deleteUser');
-Route::get('users/import', 'UserController@importUsers');
-Route::post('users/import_parse', 'UserController@parseImport');
-Route::post('users/import_process', 'UserController@processImport');
 
-Route::get('config/roles', 'UserController@indexRoles');
-Route::get('role/create', 'UserController@createRole');
-Route::post('role/store', 'UserController@storeRole');
-Route::get('role/{id}/edit', 'UserController@editRole');
+Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
+	Route::get('config/surveys', 'SurveyController@index')->name('surveys-list');
+	Route::get('surveys/form', 'SurveyController@form');
+	Route::post('surveys/store', 'SurveyController@store');
+	Route::delete('surveys/{id}/delete', 'SurveyController@destroy');
+	Route::get('surveys/{id}', 'SurveyController@show');
 
-Route::get('permissions', 'UserController@indexPermisions');
-Route::get('permission/create', 'UserController@createPermission');
-Route::post('permission/store', 'UserController@storePermission');
-Route::get('permission/{id}/edit', 'UserController@editPermission');
+	Route::get('surveys/{sid}/groupes', 'GroupeController@index');
+	Route::get('surveys/{sid}/groupes/create', 'GroupeController@create');
+	Route::post('surveys/{sid}/groupes/store', 'GroupeController@store');
+	Route::get('surveys/{sid}/groupes/{gid}/edit', 'GroupeController@edit');
+	Route::delete('surveys/{sid}/groupes/{gid}/delete', 'GroupeController@destroy');
 
-//Route::get('entretiens', 'EntretienController@index'); //index
-Route::get('entretiens/index', 'EntretienController@indexEntretien'); //index
+	Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
+	Route::get('surveys/{sid}/groupes/{gid}/questions/create', 'QuestionController@create');
+	Route::post('surveys/{sid}/groupes/{gid}/questions/store', 'QuestionController@store');
+	Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
+	Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}', 'QuestionController@show');
+	Route::delete('surveys/{sid}/groupes/{gid}/questions/{qid}/delete', 'QuestionController@destroy');
+	Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
+
+	Route::get('config/skills', 'SkillController@indexAdmin');
+	Route::get('skills/create', 'SkillController@create');
+	Route::post('skills/store', 'SkillController@store');
+	Route::get('skills/{id}/edit', 'SkillController@edit');
+	Route::delete('skills/{eid}/delete', 'SkillController@destroy');
+
+	Route::get('config/emails', 'EmailController@index');
+	Route::get('emails/form', 'EmailController@form');
+	Route::post('emails/store', 'EmailController@store');
+	Route::delete('emails/{id}/delete', 'EmailController@delete');
+
+	Route::get('config/settings', 'SettingController@index');
+
+	Route::get('config/setting/departments', 'DepartmentController@index');
+	Route::get('department/form', 'DepartmentController@form');
+	Route::post('department/store', 'DepartmentController@store');
+	Route::delete('department/delete', 'DepartmentController@delete');
+
+	Route::get('config/setting/functions', 'FonctionController@index');
+	Route::get('function/form', 'FonctionController@form');
+	Route::post('function/store', 'FonctionController@store');
+	Route::delete('function/delete', 'FonctionController@delete');
+
+	Route::get('config/roles', 'UserController@indexRoles');
+	Route::get('role/create', 'UserController@createRole');
+	Route::post('role/store', 'UserController@storeRole');
+	Route::get('role/{id}/edit', 'UserController@editRole');
+
+	Route::get('permissions', 'UserController@indexPermisions');
+	Route::get('permission/create', 'UserController@createPermission');
+	Route::post('permission/store', 'UserController@storePermission');
+	Route::get('permission/{id}/edit', 'UserController@editPermission');
+
+});
+
+Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
+	Route::get('crm', 'CrmController@index');
+	Route::get('crm/create', 'CrmController@form');
+	Route::get('crm/{id}/edit', 'CrmController@form');
+	Route::post('crm/store', 'CrmController@store');
+	Route::delete('crm/{id}/delete', 'CrmController@delete');
+	Route::delete('crm/logo/remove', 'CrmController@removeLogo');
+});
+
 Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretienEvals'); 
 Route::get('entretiens/list', 'EntretienController@entretiensList'); 
-Route::get('entretiens/evaluations', 'EntretienController@entretiensEval'); //mes entretiens
-Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif'); //mes entretiens
-//Route::get('entretiens/filter', 'EntretienController@filterEntretiens');
-Route::get('entretiens/calendar', 'EntretienController@calendar');
+Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif');
 
 Route::get('entretiens/form', 'EntretienController@form');
 Route::post('entretiens/store', 'EntretienController@store');
@@ -61,11 +115,7 @@ Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'EvaluationController@index');
 
-Route::get('config/skills', 'SkillController@indexAdmin');
-Route::get('skills/create', 'SkillController@create');
-Route::post('skills/store', 'SkillController@store');
-Route::get('skills/{id}/edit', 'SkillController@edit');
-Route::delete('skills/{eid}/delete', 'SkillController@destroy');
+
 Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index');
 Route::get('skills/updateUserSkills', 'SkillController@updateUserSkills');
 
@@ -111,56 +161,6 @@ Route::get('entretiens/{eid}/u/{uid}/carrieres/{id}/edit', 'CarreerController@ed
 Route::put('entretiens/{eid}/u/{uid}/carrieres/{cid}/mentorUpdate', 'CarreerController@mentorUpdate');
 Route::put('entretiens/{eid}/u/{user}/submit', 'EntretienController@submission');
 
-Route::get('config/surveys', 'SurveyController@index')->name('surveys-list');
-Route::get('surveys/form', 'SurveyController@form');
-Route::post('surveys/store', 'SurveyController@store');
-Route::delete('surveys/{id}/delete', 'SurveyController@destroy');
-Route::get('surveys/{id}', 'SurveyController@show');
-
-Route::get('surveys/{sid}/groupes', 'GroupeController@index');
-Route::get('surveys/{sid}/groupes/create', 'GroupeController@create');
-Route::post('surveys/{sid}/groupes/store', 'GroupeController@store');
-Route::get('surveys/{sid}/groupes/{gid}/edit', 'GroupeController@edit');
-Route::delete('surveys/{sid}/groupes/{gid}/delete', 'GroupeController@destroy');
-
-Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
-Route::get('surveys/{sid}/groupes/{gid}/questions/create', 'QuestionController@create');
-Route::post('surveys/{sid}/groupes/{gid}/questions/store', 'QuestionController@store');
-Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}/edit', 'QuestionController@edit');
-Route::get('surveys/{sid}/groupes/{gid}/questions/{qid}', 'QuestionController@show');
-Route::delete('surveys/{sid}/groupes/{gid}/questions/{qid}/delete', 'QuestionController@destroy');
-Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 Route::post('answers/store', 'AnswerController@store');
 
-Route::get('config/emails', 'EmailController@index');
-Route::get('emails/form', 'EmailController@form');
-Route::post('emails/store', 'EmailController@store');
-Route::delete('emails/{id}/delete', 'EmailController@delete');
-
-// Route::get('emailActions', 'ActionController@index');
-// Route::get('emailActions/create', 'ActionController@create');
-// Route::post('emailActions/store', 'ActionController@store');
-// Route::get('emailActions/{id}', 'ActionController@show');
-// Route::get('emailActions/{id}/edit', 'ActionController@edit');
-// Route::delete('emailActions/{id}/delete', 'ActionController@delete');
-// Route::post('emails/actions/{actionId}/attach', 'ActionController@attachEmailAtion');
-
-Route::get('crm', 'CrmController@index');
-Route::get('crm/create', 'CrmController@form');
-Route::get('crm/{id}/edit', 'CrmController@form');
-Route::post('crm/store', 'CrmController@store');
-Route::delete('crm/{id}/delete', 'CrmController@delete');
-Route::delete('crm/logo/remove', 'CrmController@removeLogo');
-
-Route::get('config/settings', 'SettingController@index');
 Route::post('config/settings/store', 'SettingController@store');
-
-Route::get('config/setting/departments', 'DepartmentController@index');
-Route::get('department/form', 'DepartmentController@form');
-Route::post('department/store', 'DepartmentController@store');
-Route::delete('department/delete', 'DepartmentController@delete');
-
-Route::get('config/setting/functions', 'FonctionController@index');
-Route::get('function/form', 'FonctionController@form');
-Route::post('function/store', 'FonctionController@store');
-Route::delete('function/delete', 'FonctionController@delete');

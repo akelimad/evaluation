@@ -216,8 +216,8 @@
     <div class="content-wrapper">
         <section class="content-header">
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-home"></i> Accueil </a></li>
-                <li class="active">Tableau de board</li>
+                <li><a href="{{url('/')}}"><i class="fa fa-home"></i> Accueil</a></li>
+                @yield('breadcrumb')
             </ol>
         </section>
         @yield('content')

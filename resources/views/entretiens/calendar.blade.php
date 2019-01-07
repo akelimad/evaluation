@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Calendrier')
+@section('breadcrumb')
+    <li>Calendrier</li>
+@endsection
 @section('content')
     <section class="content entretiens-list">
         <div class="row">

@@ -1,5 +1,12 @@
 @extends('layouts.app')
 @section('title', 'Questions')
+@section('breadcrumb')
+    <li>Questionnaires</li>
+    <li>{{ $qs->groupe->survey->title }}</li>
+    <li>Groupes</li>
+    <li title="{{ $qs->groupe->name }}">{{str_limit($qs->groupe->name,20)}}</li>
+    <li>Questions</li>
+@endsection
 @section('content')
     <section class="content showQuestion">
         @foreach (['danger', 'warning', 'success', 'info'] as $key)

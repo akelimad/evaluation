@@ -827,3 +827,6 @@ p.help-block{
     background-color: #e6f3f9 !important;
     color: #4e4e4e !important;
 }
+.breadcrumb>li {
+    font-size: 14px;
+}

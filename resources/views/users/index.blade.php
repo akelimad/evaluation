@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Utilisateurs')
+@section('breadcrumb')
+    <li>Utilisateurs</li>
+@endsection
 @section('content')
     <section class="content users">
         <div class="row">

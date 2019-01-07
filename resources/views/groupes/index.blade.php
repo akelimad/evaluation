@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Groupes')
+@section('breadcrumb')
+    <li>Questionnaires</li>
+    <li>{{ $survey->title }}</li>
+    <li>Groupes</li>
+@endsection
 @section('content')
     <section class="content users">
         <div class="row">

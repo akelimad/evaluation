@@ -6,10 +6,17 @@
 </style>
 @extends('layouts.app')
 @section('title', 'Questions')
+@section('breadcrumb')
+    <li>Questionnaires</li>
+    <li>{{ $survey->title }}</li>
+    <li>Groupes</li>
+    <li title="{{$groupe->name}}">{{str_limit($groupe->name,20)}}</li>
+    <li>Questions</li>
+@endsection
 @section('content')
     <section class="content showQuestion">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="box box-primary">
                     <div class="box-body">
                         <p class="">
