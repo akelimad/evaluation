@@ -2,26 +2,14 @@ import $ from 'jquery'
 
 export default class Crm {
 
-  static create () {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('crm/create')}, {
+  static form (id = null) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('crm/form'), data: {id: id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'Crm.store'
       },
       footer: {
         label: 'Sauvegarder'
-      }
-    })
-  }
-
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('crm/' + params.id + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'Crm.store'
-      },
-      footer: {
-        label: 'Mettre à jour'
       }
     })
   }

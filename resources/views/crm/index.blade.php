@@ -27,7 +27,7 @@
                     <div class="box-header">
                         <h3 class="box-title"><i class="glyphicon glyphicon-user"></i> Liste des sociétés <span class="badge">{{ $results->total() }}</span></h3>
                         <div class="box-tools mb40">
-                            <a onclick="return Crm.create()" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter</a>
+                            <a onclick="return Crm.form({})" class="btn bg-maroon"> <i class="fa fa-user-plus"></i> Ajouter</a>
                         </div>
                     </div>
                     @if(count($results)>0)
@@ -48,7 +48,7 @@
                                     <td> {{ $user->email }} </td>
                                     <td class="text-center"> 
                                         {{ csrf_field() }} 
-                                        <a href="javascript:void(0)" onclick="return Crm.edit({id: {{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
+                                        <a href="javascript:void(0)" onclick="return Crm.form({{{$user->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
                                         </a>
                                         <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer le compte ?', 'Etes-vous sur de vouloir supprimer ce compte ?','Crm.delete', {id: {{$user->id}}}, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer"> <i class="fa fa-trash"></i> </a>
                                     </td>

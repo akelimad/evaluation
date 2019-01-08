@@ -25,8 +25,9 @@ class CrmController extends Controller
     ]);
   }
 
-  public function form($id = null)
+  public function form(Request $request)
   {
+    $id = $request->id;
     ob_start();
     if( isset($id) && is_numeric($id) ) {
       $user = User::findOrFail($id);
@@ -43,7 +44,7 @@ class CrmController extends Controller
 
   public function store(Request $request)
   {
-    $id = $request->input('id', false);
+    $id = $request->id;
     $rules = [
       'logo'      => 'required|max:500',
       'name'      => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',

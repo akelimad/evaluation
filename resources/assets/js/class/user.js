@@ -3,7 +3,7 @@ import $ from 'jquery'
 export default class chmUser {
 
   static form (id = null) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/form'), data: {id: id}}, {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('users/form'), data: {id: id}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmUser.store'
@@ -30,7 +30,7 @@ export default class chmUser {
     var ajaxParams = {
       id: id,
       type: 'POST',
-      url: window.chmSite.url('user/store'),
+      url: window.chmSite.url('users/store'),
       data: data,
       processData: false,
       contentType: false,

@@ -19,7 +19,7 @@
             @endif
         @endforeach
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="box box-primary">
                     <div class="box-body groupeQuestions">
                         <p class="">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-body">
                         <h3 class="title mb40"> Resumé de la question </h3>

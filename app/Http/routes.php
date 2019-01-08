@@ -19,16 +19,17 @@ Route::get('/dashboard', 'HomeController@dashboard');
 Route::get('profile', 'UserController@profile');
 
 Route::get('user/{id}', 'UserController@show');
+Route::get('users/form', 'UserController@formUser');
+Route::post('users/store', 'UserController@storeUser');
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
 	Route::get('users', 'UserController@indexUsers');
-	Route::get('user/form', 'UserController@formUser');
-	Route::post('user/store', 'UserController@storeUser');
 	Route::delete('user/{id}/delete', 'UserController@deleteUser');
 	Route::get('users/import', 'UserController@importUsers');
 	Route::post('users/import_parse', 'UserController@parseImport');
 	Route::post('users/import_process', 'UserController@processImport');
 	Route::get('entretiens/index', 'EntretienController@indexEntretien');
+	Route::get('entretiens/{id}/show', 'EntretienController@show');
 	Route::get('entretiens/evaluations', 'EntretienController@entretiensEval');
 	Route::get('entretiens/calendar', 'EntretienController@calendar');
 });
@@ -91,11 +92,12 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
 	Route::get('crm', 'CrmController@index');
-	Route::get('crm/create', 'CrmController@form');
-	Route::get('crm/{id}/edit', 'CrmController@form');
-	Route::post('crm/store', 'CrmController@store');
 	Route::delete('crm/{id}/delete', 'CrmController@delete');
 	Route::delete('crm/logo/remove', 'CrmController@removeLogo');
+});
+Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() {
+	Route::get('crm/form', 'CrmController@form');
+	Route::post('crm/store', 'CrmController@store');
 });
 
 Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretienEvals'); 
@@ -105,7 +107,7 @@ Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMo
 Route::get('entretiens/form', 'EntretienController@form');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
-Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@show');
+Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@synthese');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');

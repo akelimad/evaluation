@@ -65,6 +65,7 @@
                                         <td class="text-center">
                                             {{ csrf_field() }}
                                             <button type="submit" class="btn-success icon-fill" data-toggle="tooltip" title="Mettre à jour"><i class="fa fa-refresh"></i></button>
+                                            <a href="javascript:void(0)" onclick="return chmEntretien.show({{{$e->id}}})" class="bg-navy icon-fill" title="Voir" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
                                             <a href="javascript:void(0)" onclick="return chmEntretien.form({{{$e->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Modifier"> <i class="fa fa-pencil"></i></a>
                                             <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{$e->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer l'entretien"> <i class="fa fa-trash"></i> </a>
                                             <div class="clearfix"></div>

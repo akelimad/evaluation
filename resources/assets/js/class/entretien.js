@@ -31,8 +31,8 @@ export default class chmEntretien {
     })
   }
 
-  static show (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/' + params.id)})
+  static show (id) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/' + id + '/show')})
   }
 
   static apercu (params) {

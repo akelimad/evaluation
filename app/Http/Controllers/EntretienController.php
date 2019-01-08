@@ -60,6 +60,15 @@ class EntretienController extends Controller
     return view('entretiens.index', compact('entretiens', 'evaluations', 'surveys'));
   }
 
+  public function show($id)
+  {
+    ob_start();
+    $e = Entretien::findOrFail($id);
+    echo view('entretiens.show', compact('e'));
+    $content = ob_get_clean();
+    return ['title' => "Détails de l'entretien", 'content' => $content];
+  }
+
   /**
    * Display a listing of the resource.
    */
@@ -105,13 +114,13 @@ class EntretienController extends Controller
   /**
    * Display a listing of the resource.
    */
-  public function show($e_id, $uid)
+  public function synthese($e_id, $uid)
   {
     $entretien = Entretien::findOrFail($e_id);
     $evaluations = $entretien->evaluations;
     // $evaluation = Evaluation::where('title', $type)->first();
     $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
-    return view('entretiens.show', [
+    return view('entretiens.synthese', [
       'e' => $entretien,
       'user' => $user,
       'evaluations' => $evaluations,
