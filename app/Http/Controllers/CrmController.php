@@ -29,7 +29,7 @@ class CrmController extends Controller
   {
     ob_start();
     if( isset($id) && is_numeric($id) ) {
-      $user = User::find($id);
+      $user = User::findOrFail($id);
       $title = "Modifier le compte";
     } else {
       $title = "Ajoute un compte";
@@ -53,7 +53,7 @@ class CrmController extends Controller
       'password'  => 'required|confirmed|min:6',
     ];
     if($id) {
-      $user = User::find($id);
+      $user = User::findOrFail($id);
       $rules['email'] = 'required|unique:users,email,'.$user->id;
       if(!empty($request->password) || !empty($request->password_confirmation)){
         $rules['password'] = 'required|confirmed|min:6';
@@ -99,19 +99,19 @@ class CrmController extends Controller
   }
 
   public function delete(Request $request, $id){
-    $user = User::find($id);
+    $user = User::findOrFail($id);
     $user->delete();
   }
 
   public function uploadLogo(Request $request){
-    $user = User::find($request->id);
+    $user = User::findOrFail($request->id);
     $user->logo = "";
     $user->save();
 
   }
 
   public function removeLogo(Request $request){
-    $user = User::find($request->id);
+    $user = User::findOrFail($request->id);
     $logo = $user->logo;
     $user->logo = "";
     $user->save();

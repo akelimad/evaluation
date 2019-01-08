@@ -54,9 +54,10 @@
                                                         <input type="checkbox" name="done" {{$f->done == 1 ? 'checked':''}} {{$user->id == Auth::user()->id ? 'disabled':'' }} >
                                                     </td>
                                                     <td class="text-center"> 
-                                                        @if($user->id == Auth::user()->id)
+                                                        @if($user->id == Auth::user()->id && !App\Entretien::answered($e->id, $user->id))
                                                         <a href="javascript:void(0)" onclick="return chmFormation.edit({e_id: {{$e->id}} , id: {{$f->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
-                                                        @else
+                                                        @endif
+                                                        @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
                                                         <button type="submit" class="btn btn-sm btn-flat bg-navy">Mettre à jour</button>
                                                         @endif
                                                     </td>
@@ -67,9 +68,9 @@
                                         </table>
                                     </div>
                                 @else
-                                    @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+                                    @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                                 @endif
-                                @if($user->id == Auth::user()->id)
+                                @if(!App\Entretien::answered($e->id, $user->id) && $user->id == Auth::user()->id)
                                 <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn"><i class="fa fa-plus"></i> Demander une formation</a>
                                 @endif
                                 </div>

@@ -35,7 +35,7 @@ class SettingController extends Controller
   // public function edit($id)
   // {
   //   ob_start();
-  //   $setting = Setting::find($id);
+  //   $setting = Setting::findOrFail($id);
   //   echo view('setting.form', compact('setting'));
   //   $content = ob_get_clean();
   //   return ['title' => 'Modifier les options', 'content' => $content];

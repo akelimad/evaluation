@@ -45,7 +45,7 @@
                             <a onclick="return chmEntretien.entretiens()" class="btn btn-success"> <i class="fa fa-send"></i> Envoyer une invitation</a>
                         </div>
                     @else
-                        @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+                        @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                     @endif
                 </div>
             </div>

@@ -30,7 +30,7 @@ class UserController extends Controller
 
   public function show($id)
   {
-    $user = User::find($id);
+    $user = User::findOrFail($id);
     return view('users.profile', compact('user'));
   }
 
@@ -95,7 +95,7 @@ class UserController extends Controller
     $roles_ids = [];
     ob_start();
     if (isset($id) && is_numeric($id)) {
-      $user = User::find($id);
+      $user = User::findOrFail($id);
       if ($user->roles) {
         foreach ($user->roles as $role) {
           $roles_ids [] = $role->id;
@@ -133,7 +133,7 @@ class UserController extends Controller
     ];
     $query = User::where('email', $request->email)->where('society_id', User::getOwner()->id);
     if ($id) {
-      $user = User::find($id);
+      $user = User::findOrFail($id);
       if (!empty($request->password) || !empty($request->password_confirmation)) {
         $rules['password'] = 'required|confirmed|min:6';
         $user->password = bcrypt($request->password);
@@ -186,7 +186,7 @@ class UserController extends Controller
 
   public function deleteUser(Request $request, $id)
   {
-    $user = User::find($id);
+    $user = User::findOrFail($id);
     $user->delete();
     return redirect('users');
   }
@@ -290,7 +290,7 @@ class UserController extends Controller
   {
     $id = $request->input('id', false);
     if ($id) {
-      $role = Role::find($id);
+      $role = Role::findOrFail($id);
       $role->name = $request->name;
       $role->display_name = $request->display_name;
       $role->description = $request->description;
@@ -326,7 +326,7 @@ class UserController extends Controller
   public function editRole($id)
   {
     ob_start();
-    $role = Role::find($id);
+    $role = Role::findOrFail($id);
     $role_perms = [];
     foreach ($role->perms()->get() as $perm) {
       $role_perms[] = $perm->id;
@@ -339,7 +339,7 @@ class UserController extends Controller
 
   public function deleteRole(Request $request, $id)
   {
-    $role = Role::find($id);
+    $role = Role::findOrFail($id);
     $role->delete();
     return redirect('utilisateurs/roles');
   }
@@ -362,7 +362,7 @@ class UserController extends Controller
   {
     $id = $request->input('id', false);
     if ($id) {
-      $permission = Permission::find($id);
+      $permission = Permission::findOrFail($id);
     } else {
       $permission = new Permission();
     }
@@ -380,7 +380,7 @@ class UserController extends Controller
   public function editPermission($id)
   {
     ob_start();
-    $p = Permission::find($id);
+    $p = Permission::findOrFail($id);
     echo view('users/permissions.edit', ['p' => $p]);
     $content = ob_get_clean();
     return ['title' => 'Modifier une permission', 'content' => $content];

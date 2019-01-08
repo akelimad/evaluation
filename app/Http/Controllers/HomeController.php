@@ -10,6 +10,7 @@ use App\Answer;
 use App\Formation;
 use App\User;
 use App\Entretien_user;
+use App\Survey;
 
 class HomeController extends Controller
 {

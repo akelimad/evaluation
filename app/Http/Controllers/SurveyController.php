@@ -23,7 +23,7 @@ class SurveyController extends Controller
         $id = $request->id;
         ob_start();
         if(isset($id) && is_numeric($id)) {
-            $survey = Survey::find($id);
+            $survey = Survey::findOrFail($id);
             $title = "Modifier le questionnaire";
         } else {
             $survey = new Survey();
@@ -40,7 +40,7 @@ class SurveyController extends Controller
         if($request->id == null ){
             $survey = new Survey();
         }else{
-            $survey = Survey::find($request->id);
+            $survey = Survey::findOrFail($request->id);
         }
         $survey->title = $request->title;
         $survey->description = $request->description;
@@ -58,22 +58,23 @@ class SurveyController extends Controller
     public function show($sid)
     {
         ob_start();
-        $survey = Survey::find($sid);
+        $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;
         $incompleteSurvey = Survey::icompleteSurvey($sid);
         echo view('surveys.preview', compact('groupes', 'sid', 'incompleteSurvey'));
         $content = ob_get_clean();
-        // if($incompleteSurvey == true){
-        //     return ['title' => 'Visualiser un questionnaire', 'content' => "<i class='fa fa-info-circle'></i>le questionnaire est incomplet, vous ne pouvez pas le vésualiser. veuillez attribuer les choix pour les questions multichoix."];
-        // }else{
-            return ['title' => 'Visualiser le questionnaire', 'content' => $content];
-        // }
+        return ['title' => 'Visualiser le questionnaire', 'content' => $content];
     }    
 
     public function destroy($sid)
     {
         $survey = Survey::findOrFail($sid);
+        if($survey->groupes()->count() > 0) {
+            foreach ($survey->groupes()->get() as $group) {
+                $group->delete();
+                $group->questions()->delete();
+            }
+        }
         $survey->delete();
-        return redirect('config/surveys');
     }
 }

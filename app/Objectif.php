@@ -28,7 +28,7 @@ class Objectif extends Model
     }
 
     public static function getObjectif($eid, $uid, $oid){
-        $auth = User::find($uid);
+        $auth = User::findOrFail($uid);
         if($auth->id == $uid){
             $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('objectif_id', $oid)->first();
         }else{

@@ -51,40 +51,7 @@
 </div>
 
 <script>
-    $(function(){
-        function uuidv4() {
-            return ([1e7]+-1e3).replace(/[018]/g, c =>
-                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-            )
-        }
-        $(".addLine").click(function(event){
-            event.preventDefault()
-            var copy = $('#addLine-wrap').find(".form-group:first").clone()
-            copy.find('input').val('')
-            copy.find('button').toggleClass('addLine deleteLine')
-            copy.find('button>i').toggleClass('fa-plus fa-minus')
-            var uid = uuidv4()
-            $.each(copy.find('input'), function(){
-                var name = $(this).attr('name')
-                $(this).attr('name', name.replace('[0]', '['+uid+']'))
-            })
-            $('#addLine-wrap').append(copy)
-        })
-        $('#addLine-wrap').on('click', '.deleteLine', function(){
-            $(this).closest('.form-group').remove();
-        });
-
-        $("#questionType").change(function(){
-            value = $(this).val()
-            if(value == "text" || value == "textarea" ){
-                $("#addLine-wrap").hide()
-                $("#addLine-wrap #choiceField").prop('required', false).attr('name', '')
-            }else{
-                $("#addLine-wrap").show()
-                $("#addLine-wrap #choiceField").prop('required', true).attr('name', 'subQuestions[0]')
-            }
-        })
-        $("#questionType").change()
-
-    })
+jQuery(document).ready(function() {
+    showHideChoiceFields()
+})
 </script>

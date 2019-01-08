@@ -38,7 +38,7 @@ class ObjectifController extends Controller
      */
     public function index($e_id, $uid)
     {
-        $entretien = Entretien::find($e_id);
+        $entretien = Entretien::findOrFail($e_id);
         $evaluations = $entretien->evaluations;
         $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $entretien->objectif_id)->paginate(10);
         $total = 0;
@@ -136,7 +136,7 @@ class ObjectifController extends Controller
     public function edit($oid, $gid)
     {
         ob_start();
-        $groupe = Objectif::find($gid);
+        $groupe = Objectif::findOrFail($gid);
         $objectif = $groupe->children;
         echo view('objectifs.form', compact('objectif','oid', 'groupe'));
         $content = ob_get_clean();
@@ -163,7 +163,7 @@ class ObjectifController extends Controller
             $user = $auth;
             $mentor_id = $auth->parent->id;
         }else{
-            $user = User::find($user_id);
+            $user = User::findOrFail($user_id);
             $mentor_id = $auth->id;
         }
         // dump($user);
@@ -207,7 +207,7 @@ class ObjectifController extends Controller
                 // $sumPonderation += $array[3];
                 // $sousTotal +=  ($array[0] * $array[3]);
             }
-            // $objectif = Objectif::find($key);
+            // $objectif = Objectif::findOrFail($key);
             // $objectif->sousTotal = $this->cutNum($sousTotal/$sumPonderation, 2);
             // $objectif->save(); 
         }

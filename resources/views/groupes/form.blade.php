@@ -11,8 +11,8 @@
         <label for="description" class="control-label">Description</label>
         <textarea name="description" id="description" class="form-control">{{ isset($g->description) ? $g->description :''}}</textarea>
     </div>
-    @php($survey = App\Survey::find($sid))
-    @if(App\Evaluation::find($survey->evaluation_id)->title == 'Evaluations')
+    @php($survey = App\Survey::findOrFail($sid))
+    @if(App\Evaluation::findOrFail($survey->evaluation_id)->title == 'Evaluations')
     <div class="form-group">
         <label for="notation_type" class="control-label">Notation par</label>
         <select name="notation_type" id="notation_type" class="form-control">

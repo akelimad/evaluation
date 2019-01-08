@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import uuidv4 from 'uuid/v4'
 
 $(document).ready(function () {
   // Check all table rows
@@ -80,4 +81,37 @@ $(document).ready(function () {
     $($select).find('option').not($(this)).prop('selected', $(this).is(':checked'))
     $($select).trigger('change')
   })
+
+  $('body').on('click', '.addLine', function (event) {
+    event.preventDefault()
+    var copy = $('#addLine-wrap').find('.form-group:first').clone()
+    copy.find('input').val('')
+    copy.find('button').toggleClass('addLine deleteLine')
+    copy.find('button>i').toggleClass('fa-plus fa-minus')
+    var uid = uuidv4()
+    $.each(copy.find('input'), function () {
+      var name = $(this).attr('name')
+      $(this).attr('name', name.replace('[0]', '[' + uid + ']'))
+    })
+    $('#addLine-wrap').append(copy)
+  })
+
+  $('body').on('click', '.deleteLine', function () {
+    $(this).closest('.form-group').remove()
+  })
+
+  $('body').on('change', '#questionType', function () {
+    window.showHideChoiceFields()
+  })
 })
+
+window.showHideChoiceFields = () => {
+  var value = $('#questionType').val()
+  if (value === 'text' || value === 'textarea') {
+    $('#addLine-wrap').hide()
+    $('#addLine-wrap #choiceField').prop('required', false).attr('name', '')
+  } else {
+    $('#addLine-wrap').show()
+    $('#addLine-wrap #choiceField').prop('required', true).attr('name', 'subQuestions[0]')
+  }
+}

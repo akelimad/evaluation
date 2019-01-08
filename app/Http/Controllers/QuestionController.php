@@ -20,8 +20,8 @@ class QuestionController extends Controller
 
     public function index($sid, $gid)
     {
-        $survey = Survey::find($sid);
-        $groupe = Groupe::find($gid);
+        $survey = Survey::findOrFail($sid);
+        $groupe = Groupe::findOrFail($gid);
         return view('questions.index', compact('survey','groupe'));
     }
 
@@ -40,7 +40,7 @@ class QuestionController extends Controller
             $question = new Question();
             $action ="ajoutée";
         }else{
-            $question =  Question::find($request->id);
+            $question =  Question::findOrFail($request->id);
             $action ="modifiée";
         }
         
@@ -72,7 +72,7 @@ class QuestionController extends Controller
 
     public function show($sid ,$gid, $qid)
     {
-        $survey = Survey::find($sid);
+        $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;
         $gr = Groupe::findOrFail($gid);
         $qs = Question::findOrFail($qid);

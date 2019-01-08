@@ -60,7 +60,7 @@
                         @include('partials.pagination')
 
                     @else
-                        @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+                        @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                     @endif
 
                 </div>

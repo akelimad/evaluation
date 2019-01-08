@@ -29,9 +29,9 @@ class SalarieController extends Controller
      */
     public function index($eid, $uid)
     {
-        $e = Entretien::find($eid);
+        $e = Entretien::findOrFail($eid);
         $evaluations = $e->evaluations;
-        $user = User::find($uid);
+        $user = User::findOrFail($uid);
         if($user->id == Auth::user()->id){
             $salaries = Salary::where('user_id', $uid)->where('entretien_id', $eid)->paginate(10);
         }else{
@@ -48,8 +48,8 @@ class SalarieController extends Controller
     public function create($eid, $uid)
     {
         ob_start();
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
+        $e = Entretien::findOrFail($eid);
+        $user = User::findOrFail($uid);
         echo view('salaries.form', compact('e', 'user'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter une rémunération', 'content' => $content];
@@ -66,7 +66,7 @@ class SalarieController extends Controller
         if($request->id == null ){
             $salary = new Salary();
         }else{
-            $salary = Salary::find($request->id);
+            $salary = Salary::findOrFail($request->id);
         }
         $salary->brut = $request->brut;
         $salary->prime = $request->prime;
@@ -102,9 +102,9 @@ class SalarieController extends Controller
     public function edit($eid, $uid, $sid)
     {
         ob_start();
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
-        $s = Salary::find($sid);
+        $e = Entretien::findOrFail($eid);
+        $user = User::findOrFail($uid);
+        $s = Salary::findOrFail($sid);
         echo view('salaries.form', compact('e', 'user', 's'));
         $content = ob_get_clean();
         return ['title' => 'Modifier une rémunération', 'content' => $content];

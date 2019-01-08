@@ -75,7 +75,7 @@ export default class Crm {
 
   static removeLogo (params) {
     let token = $('input[name="_token"]').val()
-    if (window.confirm('etes vous sure ?')) {
+    if (window.confirm('Êtes-vous sûr ?')) {
       $.ajax({
         url: 'crm/logo/remove',
         type: 'DELETE',

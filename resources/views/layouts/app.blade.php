@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css')}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('css/select2.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/admin.min.css')}}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{ asset('css/skins/_all-skins.min.css')}}">
@@ -98,7 +98,7 @@
                                 <p>
                                     {{App\User::displayName()}}
                                     @if(!Auth::user()->hasRole('ADMIN'))
-                                        <small>{{ (!empty(Auth::user()->function)) ? App\Fonction::find(Auth::user()->function)->title : '---' }}</small>
+                                        <small>{{ (!empty(Auth::user()->function)) ? App\Fonction::findOrFail(Auth::user()->function)->title : '---' }}</small>
                                     @endif
                                 </p>
                             </li>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="pull-left info">
                     <p>{{App\User::displayName()}}</p>
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    <a href="#"><i class="fa fa-circle text-success"></i> En ligne</a>
                 </div>
             </div>
             <form action="#" method="get" class="sidebar-form">
@@ -275,7 +275,7 @@
 <script src="{{asset('js/select2.full.min.js')}}"></script>
 <script src="{{asset('vendor/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
 <!-- AdminLTE App -->
-<script src="{{asset('js/adminlte.min.js')}}"></script>
+<script src="{{asset('js/admin.min.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('js/pages/dashboard.js')}}"></script>
 <!-- AdminLTE for demo purposes -->

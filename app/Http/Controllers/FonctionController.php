@@ -33,7 +33,7 @@ class FonctionController extends Controller
         $id = $request->id;
         ob_start();
         if(isset($id) && is_numeric($id)) {
-            $fonction = Fonction::find($id);
+            $fonction = Fonction::findOrFail($id);
             $title = "Modifier la fonction";
         } else {
             $fonction = new Fonction();
@@ -54,7 +54,7 @@ class FonctionController extends Controller
     {
         $id = $request->id;
         if($id){
-            $fonction = Fonction::find($id);
+            $fonction = Fonction::findOrFail($id);
             $fonction->title = $request->titles[0];
             $fonction->save();
         }else{
@@ -81,7 +81,7 @@ class FonctionController extends Controller
     public function delete(Request $request)
     {
         $id = $request->id;
-        $fonction = Fonction::find($id);
+        $fonction = Fonction::findOrFail($id);
         $fonction->delete();
     }
 

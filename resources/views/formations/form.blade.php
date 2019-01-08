@@ -5,7 +5,7 @@
     {{ csrf_field() }}
     <div class="form-group">
         <label for="date" class="control-label">Date <span class="asterisk">*</span></label>
-        <input type="text" class="form-control" name="date" id="datepicker" placeholder="Ex: 01/01/2018" value="{{isset($f->date) ? Carbon\Carbon::parse($f->date)->format('d-m-Y') :''}}" readonly="" required="">
+        <input type="text" class="form-control" name="date" id="datepicker" placeholder="" value="{{isset($f->date) ? Carbon\Carbon::parse($f->date)->format('d-m-Y') :''}}" readonly="" required="">
     </div>
     <div class="form-group">
         <label for="exercice" class="control-label">Exercice<span class="asterisk">*</span></label>
@@ -17,7 +17,7 @@
     </div>
     <div class="form-group">
         <label for="title" class="control-label">Titre de la formation demandée<span class="asterisk">*</span></label>
-        <input type="text" class="form-control" name="title" id="title" placeholder="Ex: Formation IA" value="{{isset($f->title) ? $f->title :''}}" required="">
+        <input type="text" class="form-control" name="title" id="title" placeholder="" value="{{isset($f->title) ? $f->title :''}}" required="">
     </div>
     <div class="form-group">
         <label for="coll_comment" class="control-label">Description</label>

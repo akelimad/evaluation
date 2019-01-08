@@ -23,7 +23,7 @@ class GroupeController extends Controller
      */
     public function index($sid)
     {
-        $survey = Survey::find($sid);
+        $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes()->paginate(10);
         return view('groupes/index', compact('survey', 'groupes', 'sid'));
     }
@@ -47,7 +47,7 @@ class GroupeController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'    => 'required|min:2|max:50|regex:/^[\pL\s\-]+$/u',
+            'name'    => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s]+$/',
         ]);
         if ($validator->fails()) {
             return ["status" => "danger", "message" => $validator->errors()->all()];
@@ -56,7 +56,7 @@ class GroupeController extends Controller
         if($request->id == null ){
             $groupe = new Groupe();
         }else{
-            $groupe =  Groupe::find($request->id);
+            $groupe =  Groupe::findOrFail($request->id);
         }
         $groupe->name = $request->name;
         $groupe->description = $request->description;
@@ -93,7 +93,7 @@ class GroupeController extends Controller
     public function edit($sid, $gid)
     {
         ob_start();
-        $g = Groupe::find($gid);
+        $g = Groupe::findOrFail($gid);
         echo view('groupes.form', compact('g', 'sid'));
         $content = ob_get_clean();
         return ['title' => 'Modifier le type de questions', 'content' => $content];

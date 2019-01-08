@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Erreur 404 | Page introuvable</title>
+        <title>Erreur 404 | E-EVALUATION</title>
         <meta charset="UTF-8">
         <!-- <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css"> -->
         <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet" >
@@ -12,10 +12,9 @@
         </style>
     </head>
     <body>
-        <a href="{{url('/')}}">
+        <a href="{{url()->previous()}}">
             <div class="content">
                 <img src="{{asset('img/error404.png')}}" class="img-responsive" alt="">
-                <!-- <div class="title"><i class="fa fa-ban fa-3x"></i> Aucune page trouvée ! </div> -->
             </div>
         </a>
     </body>

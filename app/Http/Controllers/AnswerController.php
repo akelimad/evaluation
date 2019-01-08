@@ -79,15 +79,15 @@ class AnswerController extends Controller
         }
         // update entretien_user table note
         $sid = Evaluation::surveyId($eid, 1);
-        $survey = Survey::find($sid);
+        $survey = Survey::findOrFail($sid);
         $grpCount = $survey->groupes()->count();
 
         $answers = Answer::where('user_id', $uid)->where('entretien_id', $eid)->get();
         if(isset($answers) && count($answers)>0) {
             $note = 0;
             foreach ($answers as $answer) {
-                $q = Question::find($answer->question_id);
-                $g = Groupe::find($q->groupe->id);
+                $q = Question::findOrFail($answer->question_id);
+                $g = Groupe::findOrFail($q->groupe->id);
                 if($g->notation_type == 'section') {
                     if($answer->question_id == $g->questions()->first()->id) $note += $answer->note;
                 } else {

@@ -24,9 +24,9 @@
                                                 <th>Famille</th>
                                                 <th>Catégorie</th>
                                                 <th>Compétence</th>
-                                                <th>Objectif</th>
-                                                <th>Auto</th>
-                                                <th>N+1</th>
+                                                <th>Objectif (Mentor)</th>
+                                                <th>Coll.</th>
+                                                <th>Mentor</th>
                                                 <th>Ecart</th>
                                             </tr>
                                             @php($totalObjectif = 0)
@@ -67,14 +67,17 @@
                                                 <td><span class="badge">{{$totalEcart}}</span></td>
                                             </tr>
                                         </table>
-                                        @if(!App\Skill::filledSkills($e->id, $user->id, $user->parent->id))
-                                        <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Sauvegarder</button>
+                                        @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
+                                        <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Enregistrer</button>
+                                        @endif
+                                        @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
+                                        <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Enregistrer</button>
                                         @endif
                                     </form>
                                     {{ $skills->links() }}
                                 </div>
                             @else
-                                @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+                                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                             @endif
                         </div>
                     </div>

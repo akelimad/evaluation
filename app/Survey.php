@@ -24,7 +24,7 @@ class Survey extends Model
 
   public static function icompleteSurvey($sid)
   {
-    $survey = Survey::find($sid);
+    $survey = Survey::findOrFail($sid);
     $groupes = $survey->groupes;
     $incompleteSurvey = false;
     foreach ($groupes as $groupe) {

@@ -25,10 +25,10 @@ class EvaluationController extends Controller
      */
     public function index($e_id, $uid)
     {
-        $entretien = Entretien::find($e_id);
+        $entretien = Entretien::findOrFail($e_id);
         $evaluations = $entretien->evaluations;
         $sid = Evaluation::surveyId($e_id, 1);
-        $survey = Survey::find($sid);
+        $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;
         $user = User::findOrFail($uid);
         return view('evaluations.index', [

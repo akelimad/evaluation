@@ -24,8 +24,8 @@ class FormationController extends Controller
      */
     public function index($e_id, $uid)
     {
-        $e = Entretien::find($e_id);
-        $user = User::find($uid);
+        $e = Entretien::findOrFail($e_id);
+        $user = User::findOrFail($uid);
         $formations = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->orderBy('id', 'desc')->paginate(10);
         $historiques = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->where('status', 2)->paginate(10);
         $evaluations = $e->evaluations;
@@ -40,7 +40,7 @@ class FormationController extends Controller
     public function create($e_id)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
+        $entretien = Entretien::findOrFail($e_id);
         echo view('formations.form', ['e' => $entretien]);
         $content = ob_get_clean();
         return ['title' => 'Ajouter une formation', 'content' => $content];
@@ -66,7 +66,7 @@ class FormationController extends Controller
         if($request->id == null ){
             $formation = new Formation();
         }else{
-            $formation =  Formation::find($request->id);
+            $formation =  Formation::findOrFail($request->id);
         }
         $formation->date = Carbon::createFromFormat('d-m-Y', $request->date);
         $formation->exercice = $request->exercice;
@@ -104,11 +104,11 @@ class FormationController extends Controller
     public function edit($e_id, $id)
     {
         ob_start();
-        $entretien = Entretien::find($e_id);
-        $formation = Formation::find($id);
+        $entretien = Entretien::findOrFail($e_id);
+        $formation = Formation::findOrFail($id);
         echo view('formations.form', ['f' => $formation, 'e'=>$entretien]);
         $content = ob_get_clean();
-        return ['title' => 'Modifier une formation', 'content' => $content];
+        return ['title' => 'Modifier la formation', 'content' => $content];
     }
 
     /**

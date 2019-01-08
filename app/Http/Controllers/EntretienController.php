@@ -12,6 +12,7 @@ use DB;
 use App\User;
 use App\Entretien;
 use App\Entretien_user;
+use App\Skill_user;
 use App\Question;
 use App\Survey;
 use App\Evaluation;
@@ -26,6 +27,7 @@ use App\Comment;
 use App\Action;
 use App\Email;
 use App\Entretien_evaluation;
+use App\Answer;
 
 class EntretienController extends Controller
 {
@@ -105,7 +107,7 @@ class EntretienController extends Controller
    */
   public function show($e_id, $uid)
   {
-    $entretien = Entretien::find($e_id);
+    $entretien = Entretien::findOrFail($e_id);
     $evaluations = $entretien->evaluations;
     // $evaluation = Evaluation::where('title', $type)->first();
     $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
@@ -125,7 +127,7 @@ class EntretienController extends Controller
     $id = $request->id;
     ob_start();
     if (isset($id) && is_numeric($id)) {
-      $entretien = Entretien::find($id);
+      $entretien = Entretien::findOrFail($id);
       $title = "Modifier l'entretien";
     } else {
       $entretien = new Entretien();
@@ -152,7 +154,7 @@ class EntretienController extends Controller
     $entretienUsers = $removedUsers = [];
     
     if (isset($id) && is_numeric($id)) {
-      $entretien = Entretien::find($id);
+      $entretien = Entretien::findOrFail($id);
       $entretienUsers = $entretien->users()->pluck('id')->toArray();
       $removedUsers = array_diff($entretienUsers, $selectedUsers);
       $selectedUsers = array_diff($selectedUsers, $entretienUsers);
@@ -189,7 +191,7 @@ class EntretienController extends Controller
       $date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit);
       foreach ($selectedUsers as $uid) {
         if (Entretien::existInterview($entretien->id, $uid, $date, $date_limit)) {
-          $hasAlreadyInt[] = User::find($uid)->name;
+          $hasAlreadyInt[] = User::findOrFail($uid)->name;
         }
       }
     }
@@ -201,7 +203,7 @@ class EntretienController extends Controller
       return ["status" => "danger", "message" => $messages];
     }
 
-    $evaluations = Evaluation::pluck('id')->toArray(); //to get ids of all object in one array
+    $evaluations = Evaluation::where('title', '<>', 'Compétences')->pluck('id')->toArray(); //to get ids of all object in one array
     $entretien->date = $date;
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
@@ -224,7 +226,7 @@ class EntretienController extends Controller
     $already_sent = [];
 
     foreach ($selectedUsers as $uid) {
-      $user = User::find($uid);
+      $user = User::findOrFail($uid);
       $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
       MailerController::send($user, $entretien, $collEmail);
       if (!in_array($user->parent->id, $already_sent)) {
@@ -237,7 +239,7 @@ class EntretienController extends Controller
     $deleteEvalEmail = Email::getAll()->where('ref', 'delete_eval')->first();
     if($deleteEvalEmail) {
       foreach ($removedUsers as $uid) {
-        $user = User::find($uid);
+        $user = User::findOrFail($uid);
         $entretien->users()->detach($user);
         MailerController::send($user, $entretien, $deleteEvalEmail);
       }
@@ -248,7 +250,7 @@ class EntretienController extends Controller
 
   public function storeCheckedUsers(Request $request)
   {
-    $entretien = Entretien::find($request->entretien_id);
+    $entretien = Entretien::findOrFail($request->entretien_id);
     $selectedUsers = json_decode($request->ids);
     $date = Carbon::createFromFormat('Y-m-d', $entretien->date);
     $date_limit = Carbon::createFromFormat('Y-m-d', $entretien->date_limit);
@@ -257,7 +259,7 @@ class EntretienController extends Controller
     // dd($selectedUsers);
     foreach ($selectedUsers as $uid) {
       if (Entretien::existInterview($entretien->id, $uid, $date, $date_limit)) {
-        $hasAlreadyInt[] = User::find($uid)->name;
+        $hasAlreadyInt[] = User::findOrFail($uid)->name;
       }
     }
     if (count($hasAlreadyInt) > 0) {
@@ -274,7 +276,7 @@ class EntretienController extends Controller
     
     $already_sent = [];
     foreach ($selectedUsers as $uid) {
-      $user = User::find($uid);
+      $user = User::findOrFail($uid);
       $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
       MailerController::send($user, $entretien, $collEmail);
       if (!in_array($user->parent->id, $already_sent)) {
@@ -292,7 +294,7 @@ class EntretienController extends Controller
   {
     // dd($request->all());
     $evaluationsIds = [];
-    $entretien = Entretien::find($request->entretien_id);
+    $entretien = Entretien::findOrFail($request->entretien_id);
     $entretienSkills = $entretien->skills->count();
     $skillsChecked = false;
     if(count($request->choix) > 0) {
@@ -374,8 +376,8 @@ class EntretienController extends Controller
     if(count($mentors) > 0){
       foreach ($mentors as $value) {
         if (count($value) > 1) {
-          $entretien = Entretien::find($value['entretienId']);
-          $mentor = User::find($value['mentorId']);
+          $entretien = Entretien::findOrFail($value['entretienId']);
+          $mentor = User::findOrFail($value['mentorId']);
           MailerController::send($mentor, $entretien, $email);
         }
       }
@@ -385,7 +387,7 @@ class EntretienController extends Controller
 
   public function updateMotif(Request $request, $eid, $uid)
   {
-    $user = User::find($uid);
+    $user = User::findOrFail($uid);
     $user->entretiens()->updateExistingPivot($eid, ['motif' => $request->motif]);
     Session::flash('success_motif_save', "Le motif d'abscence a bien été sauvegardé.");
     return redirect('entretiens/evaluations');
@@ -394,7 +396,7 @@ class EntretienController extends Controller
   public function apercu($eid, $uid)
   {
     ob_start();
-    $e = Entretien::find($eid);
+    $e = Entretien::findOrFail($eid);
     $user = User::findOrFail($uid);
     $evaluations = $e->evaluations;
     $evalTitle = [];
@@ -420,10 +422,10 @@ class EntretienController extends Controller
 
   public function printPdf($eid, $uid)
   {
-    $e = Entretien::find($eid);
+    $e = Entretien::findOrFail($eid);
     $user = User::findOrFail($uid);
     $evaluations = $e->evaluations;
-    $survey = Survey::find($e->survey_id);
+    $survey = Survey::findOrFail($e->survey_id);
     $groupes = $survey->groupes;
     $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
     $formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
@@ -452,12 +454,18 @@ class EntretienController extends Controller
   {
     $entretien = Entretien::findOrFail($eid);
     $entretien->delete();
-    return redirect('entretiens/index');
+    $entretien->users()->detach();
+    $entretien->skills()->delete();
+    \DB::table('skill_user')->where('entretien_id', $eid)->delete();
+    \DB::table('answers')->where('entretien_id', $eid)->delete();
+    $entretien->formations()->delete();
+    $entretien->salaries()->delete();
+    $entretien->comments()->delete();
   }
 
   public function submission(Request $request)
   {
-    $entretien = Entretien::find($request->eid);
+    $entretien = Entretien::findOrFail($request->eid);
     if (Auth::user()->id == $request->user) { // this a collaborator
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)

@@ -32,7 +32,9 @@
                                                 <td> {{ $s->comment ? $s->comment : '---' }} </td>
                                                 @if($user->id != Auth::user()->id)
                                                 <td> 
+                                                    @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
                                                     <a href="javascript:void(0)" onclick="return chmSalary.edit({eid: {{$e->id}} , uid: {{$user->id}}, sid: {{$s->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                                    @endif
                                                 </td>
                                                 @endif
                                             </tr>
@@ -47,7 +49,7 @@
                             {{ $salaries->links() }}
 
                             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-                            @if($user->id != Auth::user()->id)
+                            @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
                             <a onclick="return chmSalary.create({eid: {{$e->id}} , uid: {{$user->id}} })" data-id="{{$e->id}}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un salaire</a>
                             @endif
                         </div>

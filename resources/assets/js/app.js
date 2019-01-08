@@ -19,7 +19,6 @@ import chmSalary from './class/salary'
 import chmComment from './class/comment'
 import chmCarreer from './class/carreer'
 import chmSkill from './class/skill'
-import chmActivite from './class/activite'
 import chmFormation from './class/formation'
 import chmObjectif from './class/objectif'
 import chmGroupe from './class/groupe'
@@ -49,7 +48,6 @@ window.chmSalary = chmSalary
 window.chmComment = chmComment
 window.chmCarreer = chmCarreer
 window.chmSkill = chmSkill
-window.chmActivite = chmActivite
 window.chmFormation = chmFormation
 window.chmObjectif = chmObjectif
 window.chmGroupe = chmGroupe

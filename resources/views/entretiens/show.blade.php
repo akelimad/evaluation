@@ -62,12 +62,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Fonction :</label>
-                                    <div class="col-md-9"> {{ $user->function ? App\Fonction::find($user->function)->title :'---' }} </div>
+                                    <div class="col-md-9"> {{ $user->function ? App\Fonction::findOrFail($user->function)->title :'---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Département :</label>
-                                    <div class="col-md-9"> {{ $user->service ? App\Department::find($user->service)->title : '---' }} </div>
+                                    <div class="col-md-9"> {{ $user->service ? App\Department::findOrFail($user->service)->title : '---' }} </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">

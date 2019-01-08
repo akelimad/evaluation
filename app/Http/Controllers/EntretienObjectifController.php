@@ -46,7 +46,7 @@ class EntretienObjectifController extends Controller
         if($request->id == null ){
             $objectif = new EntretienObjectif();
         }else{
-            $objectif = EntretienObjectif::find($request->id);
+            $objectif = EntretienObjectif::findOrFail($request->id);
         }
         $objectif->title = $request->title;
         $objectif->description = $request->description;
@@ -83,7 +83,7 @@ class EntretienObjectifController extends Controller
     public function edit($id)
     {
         ob_start();
-        $o = EntretienObjectif::find($id);
+        $o = EntretienObjectif::findOrFail($id);
         echo view('entretienObjectif.form', compact('o'));
         $content = ob_get_clean();
         return ['title' => 'Modifier un objectif', 'content' => $content];

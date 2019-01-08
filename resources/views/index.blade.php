@@ -20,14 +20,14 @@
                         @if(!Auth::user()->hasRole('ADMIN'))
                         <h3 class="profile-username text-center">{{ $mentor->name }} {{ $mentor->last_name }} </h3>
                         <p class="text-muted text-center">
-                            {{ (!empty($mentor->function)) ? App\Fonction::find($mentor->function)->title : '---' }}
+                            {{ (!empty($mentor->function)) ? App\Fonction::findOrFail($mentor->function)->title : '---' }}
                         </p>
                         @endif
 
                         <ul class="list-group list-group-unbordered">
                             @if(!Auth::user()->hasRole('ADMIN'))
                             <li class="list-group-item"><b>Département : </b>
-                                <a class="">{{ (!empty($mentor->service)) ? App\Department::find($mentor->service)->title : '---' }}</a>
+                                <a class="">{{ (!empty($mentor->service)) ? App\Department::findOrFail($mentor->service)->title : '---' }}</a>
                             </li>
                             <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
                             @endif
@@ -185,7 +185,7 @@
                                                     <a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $coll->function ? App\Fonction::find($coll->function)->title : '---' }}
+                                                    {{ $coll->function ? App\Fonction::findOrFail($coll->function)->title : '---' }}
                                                 </td>
                                                 <td>
                                                     <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a>
@@ -265,13 +265,15 @@
     // this to show popup message for ADMIN only after authentication
     $(window).on('load', function() {
         @if(\Auth::user()->hasRole('ADMIN') && session('popup'))
-            swal({
-                title: "Bienvenue", 
-                text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration", 
-                type: "success"
-            }, {
-                @php(session()->forget('popup'))
-            });
+            setTimeout (function () { 
+                swal({
+                    title: "Bienvenue", 
+                    text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration", 
+                    type: "success"
+                }, {
+                    @php(session()->forget('popup'))
+                });
+            }, 2000)
         @endif
     });
 </script>

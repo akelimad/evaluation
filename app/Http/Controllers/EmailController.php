@@ -26,7 +26,7 @@ class EmailController extends Controller
         $id = $request->id;
         ob_start();
         if(isset($id) && is_numeric($id)) {
-            $email = Email::find($id);
+            $email = Email::findOrFail($id);
             $title = "Mettre à jour l'email";
         } else {
             $email = new Email();
@@ -49,7 +49,7 @@ class EmailController extends Controller
 
         $query = Email::where('ref', $request->ref)->where('user_id', User::getOwner()->id);
         if(isset($id) && is_numeric($id)){
-            $email =  Email::find($id);
+            $email =  Email::findOrFail($id);
             $exist = $query->where('id', '<>', $id)->count();
         }else{
             $email = new Email();

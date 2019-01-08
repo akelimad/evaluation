@@ -47,6 +47,11 @@ class Entretien extends Model
         return $this->hasMany('App\Skill');
     }
 
+    public function salaries()
+    {
+        return $this->hasMany('App\Salary');
+    }
+
     public function objectifs()
     {
         return $this->hasMany('App\Objectif');

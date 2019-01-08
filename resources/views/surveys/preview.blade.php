@@ -39,7 +39,7 @@
         @endforeach
     </div>
     @else
-        @include('partials.alerts.warning', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+        @include('partials.alerts.warning', ['messages' => "Aucun résultat trouvé" ])
     @endif
 @else
     @include('partials.alerts.warning', ['messages' => "le questionnaire est incomplet, vous ne pouvez pas le vésualiser. veuillez attribuer les choix pour les questions multichoix !!" ])

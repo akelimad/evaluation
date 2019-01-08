@@ -26,8 +26,8 @@
                                     <th class="text-center">Actions</th>
                                 </tr>
                                 @foreach($interviewSkills as $key => $row)
-                                    @if(App\Entretien::find($row->id)->skills->count()>0)
-                                    @php($entretienSkills = App\Entretien::find($row->id)->skills)
+                                    @if(App\Entretien::findOrFail($row->id)->skills->count()>0)
+                                    @php($entretienSkills = App\Entretien::findOrFail($row->id)->skills)
                                         <tr>
                                             {{ csrf_field() }}
                                             <td colspan="5"> {{ $row->titre }} </td>
@@ -51,7 +51,7 @@
                             </table>
                         </div>
                     @else
-                        @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+                        @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                     @endif
                 </div>
             </div>

@@ -31,15 +31,15 @@ class CarreerController extends Controller
      */
     public function index($eid, $uid)
     {
-        // $e = Entretien::find($eid);
-        // $user = User::find($uid);
+        // $e = Entretien::findOrFail($eid);
+        // $user = User::findOrFail($uid);
         // $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
         // $evaluations = $e->evaluations;
         // return view('carreers.index', compact('carreers', 'e', 'user', 'evaluations') );
-        $entretien = Entretien::find($eid);
+        $entretien = Entretien::findOrFail($eid);
         $evaluations = $entretien->evaluations;
         $sid = Evaluation::surveyId($eid, 2);
-        $survey = Survey::find($sid);
+        $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;
         $user = User::findOrFail($uid);
         return view('carreers.index', [
@@ -59,8 +59,8 @@ class CarreerController extends Controller
     public function create($eid, $uid)
     {
         ob_start();
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
+        $e = Entretien::findOrFail($eid);
+        $user = User::findOrFail($uid);
         echo view('carreers.form', compact('e', 'user'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter une carrière', 'content' => $content];
@@ -76,7 +76,7 @@ class CarreerController extends Controller
     {
         $id = $request->id;
         if($id){
-            $carr = Carreer::find($id);
+            $carr = Carreer::findOrFail($id);
             $carr->userCarreer = $request->carreers[0];
             $carr->save();
         }else{
@@ -115,9 +115,9 @@ class CarreerController extends Controller
     public function edit($eid, $uid ,$cid)
     {
         ob_start();
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
-        $c = Carreer::find($cid);
+        $e = Entretien::findOrFail($eid);
+        $user = User::findOrFail($uid);
+        $c = Carreer::findOrFail($cid);
         echo view('carreers.form', compact('e', 'user', 'c'));
         $content = ob_get_clean();
         return ['title' => 'Modifier votre carrière', 'content' => $content];
@@ -144,7 +144,7 @@ class CarreerController extends Controller
      */
     public function mentorUpdate(Request $request,$eid, $uid, $cid)
     {
-        $user = User::find($uid);
+        $user = User::findOrFail($uid);
         $carreer = Carreer::findOrFail($cid);
         $carreer->mentor_id = $request->mentor_id;
         $carreer->mentorComment = $request->mentorComment;

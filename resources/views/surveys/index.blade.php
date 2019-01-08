@@ -10,7 +10,7 @@
                 <div class="box box-primary">
                     @foreach (['danger', 'warning', 'success', 'info'] as $key)
                         @if(Session::has($key))
-                            <div class="chm-alerts alert alert-info alert-white rounded">
+                            <div class="chm-alerts alert alert-{{$key}} alert-white rounded">
                                 <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
                                 <div class="icon"><i class="fa fa-info-circle"></i></div>
                                 <span> {!! Session::get($key) !!} </span>
@@ -37,7 +37,7 @@
                                 @foreach($surveys as $key => $survey)
                                 <tr>
                                     <td> {{ $survey->title }}</td>
-                                    <td> {{ is_numeric($survey->evaluation_id) ? App\Evaluation::find($survey->evaluation_id)->title : '' }}</td>
+                                    <td> {{ is_numeric($survey->evaluation_id) ? App\Evaluation::findOrFail($survey->evaluation_id)->title : '' }}</td>
                                     <td> {{ $survey->type == 0 ? 'Standard':'Personnalisé' }}</td>
                                     <td> {{ $survey->description ? $survey->description : '---' }} </td>
                                     <td class="text-center">
@@ -53,7 +53,7 @@
                             {{ $surveys->links() }}
                         </div>
                     @else
-                        @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+                        @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                     @endif
                 </div>
             </div>

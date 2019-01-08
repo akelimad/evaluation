@@ -25,5 +25,5 @@
         {{ $objectifs->links() }}
     </div>
 @else
-    @include('partials.alerts.warning', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+    @include('partials.alerts.warning', ['messages' => "Aucun résultat trouvé" ])
 @endif

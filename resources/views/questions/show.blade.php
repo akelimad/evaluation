@@ -23,9 +23,9 @@
                 <div class="box box-primary">
                     <div class="box-body groupeQuestions">
                         <p class="">
-                            <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$sid}} })"> <i class="fa fa-eye"></i> preview </a> |
+                            <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$sid}} })"> <i class="fa fa-eye"></i> Preview </a> |
                             <a href="{{ url('surveys/'.$sid.'/groupes') }}" > <i class="fa fa-list"></i> Types </a> | 
-                            <a href="{{ url('surveys') }}"> <i class="fa fa-list"></i> Questionnaires </a> 
+                            <a href="{{ url('config/surveys') }}"> <i class="fa fa-list"></i> Questionnaires </a> 
                         </p>
                         <div class="accordion" id="accordion2">
                             @foreach($groupes as $g)

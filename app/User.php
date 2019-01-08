@@ -159,7 +159,7 @@ class User extends Authenticatable
 
   public static function logo($id)
   {
-    $user = User::find($id);
+    $user = User::findOrFail($id);
     if (!empty($user->society_id)) { // this user is not owner
       $path = $user->owner->id . '/' . $user->owner->logo;
     } else {
@@ -170,12 +170,12 @@ class User extends Authenticatable
     if (file_exists(public_path($path))) {
       return asset($path);
     }
-    return "";
+    return "img/logo.png";
   }
 
   public static function avatar($id)
   {
-    $user = User::find($id);
+    $user = User::findOrFail($id);
     if (!empty($user->avatar)) {
       $path = $user->id . '/' . $user->avatar;
       $path = 'uploads/avatars/' . $path;

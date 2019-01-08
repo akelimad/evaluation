@@ -30,7 +30,7 @@ class SkillController extends Controller
      */
     public function index($e_id, $uid)
     {
-        $e = Entretien::find($e_id);
+        $e = Entretien::findOrFail($e_id);
         $evaluations = $e->evaluations;
         $skills = $e->skills()->paginate(15);
         $user = $e->users()->where('entretien_user.user_id', $uid)->first();
@@ -132,7 +132,7 @@ class SkillController extends Controller
     public function edit($id)
     {
         ob_start();
-        $entretien = Entretien::find($id);
+        $entretien = Entretien::findOrFail($id);
         $skills = $entretien->skills;
         echo view('skills.form', compact('skills', 'entretien'));
         $content = ob_get_clean();
@@ -150,7 +150,7 @@ class SkillController extends Controller
     {
         //dd($request->skills);
         foreach ($request->skills as $id => $value) {
-            $user = User::find($request->user_id);
+            $user = User::findOrFail($request->user_id);
             $user->skills()->sync([$id => 
                 [
                     'mentor_id'  => $request->mentor_id,

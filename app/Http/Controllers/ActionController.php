@@ -41,7 +41,7 @@ class ActionController extends Controller
         if($request->id == null ){
             $action = new Action();
         }else{
-            $action =  Action::find($request->id);
+            $action =  Action::findOrFail($request->id);
         }
         $action->slug = $request->slug;
         $action->name = $request->name;
@@ -62,7 +62,7 @@ class ActionController extends Controller
     public function edit($id)
     {
         ob_start();
-        $action = Action::find($id);
+        $action = Action::findOrFail($id);
         echo view('emails.actions.form', compact('action'));
         $content = ob_get_clean();
         return ['title' => 'Modifier une action', 'content' => $content];
@@ -70,7 +70,7 @@ class ActionController extends Controller
 
     public function attachEmailAtion(Request $request, $actionId)
     {
-        $action = Action::find($actionId);
+        $action = Action::findOrFail($actionId);
         $action->emails()->sync([$request->email_id]);
         return redirect('config/emails')->with("attach_emailAction", "");
     }

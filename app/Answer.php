@@ -41,7 +41,7 @@ class Answer extends Model
 
     public static function getMentorAnswers($qid, $uid, $eid)
     {
-        $user = User::find($uid);
+        $user = User::findOrFail($uid);
         $answer = Answer::where('question_id', $qid)
             ->where('user_id', $user->id)
             ->where('mentor_id', $user->parent->id)
@@ -55,8 +55,8 @@ class Answer extends Model
 
     public static function getGrpNote($gid, $uid, $eid)
     {
-        $group = Groupe::find($gid);
-        $user = User::find($uid);
+        $group = Groupe::findOrFail($gid);
+        $user = User::findOrFail($uid);
         if($group->notation_type == 'section') {
             $question = $group->questions()->first();
             $answer = Answer::where('question_id', $question->id)

@@ -33,7 +33,7 @@ class DepartmentController extends Controller
         $id = $request->id;
         ob_start();
         if(isset($id) && is_numeric($id)) {
-            $department = Department::find($id);
+            $department = Department::findOrFail($id);
             $title = "Modifier le département";
         } else {
             $department = new Department();
@@ -54,7 +54,7 @@ class DepartmentController extends Controller
     {
         $id = $request->id;
         if($id){
-            $department = Department::find($id);
+            $department = Department::findOrFail($id);
             $department->title = $request->departments[0];
             $department->save();
         }else{
@@ -81,7 +81,7 @@ class DepartmentController extends Controller
     public function delete(Request $request)
     {
         $id = $request->id;
-        $department = Department::find($id);
+        $department = Department::findOrFail($id);
         $department->delete();
     }
 

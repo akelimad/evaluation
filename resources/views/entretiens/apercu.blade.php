@@ -18,7 +18,7 @@
             <div id="collapse-evaluations" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-evaluations">
                 <div class="panel-body">
                     @php($surveyId = App\Evaluation::surveyId($e->id, 1))
-                    @php($survey = App\Survey::find($surveyId))
+                    @php($survey = App\Survey::findOrFail($surveyId))
                     <div class="row">
                         @if(count($survey->groupes)>0)
                         <div class="col-md-6">
@@ -147,7 +147,7 @@
                 <div class="panel-body">
                     <div class="panel-body">
                         @php($surveyId = App\Evaluation::surveyId($e->id, 2))
-                        @php($survey = App\Survey::find($surveyId))
+                        @php($survey = App\Survey::findOrFail($surveyId))
                         <div class="row">
                             @if(count($survey->groupes)>0)
                             <div class="col-md-6">

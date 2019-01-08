@@ -30,8 +30,8 @@ class CommentController extends Controller
      */
     public function index($eid, $uid)
     {
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
+        $e = Entretien::findOrFail($eid);
+        $user = User::findOrFail($uid);
         $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
         $evaluations = $e->evaluations;
         return view('comments.index', compact('comment', 'e', 'user', 'evaluations') );
@@ -45,8 +45,8 @@ class CommentController extends Controller
     public function create($eid, $uid)
     {
         ob_start();
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
+        $e = Entretien::findOrFail($eid);
+        $user = User::findOrFail($uid);
         echo view('comments.form', compact('e', 'user'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter un commentaire', 'content' => $content];
@@ -62,7 +62,7 @@ class CommentController extends Controller
     {
         $id = $request->id;
         if($id){
-            $cmt = Comment::find($id);
+            $cmt = Comment::findOrFail($id);
         }else{
             $cmt = new Comment();
         }
@@ -105,9 +105,9 @@ class CommentController extends Controller
     public function edit($eid, $uid ,$cid)
     {
         ob_start();
-        $e = Entretien::find($eid);
-        $user = User::find($uid);
-        $c = Comment::find($cid);
+        $e = Entretien::findOrFail($eid);
+        $user = User::findOrFail($uid);
+        $c = Comment::findOrFail($cid);
         $comment = "";
         if($user->hasRole('MENTOR')) {
             $comment = $c->mentorComment;
@@ -140,7 +140,7 @@ class CommentController extends Controller
      */
     public function mentorUpdate(Request $request,$eid, $uid, $cid)
     {
-        $user = User::find($uid);
+        $user = User::findOrFail($uid);
         $comment = Comment::findOrFail($cid);
         $comment->mentor_id = $request->mentor_id;
         $comment->mentorComment = $request->comment;
