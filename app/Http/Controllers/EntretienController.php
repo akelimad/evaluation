@@ -409,7 +409,6 @@ class EntretienController extends Controller
     $user = User::findOrFail($uid);
     $evaluations = $e->evaluations;
     $evalTitle = [];
-    $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
     $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->where('status', 2)->get();
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->paginate(10);
     $skills = Skill::where('entretien_id', $eid)->get();
@@ -418,7 +417,7 @@ class EntretienController extends Controller
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'carreers', 'formations', 'skills', 'comment'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'formations', 'skills', 'comment'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }

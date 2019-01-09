@@ -58,7 +58,7 @@
                                                         <a href="javascript:void(0)" onclick="return chmFormation.edit({e_id: {{$e->id}} , id: {{$f->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                                         @endif
                                                         @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                                                        <button type="submit" class="btn btn-sm btn-flat bg-navy">Mettre à jour</button>
+                                                        <button type="submit" class="btn-success icon-fill" data-toggle="tooltip" title="Mettre à jour"><i class="fa fa-refresh"></i></button>
                                                         @endif
                                                     </td>
                                                 </tr>

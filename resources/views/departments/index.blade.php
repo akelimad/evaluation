@@ -1,5 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Departements')
+@section('title', 'Départements')
+@section('breadcrumb')
+    <li>Paramètres</li>
+    <li>Départements</li>
+@endsection
 @section('content')
     <section class="content setting">
         <div class="row">
