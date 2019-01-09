@@ -47,7 +47,7 @@ class CrmController extends Controller
     $id = $request->id;
     $rules = [
       'logo'      => 'required|max:500',
-      'name'      => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
+      'name'      => 'required|min:3|max:25',
       'first_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'email'     => 'required|unique:users,email',
