@@ -79,8 +79,7 @@ class AnswerController extends Controller
         }
         // update entretien_user table note
         $sid = Evaluation::surveyId($eid, 1);
-        $survey = Survey::findOrFail($sid);
-        $grpCount = $survey->groupes()->count();
+        $grpCount = Survey::countGroups($sid);
 
         $answers = Answer::where('user_id', $uid)->where('entretien_id', $eid)->get();
         if(isset($answers) && count($answers)>0) {

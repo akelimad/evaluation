@@ -55,8 +55,7 @@
     </script>
 
 </head>
-@php( $settings = json_decode(Auth::user()->settings) )
-<body class="hold-transition skin-blue sidebar-mini {{isset($settings) && $settings->toggle_sidebar == 1 ? 'sidebar-collapse':''}}">
+<body class="hold-transition skin-blue sidebar-mini {{App\Setting::get('toggle_sidebar') == 1 ? 'sidebar-collapse':''}}">
 <div class="spinner-wp">
     <!-- <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i> -->
     <div class="looding">
@@ -180,8 +179,8 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu" style="{{ Request::is('config*') ? 'display: block;' : '' }}">
-                        <li class="{{ Request::is('config/settings') ? 'active' : '' }}">
-                            <a href="{{ url('config/settings') }}"><i class="fa fa-wrench"></i> Paramètres</a>
+                        <li class="{{ Request::is('config/settings/general') ? 'active' : '' }}">
+                            <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> Paramètres</a>
                         </li>
                         <!-- <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
                             <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>

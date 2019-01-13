@@ -20,7 +20,23 @@
             <div class="col-md-9">
                 <div class="box box-primary">
                     <div class="card">
-                        <p class="help-block">Selectionnez un élement ...</p>
+                        <form action="{{url('config/settings/store')}}" method="post">
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="checkbox" name="settings[toggle_sidebar]" id="toggle-sidebar" value="1" {{App\Setting::get('toggle_sidebar') == 1 ? 'checked' : ''}}> <label for="toggle-sidebar">Toggle side bar</label>
+                                    <p class="help-block">Permet de réduire la taille du side bar.</p>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="max_note">Notation max</label>
+                                    <input type="number" min="1" max="100" name="settings[max_note]" id="max_note" class="form-control" value="{{ App\Setting::get('max_note') }}" required>
+                                    <p class="help-block">Permet de définir la note maximale pour les sections ou éléments de l'évaluation que le mentor pourrait attribuer</p>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

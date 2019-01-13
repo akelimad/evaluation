@@ -133,7 +133,8 @@
                                             <span class="label label-danger empty"> </span>
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge">{{ $row->note > 0 ? App\Answer::formated($row->note).'/5' : '0/5' }}</span>
+                                            @php($count = App\Survey::countGroups(App\Evaluation::surveyId($row->entretienId, 1)))
+                                            <span class="badge">{{ $row->note > 0 ? App\Answer::formated($row->note)."/$count" : "0/$count" }}</span>
                                         </td>
                                         <td class="text-center">
                                             <!-- <a href="{{ url('entretiens/'.$row->entretienId.'/u/'.$row->userId.'/printPdf') }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a> -->
@@ -141,10 +142,11 @@
                                                 <a href="javascript:void(0)" class="bg-navy icon-fill show-motif" data-toggle="tooltip" title="Motif de non réaliation" data-id="{{$row->userId}}"> <i class="glyphicon glyphicon-wrench"></i> </a>
 
                                                 <button type="button" class="btn-danger icon-fill notifyMentor" data-toggle="tooltip" title="Relancer le mentor pour évaluer {{ $row->name.' '.$row->last_name }}" data-entretien-id="{{$row->entretienId}}" data-user-id="{{$row->userId}}"> <i class="fa fa-bell" id="icon-{{$row->userId}}"></i></button>
+                                                <a href="javascript:void(0)" class="bg-purple icon-fill disactivated" data-toggle="tooltip" title="Aucun résultat à afficher"> <i class="fa fa-search"></i> </a>
                                             @else
-                                                <button type="button" class="btn-danger icon-fill relanceMentor" data-toggle="tooltip" title="Ya pas de relance. le mentor a déjà évalué le collaborateur"><i class="fa fa-bell"></i></button>
+                                                <button type="button" class="btn-danger icon-fill disactivated" data-toggle="tooltip" title="Ya pas de relance. le mentor a déjà évalué le collaborateur"><i class="fa fa-bell"></i></button>
 
-                                                <button type="button" class="bg-navy icon-fill relanceMentor" data-toggle="tooltip" title="Ya pas de motif. le mentor a déjà évalué le collaborateur"> <i class="glyphicon glyphicon-wrench"></i></button>
+                                                <button type="button" class="bg-navy icon-fill disactivated" data-toggle="tooltip" title="Ya pas de motif. le mentor a déjà évalué le collaborateur"> <i class="glyphicon glyphicon-wrench"></i></button>
                                                 <a href="javascript:void(0)" class="bg-purple icon-fill" data-toggle="tooltip" title="Aperçu" onclick="return chmEntretien.apercu({eid: {{$row->entretienId}}, uid: {{$row->userId}} })"> <i class="fa fa-search"></i> </a>
                                             @endif
                                         </td>

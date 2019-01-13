@@ -57,4 +57,18 @@ class Survey extends Model
     return $fonctions;
   }
 
+  public static function countGroups($sid)
+  {
+    $survey = Survey::findOrFail($sid);
+    $c = 0;
+    foreach ($survey->groupes()->get() as $group) {
+      if($group->questions()->count() > 0 && $group->notation_type == 'section'){
+        $c ++;
+      } elseif($group->questions()->count() > 0 && $group->notation_type == 'item') {
+        $c += $group->questions()->count();
+      }
+    }
+    return $c;
+  }
+
 }

@@ -66,7 +66,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::post('emails/store', 'EmailController@store');
 	Route::delete('emails/{id}/delete', 'EmailController@delete');
 
-	Route::get('config/settings', 'SettingController@index');
+	Route::get('config/settings/general', 'SettingController@general');
 
 	Route::get('config/setting/departments', 'DepartmentController@index');
 	Route::get('department/form', 'DepartmentController@form');

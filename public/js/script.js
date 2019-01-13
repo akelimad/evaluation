@@ -4,6 +4,8 @@ $(window).on('load', function() {
 $(function(){
     var baseUrl =  $("base").attr("href")
 
+    var max_note = parseInt($('#max_note').text())
+
     $('#datepicker, #datepicker1, #datepicker2').datepicker({
         autoclose: true,
         format: 'dd-mm-yyyy'
@@ -80,14 +82,14 @@ $(function(){
         }
 
         check = true
-        $(".mentor-item .inputNote").each(function() {
+        $(".mentor-item .inputNote[required]").each(function() {
             var val = $(this).val()
-            if(/^(\d+(?:[\.\,]\d{1})?)$/.test(val) == false || parseFloat(val) < 1 || parseFloat(val) > 5) {
+            if(/^(\d+(?:[\.\,]\d{1})?)$/.test(val) == false || parseFloat(val) < 1 || parseFloat(val) > max_note) {
                 check = false; 
             }
         })
         if(!check) {
-           alert("Vuillez entre une note valide entre 1 et 5 !")
+           alert("Veuillez entrer une note valide entre 1 et " + max_note + " !")
             return false; 
         }
     });

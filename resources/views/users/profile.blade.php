@@ -13,8 +13,8 @@
                             <li class="active"><a href="#personels" data-toggle="tab">Informations personnelles</a></li>
                             @if(!$user->hasRole('ADMIN'))
                             <li><a href="#profesionnels" data-toggle="tab">Informations professionnelles</a></li>
-                            @endif
                             <li><a href="#preferences" data-toggle="tab">Préférences</a></li>
+                            @endif
                         </ul>
                         <div class="tab-content mb20">
                             <div class="active tab-pane" id="personels">
@@ -75,11 +75,10 @@
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                            @endif
                             <div class="tab-pane" id="preferences">
                                 @php($settings = json_decode(Auth::user()->settings))
                                 <div class="form-group">
-                                    <form action="{{ url('config/settings/store') }}" method="post" onsubmit="return Setting.store(event)">
+                                    <form action="{{ url('config/settings/store') }}" method="post">
                                         {{ csrf_field() }}
                                         <div class="col-md-4">
                                             <input type="checkbox" name="settings[toggle_sidebar]" id="toggle-sidebar" value="1" {{$settings && $settings->toggle_sidebar == 1 ? 'checked' : ''}}> <label for="toggle-sidebar">Toggle side bar</label>
@@ -92,6 +91,7 @@
                                     </form>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <a href="{{ url()->previous() }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
                         @if(Auth::user()->id == $user->id)

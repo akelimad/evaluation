@@ -9,6 +9,13 @@ class Setting extends Model
 
   public static $models = [
     [
+      'label' => 'Générales',
+      'route' => 'config/settings/general',
+      'icon'  => 'fa fa-long-arrow-right',
+      'model' => 'App\Setting',
+      'active' => 'gen',
+    ],
+    [
       'label' => 'Départements',
       'route' => 'config/setting/departments',
       'icon'  => 'fa fa-long-arrow-right',
@@ -32,22 +39,10 @@ class Setting extends Model
    *
    * @return string
    **/
-  public static function get($name = null, $dafault = null) {
-    // setting is a file in config directory
-    $settings = config('settings');
-    if( empty($settings) ) {
-      foreach (Setting::all() as $key => $s) :
-        $settings[$s->name] = $s->value;
-      endforeach;
-      config('settings', $settings);
-    }
-
-    if( is_null($name) ) {
-      return $settings;
-    } elseif ( isset($settings[$name]) ) {
-      return $settings[$name];
-    }
-    return $dafault;
+  public static function get($name = null) {
+    $user = User::getOwner();
+    $settings = json_decode($user->settings);
+    return isset($settings->$name) ? $settings->$name : '';
   }
 
 

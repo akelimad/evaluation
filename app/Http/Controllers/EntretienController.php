@@ -161,6 +161,10 @@ class EntretienController extends Controller
     $id = $request->id;
     $selectedUsers = $request->usersId;
     $entretienUsers = $removedUsers = [];
+    $url=url('config/settings/general');
+    if(Evaluation::maxNote() == 0) {
+      return ["status" => "danger", "message" => "Veuillez définir tout d'abord la note maximale dans <a href='$url' target='_blank'>Paramétres</a> !"];
+    }
     
     if (isset($id) && is_numeric($id)) {
       $entretien = Entretien::findOrFail($id);
@@ -460,15 +464,20 @@ class EntretienController extends Controller
    */
   public function destroy($eid)
   {
-    $entretien = Entretien::findOrFail($eid);
-    $entretien->delete();
-    $entretien->users()->detach();
-    $entretien->skills()->delete();
-    \DB::table('skill_user')->where('entretien_id', $eid)->delete();
-    \DB::table('answers')->where('entretien_id', $eid)->delete();
-    $entretien->formations()->delete();
-    $entretien->salaries()->delete();
-    $entretien->comments()->delete();
+    $user = Auth::user();
+    if($user->hasRole('ADMIN') OR $user->hasRole('RH')) {
+      $entretien = Entretien::findOrFail($eid);
+      $entretien->delete();
+      $entretien->users()->detach();
+      $entretien->skills()->delete();
+      \DB::table('skill_user')->where('entretien_id', $eid)->delete();
+      \DB::table('answers')->where('entretien_id', $eid)->delete();
+      $entretien->formations()->delete();
+      $entretien->salaries()->delete();
+      $entretien->comments()->delete();
+    } else {
+      return ["status" => "danger", "message" => "Stop ! Vous n'avez pas la permission !"];
+    }
   }
 
   public function submission(Request $request)

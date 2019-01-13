@@ -43,4 +43,11 @@ class Evaluation extends Model
         ->where('entretien_id', $eid)->where('evaluation_id', $evalId)->first();
         return $result ? $result->survey_id : '';
     }
+
+    public static function maxNote()
+    {
+        $user = User::getOwner();
+        $settings = json_decode($user->settings);
+        return isset($settings->max_note) && $settings->max_note>0 ? $settings->max_note : 0;
+    }
 }

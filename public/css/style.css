@@ -635,7 +635,7 @@ p.help-block{
     border-bottom: 1px solid #22bba5;
     padding-bottom: 5px;
 }
-.relanceMentor{
+.disactivated{
     opacity: .2;
     cursor: not-allowed;
 }
@@ -734,6 +734,14 @@ p.help-block{
     width: 58px;
     padding-left: 4px;
 }
+.inputNote {
+    display: none;
+}
+.form-group .notation {
+    display: none;
+    padding: 0 8px
+}
+
 .fa.checked{
     color: orange;
 }

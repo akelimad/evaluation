@@ -15,10 +15,10 @@ class SettingController extends Controller
     $this->middleware('auth');
   }
   
-  public function index()
+  public function general()
   {
     $settings = json_decode(Auth::user()->settings);
-    $active = "set";
+    $active = "gen";
     return view('setting.index', compact('settings', 'active'));
   }
   public function services()
@@ -47,10 +47,11 @@ class SettingController extends Controller
     $settings =  $request->settings;
     $user->settings = isset($settings) ? json_encode($settings) : '';
     $user->save();
-    if($user->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+    if($user->hasRole('ADMIN')) {
+      return redirect('config/settings/general');
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return redirect('profile');
     }
   }
+  
 }
