@@ -196,7 +196,8 @@ class EntretienController extends Controller
     $surveyCarreer = Survey::getAll()
     ->where('evaluation_id', 2)->where('type', 0)->first();
     if (!$surveyEval || !$surveyCarreer) {
-      $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation et/ou de carrière n'a été trouvé ! il faut le/les créer tout d'abord.");
+      $url_survey = url('config/surveys');
+      $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation et/ou de carrière n'a été trouvé ! il faut le/les créer tout d'abord dans <a href='$url_survey' target='_blank'>Questionnaires</a>");
     }
     $hasAlreadyInt = [];
     if(!empty($request->date) && !empty($request->date_limit)) {
