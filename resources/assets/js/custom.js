@@ -107,11 +107,11 @@ $(document).ready(function () {
 
 window.showHideChoiceFields = () => {
   var value = $('#questionType').val()
-  if (value === 'text' || value === 'textarea') {
-    $('#addLine-wrap').hide()
-    $('#addLine-wrap #choiceField').prop('required', false).attr('name', '')
-  } else {
+  if (value === 'radio' || value === 'checkbox') {
     $('#addLine-wrap').show()
     $('#addLine-wrap #choiceField').prop('required', true).attr('name', 'subQuestions[0]')
+  } else {
+    $('#addLine-wrap').hide()
+    $('#addLine-wrap #choiceField').prop('required', false).attr('name', '')
   }
 }

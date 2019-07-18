@@ -30,7 +30,7 @@ class SalarieController extends Controller
     public function index($eid, $uid)
     {
         $e = Entretien::findOrFail($eid);
-        $evaluations = $e->evaluations;
+        $evaluations = Entretien::findEvaluations($e);
         $user = User::findOrFail($uid);
         if($user->id == Auth::user()->id){
             $salaries = Salary::where('user_id', $uid)->where('entretien_id', $eid)->paginate(10);

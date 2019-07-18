@@ -28,6 +28,10 @@
                                 <input type="{{$q->type}}"> 
                                 <label >{{ $child->titre }}</label>
                             @endforeach
+                        @elseif ($q->type == "slider")
+                            <div class="" style="margin-top: 30px;">
+                                <input type="text" required="" name="" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="" data-slider-tooltip="always">
+                            </div>
                         @endif
                     </div>
                 @empty

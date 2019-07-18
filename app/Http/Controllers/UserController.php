@@ -108,9 +108,7 @@ class UserController extends Controller
     }
     $roles = Role::select('id', 'name')->where('name', '<>', 'ROOT')
       ->where('name', '<>', 'ADMIN')->get();
-    $users = User::getUsers()->with('roles')->whereHas('roles', function ($query) {
-      $query->where('name', '=', 'MENTOR');
-    })->get();
+    $users = User::getUsers()->get();
     $fonctions = Fonction::getAll()->get();
     $departments = Department::getAll()->get();
     echo view('users.form', compact('departments', 'fonctions', 'user', 'roles', 'roles_ids', 'users'));

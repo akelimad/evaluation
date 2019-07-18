@@ -1,4 +1,8 @@
-
+<style>
+    .slider.slider-horizontal {
+        width: 100% !important;
+    }
+</style>
 <div class="row evaluation-survey">
     @if(count($groupes)>0)
     <div class="col-md-12">
@@ -34,10 +38,14 @@
                                     <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer ? 'checked' : '' }} disabled> 
                                     <label >{{ $child->titre }}</label>
                                 @endforeach
+                            @elseif($q->type == "slider")
+                                <div class="" style="margin-top: 30px;">
+                                    <input type="text" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" data-slider-tooltip="always" disabled>
+                                </div>
                             @endif
                         </div>
                     @empty
-                        <p class="help-block"> Aucune question </p>
+                        <p class="help-block">Aucune question</p>
                     @endforelse
                     </div>
                 </div>
@@ -66,7 +74,7 @@
                             {{ $g->name }}
                             @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) 
                                 @if(App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations')
-                                <input type="text" data-group-source="{{$g->id}}" class="notation inputNote" min="1" max="{{App\Setting::get('max_note')}}" placeholder="Note" value="{{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}" @if($g->notation_type == 'section' && App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;" required @endif>
+                                <input type="text" data-group-source="{{$g->id}}" class="notation inputNote" min="1" max="{{App\Setting::get('max_note')}}" placeholder="Note" value="{{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}" @if($g->notation_type == 'section' && App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;" required @else style="display: none;" @endif>
                                 @endif
 
                                 @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
@@ -111,10 +119,14 @@
                                         <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
                                         <label for="{{$child->id}}">{{ $child->titre }}</label>
                                     @endforeach
+                                @elseif($q->type == "slider")
+                                    <div class="" style="margin-top: 30px;">
+                                        <input type="text" required="" name="answers[{{$q->id}}][ansr]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}" data-slider-tooltip="always">
+                                    </div>
                                 @endif
                             </div>
                         @empty
-                            <p class="help-block"> Aucune question </p>
+                            <p class="help-block">Aucune question</p>
                         @endforelse
                         </div>
                     </div>

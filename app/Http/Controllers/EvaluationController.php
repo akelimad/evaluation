@@ -26,7 +26,7 @@ class EvaluationController extends Controller
     public function index($e_id, $uid)
     {
         $entretien = Entretien::findOrFail($e_id);
-        $evaluations = $entretien->evaluations;
+        $evaluations = Entretien::findEvaluations($entretien);
         $sid = Evaluation::surveyId($e_id, 1);
         $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;

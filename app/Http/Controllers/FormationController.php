@@ -28,7 +28,7 @@ class FormationController extends Controller
         $user = User::findOrFail($uid);
         $formations = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->orderBy('id', 'desc')->paginate(10);
         $historiques = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->where('status', 2)->paginate(10);
-        $evaluations = $e->evaluations;
+        $evaluations = Entretien::findEvaluations($e);
         return view('formations.index', compact('formations', 'historiques', 'e', 'user', 'evaluations') );
     }
 

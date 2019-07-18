@@ -60,6 +60,14 @@
                                                 @endforeach
                                             </select>
                                             @endif
+                                            @if($evaluation->title == "Objectifs")
+                                            <select name="choix[{{$evaluation->id}}][survey_id]" class="form-control surveySelect" title="" data-toggle="tooltip" style="background: none;border-color: #ece8e8;">
+                                                <option value="" {{ !$e->survey_id ? 'selected':'' }}></option>
+                                                @foreach($objectifs as $o)
+                                                <option value="{{$o->id}}"  {{App\Evaluation::surveyId($e->id, $evaluation->id) == $o->id? 'selected':''}}>{{$o->title}}</option>
+                                                @endforeach
+                                            </select>
+                                            @endif
                                         </td>
                                         @endforeach
                                         <td class="text-center">

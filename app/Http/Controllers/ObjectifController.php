@@ -39,8 +39,14 @@ class ObjectifController extends Controller
     public function index($e_id, $uid)
     {
         $entretien = Entretien::findOrFail($e_id);
-        $evaluations = $entretien->evaluations;
-        $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $entretien->objectif_id)->paginate(10);
+        $evaluations = Entretien::findEvaluations($entretien);
+        $obj_id = 0;
+        foreach ($evaluations as $key => $evaluation) {
+            if ($evaluation->title != "Objectifs") continue;
+            $obj_id = $evaluation->survey_id;
+        }
+        $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $obj_id)->get();
+
         $total = 0;
         if(count($objectifs)>0){
             foreach ($objectifs as $obj) {
@@ -53,7 +59,7 @@ class ObjectifController extends Controller
             'objectifs' => $objectifs, 
             'e'=> $entretien,
             'user'=> $user,
-            'total'=> $this->cutNum($total/$objectifs->count()),
+            'total'=> $objectifs->count() > 0 ? $this->cutNum($total/$objectifs->count()) : 0,
         ]);
     }
 

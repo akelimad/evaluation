@@ -170,7 +170,6 @@
                                     @endif
 
                                 </form>
-                                {{ $objectifs->links() }}
                             </div>
                         @else
                             @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])

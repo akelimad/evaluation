@@ -1,4 +1,8 @@
-
+<style>
+    .slider.slider-horizontal {
+        width: 100% !important;
+    }
+</style>
 <div class="row">
     <div class="col-md-12 survey">
         @if(count($groupes)>0)
@@ -40,6 +44,10 @@
                                         <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}>
                                         <label for="{{$child->id}}">{{ $child->titre }}</label>
                                     @endforeach
+                                @elseif($q->type == "slider")
+                                    <div class="" style="margin-top: 30px;">
+                                        <input type="text" required="" name="answers[{{$q->id}}][ansr]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" data-slider-tooltip="always">
+                                    </div>
                                 @endif
                             </div>
                         @empty

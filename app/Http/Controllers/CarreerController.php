@@ -37,7 +37,7 @@ class CarreerController extends Controller
         // $evaluations = $e->evaluations;
         // return view('carreers.index', compact('carreers', 'e', 'user', 'evaluations') );
         $entretien = Entretien::findOrFail($eid);
-        $evaluations = $entretien->evaluations;
+        $evaluations = Entretien::findEvaluations($entretien);
         $sid = Evaluation::surveyId($eid, 2);
         $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;

@@ -182,9 +182,9 @@
                         <li class="{{ Request::is('config/settings/general') ? 'active' : '' }}">
                             <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> Paramètres</a>
                         </li>
-                        <!-- <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
+                        <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
                             <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>
-                        </li> -->
+                        </li>
                         <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
                             <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Compétences </a>
                         </li>

@@ -15,10 +15,11 @@
         <label for="type" class="col-md-2 control-label">Type</label>
         <div class="col-md-10">
             <select name="type" id="questionType" class="form-control">
-                <option value="text" {{ isset($q) && $q->type == "text" ? 'selected':''  }} > Text  </option>
-                <option value="textarea" {{ isset($q) && $q->type == "textarea" ? 'selected':''  }}> Textarea   </option>
-                <option value="checkbox" {{ isset($q) && $q->type == "checkbox" ? 'selected':''  }}> Case à cocher  </option>
-                <option value="radio" {{ isset($q) && $q->type == "radio" ? 'selected':''  }}> Radio button   </option>
+                <option value="text" {{ isset($q) && $q->type == "text" ? 'selected':''  }} >Text</option>
+                <option value="textarea" {{ isset($q) && $q->type == "textarea" ? 'selected':''  }}>Textarea</option>
+                <option value="checkbox" {{ isset($q) && $q->type == "checkbox" ? 'selected':''  }}>Case à cocher</option>
+                <option value="radio" {{ isset($q) && $q->type == "radio" ? 'selected':''  }}>Radio button</option>
+                <option value="slider" {{ isset($q) && $q->type == "slider" ? 'selected':''  }}>Slider note</option>
             </select>
         </div>
     </div>

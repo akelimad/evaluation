@@ -54,10 +54,10 @@ class EntretienController extends Controller
    */
   public function indexEntretien()
   {
-    $evaluations = Evaluation::all();
-    // $objectifs = EntretienObjectif::select('id', 'title')->get();
+    $evaluations = Evaluation::all()->sortBy('sort_order');
+    $objectifs = EntretienObjectif::getAll()->get();
     $entretiens = Entretien::getAll()->paginate(15);
-    return view('entretiens.index', compact('entretiens', 'evaluations', 'surveys'));
+    return view('entretiens.index', compact('entretiens', 'evaluations', 'objectifs'));
   }
 
   public function show($id)
@@ -117,7 +117,7 @@ class EntretienController extends Controller
   public function synthese($e_id, $uid)
   {
     $entretien = Entretien::findOrFail($e_id);
-    $evaluations = $entretien->evaluations;
+    $evaluations = Entretien::findEvaluations($entretien);
     // $evaluation = Evaluation::where('title', $type)->first();
     $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
     return view('entretiens.synthese', [
@@ -325,20 +325,21 @@ class EntretienController extends Controller
       foreach ($request->choix as $key => $choix) {
         $survey_id = isset($choix['survey_id']) ? $choix['survey_id'] : null;
         $evaluation_id = isset($choix['evaluation_id']) ? $choix['evaluation_id'] : null;
-        if (is_numeric($survey_id)) {
+        if (!is_numeric($evaluation_id) || !is_numeric($survey_id)) continue;
+
+        Entretien_evaluation::where('entretien_id', $entretien->id)
+        ->where('evaluation_id', $evaluation_id)->update(['survey_id'=>$survey_id]);
+        Session::flash('success', "Les informations ont été sauvegardées avec succès.");
+        // 1 = evaluations, 2 = carrieres
+        if(in_array($evaluation_id, [1, 2])) {
           $incompleteSurvey = Survey::icompleteSurvey($survey_id);
-          if($incompleteSurvey) {
-            Session::flash('warning', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entreteien. veuillez attribuer les choix pour les questions multichoix !!");
-          } else {
-            if(is_numeric($evaluation_id) && is_numeric($survey_id)) {
-              Entretien_evaluation::where('entretien_id', $entretien->id)->where('evaluation_id', $evaluation_id)->update(['survey_id'=>$survey_id]);
-              Session::flash('success', "Les informations ont été sauvegardées avec succès.");
-            }
-            if($skillsChecked && $entretienSkills == 0){
-              Session::flash('warning', "Aucune compétence trouvée liée à cet entretien. vous ne pouvez pas activer cette section. veuillez aller dans la configuration et en créer.");
-            }
+          if ($incompleteSurvey) {
+            Session::flash('warning', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entretien. veuillez attribuer les choix pour les questions multichoix !!");
           }
         }
+      }
+      if($skillsChecked && $entretienSkills == 0) {
+        Session::flash('warning', "Aucune compétence trouvée liée à cet entretien. vous ne pouvez pas activer cette section. veuillez aller dans la configuration et en créer.");
       }
     }
 

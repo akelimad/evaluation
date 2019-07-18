@@ -144,5 +144,12 @@ class Entretien extends Model
         return count($countUnanswred);
     }
 
+    public static function findEvaluations($entretien)
+    {
+        $evaluations = \DB::select("SELECT * FROM evaluations eval join entretien_evaluation ev on eval.id = ev.evaluation_id and ev.entretien_id = ". $entretien->id . " order by eval.sort_order");
+
+        return $evaluations;
+    }
+
 
 }

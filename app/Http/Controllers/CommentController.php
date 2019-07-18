@@ -33,7 +33,7 @@ class CommentController extends Controller
         $e = Entretien::findOrFail($eid);
         $user = User::findOrFail($uid);
         $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
-        $evaluations = $e->evaluations;
+        $evaluations = Entretien::findEvaluations($e);
         return view('comments.index', compact('comment', 'e', 'user', 'evaluations') );
     }
 
