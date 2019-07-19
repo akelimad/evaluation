@@ -27,13 +27,13 @@
                                         @endif
                                         <tr>
                                             <th style="width: 27%">Critères d'évaluation</th>
-                                            <th >Notation (%)</th>
+                                            <th>Notation (%)</th>
                                             <th class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">Apréciation</th>
-                                            <th >Pondération (%)</th>
-                                            <th >Objectif N+1 </th>
+                                            <th class="text-center">Pondération (%)</th>
+                                            <th>Objectif N+1 </th>
                                             @if($user->id != Auth::user()->id)
-                                            <th >Notation (%)</th>
-                                            <th >Appreciation </th>
+                                            <th>Notation (%)</th>
+                                            <th>Appreciation </th>
                                             @endif
                                         </tr>
                                         @php($c = 0)
@@ -66,11 +66,11 @@
                                                     @endif
                                                 @endif
                                                 
-                                            <tr>
+                                            <tr class="objectifRow">
                                                 <td>{{ $sub->title }}</td>
                                                 <td class="criteres text-center slider-note {{$user->id != Auth::user()->id ? 'disabled':''}}">
                                                     @if(!App\Objectif::getNmoins1Note($sub->id, $e->id) || (App\Objectif::getNmoins1Note($sub->id, $e->id) == true && App\Objectif::getNmoins1Note($sub->id, $e->id)->objNplus1 == 0 ) )
-                                                    <input type="text" placeholder="Votre note" required="" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider" data-slider-min="0" data-slider-max="200" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}" data-slider-tooltip="always">
+                                                    <input type="text" class="slider objSection-{{ $objectif->id }}" data-section="{{ $objectif->id }}" required="" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider" data-slider-min="0" data-slider-max="200" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}" data-slider-tooltip="always">
                                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]" value="">
                                                     @else
                                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" value="">
@@ -100,14 +100,14 @@
                                                     <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}" placeholder="Révision de l'objectif ..." title="Révision de l'objectif (optionnel) + date de la révision" data-toggle="tooltip" {{ $user->id != Auth::user()->id ? 'disabled':'' }}>
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ $sub->ponderation }}
+                                                    <span class="ponderation">{{ $sub->ponderation }}</span>
                                                 </td>
                                                 <td class="">
                                                     <input type="checkbox" name="objectifs[{{$objectif->id}}][{{$sub->id}}][objNplus1]" {{isset(App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1) && App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1 == 1 ? 'checked':''}}>
                                                 </td>
                                                 @if($user->id != Auth::user()->id)
-                                                <td class="slider-note">
-                                                    <input type="text" placeholder="Votre note" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]" data-provide="slider" data-slider-min="0" data-slider-max="200" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}" data-slider-tooltip="always" >
+                                                <td class="slider">
+                                                    <input type="text" class="slider" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]" data-provide="slider" data-slider-min="0" data-slider-max="200" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}" data-slider-tooltip="always" >
                                                 </td>
                                                 <td>
                                                     <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '' }}" placeholder="Révision de l'objectif ..." title="Révision de l'objectif (optionnel) + date de la révision" data-toggle="tooltip">
@@ -122,7 +122,7 @@
                                                 @if($user->id == Auth::user()->id)
                                                 <td colspan="7" class="sousTotal"> 
                                                     <span>Sous-total</span>
-                                                    <span class="badge badge-success pull-right">{{App\Objectif::cutNum($usersousTotal/$sumPonderation)}}</span>
+                                                    <span class="badge badge-success pull-right subTotalSection" id="subTotalSection-{{$objectif->id}}">{{App\Objectif::cutNum($usersousTotal/$sumPonderation)}}</span>
                                                 </td>
                                                 @else
                                                 <td colspan="3" class="sousTotal {{ $user->id != Auth::user()->id ? 'separate':'' }}"> 
@@ -141,7 +141,7 @@
                                             @if($user->id == Auth::user()->id)
                                             <td colspan="7" class="btn-warning" valign="middle">
                                                 <span>TOTAL DE L'ÉVALUATION</span>  
-                                                <span class="btn-default pull-right badge">
+                                                <span class="btn-default pull-right badge totalNote">
                                                 {{ App\Objectif::cutNum($userTotal/$c) }} %
                                                 </span>
                                             </td>
@@ -153,7 +153,7 @@
                                                 </span>
                                             </td>
                                             <td colspan="4" class="btn-warning" valign="middle">
-                                                <span class="btn-default pull-right badge">
+                                                <span class="btn-default pull-right badge totalNote">
                                                 {{ App\Objectif::cutNum($mentorTotal/$c) }} %
                                                 </span>
                                             </td>
@@ -188,8 +188,23 @@
 
 @section('javascript')
 <script>
-    $(function(){
-
+    $(document).ready(function () {
+        $('.slider').on('change', function(ev){
+            var sectionId = $(this).data('section')
+            var sectionObjectifs = $('.objSection-' + sectionId)
+            var total = sectionsTotal = note = ponderation = 0
+            $.each(sectionObjectifs, function (i, el) {
+                note = $(el).val()
+                ponderation = $(el).closest('.objectifRow').find('.ponderation').text()
+                sectionsTotal += parseFloat(note) * parseFloat(ponderation)
+            })
+            sectionsTotal = sectionsTotal / 100
+            $('#subTotalSection-' + sectionId).text(sectionsTotal.toFixed(2))
+            $.each($('.subTotalSection'), function (i, el) {
+                total += parseFloat($(el).text())
+            })
+            $('.totalNote').text(total.toFixed(2))
+        });
     })
 </script>
 @endsection

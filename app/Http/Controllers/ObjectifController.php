@@ -88,6 +88,16 @@ class ObjectifController extends Controller
         $rules = [];
         $validator = Validator::make($request->all(), $rules);
         $messages = $validator->errors();
+        $total = 0;
+        foreach ($request->objectifs as $obj) {
+            $total += $obj['ponderation'];
+        }
+        if ($total != 100) {
+            $messages->add('totaLFail', "Le total des pondération doit être égal à 100 !");
+        }
+        if (count($messages) > 0) {
+            return ["status" => "danger", "message" => $messages];
+        }
         if($request->gid){
             $objectif = Objectif::findOrFail($request->gid);
             $objectif->children()->delete();

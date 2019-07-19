@@ -13,10 +13,10 @@
             <div class="row">
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label">Titre du critère </label>
-                    <input type="text" class="form-control" name="@if($key == 0) objectifs[0][subTitle] @else objectifs[{{$o->id}}][subTitle] @endif" id="subTitle" placeholder="" value="{{isset($o->title) ? $o->title :''}}" placeholder="ex: Travail en équipe" required="" />
+                    <input type="text" class="form-control subTitle" name="@if($key == 0) objectifs[0][subTitle] @else objectifs[{{$o->id}}][subTitle] @endif" placeholder="" value="{{isset($o->title) ? $o->title :''}}" placeholder="ex: Travail en équipe" required="" />
                 </div>
                 <div class="col-md-2 col-sm-2">
-                    <label class="control-label">Ponderation(%) </label>
+                    <label class="control-label">Ponderation(%)</label>
                     <input type="number" class="form-control realise" name="@if($key == 0) objectifs[0][ponderation] @else objectifs[{{$o->id}}][ponderation] @endif" placeholder="ex: 10" min="0" max="100" required="" value="{{isset($o->ponderation) ? $o->ponderation :''}}" />
                 </div>
                 <div class="col-md-1 col-sm-1">
