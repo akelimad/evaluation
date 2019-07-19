@@ -43,19 +43,22 @@ class QuestionController extends Controller
             $question =  Question::findOrFail($request->id);
             $action ="modifiée";
         }
-        
+
         $question->titre = $request->titre;
         $question->type = $request->type;
         $question->parent_id =  0;
         $question->groupe_id = $request->groupe_id;
         $question->save();
+        //dd($request->all());
         if(isset($request->subQuestions) && count($request->subQuestions)>0 ){
             $question->children()->delete();
             foreach ($request->subQuestions as $key => $value) {
-                $choice = new Question(); 
+                $choice = new Question();
+                $choice->id  = $key;
                 $choice->titre = $value;
                 $choice->parent_id = $question->id;
                 $choice->groupe_id = $request->groupe_id;
+                $choice->options = json_encode($request->subQuestionsOptions[$key]);
                 $choice->save();
             }
         }

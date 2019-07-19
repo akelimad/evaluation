@@ -99,19 +99,5 @@ $(document).ready(function () {
   $('body').on('click', '.deleteLine', function () {
     $(this).closest('.form-group').remove()
   })
-
-  $('body').on('change', '#questionType', function () {
-    window.showHideChoiceFields()
-  })
 })
 
-window.showHideChoiceFields = () => {
-  var value = $('#questionType').val()
-  if (value === 'radio' || value === 'checkbox') {
-    $('#addLine-wrap').show()
-    $('#addLine-wrap #choiceField').prop('required', true).attr('name', 'subQuestions[0]')
-  } else {
-    $('#addLine-wrap').hide()
-    $('#addLine-wrap #choiceField').prop('required', false).attr('name', '')
-  }
-}
