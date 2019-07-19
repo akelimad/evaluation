@@ -178,12 +178,14 @@ class EntretienController extends Controller
     $rules = [
       'date' => 'required',
       'date_limit' => 'required|after:date',
+      'end_periode' => 'after:start_date',
       'titre' => 'required|min:3|max:50|regex:/^[0-9a-zÀ-ú\s\-_"°^\'’.,:]*$/i',
     ];
     $messages = [
       'date.required' => "La date de l'entretien est obligatoire",
       'date_limit.required' => "La date de clôture de l'entretien est obligatoire",
       'date_limit.after' => "La date de clôture doit être une date postérieure à la date de l'entretien",
+      'end_periode.after' => "La date fin de la période de l'évaluation doit être une date postérieure à la date de début de la période d'évaluation",
       'titre.required' => "Le titre est obligatoire",
       'titre.min' => "Le titre ne peut pas contenir moins de :min lettres",
       'titre.max' => "Le titre ne peut pas contenir plus de :max lettres",
@@ -191,10 +193,8 @@ class EntretienController extends Controller
     ];
     $validator = \Validator::make($request->all(), $rules, $messages);
     $messages = $validator->errors();
-    $surveyEval = Survey::getAll()
-    ->where('evaluation_id', 1)->where('type', 0)->first();
-    $surveyCarreer = Survey::getAll()
-    ->where('evaluation_id', 2)->where('type', 0)->first();
+    $surveyEval = Survey::getAll()->where('evaluation_id', 1)->where('type', 0)->first();
+    $surveyCarreer = Survey::getAll()->where('evaluation_id', 2)->where('type', 0)->first();
     if (!$surveyEval || !$surveyCarreer) {
       $url_survey = url('config/surveys');
       $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation et/ou de carrière n'a été trouvé ! il faut le/les créer tout d'abord dans <a href='$url_survey' target='_blank'>Questionnaires</a>");
@@ -218,10 +218,14 @@ class EntretienController extends Controller
     }
 
     $evaluations = Evaluation::where('title', '<>', 'Compétences')->pluck('id')->toArray(); //to get ids of all object in one array
+    $start_periode = !empty($request->start_periode) ? Carbon::createFromFormat('d-m-Y', $request->start_periode) : null;
+    $end_periode = !empty($request->end_periode) ? Carbon::createFromFormat('d-m-Y', $request->end_periode) : null;
     $entretien->date = $date;
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
     $entretien->user_id = User::getOwner()->id;
+    $entretien->start_periode = $start_periode;
+    $entretien->end_periode = $end_periode;
     $entretien->save();
     if (empty($id)) {
       $entretien->evaluations()->attach($evaluations);
