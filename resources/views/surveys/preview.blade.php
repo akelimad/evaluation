@@ -48,3 +48,9 @@
 @else
     @include('partials.alerts.warning', ['messages' => "le questionnaire est incomplet, vous ne pouvez pas le vésualiser. veuillez attribuer les choix pour les questions multichoix !!" ])
 @endif
+
+<script>
+    $(document).ready(function() {
+        var mySlider = $('[data-provide="slider"]').slider();
+    })
+</script>

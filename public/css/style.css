@@ -838,3 +838,6 @@ p.help-block{
 .breadcrumb>li {
     font-size: 14px;
 }
+.slider.slider-horizontal {
+    width: 100% !important;
+}

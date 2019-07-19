@@ -23,7 +23,7 @@
                                     <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="{{App\Setting::get('max_note')}}" style="display:none;">
                                 @endif
                                 @if($q->parent == null)
-                                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                                    <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                                 @endif
                                 @if($q->type == 'text')
                                     <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>
@@ -46,7 +46,15 @@
                                     @endforeach
                                 @elseif($q->type == "slider")
                                     <div class="" style="margin-top: 30px;">
-                                        <input type="text" required="" name="answers[{{$q->id}}][ansr]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" data-slider-tooltip="always">
+                                        <input type="text" required="" name="answers[{{$q->id}}][ansr]" data-provide="slider" 
+                                        data-slider-min="1" 
+                                        data-slider-max="5" 
+                                        data-slider-step="1" 
+                                        data-slider-value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" 
+                                        data-slider-tooltip="always"
+                                        data-slider-ticks="[1, 2, 3, 4, 5]"
+                                        data-slider-ticks-labels='["1", "2", "3", "4", "5"]'
+                                        >
                                     </div>
                                 @endif
                             </div>

@@ -413,7 +413,13 @@ class EntretienController extends Controller
     ob_start();
     $e = Entretien::findOrFail($eid);
     $user = User::findOrFail($uid);
-    $evaluations = $e->evaluations;
+    $evaluations = Entretien::findEvaluations($e);
+    $obj_id = 0;
+    foreach ($evaluations as $key => $evaluation) {
+      if ($evaluation->title != "Objectifs") continue;
+      $obj_id = $evaluation->survey_id;
+    }
+    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $obj_id)->get();
     $evalTitle = [];
     $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->where('status', 2)->get();
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->paginate(10);
@@ -423,7 +429,7 @@ class EntretienController extends Controller
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'formations', 'skills', 'comment'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifs', 'formations', 'skills', 'comment'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }

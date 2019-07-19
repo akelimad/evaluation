@@ -19,7 +19,7 @@
                     @forelse($g->questions as $q)
                         <div class="form-group">
                             @if($q->parent == null)
-                                <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                                <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                             @endif
                             @if($q->type == 'text')
                                 <input type="{{$q->type}}" class="form-control" readonly="" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}">
@@ -39,8 +39,18 @@
                                     <label >{{ $child->titre }}</label>
                                 @endforeach
                             @elseif($q->type == "slider")
-                                <div class="" style="margin-top: 30px;">
-                                    <input type="text" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" data-slider-tooltip="always" disabled>
+                                <div class="disabled" style="margin-top: 30px;">
+                                    <input type="text" 
+                                    data-provide="slider" 
+                                    data-slider-min="1" 
+                                    data-slider-max="5" 
+                                    data-slider-step="1" 
+                                    data-slider-value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" 
+                                    data-slider-tooltip="always" 
+                                    data-slider-ticks="[1, 2, 3, 4, 5]"
+                                    data-slider-ticks-labels='["1", "2", "3", "4", "5"]'
+                                    disabled
+                                    >
                                 </div>
                             @endif
                         </div>
@@ -96,7 +106,7 @@
                                     <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" placeholder="Note" class="notation inputNote" size="3" min="1" max="{{App\Setting::get('max_note')}}" value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}" @if($g->notation_type == 'item' && App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;" required @endif>
                                 @endif
                                 @if($q->parent == null)
-                                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i>
+                                    <label for="" class="questionTitle"><i class="fa fa-caret-right"></i>
                                         {{$q->titre}}
                                     </label>
                                 @endif
@@ -121,7 +131,15 @@
                                     @endforeach
                                 @elseif($q->type == "slider")
                                     <div class="" style="margin-top: 30px;">
-                                        <input type="text" required="" name="answers[{{$q->id}}][ansr]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}" data-slider-tooltip="always">
+                                        <input type="text" required="" name="answers[{{$q->id}}][ansr]" data-provide="slider" 
+                                        data-slider-min="1" 
+                                        data-slider-max="5" 
+                                        data-slider-step="1" 
+                                        data-slider-value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}" 
+                                        data-slider-ticks="[1, 2, 3, 4, 5]"
+                                        data-slider-ticks-labels='["1", "2", "3", "4", "5"]'
+                                        data-slider-tooltip="always"
+                                        >
                                     </div>
                                 @endif
                             </div>

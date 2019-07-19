@@ -27,12 +27,12 @@
                                         @endif
                                         <tr>
                                             <th style="width: 27%">Critères d'évaluation</th>
-                                            <th >Coll. note(%)</th>
+                                            <th >Notation (%)</th>
                                             <th class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">Apréciation</th>
-                                            <th >Pondération(%) </th>
+                                            <th >Pondération (%)</th>
                                             <th >Objectif N+1 </th>
                                             @if($user->id != Auth::user()->id)
-                                            <th >Mentor note (%)</th>
+                                            <th >Notation (%)</th>
                                             <th >Appreciation </th>
                                             @endif
                                         </tr>
@@ -70,7 +70,7 @@
                                                 <td>{{ $sub->title }}</td>
                                                 <td class="criteres text-center slider-note {{$user->id != Auth::user()->id ? 'disabled':''}}">
                                                     @if(!App\Objectif::getNmoins1Note($sub->id, $e->id) || (App\Objectif::getNmoins1Note($sub->id, $e->id) == true && App\Objectif::getNmoins1Note($sub->id, $e->id)->objNplus1 == 0 ) )
-                                                    <input type="text" placeholder="Votre note" required="" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}" data-slider-tooltip="always">
+                                                    <input type="text" placeholder="Votre note" required="" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider" data-slider-min="0" data-slider-max="200" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}" data-slider-tooltip="always">
                                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]" value="">
                                                     @else
                                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" value="">
@@ -86,10 +86,10 @@
                                                                 <span class="nMoins1-{{$sub->id}}" > {{App\Objectif::getNmoins1Note($sub->id, $e->id) ? App\Objectif::getNmoins1Note($sub->id, $e->id)->userNote : ''}} </span>
                                                             </td>
                                                             <td>
-                                                                <input type="number" min="0" max="100" class="text-center realise" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]" data-id="{{$sub->id}}" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->realise : ''}}">
+                                                                <input type="number" min="0" max="200" class="text-center realise" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]" data-id="{{$sub->id}}" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->realise : ''}}">
                                                             </td>
                                                             <td>
-                                                                <input type="number" min="0" max="100" class="ecart-{{$sub->id}} text-center" name="objectifs[{{$objectif->id}}][{{$sub->id}}][ecart]" readonly="" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->ecart : ''}}">
+                                                                <input type="number" min="0" max="200" class="ecart-{{$sub->id}} text-center" name="objectifs[{{$objectif->id}}][{{$sub->id}}][ecart]" readonly="" value="{{App\Objectif::getRealise($sub->id, $e->id) ? App\Objectif::getRealise($sub->id, $e->id)->ecart : ''}}">
                                                             </td>
                                                             <td></td>
                                                         </tr>
@@ -97,27 +97,25 @@
                                                     @endif
                                                 </td>
                                                 <td class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">
-                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}" placeholder="Pourquoi cette note ?" {{ $user->id != Auth::user()->id ? 'disabled':'' }}>
+                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}" placeholder="Révision de l'objectif ..." title="Révision de l'objectif (optionnel) + date de la révision" data-toggle="tooltip" {{ $user->id != Auth::user()->id ? 'disabled':'' }}>
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $sub->ponderation }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td class="">
                                                     <input type="checkbox" name="objectifs[{{$objectif->id}}][{{$sub->id}}][objNplus1]" {{isset(App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1) && App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1 == 1 ? 'checked':''}}>
                                                 </td>
                                                 @if($user->id != Auth::user()->id)
                                                 <td class="slider-note">
-                                                    <input type="text" placeholder="Votre note" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}" data-slider-tooltip="always" >
+                                                    <input type="text" placeholder="Votre note" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]" data-provide="slider" data-slider-min="0" data-slider-max="200" data-slider-step="1" data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}" data-slider-tooltip="always" >
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '' }}" placeholder="Pourquoi cette note ?">
+                                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppr]" class="form-control" value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '' }}" placeholder="Révision de l'objectif ..." title="Révision de l'objectif (optionnel) + date de la révision" data-toggle="tooltip">
                                                 </td>
                                                 @else
                                                 <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]" value="">
                                                 <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppreciation]" value="">
                                                 @endif
-
-
                                             </tr>
                                             @endforeach
                                             <tr>
