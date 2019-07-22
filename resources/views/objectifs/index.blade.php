@@ -121,12 +121,12 @@
                                             <tr>
                                                 @if($user->id == Auth::user()->id)
                                                 <td colspan="7" class="sousTotal"> 
-                                                    <span>Sous-total</span>
+                                                    <span>Sous-total (%)</span>
                                                     <span class="badge badge-success pull-right subTotalSection" id="subTotalSection-{{$objectif->id}}">{{App\Objectif::cutNum($usersousTotal/$sumPonderation)}}</span>
                                                 </td>
                                                 @else
                                                 <td colspan="3" class="sousTotal {{ $user->id != Auth::user()->id ? 'separate':'' }}"> 
-                                                    <span>Sous-total</span>
+                                                    <span>Sous-total (%)</span>
                                                     <span class="badge badge-success pull-right">{{App\Objectif::cutNum($usersousTotal/$sumPonderation)}}</span>
                                                 </td>
                                                 <td colspan="4" class="sousTotal"> 
@@ -140,21 +140,21 @@
                                         <tr>
                                             @if($user->id == Auth::user()->id)
                                             <td colspan="7" class="btn-warning" valign="middle">
-                                                <span>TOTAL DE L'ÉVALUATION</span>  
+                                                <span>TOTAL DE L'ÉVALUATION (%)</span>
                                                 <span class="btn-default pull-right badge totalNote">
-                                                {{ App\Objectif::cutNum($userTotal/$c) }} %
+                                                {{ App\Objectif::cutNum($userTotal/$c) }}
                                                 </span>
                                             </td>
                                             @else
                                             <td colspan="3" class="btn-warning {{ $user->id != Auth::user()->id ? 'separate':'' }}" valign="middle">
-                                                <span>TOTAL DE L'ÉVALUATION</span>  
+                                                <span>TOTAL DE L'ÉVALUATION (%)</span>
                                                 <span class="btn-default pull-right badge">
-                                                {{ App\Objectif::cutNum($userTotal/$c) }} %
+                                                {{ App\Objectif::cutNum($userTotal/$c) }}
                                                 </span>
                                             </td>
                                             <td colspan="4" class="btn-warning" valign="middle">
                                                 <span class="btn-default pull-right badge totalNote">
-                                                {{ App\Objectif::cutNum($mentorTotal/$c) }} %
+                                                {{ App\Objectif::cutNum($mentorTotal/$c) }}
                                                 </span>
                                             </td>
                                             @endif
@@ -196,14 +196,15 @@
             $.each(sectionObjectifs, function (i, el) {
                 note = $(el).val()
                 ponderation = $(el).closest('.objectifRow').find('.ponderation').text()
-                sectionsTotal += parseFloat(note) * parseFloat(ponderation)
+                sectionsTotal += parseInt(note) * parseInt(ponderation)
             })
             sectionsTotal = sectionsTotal / 100
-            $('#subTotalSection-' + sectionId).text(sectionsTotal.toFixed(2))
+            sectionsTotal = Math.round(sectionsTotal)
+            $('#subTotalSection-' + sectionId).text(sectionsTotal)
             $.each($('.subTotalSection'), function (i, el) {
-                total += parseFloat($(el).text())
+                total += parseInt($(el).text())
             })
-            $('.totalNote').text(total.toFixed(2))
+            $('.totalNote').text(total)
         });
     })
 </script>

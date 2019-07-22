@@ -29,7 +29,9 @@ class QuestionController extends Controller
     {
         ob_start();
         $parent_id = $request->parent_id;
-        echo view('questions.form', compact('sid','gid', 'parent_id'));
+        $qChoices = ['' => ''];
+        $count = count($qChoices) - 1;
+        echo view('questions.form', compact('sid','gid', 'parent_id', 'qChoices', 'count'));
         $content = ob_get_clean();
         return ['title' => 'Ajouter une question', 'content' => $content];
     }
@@ -53,12 +55,12 @@ class QuestionController extends Controller
         if(isset($request->subQuestions) && count($request->subQuestions)>0 ){
             $question->children()->delete();
             foreach ($request->subQuestions as $key => $value) {
+                if (empty($value['titre'])) continue;
                 $choice = new Question();
-                $choice->id  = $key;
-                $choice->titre = $value;
+                $choice->titre = $value['titre'];
                 $choice->parent_id = $question->id;
                 $choice->groupe_id = $request->groupe_id;
-                $choice->options = json_encode($request->subQuestionsOptions[$key]);
+                $choice->options = json_encode(['label' => $value['label']]);
                 $choice->save();
             }
         }
@@ -86,7 +88,9 @@ class QuestionController extends Controller
     {
         ob_start();
         $q = Question::findOrFail($qid);
-        echo view('questions.form', compact('sid','gid', 'q'));
+        $qChoices = $q->children->push(new Question());
+        $count = count($qChoices) - 1;
+        echo view('questions.form', compact('sid','gid', 'q', 'qChoices', 'count'));
         $content = ob_get_clean();
         return ['title' => 'Modifier la question', 'content' => $content];
     }

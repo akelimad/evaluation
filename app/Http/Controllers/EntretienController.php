@@ -484,6 +484,7 @@ class EntretienController extends Controller
       $entretien->skills()->delete();
       \DB::table('skill_user')->where('entretien_id', $eid)->delete();
       \DB::table('answers')->where('entretien_id', $eid)->delete();
+      \DB::table('objectif_user')->where('entretien_id', $eid)->delete();
       $entretien->formations()->delete();
       $entretien->salaries()->delete();
       $entretien->comments()->delete();

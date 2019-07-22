@@ -7,6 +7,9 @@
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
+  .pointer {
+    cursor: pointer;
+  }
 </style>
 <div class="row">
   <div class="col-md-12 survey">
@@ -74,9 +77,11 @@
                       @elseif ($q->type == "rate")
                         @foreach($q->children as $child)
                           <div class="row margin-bottom">
-                            <div class="col-md-2"><input type="radio" name="answers[{{$q->id}}][ansr]"> {{ $child->titre }}</div>
-                            <div class="col-md-10">
-                              <label class="pull-right">{{ json_decode($child->options)->label }}</label>
+                            <div class="col-md-1">
+                              <input type="radio" name="answers[{{$q->id}}][ansr]" value="{{ $child->id }}" id="{{ $child->id }}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}> {{ $child->titre }}
+                            </div>
+                            <div class="col-md-11">
+                              <label class="pull-right pointer" for="{{ $child->id }}">{{ json_decode($child->options)->label }}</label>
                             </div>
                           </div>
                         @endforeach

@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import uuidv4 from 'uuid/v4'
 
 $(document).ready(function () {
   // Check all table rows
@@ -82,22 +81,30 @@ $(document).ready(function () {
     $($select).trigger('change')
   })
 
+  // Add new Line with table
   $('body').on('click', '.addLine', function (event) {
     event.preventDefault()
-    var copy = $('#addLine-wrap').find('.form-group:first').clone()
-    copy.find('input').val('')
-    copy.find('button').toggleClass('addLine deleteLine')
-    copy.find('button>i').toggleClass('fa-plus fa-minus')
-    var uid = uuidv4()
-    $.each(copy.find('input'), function () {
-      var name = $(this).attr('name')
-      $(this).attr('name', name.replace('[0]', '[' + uid + ']'))
-    })
-    $('#addLine-wrap').append(copy)
+
+    $(this).addClass('target')
+    let $copy = $(this).closest('tr').clone()
+
+    $(this).removeClass('target')
+    $(this).toggleClass('addLine deleteLine')
+    $(this).toggleClass('btn-success btn-danger')
+    $(this).find('i').toggleClass('fa-plus fa-minus')
+
+    $copy.find('input').not("input[type='hidden']").val('')
+
+    $(this).closest('tbody').append($copy)
+
+    $($copy).find('[chm-duplicate].target').removeClass('target').trigger('chmLineAdded')
   })
 
+  // Delete added Line
   $('body').on('click', '.deleteLine', function () {
-    $(this).closest('.form-group').remove()
+    let $table = $(this).closest('tr')
+    $(this).closest('tr').remove()
+    $table.trigger('chmLineDeleted')
   })
 })
 
