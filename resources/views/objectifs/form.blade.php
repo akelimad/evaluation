@@ -72,7 +72,7 @@
       var $row = $('#extraFieldsTable tr:last').find('[chm-duplicate]').closest('tr')
       console.log($row)
       var count = $('#extraFieldsTable').data('count')
-      $($row).find('input', 'select').each(function(key, value) {
+      $($row).find('input, select').each(function(key, value) {
         var id = $(this).attr('id')
         var name = $(this).attr('name')
         var index = name.split('objExtrFields[').pop().split(']').shift()

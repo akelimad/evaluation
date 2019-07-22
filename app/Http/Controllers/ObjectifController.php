@@ -102,6 +102,7 @@ class ObjectifController extends Controller
             $objectif = Objectif::findOrFail($request->gid);
             $objectif->children()->delete();
             $objectif->title = $request->title;
+            $objectif->extra_fields = json_encode($request->objExtrFields);
             $objectif->save();
             foreach ($request->objectifs as $obj) {
                 $subObj = new Objectif();
@@ -115,6 +116,7 @@ class ObjectifController extends Controller
                 $objectif = new Objectif();
                 $objectif->title = $request->title;
                 $objectif->entretienobjectif_id = $request->oid;
+                $objectif->extra_fields = json_encode($request->objExtrFields);
                 $objectif->save();
                 foreach ($request->objectifs as $obj) {
                     $subObj = new Objectif();
