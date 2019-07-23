@@ -78,10 +78,10 @@
                         @foreach($q->children as $child)
                           <div class="row margin-bottom">
                             <div class="col-md-1">
-                              <input type="radio" name="answers[{{$q->id}}][ansr]" value="{{ $child->id }}" id="{{ $child->id }}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}> {{ $child->titre }}
+                              <input type="radio" name="answers[{{$q->id}}][ansr]" value="{{ $child->id }}" id="user-{{ $child->id }}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}> {{ $child->titre }}
                             </div>
                             <div class="col-md-11">
-                              <label class="pull-right pointer" for="{{ $child->id }}">{{ json_decode($child->options)->label }}</label>
+                              <label class="pull-right pointer" for="user-{{ $child->id }}">{{ json_decode($child->options)->label }}</label>
                             </div>
                           </div>
                         @endforeach

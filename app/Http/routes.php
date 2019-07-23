@@ -111,7 +111,7 @@ Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@synthese');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
-Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu');
+Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu')->name('entretien.apercu');
 Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
 

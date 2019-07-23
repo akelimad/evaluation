@@ -84,6 +84,7 @@ class EntretienObjectifController extends Controller
     {
         ob_start();
         $o = EntretienObjectif::findOrFail($id);
+
         echo view('entretienObjectif.form', compact('o'));
         $content = ob_get_clean();
         return ['title' => 'Modifier un objectif', 'content' => $content];

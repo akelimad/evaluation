@@ -38,26 +38,33 @@
 
     <div class="form-group">
       <h3>Les champs additionnels</h3>
-      <table class="table mb-10" id="extraFieldsTable" data-count="0">
+      <table class="table mb-10" id="extraFieldsTable" data-count="{{ count($objExtraFields) }}">
         <tbody>
-          <tr>
-            <td>
-              <label for="">Libellé</label>
-              <input type="text" name="objExtrFields[0][label]" id="objExtrFields_0_label" class="form-control">
-            </td>
-            <td>
-              <label for="">Type du champ</label>
-              <select name="objExtrFields[0][type]" id="objExtrFields_0_type" class="form-control">
-                <option value=""></option>
-                <option value="text">Court text</option>
-                <option value="textarea">Long text</option>
-              </select>
-            </td>
-            <td>
-              <div><label class="control-label">&nbsp;</label></div>
-              <button type="button" class="btn btn-info addLine  pull-right" chm-duplicate><i class="fa fa-plus"></i></button>
-            </td>
-          </tr>
+        @php($i = 0)
+          @foreach($objExtraFields as $key => $field)
+            @php($i ++)
+            @php($islast = count($objExtraFields) == $i)
+            @php ($class = $islast ? 'btn btn-success addLine' : 'btn btn-danger deleteLine')
+            @php ($icon = $islast ? 'fa fa-plus' : 'fa fa-minus')
+            <tr>
+              <td>
+                <label for="">Libellé</label>
+                <input type="text" name="objExtrFields[{{ isset($key) ? $key : 1 }}][label]" id="objExtrFields_{{ isset($key) ? $key : 1 }}_label" class="form-control" value="{{ isset($field['label']) ? $field['label'] : '' }}">
+              </td>
+              <td>
+                <label for="">Type du champ</label>
+                <select name="objExtrFields[{{ isset($key) ? $key : 1 }}][type]" id="objExtrFields_{{ isset($key) ? $key : 1 }}_type" class="form-control">
+                  <option value=""></option>
+                  <option value="text" {{isset($field['type']) && $field['type'] == 'text' ? 'selected':''}}>Court text</option>
+                  <option value="textarea" {{isset($field['type']) && $field['type'] == 'textarea' ? 'selected':''}}>Long text</option>
+                </select>
+              </td>
+              <td>
+                <div><label class="control-label">&nbsp;</label></div>
+                <button type="button" class="{{ $class }} pull-right" chm-duplicate><i class="{{$icon}}"></i></button>
+              </td>
+            </tr>
+          @endforeach
         </tbody>
       </table>
     </div>
@@ -70,7 +77,6 @@
 
     $('body').on('click', ['chm-duplicate'], function (event) {
       var $row = $('#extraFieldsTable tr:last').find('[chm-duplicate]').closest('tr')
-      console.log($row)
       var count = $('#extraFieldsTable').data('count')
       $($row).find('input, select').each(function(key, value) {
         var id = $(this).attr('id')

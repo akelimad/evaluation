@@ -433,7 +433,7 @@ class EntretienController extends Controller
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifs', 'formations', 'skills', 'comment'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifs', 'formations', 'skills', 'comment', 'evaluations'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }

@@ -37,6 +37,18 @@ class Objectif extends Model
         return $objectif;
     }
 
+    public static function getExtraFieldData($eid, $uid, $oid, $fieldId, $isColl = true)
+    {
+        $data = self::getObjectif($eid, $uid, $oid);
+        if (!empty($data)) {
+            $data = $isColl ? $data->user_extra_fields_data : $data->mentor_extra_fields_data;
+            $data = json_decode($data);
+            $data = isset($data->$fieldId) ? $data->$fieldId : '';
+        }
+
+        return $data;
+    }
+
     public static function getNmoins1Note($oid, $eid){
         $objectif = Objectif_user::where('user_id', Auth::user()->id)->where('objectif_id', $oid)->where('entretien_id', '<', $eid)->get()->last();
         //dd($objectif);
@@ -59,7 +71,7 @@ class Objectif extends Model
     public static function userSentGoals($eid, $uid){
         $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('userNote', '<>', 0)->first();
         if($objectif){
-            return $objectif;            
+            return $objectif;
         }else{
             return null;
         }
@@ -67,7 +79,7 @@ class Objectif extends Model
     public static function mentorSentGoals($eid, $uid, $mentor_id){
         $objectif = Objectif_user::where('user_id', $uid)->where('entretien_id', $eid)->where('mentor_id', $mentor_id)->where('mentorNote', '<>', 0)->first();
         if($objectif){
-            return $objectif;            
+            return $objectif;
         }else{
             return null;
         }
