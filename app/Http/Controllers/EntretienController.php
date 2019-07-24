@@ -448,26 +448,33 @@ class EntretienController extends Controller
   {
     $e = Entretien::findOrFail($eid);
     $user = User::findOrFail($uid);
-    $evaluations = $e->evaluations;
-    $survey = Survey::findOrFail($e->survey_id);
-    $groupes = $survey->groupes;
-    $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
-    $formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
-    $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
-    $skills = Skill::all();
-    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
+    $surveyId = Evaluation::surveyId($e->id, 1);
+    $survey = Survey::find($surveyId);
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
-    $total = 0;
-    foreach ($objectifs as $obj) {
-      $total += $obj->sousTotal;
+    $evaluations = Entretien::findEvaluations($e);
+    $obj_id = 0;
+    foreach ($evaluations as $key => $evaluation) {
+      if ($evaluation->title != "Objectifs") continue;
+      $obj_id = $evaluation->survey_id;
     }
-    $entreEvalsTitle = [];
-    foreach ($evaluations as $eval) {
-      $entreEvalsTitle[] = $eval->title;
-    }
+    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $obj_id)->get();
 
-    $pdf = \PDF::loadView('entretiens.apercu', compact('entreEvalsTitle', 'evaluations', 'e', 'user', 'groupes', 'salaries', 'carreers', 'formations', 'skills', 'objectifs', 'comment', 'total'));
-    return $pdf->download('entretien-synthese.pdf');
+    //$carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
+    //$formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
+    //$salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
+    //$skills = Skill::all();
+    //$objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
+    //$total = 0;
+    //foreach ($objectifs as $obj) {
+    //  $total += $obj->sousTotal;
+    //}
+    //$entreEvalsTitle = [];
+    //foreach ($evaluations as $eval) {
+    //  $entreEvalsTitle[] = $eval->title;
+    //}
+
+    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'objectifs', 'comment'));
+    return $pdf->download('synthese-entretien-evaluation.pdf');
   }
 
 

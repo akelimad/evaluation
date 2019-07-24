@@ -542,7 +542,7 @@
               @if($comment)
                 <div class="direct-chat-messages" style="height: auto;">
                   <div class="col-md-6">
-                    <h5 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du collaborateur : {{ $user->name." ".$user->last_name }}</h5>
+                    <h class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du collaborateur : {{ $user->name." ".$user->last_name }}</h>
                     <div class="direct-chat-msg mb20">
                       <div class="direct-chat-info clearfix">
                         <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>

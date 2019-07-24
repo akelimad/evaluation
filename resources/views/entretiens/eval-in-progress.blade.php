@@ -137,7 +137,7 @@
                                             <span class="badge">{{ $row->note > 0 ? App\Answer::formated($row->note)."/$count" : "0/$count" }}</span>
                                         </td>
                                         <td class="text-center">
-                                            <!-- <a href="{{ url('entretiens/'.$row->entretienId.'/u/'.$row->userId.'/printPdf') }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a> -->
+                                            <a href="{{ url('entretiens/'.$row->entretienId.'/u/'.$row->userId.'/printPdf') }}" class="btn-primary icon-fill" data-toggle="tooltip" title="Imprimer"> <i class="fa fa-print"></i> </a>
                                             @if(!App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId))
                                                 <a href="javascript:void(0)" class="bg-navy icon-fill show-motif" data-toggle="tooltip" title="Motif de non réaliation" data-id="{{$row->userId}}"> <i class="glyphicon glyphicon-wrench"></i> </a>
 
