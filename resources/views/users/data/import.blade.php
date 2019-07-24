@@ -37,7 +37,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-4">
-                                <p>Vuillez choisir le fichier csv :</p>
+                                <p>Veuillez choisir le fichier CSV :</p>
                             </div>
                             <div class="col-md-8">
                                 <form action="{{url('users/import_parse')}}" method="post" enctype="multipart/form-data" >
