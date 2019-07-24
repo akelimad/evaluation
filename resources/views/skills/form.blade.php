@@ -4,7 +4,7 @@
     {{ csrf_field() }}
     <div class="row form-group">
         <div class="col-md-12">
-            <label for="entretien" class="control-label">Entretien <span class="asterisk">*</span></label>
+            <label for="entretien" class="control-label required required">Entretien</label>
             <select name="entretien_id" id="entretien" class="form-control">
                 @if( isset($entretien) )
                     <option value="{{ $entretien->id }}"> {{ $entretien->titre }} </option>
@@ -17,59 +17,64 @@
         </div>
     </div>
     <div id="addLine-wrap">
-        @foreach($skills as $key => $s)
-        <div class="row form-group">
-            <div class="col-md-2">
-                <label for="axe" class="control-label">Axe <span class="asterisk">*</span></label>
-                <input type="text" class="form-control" name="@if($key == 0) skills[0][axe] @else skills[{{$s->id}}][axe] @endif" id="axe" placeholder="" value="{{isset($s->axe) ? $s->axe :''}}" required="">
-            </div>
-            <div class="col-md-3">
-                <label for="famille" class="control-label">Famille <span class="asterisk">*</span></label>
-                <input type="text" class="form-control" name="@if($key == 0) skills[0][famille] @else skills[{{$s->id}}][famille] @endif" id="famille" placeholder="" value="{{isset($s->famille) ? $s->famille :''}}" required="">
-            </div>
-            <div class="col-md-3"> 
-                <label for="categorie" class="control-label">Catégorie <span class="asterisk">*</span></label>
-                <input type="text" class="form-control" name="@if($key == 0) skills[0][categorie] @else skills[{{$s->id}}][categorie] @endif" id="categorie" placeholder="" value="{{isset($s->categorie) ? $s->categorie :''}}" required="">
-            </div>
-            <div class="col-md-3">
-                <label for="competence" class="control-label">Compétence <span class="asterisk">*</span></label>
-                <input type="text" class="form-control" name="@if($key == 0) skills[0][competence] @else skills[{{$s->id}}][competence] @endif" id="competence" placeholder="" value="{{isset($s->competence) ? $s->competence :''}}" required=""> 
-            </div>
-            <div class="col-md-1">
-                <label class="control-label"> &nbsp; </label>
-                <button type="button" class="btn btn-info {{ $key == 0 ? 'addLine':'deleteLine' }} pull-right"><i class="fa {{ $key == 0 ? 'fa-plus':'fa-minus' }}"></i></button>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-        @endforeach
+        <table class="table mb-10" id="entretienSkillsTable" data-count="{{ count($skills) }}">
+            <tbody>
+            @php($i = 0)
+            @foreach($skills as $key => $s)
+                @php($i ++)
+                @php($islast = count($skills) == $i)
+                @php ($class = $islast ? 'btn btn-success addLine' : 'btn btn-danger deleteLine')
+                @php ($icon = $islast ? 'fa fa-plus' : 'fa fa-minus')
+                <tr>
+                    <td>
+                        <label for="axe" class="control-label required">Axe</label>
+                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][axe]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_axe" placeholder="" value="{{isset($s->axe) ? $s->axe :''}}" required="">
+                    </td>
+                    <td>
+                        <label for="famille" class="control-label required">Famille</label>
+                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][famille]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_famille" placeholder="" value="{{isset($s->famille) ? $s->famille :''}}" required="">
+                    </td>
+                    <td>
+                        <label for="categorie" class="control-label required">Catégorie</label>
+                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][categorie]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_categorie" placeholder="" value="{{isset($s->categorie) ? $s->categorie :''}}" required="">
+                    </td>
+                    <td>
+                        <label for="competence" class="control-label required">Compétence</label>
+                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][competence]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_competence" placeholder="" value="{{isset($s->competence) ? $s->competence :''}}" required="">
+                    </td>
+                    <td>
+                        <label class="control-label">&nbsp;</label>
+                        <button type="button" class="{{ $class }} pull-right skills-duplicate-btn" chm-duplicate><i class="{{$icon}}"></i></button>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 
 <script>
-    $(function(){
-        function uuidv4() {
-            return ([1e7]+-1e3).replace(/[018]/g, c =>
-                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-            )
-        }
-        $(".addLine").click(function(event){
-            event.preventDefault()
-            var copy = $('#addLine-wrap').find(".form-group:first").clone()
-            copy.find('input').val('')
-            copy.find('button').toggleClass('addLine deleteLine')
-            copy.find('button>i').toggleClass('fa-plus fa-minus')
-            var uid = uuidv4()
-            $.each(copy.find('input'), function(){
+    $(document).ready(function () {
+
+        $('body').on('click', '.skills-duplicate-btn',function (event) {
+            var $row = $('#entretienSkillsTable tr:last').find('[chm-duplicate]').closest('tr')
+            var count = $('#entretienSkillsTable').data('count')
+            $($row).find('input, select').each(function(key, value) {
+                var id = $(this).attr('id')
                 var name = $(this).attr('name')
-                $(this).attr('name', name.replace('[0]', '['+uid+']'))
+                var index = name.split('skills[').pop().split(']').shift()
+                if (key == 0) {
+                    count += 1
+                    $('#entretienSkillsTable').data('count', count)
+                }
+                name = name.replace('['+ index +']', '['+ count +']')
+                $(this).attr('name', name)
+                id = id.replace('_'+ index + '_', '_'+ count + '_')
+                $(this).attr('id', id)
             })
-            $('#addLine-wrap').append(copy)
+            $row.find('input').removeClass('chm-has-error')
+            $row.find('.chm-error-block').remove()
         })
-        $('#addLine-wrap').on('click', '.deleteLine', function(){
-            if(confirm('Voulez-vous supprimer cette ligne ?')){
-                $(this).closest('.form-group').remove();   
-            }
-        });
 
     })
 </script>
