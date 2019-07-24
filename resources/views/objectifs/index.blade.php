@@ -31,7 +31,7 @@
                         <th>Notation (%)</th>
                         <th class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">Apréciation</th>
                         <th class="text-center">Pondération (%)</th>
-                        <th title="Objectif N+1">Obj N+1</th>
+                        <th title="Objectif N+1" class="hidden">Obj N+1</th>
                         @if($user->id != Auth::user()->id)
                           <th width="15%">Notation (%)</th>
                           <th>Appreciation</th>
@@ -120,12 +120,12 @@
                             <td class="text-center">
                               <span class="ponderation">{{ $sub->ponderation }}</span>
                             </td>
-                            <td class="">
+                            <td class="hidden">
                               <input type="checkbox"
                                      name="objectifs[{{$objectif->id}}][{{$sub->id}}][objNplus1]" {{isset(App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1) && App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1 == 1 ? 'checked':''}}>
                             </td>
                             @if($user->id != Auth::user()->id)
-                              <td class="slider" style="width: 100%; line-height: 60px;">
+                              <td class="criteres text-center slider-note">
                                 <input type="text" class="slider mentorNote mentorObjSection-{{ $objectif->id }}"
                                        data-section="{{ $objectif->id }}"
                                        name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]"

@@ -1,3 +1,4 @@
+
 <div class="apercu">
   @if($user->parent)
     <p class="help-block">Aperçu sur les informations partagées entre
@@ -193,7 +194,7 @@
                         <th>Notation (%)</th>
                         <th class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">Apréciation</th>
                         <th class="text-center">Pondération (%)</th>
-                        <th title="Objectif N+1">Obj N+1</th>
+                        <th title="Objectif N+1" class="hidden">Obj N+1</th>
                         @if($user->id != Auth::user()->id)
                           <th width="15%">Notation (%)</th>
                           <th>Appreciation</th>
@@ -231,16 +232,9 @@
 
                           <tr class="objectifRow">
                             <td style="max-width: 6%">{{ $sub->title }}</td>
-                            <td class="criteres text-center slider-note {{$user->id != Auth::user()->id ? 'disabled':''}}">
+                            <td class="">
                               @if(!App\Objectif::getNmoins1Note($sub->id, $e->id) || (App\Objectif::getNmoins1Note($sub->id, $e->id) == true && App\Objectif::getNmoins1Note($sub->id, $e->id)->objNplus1 == 0 ) )
-                                <input type="text" class="slider userNote userObjSection-{{ $objectif->id }}"
-                                       data-section="{{ $objectif->id }}" required=""
-                                       name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider"
-                                       data-slider-min="0" data-slider-max="200" data-slider-step="1"
-                                       data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}"
-                                       data-slider-tooltip="always">
-                                <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]"
-                                       value="">
+                                <span class="badge">{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}</span>
                               @else
                                 <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]"
                                        value="">
@@ -272,37 +266,21 @@
                               @endif
                             </td>
                             <td class="{{ $user->id != Auth::user()->id ? 'separate':'' }}">
-                              <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]"
-                                     class="form-control"
-                                     value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}"
-                                     placeholder="Révision de l'objectif ..."
-                                     title="Révision de l'objectif (optionnel) + date de la révision"
-                                     data-toggle="tooltip" {{ $user->id != Auth::user()->id ? 'disabled':'' }}>
+                              <span>{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '---' }}</span>
                             </td>
                             <td class="text-center">
                               <span class="ponderation">{{ $sub->ponderation }}</span>
                             </td>
-                            <td class="">
+                            <td class="hidden">
                               <input type="checkbox"
                                      name="objectifs[{{$objectif->id}}][{{$sub->id}}][objNplus1]" {{isset(App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1) && App\Objectif::getObjectif($e->id,$user->id, $sub->id)->objNplus1 == 1 ? 'checked':''}}>
                             </td>
                             @if($user->id != Auth::user()->id)
-                              <td class="slider" style="width: 100%; line-height: 60px;">
-                                <input type="text" class="slider mentorNote mentorObjSection-{{ $objectif->id }}"
-                                       data-section="{{ $objectif->id }}"
-                                       name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]"
-                                       data-provide="slider" data-slider-min="0" data-slider-max="200"
-                                       data-slider-step="1"
-                                       data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}"
-                                       data-slider-tooltip="always">
+                              <td class="">
+                                <div class="badge">{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}</div>
                               </td>
                               <td>
-                                <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppr]"
-                                       class="form-control"
-                                       value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '' }}"
-                                       placeholder="Révision de l'objectif ..."
-                                       title="Révision de l'objectif (optionnel) + date de la révision"
-                                       data-toggle="tooltip">
+                                <span>{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '---' }}</span>
                               </td>
                             @else
                               <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]"
@@ -321,24 +299,24 @@
                               @if($user->id == Auth::user()->id)
                                 <td colspan="4">
                                   @if ($field->type == 'text')
-                                    <input type="text" name="user_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key) }}">
+                                    <span>{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key) }}</span>
                                   @elseif ($field->type == 'textarea')
-                                    <textarea name="user_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key) }}</textarea>
+                                    <span>{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key) }}</span>
                                   @endif
                                 </td>
                               @else
                                 <td colspan="2" class="separate">
                                   @if ($field->type == 'text')
-                                    <input type="text" name="user_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key) }}">
+                                    <span>{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key) }}</span>
                                   @elseif ($field->type == 'textarea')
-                                    <textarea name="user_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key) }}</textarea>
+                                    <span>{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key) }}</span>
                                   @endif
                                 </td>
                                 <td colspan="4">
                                   @if ($field->type == 'text')
-                                    <input type="text" name="mentor_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key, false) }}">
+                                    <span>{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key, false) }}</span>
                                   @elseif ($field->type == 'textarea')
-                                    <textarea name="mentor_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key, false) }}</textarea>
+                                    <span>{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key, false) }}</span>
                                   @endif
                                 </td>
                               @endif
@@ -390,15 +368,6 @@
                         @endif
                       </tr>
                     </table>
-                    @if($user->id == Auth::user()->id && !App\Entretien_user::userHasSubmitedEval($e->id, $user->id))
-                      <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Sauvegarder
-                      </button>
-                    @endif
-                    @if($user->id != Auth::user()->id && !App\Entretien_user::mentorHasSubmitedEval($e->id, $user->id, $user->parent->id))
-                      <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Sauvegarder
-                      </button>
-                    @endif
-
                   </form>
                 </div>
               @else
@@ -573,6 +542,7 @@
               @if($comment)
                 <div class="direct-chat-messages" style="height: auto;">
                   <div class="col-md-6">
+                    <h5 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du collaborateur : {{ $user->name." ".$user->last_name }}</h5>
                     <div class="direct-chat-msg mb20">
                       <div class="direct-chat-info clearfix">
                         <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>
@@ -587,6 +557,7 @@
                     </div>
                   </div>
                   <div class="col-md-6">
+                    <h5 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du mentor : {{ $user->parent->name." ".$user->parent->last_name }}</h5>
                     <div class="direct-chat-msg right">
                       <div class="direct-chat-info clearfix">
                         <span

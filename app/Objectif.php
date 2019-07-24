@@ -46,7 +46,7 @@ class Objectif extends Model
             $data = isset($data->$fieldId) ? $data->$fieldId : '';
         }
 
-        return $data;
+        return !empty($data) ? $data : '---';
     }
 
     public static function getNmoins1Note($oid, $eid){

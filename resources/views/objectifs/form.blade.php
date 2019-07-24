@@ -21,19 +21,18 @@
                 <label class="control-label">Titre du critère </label>
                 <input type="text" class="form-control subTitle" id="objectifs_{{ isset($o->id) ? $o->id : 1 }}_subTitle"
                   name="objectifs[{{ isset($o->id) ? $o->id : 1 }}][subTitle]"
-                  placeholder="" value="{{isset($o->title) ? $o->title :''}}" placeholder="ex: Travail en équipe"
-                  required=""/>
+                  placeholder="" value="{{isset($o->title) ? $o->title :''}}" placeholder="ex: Travail en équipe"/>
               </td>
               <td>
                 <label class="control-label">Ponderation(%)</label>
                 <input type="number" class="form-control realise" id="objectifs_{{ isset($o->id) ? $o->id : 1 }}_ponderation"
                   name="objectifs[{{ isset($o->id) ? $o->id : 1 }}][ponderation]"
-                  placeholder="ex: 10" min="0" max="100" required=""
+                  placeholder="ex: 10" min="0" max="100"
                   value="{{isset($o->ponderation) ? $o->ponderation :''}}"/>
               </td>
               <td>
                 <div><label class="control-label">&nbsp;</label></div>
-                <button type="button" class="{{ $class }} pull-right" chm-duplicate><i class="{{$icon}}"></i></button>
+                <button type="button" class="{{ $class }} pull-right obj-duplicate-btn" chm-duplicate><i class="{{$icon}}"></i></button>
               </td>
             </tr>
           @endforeach
@@ -55,11 +54,11 @@
             <tr>
               <td>
                 <label for="">Libellé</label>
-                <input type="text" name="objExtrFields[{{ isset($key) ? $key : 1 }}][label]" id="objExtrFields_{{ isset($key) ? $key : 1 }}_label" class="form-control" value="{{ isset($field['label']) ? $field['label'] : '' }}">
+                <input type="text" name="objExtrFields[{{ isset($key) && !empty($key) ? $key : 1 }}][label]" id="objExtrFields_{{ isset($key) && !empty($key) ? $key : 1 }}_label" class="form-control" value="{{ isset($field['label']) ? $field['label'] : '' }}">
               </td>
               <td>
                 <label for="">Type du champ</label>
-                <select name="objExtrFields[{{ isset($key) ? $key : 1 }}][type]" id="objExtrFields_{{ isset($key) ? $key : 1 }}_type" class="form-control">
+                <select name="objExtrFields[{{ isset($key) && !empty($key) ? $key : 1 }}][type]" id="objExtrFields_{{ isset($key) && !empty($key) ? $key : 1 }}_type" class="form-control">
                   <option value=""></option>
                   <option value="text" {{isset($field['type']) && $field['type'] == 'text' ? 'selected':''}}>Court text</option>
                   <option value="textarea" {{isset($field['type']) && $field['type'] == 'textarea' ? 'selected':''}}>Long text</option>
@@ -67,7 +66,7 @@
               </td>
               <td>
                 <div><label class="control-label">&nbsp;</label></div>
-                <button type="button" class="{{ $class }} pull-right" chm-duplicate><i class="{{$icon}}"></i></button>
+                <button type="button" class="{{ $class }} pull-right extrafields-duplicate-btn" chm-duplicate><i class="{{$icon}}"></i></button>
               </td>
             </tr>
           @endforeach
@@ -81,7 +80,7 @@
 
   $(document).ready(function () {
 
-    $('body').on('chmLineAdded', ['chm-duplicate'], function (event) {
+    $('body').on('click', '.obj-duplicate-btn',function (event) {
       var $row = $('#objectifsTable tr:last').find('[chm-duplicate]').closest('tr')
       var count = $('#objectifsTable').data('count')
       $($row).find('input, select').each(function(key, value) {
@@ -101,7 +100,7 @@
       $row.find('.chm-error-block').remove()
     })
 
-    $('body').on('chmLineAdded', ['chm-duplicate'], function (event) {
+    $('body').on('click', '.extrafields-duplicate-btn',function (event) {
       var $row = $('#extraFieldsTable tr:last').find('[chm-duplicate]').closest('tr')
       var count = $('#extraFieldsTable').data('count')
       $($row).find('input, select').each(function(key, value) {

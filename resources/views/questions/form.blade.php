@@ -26,30 +26,38 @@
     </div>
   </div>
   <div id="addLine-wrap">
-        @foreach($qChoices as $key => $choice)
-          @php($isLastRow = $count == $key)
-          @if ($isLastRow)
-            @php ($class = 'btn btn-success addLine')
-            @php ($icon = 'fa fa-plus')
-          @else
-            @php ($class = 'btn btn-danger deleteLine')
-            @php ($icon = 'fa fa-minus')
-          @endif
-          <div class="form-group">
-          <div class="col-md-2">
-            <label class="control-label">Choix : <span class="badge"> </span></label>
-          </div>
-          <div class="col-md-4">
-            <input type="text" class="form-control" name="subQuestions[{{ isset($choice->id) ? $choice->id : 0  }}][titre]" required="required" value="{{isset($choice->titre) ? $choice->titre : ''}}"/>
-          </div>
-          <div class="col-md-4">
-            <input type="text" class="form-control" name="subQuestions[{{ isset($choice->id) ? $choice->id : 0  }}][label]" required="required" value="{{ isset($choice->options) ? json_decode($choice->options)->label : '' }}"/>
-          </div>
-          <div class="col-md-2">
-            <button type="button" class="{{ $class }} btn-block btn-xs" style="padding: 4px;outline: 0;"><i class="fa {{ $icon }}"></i></button>
-          </div>
-          </div>
-        @endforeach
+    <table class="table mb-10" id="questionChoicesTable" data-count="{{ count($qChoices) }}">
+      <tbody>
+      @php($i = 0)
+      @foreach($qChoices as $key => $choice)
+        @php($i ++)
+        @php($islast = count($qChoices) == $i)
+        @php ($class = $islast ? 'btn btn-success addLine' : 'btn btn-danger deleteLine')
+        @php ($icon = $islast ? 'fa fa-plus' : 'fa fa-minus')
+        <tr>
+          <td width="17%">
+            <label class="control-label">Choix <span class="badge"> </span></label>
+          </td>
+          <td width="80%">
+            <div class="indexContainer">
+              <label for="">Index</label>
+              <input type="text" class="form-control mb20" name="subQuestions[{{ isset($choice->id) ? $choice->id : 1  }}][titre]" id="subQuestions_{{isset($choice->id) ? $choice->id : 1}}_titre" required="required" value="{{isset($choice->titre) ? $choice->titre : ''}}"/>
+            </div>
+            <div class="valueContainer">
+              <label for="">Valeur</label>
+              <input type="text" class="form-control" name="subQuestions[{{ isset($choice->id) ? $choice->id : 1  }}][label]" id="subQuestions_{{isset($choice->id) ? $choice->id : 1}}_label" required="required" value="{{ isset($choice->options) ? json_decode($choice->options)->label : '' }}"/>
+            </div>
+          </td>
+          <td width="3%">
+            <div class="addButton">
+              <label class="control-label">&nbsp;</label>
+              <button type="button" class="{{ $class }} pull-right qchoice-duplicate-btn" chm-duplicate><i class="{{$icon}}"></i></button>
+            </div>
+          </td>
+        </tr>
+      @endforeach
+      </tbody>
+    </table>
   </div>
 
 </div>
@@ -61,36 +69,46 @@
     })
     $('#questionType').trigger('change')
 
-    $(".addLine").click(function(event){
-      event.preventDefault()
-      var copy = $('#addLine-wrap').find(".form-group:first").clone()
-      copy.find('input').val('')
-      var uid = uuidv4()
-      $.each(copy.find('input'), function(){
+    $('body').on('click', '.qchoice-duplicate-btn',function (event) {
+      var $row = $('#questionChoicesTable tr:last').find('[chm-duplicate]').closest('tr')
+      var count = $('#questionChoicesTable').data('count')
+      $($row).find('input, select').each(function(key, value) {
+        var id = $(this).attr('id')
         var name = $(this).attr('name')
-        $(this).attr('name', name.replace('[0]', '['+uid+']'))
+        var index = name.split('subQuestions[').pop().split(']').shift()
+        if (key == 0) {
+          count += 1
+          $('#questionChoicesTable').data('count', count)
+        }
+        name = name.replace('['+ index +']', '['+ count +']')
+        $(this).attr('name', name)
+        id = id.replace('_'+ index + '_', '_'+ count + '_')
+        $(this).attr('id', id)
       })
-      $('#addLine-wrap').append(copy)
+      $row.find('input').removeClass('chm-has-error')
+      $row.find('.chm-error-block').remove()
     })
-    $('#addLine-wrap').on('click', '.deleteLine', function(){
-      $(this).closest('.form-group').remove();
-    });
 
     function showHideQuestionChoices() {
       var value = $('#questionType').val()
       if ($.inArray(value, ['radio', 'checkbox', 'select', 'rate']) !== -1) {
         $('#addLine-wrap').show()
         $('#addLine-wrap #choiceField').prop('required', true).attr('name', 'subQuestions[0]')
+        if (value == 'rate') {
+          $('.valueContainer').show()
+          $('.indexContainer label').show()
+          $('.indexContainer input').addClass('mb20')
+          $('.addButton label').show()
+        } else {
+          $('.valueContainer').hide()
+          $('.indexContainer label').hide()
+          $('.indexContainer input').removeClass('mb20')
+          $('.addButton label').hide()
+        }
       } else {
         $('#addLine-wrap').hide()
         $('#addLine-wrap #choiceField').prop('required', false).attr('name', '')
       }
-    }
-
-    function uuidv4() {
-      return ([1e7]+-1e3).replace(/[018]/g, c =>
-          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-      )
     }
 
   })

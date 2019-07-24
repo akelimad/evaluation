@@ -91,6 +91,7 @@ class ObjectifController extends Controller
     $messages = $validator->errors();
     $total = 0;
     foreach ($request->objectifs as $obj) {
+      if (empty($obj['ponderation'])) continue;
       $total += $obj['ponderation'];
     }
     if ($total != 100) {
@@ -113,6 +114,7 @@ class ObjectifController extends Controller
       $objectif->extra_fields = !empty($extraFields) ? json_encode($extraFields) : null;
       $objectif->save();
       foreach ($request->objectifs as $obj) {
+        if (!isset($obj['subTitle']) || empty($obj['subTitle'])) continue;
         $subObj = new Objectif();
         $subObj->title = $obj['subTitle'];
         $subObj->ponderation = $obj['ponderation'];
@@ -127,6 +129,7 @@ class ObjectifController extends Controller
         $objectif->extra_fields = !empty($extraFields) ? json_encode($extraFields) : null;
         $objectif->save();
         foreach ($request->objectifs as $obj) {
+          if (!isset($obj['subTitle']) || empty($obj['subTitle'])) continue;
           $subObj = new Objectif();
           $subObj->title = $obj['subTitle'];
           $subObj->ponderation = $obj['ponderation'];

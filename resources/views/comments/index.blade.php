@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Commentaires')
 @section('content')
-    <section class="content evaluations">
+    <section class="content comments">
         <div class="row">
             <div class="col-md-12">
                 @if(Session::has('mentor_comment'))
@@ -40,6 +40,7 @@
                                 <div class="box-body">
                                     <div class="direct-chat-messages" style="height: auto;">
                                         <div class="col-md-6">
+                                            <h4 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du collaborateur : {{ $user->name." ".$user->last_name }}</h4>
                                             <div class="direct-chat-msg mb20">
                                                 <div class="direct-chat-info clearfix">
                                                     <span class="direct-chat-name pull-left">{{ $user->name." ".$user->last_name }}</span>
@@ -56,6 +57,7 @@
                                         </div>
                                         @if(($user->id == Auth::user()->id && App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id)) or ($user->id != Auth::user()->id))
                                         <div class="col-md-6">
+                                            <h4 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du mentor : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
                                             <div class="direct-chat-msg right">
                                                 <div class="direct-chat-info clearfix">
                                                     <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>
@@ -88,10 +90,10 @@
                             @endif
                             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
                             @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
-                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-danger"><i class="fa fa-check"></i> Soumettre</buton>
+                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sûr de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-danger"><i class="fa fa-check"></i> Soumettre</buton>
                             @endif
                             @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
-                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sur de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-danger"><i class="fa fa-check"></i> Soumettre</buton>
+                                <buton onclick="return chmModal.confirm('', 'Soumettre ?', 'Attention !! Vous n’aurez plus la possibilité de modifier votre évaluation. Êtes-vous sûr de vouloir soumettre ?','chmEntretien.submission', {eid: {{$e->id}}, user: {{$user->id}}}, {width: 450, btnlabel: 'Soumettre'})" class="btn btn-danger"><i class="fa fa-check"></i> Soumettre</buton>
                             @endif
                             @if(!App\Entretien::answered($e->id, $user->id) && !$comment)
                                 <a onclick="return chmComment.create({eid: {{$e->id}}, uid:{{$user->id}} })" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un commentaire</a>
