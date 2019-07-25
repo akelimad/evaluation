@@ -41,11 +41,11 @@
           <td width="80%">
             <div class="indexContainer">
               <label for="">Index</label>
-              <input type="text" class="form-control mb20" name="subQuestions[{{ isset($choice->id) ? $choice->id : 1  }}][titre]" id="subQuestions_{{isset($choice->id) ? $choice->id : 1}}_titre" required="required" value="{{isset($choice->titre) ? $choice->titre : ''}}"/>
+              <input type="text" class="form-control mb20" name="subQuestions[{{ isset($choice->id) ? $choice->id : 1  }}][titre]" id="subQuestions_{{isset($choice->id) ? $choice->id : 1}}_titre" value="{{isset($choice->titre) ? $choice->titre : ''}}"/>
             </div>
             <div class="valueContainer">
               <label for="">Valeur</label>
-              <input type="text" class="form-control" name="subQuestions[{{ isset($choice->id) ? $choice->id : 1  }}][label]" id="subQuestions_{{isset($choice->id) ? $choice->id : 1}}_label" required="required" value="{{ isset($choice->options) ? json_decode($choice->options)->label : '' }}"/>
+              <input type="text" class="form-control" name="subQuestions[{{ isset($choice->id) ? $choice->id : 1  }}][label]" id="subQuestions_{{isset($choice->id) ? $choice->id : 1}}_label" value="{{ isset($choice->options) ? json_decode($choice->options)->label : '' }}"/>
             </div>
           </td>
           <td width="3%">
