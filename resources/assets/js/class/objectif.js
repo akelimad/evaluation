@@ -28,6 +28,19 @@ export default class chmObjectif {
     })
   }
 
+  static subObjectifForm (params) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/' + params.gid + '/subobjectifs/' + params.subObjId + '/form')}, {
+      form: {
+        class: 'allInputsFormValidation form-horizontal',
+        callback: 'chmObjectif.store'
+      },
+      footer: {
+        label: 'Enregistrer'
+      },
+      width: 700
+    })
+  }
+
   static show (params) {
     window.chmModal.show({type: 'GET', url: window.chmSite.url('user/' + params.id)})
   }

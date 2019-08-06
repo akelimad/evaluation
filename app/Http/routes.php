@@ -135,9 +135,11 @@ Route::delete('entretienObjectif/{id}/delete', 'EntretienObjectifController@dest
 
 Route::get('entretienObjectif/{oid}/groupes', 'ObjectifController@indexAdmin');
 Route::get('entretienObjectif/{oid}/groupes/create', 'ObjectifController@create');
+Route::get('entretienObjectif/{oid}/groupes/{gid}/subobjectifs/{subObjId}/form', 'ObjectifController@subObjectifForm');
 Route::post('entretienObjectif/{oid}/groupes/store', 'ObjectifController@store');
 Route::get('entretienObjectif/{oid}/groupes/{gid}/edit', 'ObjectifController@edit');
 Route::delete('entretienObjectif/{oid}/groupes/{gid}/delete', 'ObjectifController@destroy');
+
 
 Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index');
 Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');

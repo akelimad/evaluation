@@ -17,7 +17,7 @@
                                     <th style="width: 25%">section</th>
                                     <th style="width: 55%">Titre</th>
                                     <th style="width: 10%">Pondération (%)</th>
-                                    <th style="width: 10%" class="text-center">Actions</th>
+                                    <th style="width: 10%" class="">Actions</th>
                                 </tr>
                                 @foreach($objectifs as $key => $objectif)
                                     @if( count($objectif->children)>0 )
@@ -26,7 +26,7 @@
                                             <td> {{ $objectif->title }} </td>
                                             <td></td>
                                             <td></td>
-                                            <td class="text-center">  
+                                            <td class="">
                                                 <a href="javascript:void(0)" onclick="return chmObjectif.edit({oid: {{$oid}}, gid: {{$objectif->id}}})" class="btn-warning icon-fill" title="Modifier les sections d'objectif" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                                 <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer les objectifs ?', 'Etes-vous sur de vouloir supprimer les objectifs de cette section ?','chmObjectif.delete', {oid: {{$oid}} , gid: {{$objectif->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer les objectifs de cette section"> <i class="fa fa-trash"></i> </a>
                                             </td>
@@ -36,7 +36,9 @@
                                             <td></td>
                                             <td> {{ $sub->title ? $sub->title : '---' }}</td>
                                             <td> {{ $sub->ponderation ? $sub->ponderation : '---' }}  </td>
-                                            <td></td>
+                                            <td class="">
+                                              <a href="javascript:void(0)" onclick="return chmObjectif.subObjectifForm({oid: {{$oid}}, gid: {{$objectif->id}},subObjId: {{$sub->id}}})" class="btn-warning icon-fill" title="Ajouter ou modifier les sous sections d'objectif (Optionnel)" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     @endif

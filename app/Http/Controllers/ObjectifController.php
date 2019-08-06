@@ -79,6 +79,22 @@ class ObjectifController extends Controller
   }
 
   /**
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function subObjectifForm($oid, $gid, $subObjId)
+  {
+    ob_start();
+    $subObj = Objectif::find($subObjId);
+    $objectifs = Objectif::where('parent_id', $subObjId)->get()->toArray();
+    $objectifs = $objectifs + ['' => ''];
+    echo view('objectifs.subObjectifForm', compact('oid', 'gid', 'subObj', 'objectifs'));
+    $content = ob_get_clean();
+    return ['title' => 'Gérer les sous objectifs', 'content' => $content];
+  }
+
+  /**
    * Store a newly created resource in storage.
    *
    * @param  \Illuminate\Http\Request $request
@@ -90,6 +106,8 @@ class ObjectifController extends Controller
     $validator = Validator::make($request->all(), $rules);
     $messages = $validator->errors();
     $total = 0;
+    $subObjArray = [];
+    $saveSuccess = false;
     foreach ($request->objectifs as $obj) {
       if (empty($obj['ponderation'])) continue;
       $total += $obj['ponderation'];
@@ -101,31 +119,35 @@ class ObjectifController extends Controller
       return ["status" => "danger", "message" => $messages];
     }
 
-    $extraFields = [];
-    foreach ($request->objExtrFields as $key => $field) {
-      if (empty($field['label'])) continue;
-      $extraFields[$key] = $field;
-    }
-
-    if ($request->gid) {
-      $objectif = Objectif::findOrFail($request->gid);
-      $objectif->children()->delete();
-      $objectif->title = $request->title;
-      $objectif->extra_fields = !empty($extraFields) ? json_encode($extraFields) : null;
-      $objectif->save();
-      foreach ($request->objectifs as $obj) {
-        if (!isset($obj['subTitle']) || empty($obj['subTitle'])) continue;
-        $subObj = new Objectif();
-        $subObj->title = $obj['subTitle'];
-        $subObj->ponderation = $obj['ponderation'];
-        $subObj->parent_id = $objectif->id;
-        $subObj->save();
+    //dd($request->all());
+    if (isset($request->form) && $request->form == 'storeSubObj') {
+      if (!empty($request->objectifs)) {
+        $subObj = Objectif::find($request->subObjId);
+        $subObj->children()->delete();
+        foreach ($request->objectifs as $key => $obj) {
+          if (empty($obj['subTitle']) || empty($obj['ponderation'])) continue;
+          $subObj = new Objectif();
+          $subObj->title = $obj['subTitle'];
+          $subObj->ponderation = $obj['ponderation'];
+          $subObj->entretienobjectif_id = $request->oid;
+          $subObj->parent_id = $request->subObjId;
+          $subObj->save();
+        }
+        $saveSuccess = true;
       }
-    } else {
-      if ($request->objectifs) {
-        $objectif = new Objectif();
+    }
+    if (isset($request->form) && $request->form == 'storeSectionObj') {
+      $extraFields = [];
+      if (isset($request->objExtrFields) and !empty($request->objExtrFields)) {
+        foreach ($request->objExtrFields as $key => $field) {
+          if (empty($field['label'])) continue;
+          $extraFields[$key] = $field;
+        }
+      }
+      if ($request->gid) {
+        $objectif = Objectif::findOrFail($request->gid);
+        $objectif->children()->delete();
         $objectif->title = $request->title;
-        $objectif->entretienobjectif_id = $request->oid;
         $objectif->extra_fields = !empty($extraFields) ? json_encode($extraFields) : null;
         $objectif->save();
         foreach ($request->objectifs as $obj) {
@@ -136,9 +158,27 @@ class ObjectifController extends Controller
           $subObj->parent_id = $objectif->id;
           $subObj->save();
         }
+        $saveSuccess = true;
+      } else {
+        if ($request->objectifs) {
+          $objectif = new Objectif();
+          $objectif->title = $request->title;
+          $objectif->entretienobjectif_id = $request->oid;
+          $objectif->extra_fields = !empty($extraFields) ? json_encode($extraFields) : null;
+          $objectif->save();
+          foreach ($request->objectifs as $obj) {
+            if (!isset($obj['subTitle']) || empty($obj['subTitle'])) continue;
+            $subObj = new Objectif();
+            $subObj->title = $obj['subTitle'];
+            $subObj->ponderation = $obj['ponderation'];
+            $subObj->parent_id = $objectif->id;
+            $subObj->save();
+          }
+          $saveSuccess = true;
+        }
       }
     }
-    if ($objectif->save()) {
+    if ($saveSuccess) {
       return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
     } else {
       return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
@@ -222,7 +262,7 @@ class ObjectifController extends Controller
           ]);
         } else if ($mentorHasObjectif) {
           Objectif_user::where('objectif_id', $id)->where('user_id', $user->id)->where('entretien_id', $request->entretien_id)->where('mentor_id', $mentor_id)->update([
-            'userNote' => isset($array['userNote']) ? $array['userNote'] : "",
+            'userNote' => isset($array['userNote']) ? $array['userNote'] : 0,
             'userAppreciation' => isset($array['userAppr']) ? $array['userAppr'] : "",
             'mentor_extra_fields_data' => $mentor_extra_fields_data,
           ]);
@@ -230,7 +270,7 @@ class ObjectifController extends Controller
           $user->objectifs()->attach([$id =>
             [
               'entretien_id' => $request->entretien_id,
-              'userNote' => isset($array['userNote']) ? $array['userNote'] : "",
+              'userNote' => isset($array['userNote']) ? $array['userNote'] : 0,
               'realise' => isset($array['realise']) ? $array['realise'] : "",
               'ecart' => isset($array['ecart']) ? $array['ecart'] : "",
               'userAppreciation' => isset($array['userAppr']) ? $array['userAppr'] : "",
