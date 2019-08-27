@@ -20,6 +20,9 @@
         @php ($icon = $islast ? 'fa fa-plus' : 'fa fa-minus')
         <tr>
           <td>
+            <i class="fa fa-minus"></i>
+          </td>
+          <td>
             <label class="control-label">Titre du critère </label>
             <input type="text" class="form-control subTitle" id="objectifs_{{ isset($o['id']) ? $o['id'] : 1 }}_subTitle" name="objectifs[{{ isset($o['id']) ? $o['id'] : 1 }}][subTitle]" placeholder="" value="{{isset($o['title']) ? $o['title'] :''}}" placeholder="ex: Travail en équipe"/>
           </td>

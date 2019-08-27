@@ -26,9 +26,12 @@
     width: 50%;
   }
   .col-md-10 {
-    width: 83.33333333%;
+     width: 83.33333333%;
   }
-  .col-md-2, .col-md-6, .col-md-10 {
+  .col-md-12 {
+    width: 100%;
+  }
+  .col-md-2, .col-md-6, .col-md-10, .col-md-12 {
     float: left;
   }
   .section-title {
@@ -66,6 +69,15 @@
   }
   tr.total {
     background-color: greenyellow;
+  }
+  .pl-30 {
+    padding-left: 30px !important;
+  }
+  .sousTotal {
+    background: #e4cece;
+  }
+  .total {
+    background: #f39c12;
   }
 </style>
 {{-- ****************** Header ********************** --}}
@@ -214,92 +226,108 @@
 
 {{-- ****************** Objectifs ********************** --}}
 <div class="mt-20"><p class="section-title">Objectifs</p></div>
-@if(!empty($objectifs)>0)
-  <table class="table">
-    <tr>
-      <th width="25%">Critères d'évaluation</th>
-      <th class="text-center">Pondération (%)</th>
-      <th width="15%">Mentor Notation (%)</th>
-      <th>Mentor Appreciation</th>
-    </tr>
-    @php($c = 0)
-    @php($userTotal = 0)
-    @php($mentorTotal = 0)
-    @foreach($objectifs as $objectif)
-      @php($c += 1)
-      <tr>
-        <td colspan="4" class="text-center">{{ $objectif->title }}</td>
-      </tr>
-      @php($usersousTotal = 0)
-      @php($mentorsousTotal = 0)
-      @php($sumPonderation = 0)
-      @foreach($objectif->children as $sub)
-        @php( $sumPonderation += $sub->ponderation )
-        @if($user->id == Auth::user()->id )
-          @if(App\Objectif::getObjectif($e->id,$user->id, $sub->id))
-            @php( $usersousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote * $sub->ponderation )
-          @endif
-        @else
-          @if(App\Objectif::getObjectif($e->id,$user->id, $sub->id))
-            @php( $usersousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote * $sub->ponderation )
-          @endif
-          @if(App\Objectif::getObjectif($e->id,$user->id, $sub->id))
-            @php( $mentorsousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote * $sub->ponderation )
-          @endif
-        @endif
+@if(!empty($objectifs))
+  <div class="box-body">
+    <h4 class="alert alert-info p-5">Mentor : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
+    <div class="table-responsive">
+      <table class="table table-hover">
         <tr>
-          <td>
-            {{ $sub->title }}
-          </td>
-          <td>
-            {{ $sub->ponderation }}
-          </td>
-          <td>
-            {{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}
-          </td>
-          <td>
-            {{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '---' }}
-          </td>
+          <th width="20%">Critères d'évaluation</th>
+          <th>Notation (%)</th>
+          <th>Apréciation</th>
+          <th class="text-center">Pondération (%)</th>
         </tr>
-      @endforeach
-      @if (!empty($objectif->extra_fields))
-        @foreach (json_decode($objectif->extra_fields) as $key => $field)
+        @foreach($objectifs as $objectif)
           <tr>
-            <td>
-              {{ $field->label }}
+            <td colspan="4" class="objectifTitle text-center">
+              {{ $objectif->title }}
             </td>
+          </tr>
+          @foreach($objectif->children as $sub)
+            <tr class=" {{ count($sub->children) <= 0 ? 'objectifRow' : '' }}" id="{{ count($sub->children) <= 0 ? 'mentorObjectifRow-' . $sub->id : '' }}" data-mentorobjrow="{{ $sub->id }}">
+              <td style="max-width: 6%">{{ $sub->title }}</td>
+              <td class="criteres text-center slider-note">
+                @if (count($sub->children) <= 0)
+                  <span>{{ App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorNote }}</span>
+                @endif
+              </td>
+              <td>
+                @if (count($sub->children) <= 0)
+                  <p>{{ App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorAppreciation }}</p>
+                @endif
+              </td>
+              <td class="text-center">
+                <span class="ponderation">{{ $sub->ponderation }}</span>
+              </td>
+            </tr>
+            @if (count($sub->children) > 0)
+              @foreach($sub->children as $subObj)
+                <tr class="subObjectifRow">
+                  <td class="pl-30">&#8211; {{ $subObj->title }}</td>
+                  <td class="criteres text-center slider-note">
+                    <span>{{ App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorNote }}</span>
+                  </td>
+                  <td>
+                    <p>{{ App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorAppreciation }}</p>
+                  </td>
+                  <td><span class="ponderation">{{ $subObj->ponderation }}</span></td>
+                </tr>
+              @endforeach
+              <tr style="background: #cae5f1;">
+                <td>Sous total</td>
+                <td colspan="3">
+                  <span class="badge badge-success pull-right">{{ App\Objectif::getObjSubTotal($e, $user, $user->parent, 'mentor', $sub->id) }}</span>
+                </td>
+              </tr>
+            @endif
+            @if (count($sub->children) <= 0)
+              <tr style="background: #cae5f1;">
+                <td>Sous total</td>
+                <td colspan="3">
+                  <span class="badge badge-success pull-right">{{ App\Objectif::getObjSubTotal($e, $user, $user->parent, 'mentor', $sub->id) }}</span>
+                </td>
+                </td>
+              </tr>
+            @endif
+          @endforeach
+          @if (!empty($objectif->extra_fields))
+            @foreach (json_decode($objectif->extra_fields) as $key => $field)
+              <tr>
+                <td>
+                  {{ $field->label }}
+                </td>
+                <td colspan="3">
+                  @if ($field->type == 'text')
+                    <p>{{ App\Objectif::getExtraFieldData($e->id, $user, $user->prent, $sub->id, $key) }}</p>
+                  @elseif ($field->type == 'textarea')
+                    <p>{{ App\Objectif::getExtraFieldData($e->id, $user, $user->parent, $sub->id, $key) }}</p>
+                  @endif
+                </td>
+              </tr>
+            @endforeach
+          @endif
+          <tr class="sousTotal">
             <td colspan="3">
-              @if ($field->type == 'text')
-                <span>{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key, false) }}</span>
-              @elseif ($field->type == 'textarea')
-                <span>{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key, false) }}</span>
-              @endif
+              <span>Sous total de la section (%)</span>
+            </td>
+            <td>
+              <span class="badge badge-success pull-right">{{ App\Objectif::getSectionSubTotal($e, $user, $user->parent, 'mentor', $objectif->id) }}</span>
             </td>
           </tr>
         @endforeach
-      @endif
-      <tr class="sous-total">
-        <td>Sous-total du Mentor (%)</td>
-        <td colspan="3" class="sousTotal">
-          <span class="badge badge-success pull-right">
-            {{ $sumPonderation > 0 ? round($mentorsousTotal / $sumPonderation) : 0 }}
-          </span>
-        </td>
-      </tr>
-      @php( $userTotal += App\Objectif::cutNum($usersousTotal/$sumPonderation))
-      @php( $mentorTotal += App\Objectif::cutNum($mentorsousTotal/$sumPonderation))
-    @endforeach
-    <tr class="total">
-      <td>Total du Mentor (%)</td>
-      <td colspan="3">
-        <span class="badge badge-success pull-right">
-          {{ $c > 0 ? round($mentorTotal / $c) : 0 }}
-        </span>
-      </td>
-    </tr>
-  </table>
+        <tr class="total">
+          <td colspan="3" valign="middle">
+            <span>TOTAL DE L'ÉVALUATION (%)</span>
+          </td>
+          <td valign="middle">
+            <span class="btn-default pull-right badge">{{ App\Objectif::getTotalNote($e, $user, $user->parent, 'mentor') }}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 @else
-  @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée dans la table ... !!" ])
+  @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
 @endif
 
 {{-- ****************** Commentaires ********************** --}}

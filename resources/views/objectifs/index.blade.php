@@ -15,7 +15,7 @@
                   <div class="row">
                     <div class="{{ $user->id != Auth::user()->id ? 'col-md-6':'col-md-12' }}">
                       @if ($user->id != Auth::user()->id)
-                      <h4 class="alert alert-info p-5">{{ $user->name." ".$user->last_name }}</h4>
+                        <h4 class="alert alert-info p-5">{{ $user->name." ".$user->last_name }}</h4>
                       @endif
                       <div class="table-responsive">
                         <form action="{{url('objectifs/updateNoteObjectifs')}}">
@@ -26,33 +26,24 @@
                             <th width="20%">Critères d'évaluation</th>
                             <th>Notation (%)</th>
                             <th>Apréciation</th>
-                            <th>Pondération (%)</th>
+                            <th class="text-center">Pondération (%)</th>
                           </tr>
-                          @php($c = 0)
-                          @php($userTotal = 0)
                           @foreach($objectifs as $objectif)
-                            @php($c += 1)
                             <tr>
                               <td colspan="4" class="objectifTitle text-center">
                                 {{ $objectif->title }}
                               </td>
                             </tr>
-                            @php($usersousTotal = 0)
-                            @php($sumPonderation = 0)
                             @foreach($objectif->children as $sub)
-                              @php ($sumPonderation += $sub->ponderation)
-                              @if (App\Objectif::getObjectif($e->id,$user->id, $sub->id))
-                                @php ($usersousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote * $sub->ponderation)
-                              @endif
                               <tr class=" {{ count($sub->children) <= 0 ? 'objectifRow' : '' }}" id="{{ count($sub->children) <= 0 ? 'userObjectifRow-' . $sub->id : '' }}" data-userobjrow="{{ $sub->id }}">
                                 <td style="max-width: 6%">{{ $sub->title }}</td>
-                                <td class="criteres text-center slider-note">
+                                <td class="criteres text-center slider-note {{$user->id != Auth::user()->id ? 'disabled':''}}">
                                   @if (count($sub->children) <= 0)
                                     <input type="text" class="slider userNote userObjSection-{{ $sub->id }}"
                                            data-objectif="{{ $sub->id }}" data-section="{{ $objectif->id }}" required=""
                                            name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider"
                                            data-slider-min="0" data-slider-max="200" data-slider-step="1"
-                                           data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}"
+                                           data-slider-value="{{App\Objectif::getObjectif($e->id, $user, null, $sub->id) ? App\Objectif::getObjectif($e->id, $user, null, $sub->id)->userNote : '0' }}"
                                            data-slider-tooltip="always">
                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]"
                                            value="">
@@ -62,7 +53,7 @@
                                   @if (count($sub->children) <= 0)
                                     <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]"
                                            class="form-control"
-                                           value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}"
+                                           value="{{App\Objectif::getObjectif($e->id, $user, null, $sub->id) ? App\Objectif::getObjectif($e->id, $user, null, $sub->id)->userAppreciation : '' }}"
                                            placeholder="Révision de l'objectif ..."
                                            title="Révision de l'objectif (optionnel) + date de la révision"
                                            data-toggle="tooltip">
@@ -73,23 +64,21 @@
                                 </td>
                               </tr>
                               @if (count($sub->children) > 0)
-                                @php($userSubObjTotal = 0)
                                 @foreach($sub->children as $subObj)
-                                  @php($userSubObjTotal += App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->userNote * $subObj->ponderation)
                                   <tr class="subObjectifRow">
                                     <td class="pl-30"><i class="fa fa-minus"></i> {{ $subObj->title }}</td>
-                                    <td>
+                                    <td class="{{$user->id != Auth::user()->id ? 'disabled':''}}">
                                       <input type="text" class="slider userNote userSubObjSection-{{ $sub->id }}" data-objectif="{{ $sub->id }}" data-section="{{ $objectif->id }}" required="" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][userNote]" data-provide="slider"
                                              data-slider-min="0"
                                              data-slider-max="200"
                                              data-slider-step="1"
-                                             data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->userNote : '0' }}"
+                                             data-slider-value="{{App\Objectif::getObjectif($e->id, $user, null, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, null, $subObj->id)->userNote : '0' }}"
                                              data-slider-tooltip="always">
                                     </td>
                                     <td>
                                       <input type="text" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][userAppr]"
                                              class="form-control"
-                                             value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->userAppreciation : '' }}"
+                                             value="{{App\Objectif::getObjectif($e->id, $user, null, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, null, $subObj->id)->userAppreciation : '' }}"
                                              placeholder="Révision de l'objectif ..."
                                              title="Révision de l'objectif (optionnel) + date de la révision"
                                              data-toggle="tooltip">
@@ -122,9 +111,9 @@
                                   </td>
                                   <td colspan="4">
                                     @if ($field->type == 'text')
-                                      <input type="text" name="user_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key) }}">
+                                      <input type="text" name="user_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user, null, $sub->id, $key) }}">
                                     @elseif ($field->type == 'textarea')
-                                      <textarea name="user_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key) }}</textarea>
+                                      <textarea name="user_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id, $user, null, $sub->id, $key) }}</textarea>
                                     @endif
                                   </td>
                                 </tr>
@@ -136,7 +125,6 @@
                                 <span class="badge badge-success pull-right userSubTotalSection" id="userSubTotalSection-{{$objectif->id}}">0</span>
                               </td>
                             </tr>
-                            @php( $userTotal += App\Objectif::cutNum($usersousTotal/$sumPonderation))
                           @endforeach
                           <tr>
                             <td colspan="4" class="btn-warning" valign="middle">
@@ -164,24 +152,16 @@
                                 <th width="20%">Critères d'évaluation</th>
                                 <th>Notation (%)</th>
                                 <th>Apréciation</th>
-                                <th>Pondération (%)</th>
+                                <th class="text-center">Pondération (%)</th>
                               </tr>
-                              @php($c = 0)
-                              @php($mentorTotal = 0)
                               @foreach($objectifs as $objectif)
-                                @php($c += 1)
                                 <input type="hidden" name="parentObjectif[]" value="{{$objectif->id}}">
                                 <tr>
                                   <td colspan="4" class="objectifTitle text-center">
                                     {{ $objectif->title }}
                                   </td>
                                 </tr>
-                                @php($mentorsousTotal = 0)
-                                @php($sumPonderation = 0)
                                 @foreach($objectif->children as $sub)
-
-                                  @php( $sumPonderation += $sub->ponderation )
-                                  @php( $mentorsousTotal += App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote * $sub->ponderation )
                                   <tr class=" {{ count($sub->children) <= 0 ? 'objectifRow' : '' }}" id="{{ count($sub->children) <= 0 ? 'mentorObjectifRow-' . $sub->id : '' }}" data-mentorobjrow="{{ $sub->id }}">
                                     <td style="max-width: 6%">{{ $sub->title }}</td>
                                     <td class="criteres text-center slider-note">
@@ -190,7 +170,7 @@
                                          data-slider-min="0"
                                          data-slider-max="200"
                                          data-slider-step="1"
-                                         data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}"
+                                         data-slider-value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorNote : '0' }}"
                                          data-slider-tooltip="always">
                                       @endif
                                     </td>
@@ -198,7 +178,7 @@
                                       @if (count($sub->children) <= 0)
                                         <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppr]"
                                              class="form-control"
-                                             value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '' }}"
+                                             value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorAppreciation : '' }}"
                                              placeholder="Révision de l'objectif ..."
                                              title="Révision de l'objectif (optionnel) + date de la révision"
                                              data-toggle="tooltip">
@@ -209,9 +189,7 @@
                                     </td>
                                   </tr>
                                   @if (count($sub->children) > 0)
-                                    @php($mentorSubObjTotal = 0)
                                     @foreach($sub->children as $subObj)
-                                      @php($mentorSubObjTotal += App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->mentorNote * $subObj->ponderation)
                                       <tr class="subObjectifRow">
                                         <td class="pl-30"><i class="fa fa-minus"></i> {{ $subObj->title }}</td>
                                         <td class="criteres text-center slider-note">
@@ -220,13 +198,13 @@
                                                  name="objectifs[{{$objectif->id}}][{{$subObj->id}}][mentorNote]"
                                                  data-provide="slider" data-slider-min="0" data-slider-max="200"
                                                  data-slider-step="1"
-                                                 data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->mentorNote : '0' }}"
+                                                 data-slider-value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorNote : '0' }}"
                                                  data-slider-tooltip="always">
                                         </td>
                                         <td>
                                           <input type="text" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][mentorAppr]"
                                                  class="form-control"
-                                                 value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->mentorAppreciation : '' }}"
+                                                 value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorAppreciation : '' }}"
                                                  placeholder="Révision de l'objectif ..."
                                                  title="Révision de l'objectif (optionnel) + date de la révision"
                                                  data-toggle="tooltip">
@@ -259,9 +237,9 @@
                                       </td>
                                       <td colspan="4">
                                         @if ($field->type == 'text')
-                                          <input type="text" name="mentor_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key, false) }}">
+                                          <input type="text" name="mentor_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user, $user->parent, $sub->id, $key, false) }}">
                                         @elseif ($field->type == 'textarea')
-                                          <textarea name="mentor_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key, false) }}</textarea>
+                                          <textarea name="mentor_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id, $user, $user->parent, $sub->id, $key, false) }}</textarea>
                                         @endif
                                       </td>
                                     </tr>
@@ -275,7 +253,6 @@
                                     <span class="badge badge-success pull-right mentorSubTotalSection" id="mentorSubTotalSection-{{$objectif->id}}">0</span>
                                   </td>
                                 </tr>
-                                @php( $mentorTotal += App\Objectif::cutNum($mentorsousTotal/$sumPonderation))
                               @endforeach
                               <tr>
                                 <td colspan="3" class="btn-warning"
@@ -315,20 +292,23 @@
 @endsection
 
 @section('javascript')
-    <script>
-      $(document).ready(function () {
-        // Calculate sub total & total in real-time
-        var userType
-        @if ($user->id == Auth::user()->id)
-          userType = 'user'
-        @else
-          userType = 'mentor'
-        @endif
+  <script>
+    $(document).ready(function () {
+      // Calculate sub total & total in real-time
+      var userTypes
+      @if ($user->id == Auth::user()->id)
+        userTypes = ['user']
+      @else
+        userTypes = ['user', 'mentor']
+      @endif
+      $.each(userTypes, function (i, userType) {
         $('.slider').on('change', function (ev) {
           var objectifId = $(this).data('objectif')
           var sectionId = $(this).data('section')
           var subObjectifs = $('.'+ userType +'SubObjSection-' + objectifId)
           var total = sectionTotal = SubTotalObjectif = SubTotalSubObjectif = note = ponderation = objPonderation = 0
+
+          // calculate sub total of objectif that have own sub objectifs
           $.each(subObjectifs, function (i, el) {
             note = $(el).closest('.subObjectifRow').find('.' + userType + 'Note').val()
             ponderation = $(el).closest('.subObjectifRow').find('.ponderation').text()
@@ -339,6 +319,7 @@
           SubTotalSubObjectif = Math.round((SubTotalSubObjectif / 100) * objPonderation)
           $('#'+ userType +'SubTotalSubObjectif-' + objectifId).text(SubTotalSubObjectif)
 
+          // calculate sub total of objectif that have'nt sub objectifs
           $.each($('#' + userType + 'ObjectifRow-' + objectifId), function (i, el) {
             note = $(el).closest('.objectifRow').find('.' + userType + 'Note').val()
             ponderation = $(el).closest('.objectifRow').find('.ponderation').text()
@@ -347,6 +328,7 @@
           SubTotalObjectif = Math.round(SubTotalObjectif)
           $('#'+ userType +'SubTotalObjectif-' + objectifId).text(SubTotalObjectif)
 
+          // calculate sub total of section
           var countObjs = 0
           $.each($('.'+ userType +'SubTotalObjectif-' + sectionId), function (i, el) {
             countObjs += 1
@@ -355,17 +337,19 @@
           sectionTotal = sectionTotal / countObjs
           $('#' + userType + 'SubTotalSection-' + sectionId).text(Math.round(sectionTotal))
 
+          // calculate total note of evaluation
           var countSections = 0
-          $.each($('.userSubTotalSection'), function (i, el) {
+          $.each($('.' + userType + 'SubTotalSection'), function (i, el) {
             countSections += 1
             total += parseInt($(el).text())
           })
           total = total / countSections
           $('.' + userType + 'TotalNote').text(Math.round(total))
         })
-        $('.slider').trigger('change')
       })
-    </script>
-  @endsection
+      $('.slider').trigger('change')
+    })
+  </script>
+@endsection
 
 

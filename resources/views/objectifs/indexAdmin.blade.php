@@ -34,7 +34,12 @@
                                         @foreach( $objectif->children as $key => $sub )
                                         <tr>
                                             <td></td>
-                                            <td> {{ $sub->title ? $sub->title : '---' }}</td>
+                                            <td>
+                                              {{ $sub->title ? $sub->title : '---' }}
+                                              @if (count($sub->children) > 0)
+                                                <a href="javascript:void(0)" onclick="return chmObjectif.subObjectifForm({oid: {{$oid}}, gid: {{$objectif->id}},subObjId: {{$sub->id}}})" title="Contient des sous objectifs"> <i class="fa fa-info-circle"></i></a>
+                                              @endif
+                                            </td>
                                             <td> {{ $sub->ponderation ? $sub->ponderation : '---' }}  </td>
                                             <td class="">
                                               <a href="javascript:void(0)" onclick="return chmObjectif.subObjectifForm({oid: {{$oid}}, gid: {{$objectif->id}},subObjId: {{$sub->id}}})" class="btn-warning icon-fill" title="Ajouter ou modifier les sous sections d'objectif (Optionnel)" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>
