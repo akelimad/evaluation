@@ -203,7 +203,7 @@
                                            data-objectif="{{ $sub->id }}" data-section="{{ $objectif->id }}" required=""
                                            name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider"
                                            data-slider-min="0" data-slider-max="200" data-slider-step="1"
-                                           data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userNote : '0' }}"
+                                           data-slider-value="{{App\Objectif::getObjectif($e->id, $user, null, $sub->id) ? App\Objectif::getObjectif($e->id, $user, null, $sub->id)->userNote : '0' }}"
                                            data-slider-tooltip="always">
                                     <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]"
                                            value="">
@@ -213,7 +213,7 @@
                                   @if (count($sub->children) <= 0)
                                     <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]"
                                            class="form-control"
-                                           value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->userAppreciation : '' }}"
+                                           value="{{App\Objectif::getObjectif($e->id, $user, null, $sub->id) ? App\Objectif::getObjectif($e->id, $user, null, $sub->id)->userAppreciation : '' }}"
                                            placeholder="Révision de l'objectif ..."
                                            title="Révision de l'objectif (optionnel) + date de la révision"
                                            data-toggle="tooltip">
@@ -232,13 +232,13 @@
                                              data-slider-min="0"
                                              data-slider-max="200"
                                              data-slider-step="1"
-                                             data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->userNote : '0' }}"
+                                             data-slider-value="{{App\Objectif::getObjectif($e->id, $user, null, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, null, $subObj->id)->userNote : '0' }}"
                                              data-slider-tooltip="always">
                                     </td>
                                     <td>
                                       <input type="text" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][userAppr]"
                                              class="form-control"
-                                             value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->userAppreciation : '' }}"
+                                             value="{{App\Objectif::getObjectif($e->id, $user, null, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, null, $subObj->id)->userAppreciation : '' }}"
                                              placeholder="Révision de l'objectif ..."
                                              title="Révision de l'objectif (optionnel) + date de la révision"
                                              data-toggle="tooltip">
@@ -271,9 +271,9 @@
                                   </td>
                                   <td colspan="4">
                                     @if ($field->type == 'text')
-                                      <input type="text" name="user_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key) }}">
+                                      <input type="text" name="user_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user, null, $sub->id, $key) }}">
                                     @elseif ($field->type == 'textarea')
-                                      <textarea name="user_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key) }}</textarea>
+                                      <textarea name="user_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id, $user, null, $sub->id, $key) }}</textarea>
                                     @endif
                                   </td>
                                 </tr>
@@ -285,7 +285,6 @@
                                 <span class="badge badge-success pull-right userSubTotalSection" id="userSubTotalSection-{{$objectif->id}}">0</span>
                               </td>
                             </tr>
-                            @php( $userTotal += App\Objectif::cutNum($usersousTotal/$sumPonderation))
                           @endforeach
                           <tr>
                             <td colspan="4" class="btn-warning" valign="middle">
@@ -323,7 +322,7 @@
                                              data-slider-min="0"
                                              data-slider-max="200"
                                              data-slider-step="1"
-                                             data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorNote : '0' }}"
+                                             data-slider-value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorNote : '0' }}"
                                              data-slider-tooltip="always">
                                     @endif
                                   </td>
@@ -331,7 +330,7 @@
                                     @if (count($sub->children) <= 0)
                                       <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppr]"
                                              class="form-control"
-                                             value="{{App\Objectif::getObjectif($e->id,$user->id, $sub->id) ? App\Objectif::getObjectif($e->id,$user->id, $sub->id)->mentorAppreciation : '' }}"
+                                             value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorAppreciation : '' }}"
                                              placeholder="Révision de l'objectif ..."
                                              title="Révision de l'objectif (optionnel) + date de la révision"
                                              data-toggle="tooltip">
@@ -351,13 +350,13 @@
                                                name="objectifs[{{$objectif->id}}][{{$subObj->id}}][mentorNote]"
                                                data-provide="slider" data-slider-min="0" data-slider-max="200"
                                                data-slider-step="1"
-                                               data-slider-value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->mentorNote : '0' }}"
+                                               data-slider-value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorNote : '0' }}"
                                                data-slider-tooltip="always">
                                       </td>
                                       <td>
                                         <input type="text" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][mentorAppr]"
                                                class="form-control"
-                                               value="{{App\Objectif::getObjectif($e->id,$user->id, $subObj->id) ? App\Objectif::getObjectif($e->id,$user->id, $subObj->id)->mentorAppreciation : '' }}"
+                                               value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorAppreciation : '' }}"
                                                placeholder="Révision de l'objectif ..."
                                                title="Révision de l'objectif (optionnel) + date de la révision"
                                                data-toggle="tooltip">
@@ -390,9 +389,9 @@
                                     </td>
                                     <td colspan="4">
                                       @if ($field->type == 'text')
-                                        <input type="text" name="mentor_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user->id, $sub->id, $key, false) }}">
+                                        <input type="text" name="mentor_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user, $user->parent, $sub->id, $key, false) }}">
                                       @elseif ($field->type == 'textarea')
-                                        <textarea name="mentor_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id,$user->id, $sub->id, $key, false) }}</textarea>
+                                        <textarea name="mentor_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id, $user, $user->parent, $sub->id, $key, false) }}</textarea>
                                       @endif
                                     </td>
                                   </tr>
@@ -406,7 +405,6 @@
                                   <span class="badge badge-success pull-right mentorSubTotalSection" id="mentorSubTotalSection-{{$objectif->id}}">0</span>
                                 </td>
                               </tr>
-                              @php( $mentorTotal += App\Objectif::cutNum($mentorsousTotal/$sumPonderation))
                             @endforeach
                             <tr>
                               <td colspan="3" class="btn-warning"

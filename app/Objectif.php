@@ -100,12 +100,12 @@ class Objectif extends Model
         return $objectifs;
     }
 
-    public static function getObjSubTotal($e, $user, $mentor, $profil, $objId)
+    public static function getObjSubTotal($e, $user, $mentor, $profil, $subObjId)
     {
         $objSubTotal = $note = $ponderation = 0;
         $profilNote = $profil.'Note';
-        $objectif_user = self::getObjectif($e->id, $user, $mentor, $objId);
-        $subObj = Objectif::find($objectif_user->objectif_id);
+        $subObj = Objectif::find($subObjId);
+        if (is_null($subObj)) return 0;
         if (count($subObj->children) > 0) {
             foreach ($subObj->children as $sub) {
                 $note = self::getObjectif($e->id, $user, $mentor, $sub->id)->$profilNote;
@@ -115,7 +115,7 @@ class Objectif extends Model
             $objSubTotal = $objSubTotal / 100;
             $objSubTotal = $objSubTotal * ($subObj->ponderation / 100);
         } else {
-            $note = $objectif_user->$profilNote;
+            $note = self::getObjectif($e->id, $user, $mentor, $subObjId)->$profilNote;
             $ponderation = $subObj->ponderation;
             $objSubTotal = $note * ($ponderation / 100);
         }
