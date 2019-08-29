@@ -340,7 +340,7 @@
     </tr>
     <tr>
       <td width="20%">Commentaire du manager :</td>
-      <td>{{ $comment->mentorComment or '---' }}</td>
+      <td>{{ isset($comment->mentorComment) ? $comment->mentorComment : '' }}</td>
     </tr>
     <tr>
       <td width="20%">Signature du manager :</td>
@@ -348,7 +348,7 @@
     </tr>
     <tr>
       <td width="20%">Date de la revue :</td>
-      <td>{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d.m.Y') : '' }}</td>
+      <td>{{ isset($comment->mentor_updated_at) ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d.m.Y') : '' }}</td>
     </tr>
   </tbody>
 </table>
@@ -360,7 +360,7 @@
   </tr>
   <tr>
     <td width="20%">Commentaire du collaborateur :</td>
-    <td>{{ $comment->userComment or '---' }}</td>
+    <td>{{ isset($comment->userComment) ? $comment->userComment : '' }}</td>
   </tr>
   <tr>
     <td width="20%">Signature du collaborateur :</td>
@@ -368,7 +368,7 @@
   </tr>
   <tr>
     <td width="20%">Date de la revue :</td>
-    <td>{{ Carbon\Carbon::parse($comment->created_at)->format('d.m.Y')}}</td>
+    <td>{{ isset($comment->created_at) ? Carbon\Carbon::parse($comment->created_at)->format('d.m.Y') : '' }}</td>
   </tr>
   </tbody>
 </table>
