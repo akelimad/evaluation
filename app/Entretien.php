@@ -151,5 +151,19 @@ class Entretien extends Model
         return $evaluations;
     }
 
+    public static function notationBySectionOrItem($entretien_id)
+    {
+        $entretienEvalSurveyId = Evaluation::surveyId($entretien_id, 1);
+        $survey = Survey::find($entretienEvalSurveyId);
+        $c = 0;
+        foreach ($survey->groupes as $group) {
+            if (!empty($group->notation_type)) {
+                $c += 1;
+            }
+        }
+
+        return $c >= 1;
+    }
+
 
 }
