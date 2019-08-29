@@ -87,7 +87,7 @@
                                   </tr>
                                 @endforeach
                                 <tr style="background: #cae5f1;">
-                                  <td>Sous total</td>
+                                  <td>Sous total (%)</td>
                                   <td colspan="3">
                                     <span class="badge badge-success pull-right userSubTotalObjectif userSubTotalObjectif-{{ $objectif->id }}" id="userSubTotalSubObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
                                   </td>
@@ -95,7 +95,7 @@
                               @endif
                               @if (count($sub->children) <= 0)
                                 <tr style="background: #cae5f1;">
-                                  <td>Sous total</td>
+                                  <td>Sous total (%)</td>
                                   <td colspan="3">
                                     <span class="badge badge-success pull-right userSubTotalObjectif userSubTotalObjectif-{{ $objectif->id }}" id="userSubTotalObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
                                   </td>
@@ -213,7 +213,7 @@
                                       </tr>
                                     @endforeach
                                     <tr style="background: #cae5f1;">
-                                      <td>Sous total</td>
+                                      <td>Sous total (%)</td>
                                       <td colspan="3">
                                         <span class="badge badge-success pull-right mentorSubTotalObjectif mentorSubTotalObjectif-{{ $objectif->id }}" id="mentorSubTotalSubObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
                                       </td>
@@ -221,7 +221,7 @@
                                   @endif
                                   @if (count($sub->children) <= 0)
                                     <tr style="background: #cae5f1;">
-                                      <td>Sous total</td>
+                                      <td>Sous total (%)</td>
                                       <td colspan="3">
                                         <span class="badge badge-success pull-right mentorSubTotalObjectif mentorSubTotalObjectif-{{ $objectif->id }}" id="mentorSubTotalObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
                                       </td>

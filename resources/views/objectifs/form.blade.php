@@ -9,7 +9,7 @@
            value="{{ isset($groupe) ? $groupe->title : '' }}">
   </div>
   <div id="addLine-wrap">
-    <table class="table mb-10" id="objectifsTable" data-count="0">
+    <table class="table mb-10" id="objectifsTable" data-count="{{ count($objectif) }}">
         <tbody>
         @php($i = 0)
           @foreach($objectif as $key => $o)
