@@ -47,7 +47,7 @@ class GroupeController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'    => 'required|min:2|max:50|regex:/^[a-zA-Z0-9\s]+$/',
+            'name'    => 'required|min:2|max:50|regex:/^[a-zA-Z0-9À-ú\s\-_"°^\'’.\s]+$/',
         ]);
         if ($validator->fails()) {
             return ["status" => "danger", "message" => $validator->errors()->all()];

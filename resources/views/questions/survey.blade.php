@@ -28,38 +28,28 @@
                   @forelse($g->questions as $q)
                     <div class="form-group">
                       @if(in_array($q->type, ['text', 'textarea', 'radio']))
-                        <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
-                               class="notation" min="1" max="{{App\Setting::get('max_note')}}" style="display:none;">
+                        <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="{{App\Setting::get('max_note')}}" style="display:none;">
                       @endif
                       @if($q->parent == null)
                         <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                       @endif
                       @if($q->type == 'text')
-                        <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" class="form-control"
-                               value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}"
-                               required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>
+                        <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>
                       @elseif($q->type == 'textarea')
-                        <textarea name="answers[{{$q->id}}][ansr]" class="form-control"
-                                  required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</textarea>
+                        <textarea name="answers[{{$q->id}}][ansr]" class="form-control" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</textarea>
                       @elseif($q->type == "checkbox")
-                        <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
-                               class="notation" min="1" max="{{App\Setting::get('max_note')}}"
-                               @if($g->notation_type == 'section')style="display:none;"@endif>
-                        <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au
-                          moins un élement</p>
+                        <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"  class="notation" min="1" max="{{App\Setting::get('max_note')}}" @if($g->notation_type == 'section')style="display:none;"@endif>
+                        <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                         @foreach($q->children as $child)
                           <div class="survey-checkbox">
-                            <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr][]" id="{{$child->titre}}"
-                                   value="{{$child->id}}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }}>
+                            <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }}>
                             <label for="{{$child->titre}}">{{ $child->titre }}</label>
                           </div>
                         @endforeach
                         <div class="clearfix"></div>
                       @elseif($q->type == "radio")
                         @foreach($q->children as $child)
-                          <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}"
-                                 value="{{$child->id}}"
-                                 required {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}>
+                          <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}>
                           <label for="{{$child->id}}">{{ $child->titre }}</label>
                         @endforeach
                       @elseif($q->type == "slider")
@@ -85,6 +75,31 @@
                             </div>
                           </div>
                         @endforeach
+                      @elseif($q->type == "select")
+                        select
+                      @elseif($q->type == "array")
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th width="20%"></th>
+                              @foreach(json_decode($q->options)->answers as $key => $answer)
+                                <th class="text-center">{{ $answer->value }}</th>
+                              @endforeach
+                            </tr>
+                          </thead>
+                          <tbody>
+                          @foreach($q->children as $child)
+                            <tr>
+                              <td>{{ $child->titre }}</td>
+                              @foreach(json_decode($q->options)->answers as $key => $answer)
+                                <td class="text-center" title="{{ $answer->value }}">
+                                  <input type="radio" name="" value="">
+                                </td>
+                              @endforeach
+                            </tr>
+                          @endforeach
+                          </tbody>
+                        </table>
                       @endif
                     </div>
                   @empty

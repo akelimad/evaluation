@@ -9,8 +9,7 @@
               @forelse($g->questions as $q)
                 <div class="form-group">
                   @if($q->parent == null)
-                    <label for="" class="questionTitle help-block text-blue"><i
-                          class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                    <label for="" class="questionTitle help-block text-blue"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                   @endif
                   @if($q->type == 'text')
                     <input type="{{$q->type}}" class="form-control" readonly="">
@@ -31,19 +30,45 @@
                     @endforeach
                   @elseif ($q->type == "slider")
                     <div class="" style="margin-top: 30px;">
-                      <input type="text" required="" name="" data-provide="slider"
-                             data-slider-min="0" data-slider-max="100" data-slider-step="1"
-                             data-slider-value="" data-slider-tooltip="always">
+                      <input type="text" required="" name="" data-provide="slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="" data-slider-tooltip="always">
                     </div>
                   @elseif ($q->type == "rate")
-                    @foreach($q->children as $child)
-                      <div class="row">
+                    <div class="row">
+                      @foreach($q->children as $child)
                         <div class="col-md-2"><input type="radio"> {{ $child->titre }}</div>
                         <div class="col-md-10">
                           <label class="pull-right">{{ json_decode($child->options)->label }}</label>
                         </div>
-                      </div>
-                    @endforeach
+                      @endforeach
+                    </div>
+                  @elseif ($q->type == "select")
+                    <select name="" id="" class="form-control">
+                      <option value=""></option>
+                      @foreach($q->children as $child)
+                        <option value="{{ $child->titre }}">{{ $child->titre }}</option>
+                      @endforeach
+                    </select>
+                  @elseif ($q->type == "array")
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          @foreach(json_decode($q->options)->answers as $key => $answer)
+                            <th>{{ $answer }}</th>
+                          @endforeach
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @foreach($q->children as $child)
+                          <tr>
+                            <td>{{ $child->titre }}</td>
+                            @foreach(json_decode($q->options)->answers as $key => $answer)
+                              <td><input type="radio"></td>
+                            @endforeach
+                          </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
                   @endif
                 </div>
               @empty
