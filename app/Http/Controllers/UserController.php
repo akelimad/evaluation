@@ -128,6 +128,7 @@ class UserController extends Controller
       'tel' => 'regex:/^\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/',
       'function' => 'numeric',
       'service' => 'numeric',
+      'mle' => 'numeric',
     ];
     $query = User::where('email', $request->email)->where('society_id', User::getOwner()->id);
     if ($id) {
@@ -157,6 +158,8 @@ class UserController extends Controller
     $user->tel = $request->tel;
     $user->function = $request->function;
     $user->service = $request->service;
+    $user->date_recruiting = $request->date_recruiting;
+    $user->mle = $request->mle;
     $user->status = 1;
     if ($request->user_id != null) {
       $user->user_id = $request->user_id;
