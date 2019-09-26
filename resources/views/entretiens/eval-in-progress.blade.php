@@ -20,7 +20,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="datepicker">Clôturé le</label>
+                                        <label for="datepicker">Date d'expiration</label>
                                         <input type="text" name="dlimite" id="datepicker" class="form-control" value="{{ isset($dlimite) && !empty($dlimite) ? Carbon\Carbon::parse($dlimite)->format('d-m-Y') :'' }}" readonly="" data-date-format="dd-mm-yyyy">
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                     </th>
                                     @endif
                                     <th>Réf</th>
-                                    <th>Clôturé le</th>
+                                    <th>Date d'expiration</th>
                                     <th>Collaborateur</th>
                                     <th>Type d'évaluation</th>
                                     <th>Mentor</th>

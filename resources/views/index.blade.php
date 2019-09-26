@@ -74,7 +74,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Titre </th>
-                                                <th>Clôturé le</th>
+                                                <th>Date d'expiration</th>
                                                 <th class="text-center">Collaborateur</th>
                                                 <th class="text-center">Mentor</th>
                                                 <th class="text-center">RH</th>

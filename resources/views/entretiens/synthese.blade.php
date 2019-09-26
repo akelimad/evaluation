@@ -24,12 +24,12 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Visa du collaborateur :</label>
+                                    <label class="control-label col-md-3">Validation du collaborateur :</label>
                                     <div class="col-md-9"> <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty"> </span> </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">Visa du mentor :</label>
+                                    <label class="control-label col-md-3">Validation du mentor :</label>
                                     <div class="col-md-9"> <span class="label label-{{App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span> </div>
                                     <div class="clearfix"></div>
                                 </div>

@@ -33,6 +33,9 @@ import Crm from './class/crm'
 import Fonction from './class/Fonction'
 import Department from './class/Department'
 
+// Standart jQuery script
+import './custom'
+
 // Store modules in window
 window.chmSite = chmSite
 window.chmUrl = chmUrl
@@ -61,6 +64,3 @@ window.Attachment = Attachment
 window.Crm = Crm
 window.Fonction = Fonction
 window.Department = Department
-
-// Standart jQuery script
-import './custom'
