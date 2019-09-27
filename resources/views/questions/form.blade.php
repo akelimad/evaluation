@@ -30,9 +30,19 @@
         <option value="checkbox" {{ isset($q) && $q->type == "checkbox" ? 'selected':''  }}>Case à cocher</option>
         <option value="radio" {{ isset($q) && $q->type == "radio" ? 'selected':''  }}>Radio button</option>
         <option value="rate" {{ isset($q) && $q->type == "rate" ? 'selected':''  }}>Rating</option>
-        <option value="select" {{ isset($q) && $q->type == "select" ? 'selected':''  }}>Select</option>
         <option value="array" {{ isset($q) && $q->type == "array" ? 'selected':''  }}>Table</option>
       </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="type" class="col-md-2 control-label">Options</label>
+    <div class="col-md-10">
+      @if(isset($q))
+        @php($options = json_decode($q->options, true))
+        @php($showNote = isset($options['show_global_note']) ? 1 : 0)
+      @endif
+      <label for="show_global_note"><input type="checkbox" name="options[show_global_note]" id="show_global_note" value="1" {{ $showNote == 1 ? 'checked' : '' }}> Afficher la note globale</label>
     </div>
   </div>
 

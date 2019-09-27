@@ -108,7 +108,7 @@
                               @php($sum = $countItems =0)
                               @foreach($q->children as $child)
                                 @php($answerObj = App\Answer::getCollAnswers($child->id, $user->id, $e->id))
-                                @if ($answerObj->answer > 0)
+                                @if ($answerObj && $answerObj->answer > 0)
                                   @php($countItems ++)
                                   @php($sum = $sum + $answerObj->answer)
                                 @endif
@@ -123,10 +123,14 @@
                                   @endforeach
                                 </tr>
                               @endforeach
-                              <tr class="array-qst-note">
-                                <td colspan="2">Note globale obtenue par le collaborateur</td>
-                                <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{ round($sum/$countItems) }} / {{ $positivesAnswers }}</span></td>
-                              </tr>
+                              @php($options = json_decode($q->options, true))
+                              @php($showNote = isset($options['show_global_note']) ? 1 : 0)
+                              @if ($showNote == 1)
+                                <tr class="array-qst-note">
+                                  <td colspan="2">Note globale obtenue par le collaborateur</td>
+                                  <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{  $countItems > 0 ? round($sum/$countItems) : 0 }} / {{ $positivesAnswers }}</span></td>
+                                </tr>
+                              @endif
                             </tbody>
                           </table>
                         </div>
@@ -154,11 +158,3 @@
     @endif
   </div>
 </div>
-
-<script>
-  $('.array-table tbody tr td').click(function (event) {
-    if (event.target.type !== 'radio') {
-      $(':radio', this).trigger('click');
-    }
-  });
-</script>
