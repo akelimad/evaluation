@@ -10,6 +10,12 @@
   .pointer {
     cursor: pointer;
   }
+  .array-table tbody tr td {
+    cursor: pointer;
+  }
+  .array-qst-note {
+    background: #e6d3b0 !important;
+  }
 </style>
 <div class="row">
   <div class="col-md-12 survey">
@@ -78,32 +84,59 @@
                       @elseif($q->type == "select")
                         select
                       @elseif($q->type == "array")
-                        <table class="table table-hover">
-                          <thead>
+                        @php($answersColumns = json_decode($q->options, true))
+                        @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
+                        @php($positivesAnswers = 0)
+                        @if (!empty($answersColumns))
+                          <div class="table-responsive">
+                          <table class="table table-hover array-table">
+                            <thead>
                             <tr>
                               <th width="20%"></th>
-                              @foreach(json_decode($q->options)->answers as $key => $answer)
-                                <th class="text-center">{{ $answer->value }}</th>
+                              @foreach($answersColumns as $key => $answer)
+                                @if ($answer['id'] > 0)
+                                  @php($positivesAnswers ++)
+                                @endif
+                                <th class="text-center">
+                                  <label for="">{{ $answer['value'] }}</label>
+                                  <p class="m-0">{{ $answer['id'] }}</p>
+                                </th>
                               @endforeach
                             </tr>
-                          </thead>
-                          <tbody>
-                          @foreach($q->children as $child)
-                            <tr>
-                              <td>{{ $child->titre }}</td>
-                              @foreach(json_decode($q->options)->answers as $key => $answer)
-                                <td class="text-center" title="{{ $answer->value }}">
-                                  <input type="radio" name="" value="">
-                                </td>
+                            </thead>
+                            <tbody>
+                              @php($sum = $countItems =0)
+                              @foreach($q->children as $child)
+                                @php($answerObj = App\Answer::getCollAnswers($child->id, $user->id, $e->id))
+                                @if ($answerObj->answer > 0)
+                                  @php($countItems ++)
+                                  @php($sum = $sum + $answerObj->answer)
+                                @endif
+                                <tr>
+                                  <td>{{ $child->titre }}</td>
+                                  @foreach($answersColumns as $key => $answer)
+                                    <td class="text-center" title="{{ $answer['value'] }}">
+                                      <label for="item_{{ $child->id }}_{{ $answer['id'] }}" class="table-radio-item">
+                                        <input type="radio" name="answers[{{ $child->id }}][ansr]" id="item_{{ $child->id }}_{{ $answer['id'] }}" value="{{ $answer['id'] }}" {{ $answerObj && $answerObj->answer == $answer['id'] ? 'checked' : '' }} required>
+                                      </label>
+                                    </td>
+                                  @endforeach
+                                </tr>
                               @endforeach
-                            </tr>
-                          @endforeach
-                          </tbody>
-                        </table>
+                              <tr class="array-qst-note">
+                                <td colspan="2">Note globale obtenue par le collaborateur</td>
+                                <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{ round($sum/$countItems) }} / {{ $positivesAnswers }}</span></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        @else
+                          <p class="help-block">Impossible de trouver les réponses de cette question</p>
+                        @endif
                       @endif
                     </div>
                   @empty
-                    <p class="help-block"> Aucune question </p>
+                    <p class="help-block">Aucune question</p>
                   @endforelse
                 </div>
               </div>
@@ -122,4 +155,10 @@
   </div>
 </div>
 
-  
+<script>
+  $('.array-table tbody tr td').click(function (event) {
+    if (event.target.type !== 'radio') {
+      $(':radio', this).trigger('click');
+    }
+  });
+</script>

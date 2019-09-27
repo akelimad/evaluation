@@ -49,26 +49,28 @@
                       @endforeach
                     </select>
                   @elseif ($q->type == "array")
-                    <table class="table table-hover">
-                      <thead>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
                         <tr>
                           <th></th>
                           @foreach(json_decode($q->options)->answers as $key => $answer)
-                            <th>{{ $answer }}</th>
+                            <th>{{ $answer->value }}</th>
                           @endforeach
                         </tr>
-                      </thead>
-                      <tbody>
+                        </thead>
+                        <tbody>
                         @foreach($q->children as $child)
                           <tr>
                             <td>{{ $child->titre }}</td>
                             @foreach(json_decode($q->options)->answers as $key => $answer)
-                              <td><input type="radio"></td>
+                              <td><input type="radio" disabled></td>
                             @endforeach
                           </tr>
                         @endforeach
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
+                    </div>
                   @endif
                 </div>
               @empty

@@ -653,6 +653,8 @@ ul.user-data li i {
 
 .survey label.questionTitle {
   display: block;
+  background: #e6e6e6;
+  padding: 6px 3px;
 }
 
 .asterisk {
