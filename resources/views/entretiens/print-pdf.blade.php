@@ -79,30 +79,56 @@
   .total {
     background: #f39c12;
   }
+  .array-qst-note {
+    background: #e6d3b0 !important;
+  }
 </style>
 {{-- ****************** Header ********************** --}}
-<h2 class="text-center">Formulaire d'Evaluation Annuelle des performances	</h2>
+<h2 class="text-center">Formulaire d'Evaluation Annuelle des Performances	</h2>
 <table class="table">
   <tbody>
     <tr>
-      <td>Nom et prénom :</td>
-      <td>{{ $user->last_name . ' ' .$user->name }}</td>
-      <td>Manager :</td>
-      <td>{{ $user->parent->last_name . ' ' .$user->parent->name }}</td>
+      <td>Date de l'entretien</td>
+      <td>{{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</td>
     </tr>
     <tr>
-      <td>Poste occupé :</td>
-      <td>{{ is_numeric($user->function) ? App\Fonction::find($user->function)->title : '---' }}</td>
-      <td>Entité :</td>
-      <td>{{ is_numeric($user->service) ? App\Department::find($user->service)->title : '---' }}</td>
+      <td>Pour l'année</td>
+      <td>{{ Carbon\Carbon::parse(date('Y'))->format('Y')}}</td>
+    </tr>
+    <tr>
+      <td colspan="2"></td>
+    </tr>
+    <tr>
+      <td>Nom et prénom</td>
+      <td>{{ $user->last_name . ' ' .$user->name }}</td>
+    </tr>
+    <tr>
+      <td>Matricule</td>
+      <td>{{ $user->mle }}</td>
+    </tr>
+    <tr>
+      <td>Direction</td>
+      <td>{{ $user->service }}</td>
+    </tr>
+    <tr>
+      <td>Fonction exercée</td>
+      <td>{{ $user->service }}</td>
+    </tr>
+    <tr>
+      <td>Nom et fonction de l'évaluateur</td>
+      <td>{{ $user->parent->last_name }}, {{ is_numeric($user->parent->function) ? App\Fonction::find($user->parent->function)->title : '---' }}</td>
+    </tr>
+    <tr>
+      <td>Date d'embauche dans la société</td>
+      <td>{{ !is_null($user->date_recruiting) ? Carbon\Carbon::parse($user->date_recruiting)->format('d/m/Y') : '---' }}</td>
     </tr>
   </tbody>
 </table>
 {{-- ****************** Infos de l'évaluation ********** --}}
 <div class="entretien-infos">
   <h3 class="text-center" style="color: #0b8ccd;font-weight: 600">{{ $e->titre }}</h3>
-  <div class="col-md-6">La période évaluée commence le, {{ Carbon\Carbon::parse($e->start_periode)->format('d/m/Y')}}</div>
-  <div class="col-md-6">La période évaluée finit le, {{ Carbon\Carbon::parse($e->end_periode)->format('d/m/Y')}}</div>
+  <div class="col-md-6">La période évaluée commence le, {{ !is_null($e->start_periode) ? Carbon\Carbon::parse($e->start_periode)->format('d/m/Y') : '---' }}</div>
+  <div class="col-md-6">La période évaluée finit le, {{ !is_null($e->end_periode) ? Carbon\Carbon::parse($e->end_periode)->format('d/m/Y') : '---' }}</div>
 </div>
 {{-- ****************** Evaluations ********************** --}}
 <div class="mt-20"><p class="section-title">{{ $survey->title }}</p></div>
@@ -196,6 +222,58 @@
                           <div class="clearfix"></div>
                         </div>
                       @endforeach
+                    @elseif ($q->type == "array")
+                      @php($answersColumns = json_decode($q->options, true))
+                      @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
+                      @php($positivesAnswers = 0)
+                      @if (!empty($answersColumns))
+                        <div class="table-responsive">
+                          <table class="table table-hover array-table">
+                            <thead>
+                            <tr>
+                              <th width="20%"></th>
+                              @foreach($answersColumns as $key => $answer)
+                                @if ($answer['id'] > 0)
+                                  @php($positivesAnswers ++)
+                                @endif
+                                <th class="text-center">
+                                  <label for="">{{ $answer['value'] }}</label>
+                                  <p class="m-0">{{ $answer['id'] }}</p>
+                                </th>
+                              @endforeach
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @php($sum = $countItems =0)
+                            @foreach($q->children as $child)
+                              @php($answerObj = App\Answer::getMentorAnswers($child->id, $user->id, $e->id))
+                              @if ($answerObj && $answerObj->mentor_answer > 0)
+                                @php($countItems ++)
+                                @php($sum = $sum + $answerObj->mentor_answer)
+                              @endif
+                              <tr>
+                                <td>{{ $child->titre }}</td>
+                                @foreach($answersColumns as $key => $answer)
+                                  <td class="text-center">
+                                    <span>{{ $answerObj && $answerObj->mentor_answer == $answer['id'] ? '&#88;' : '' }}</span>
+                                  </td>
+                                @endforeach
+                              </tr>
+                            @endforeach
+                            @php($options = json_decode($q->options, true))
+                            @php($showNote = isset($options['show_global_note']) ? 1 : 0)
+                            @if ($showNote == 1)
+                              <tr class="array-qst-note">
+                                <td colspan="2">Note globale obtenue par le mentor</td>
+                                <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{  $countItems > 0 ? round($sum/$countItems) : 0 }} / {{ $positivesAnswers }}</span></td>
+                              </tr>
+                            @endif
+                            </tbody>
+                          </table>
+                        </div>
+                      @else
+                        <p class="help-block">Impossible de trouver les réponses de cette question</p>
+                      @endif
                     @endif
                   </div>
                 @empty
@@ -348,7 +426,7 @@
     </tr>
     <tr>
       <td width="20%">Date de la revue :</td>
-      <td>{{ isset($comment->mentor_updated_at) ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d.m.Y') : '' }}</td>
+      <td>{{ isset($comment->mentor_updated_at) ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y') : '' }}</td>
     </tr>
   </tbody>
 </table>
@@ -368,7 +446,7 @@
   </tr>
   <tr>
     <td width="20%">Date de la revue :</td>
-    <td>{{ isset($comment->created_at) ? Carbon\Carbon::parse($comment->created_at)->format('d.m.Y') : '' }}</td>
+    <td>{{ isset($comment->created_at) ? Carbon\Carbon::parse($comment->created_at)->format('d/m/Y') : '' }}</td>
   </tr>
   </tbody>
 </table>
