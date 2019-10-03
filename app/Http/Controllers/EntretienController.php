@@ -194,10 +194,10 @@ class EntretienController extends Controller
     $validator = \Validator::make($request->all(), $rules, $messages);
     $messages = $validator->errors();
     $surveyEval = Survey::getAll()->where('evaluation_id', 1)->where('type', 0)->first();
-    $surveyCarreer = Survey::getAll()->where('evaluation_id', 2)->where('type', 0)->first();
-    if (!$surveyEval || !$surveyCarreer) {
+    //$surveyCarreer = Survey::getAll()->where('evaluation_id', 2)->where('type', 0)->first();
+    if (!$surveyEval) {
       $url_survey = url('config/surveys');
-      $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation et/ou de carrière n'a été trouvé ! il faut le/les créer tout d'abord dans <a href='$url_survey' target='_blank'>Questionnaires</a>");
+      $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation n'a été trouvé ! il faut le créer tout d'abord dans <a href='$url_survey' target='_blank'>Questionnaires</a>");
     }
     $hasAlreadyInt = [];
     if(!empty($request->date) && !empty($request->date_limit)) {
@@ -232,7 +232,7 @@ class EntretienController extends Controller
       $surveyId = null;
       foreach ($evaluations as $evalId) {
         if($evalId == 1) $surveyId = $surveyEval->id;
-        if($evalId == 2) $surveyId = $surveyCarreer->id;
+        //if($evalId == 2) $surveyId = $surveyCarreer->id;
         Entretien_evaluation::where('entretien_id', $entretien->id)
           ->where('evaluation_id', $evalId)->update(['survey_id'=>$surveyId]);
       }

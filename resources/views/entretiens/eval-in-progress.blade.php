@@ -93,7 +93,7 @@
                             </thead>
                             <tbody>
                                 @foreach($results as  $k => $row)
-                                    <tr class="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'has-motif': 'no-motif' }}" data-toggle="tooltip" title="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'Il ya un motif mentionné pour '.$row->name.''.$row->last_name.'. cliquer sur l\'icon de paramettre pour le voir ou le mettre à jour' : '' }}">
+                                    <tr class="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'has-motif': 'no-motif' }}" data-toggle="tooltip" title="{{ App\User::hasMotif($row->entretienId, $row->userId) ? 'Il ya un motif mentionné pour '.$row->name.' '.$row->last_name.'. cliquer sur l\'icon de paramétrage pour le mettre à jour' : '' }}">
                                         @if(App\Entretien::countUnanswered()>0)
                                         <td>
                                             @if(!App\Entretien::answeredMentor($row->entretienId, $row->userId, App\User::getMentor($row->userId) ? App\User::getMentor($row->userId)->id : $row->userId))
@@ -241,6 +241,8 @@
         });
 
         $(".table").on('click', '.motifUpdateBtn',function () {
+            $(this).prop('disabled', true)
+            $(this).find('i').removeClass('fa-check').addClass('fa-spinner fa-spin')
             var eid= $(this).data('entretien-id');
             var uid= $(this).data('user-id');
             var token = $('input[name="_token"]').val();
@@ -257,12 +259,12 @@
                     "motif" : motif
                 },
             }).done(function(response){
-                swal({ 
+                swal({
                     title: "Mis à jour !", 
-                    text: "Le motif a bie été Sauvegardé !", 
+                    text: "Le motif a bie été sauvegardé !",
                     type: "success" 
                 }).then(function(){
-                    location.reload(); 
+                    location.reload();
                 });
             }).fail(function(){
                 swal('Oops...', "Il ya quelque chose qui ne va pas ! Il se peut que cet utilisateur fait la coordiantion des cours il faut supprimer tout d'abord ses cours!", 'error');

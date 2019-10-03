@@ -38,6 +38,7 @@
   <div class="form-group">
     <label for="type" class="col-md-2 control-label">Options</label>
     <div class="col-md-10">
+      @php($showNote = 0)
       @if(isset($q))
         @php($options = json_decode($q->options, true))
         @php($showNote = isset($options['show_global_note']) ? 1 : 0)

@@ -5,6 +5,15 @@
   .array-qst-note {
     background: #e6d3b0 !important;
   }
+  .pointer {
+    cursor: pointer;
+  }
+  .array-table tbody tr td label.table-radio-item {
+    cursor: pointer;
+    display: block;
+    margin: 0;
+    height: 100%;
+  }
 </style>
 <div class="row evaluation-survey">
   @if(!empty($groupes))
@@ -71,6 +80,8 @@
                         @php($answersColumns = json_decode($q->options, true))
                         @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
                         @php($positivesAnswers = 0)
+                        @php($options = json_decode($q->options, true))
+                        @php($showNote = isset($options['show_global_note']) ? 1 : 0)
                         @if (!empty($answersColumns))
                           <div class="table-responsive">
                             <table class="table table-hover array-table">
@@ -82,8 +93,7 @@
                                     @php($positivesAnswers ++)
                                   @endif
                                   <th class="text-center">
-                                    <label for="">{{ $answer['value'] }}</label>
-                                    <p class="m-0">{{ $answer['id'] }}</p>
+                                    <label for="">{{ $answer['id'] != 'n/a' && $showNote ? $answer['id'] . ' = ' : ''  }} {{ $answer['value'] }}</label>
                                   </th>
                                 @endforeach
                               </tr>
@@ -241,6 +251,8 @@
                           @php($answersColumns = json_decode($q->options, true))
                           @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
                           @php($positivesAnswers = 0)
+                          @php($options = json_decode($q->options, true))
+                          @php($showNote = isset($options['show_global_note']) ? 1 : 0)
                           @if (!empty($answersColumns))
                             <div class="table-responsive">
                               <table class="table table-hover array-table">
@@ -252,8 +264,7 @@
                                       @php($positivesAnswers ++)
                                     @endif
                                     <th class="text-center">
-                                      <label for="">{{ $answer['value'] }}</label>
-                                      <p class="m-0">{{ $answer['id'] }}</p>
+                                      <label for="">{{ $answer['id'] != 'n/a' && $showNote ? $answer['id'] . ' = ' : ''  }} {{ $answer['value'] }}</label>
                                     </th>
                                   @endforeach
                                 </tr>
@@ -270,8 +281,8 @@
                                     <td>{{ $child->titre }}</td>
                                     @foreach($answersColumns as $key => $answer)
                                       <td class="text-center" title="{{ $answer['value'] }}">
-                                        <label for="item_{{ $child->id }}_{{ $answer['id'] }}" class="table-radio-item">
-                                          <input type="radio" name="answers[{{ $child->id }}][ansr]" id="item_{{ $child->id }}_{{ $answer['id'] }}" value="{{ $answer['id'] }}" {{ $answerObj && $answerObj->mentor_answer == $answer['id'] ? 'checked' : '' }} required>
+                                        <label for="m_item_{{ $child->id }}_{{ $answer['id'] }}" class="table-radio-item">
+                                          <input type="radio" name="answers[{{ $child->id }}][ansr]" id="m_item_{{ $child->id }}_{{ $answer['id'] }}" value="{{ $answer['id'] }}" {{ $answerObj && $answerObj->mentor_answer == $answer['id'] ? 'checked' : '' }} required>
                                         </label>
                                       </td>
                                     @endforeach

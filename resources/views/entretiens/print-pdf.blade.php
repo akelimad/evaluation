@@ -45,6 +45,9 @@
   .mt-20 {
     margin-top: 20px;
   }
+  .mb-20 {
+    margin-bottom: 20px;
+  }
   .clearfix {
     clear: both;
   }
@@ -127,8 +130,7 @@
 {{-- ****************** Infos de l'évaluation ********** --}}
 <div class="entretien-infos">
   <h3 class="text-center" style="color: #0b8ccd;font-weight: 600">{{ $e->titre }}</h3>
-  <div class="col-md-6">La période évaluée commence le, {{ !is_null($e->start_periode) ? Carbon\Carbon::parse($e->start_periode)->format('d/m/Y') : '---' }}</div>
-  <div class="col-md-6">La période évaluée finit le, {{ !is_null($e->end_periode) ? Carbon\Carbon::parse($e->end_periode)->format('d/m/Y') : '---' }}</div>
+  <div class="col-md-12">La période évaluée commence le {{ !is_null($e->start_periode) ? Carbon\Carbon::parse($e->start_periode)->format('d/m/Y') : '---' }} et se termine le {{ !is_null($e->end_periode) ? Carbon\Carbon::parse($e->end_periode)->format('d/m/Y') : '---' }}</div>
 </div>
 {{-- ****************** Evaluations ********************** --}}
 <div class="mt-20"><p class="section-title">{{ $survey->title }}</p></div>
@@ -168,14 +170,6 @@
               <div class="panel-body">
                 @forelse($g->questions as $q)
                   <div class="form-group">
-                    @if(in_array($q->type, ['text', 'textarea', 'radio']))
-                      <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
-                             placeholder="Note" class="notation inputNote" size="3" min="1"
-                             max="{{App\Setting::get('max_note')}}"
-                             value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"
-                             @if($g->notation_type == 'item' && App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;"
-                             required @endif>
-                    @endif
                     @if($q->parent == null)
                       <div class="questionTitle"><i class="fa fa-caret-right"></i>
                         {{$q->titre}}
@@ -185,8 +179,7 @@
                       <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" class="form-control" required
                              value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
                     @elseif($q->type == 'textarea')
-                      <textarea name="answers[{{$q->id}}][ansr]" class="form-control"
-                                required {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</textarea>
+                      <p style="padding: 10px; border: 1px solid darkgray;">{!! App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? nl2br(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer) : '' !!}</p>
                     @elseif($q->type == "checkbox")
                       <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
                              class="notation" min="1" max="{{App\Setting::get('max_note')}}"
@@ -226,8 +219,10 @@
                       @php($answersColumns = json_decode($q->options, true))
                       @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
                       @php($positivesAnswers = 0)
+                      @php($options = json_decode($q->options, true))
+                      @php($showNote = isset($options['show_global_note']) ? 1 : 0)
                       @if (!empty($answersColumns))
-                        <div class="table-responsive">
+                        <div class="table-responsive mb-20">
                           <table class="table table-hover array-table">
                             <thead>
                             <tr>
@@ -236,9 +231,8 @@
                                 @if ($answer['id'] > 0)
                                   @php($positivesAnswers ++)
                                 @endif
-                                <th class="text-center">
-                                  <label for="">{{ $answer['value'] }}</label>
-                                  <p class="m-0">{{ $answer['id'] }}</p>
+                                <th class="text-center" style="font-size: 11px;">
+                                  <label for="">{{ $answer['id'] != 'n/a' && $showNote ? $answer['id'] . ' = ' : ''  }} {{ $answer['value'] }}</label>
                                 </th>
                               @endforeach
                             </tr>
@@ -252,7 +246,9 @@
                                 @php($sum = $sum + $answerObj->mentor_answer)
                               @endif
                               <tr>
-                                <td>{{ $child->titre }}</td>
+                                <td style="font-size: 11px;">
+                                  {{ $child->titre }}
+                                </td>
                                 @foreach($answersColumns as $key => $answer)
                                   <td class="text-center">
                                     <span>{{ $answerObj && $answerObj->mentor_answer == $answer['id'] ? '&#88;' : '' }}</span>
@@ -260,11 +256,9 @@
                                 @endforeach
                               </tr>
                             @endforeach
-                            @php($options = json_decode($q->options, true))
-                            @php($showNote = isset($options['show_global_note']) ? 1 : 0)
                             @if ($showNote == 1)
                               <tr class="array-qst-note">
-                                <td colspan="2">Note globale obtenue par le mentor</td>
+                                <td colspan="3">Note globale obtenue par le mentor</td>
                                 <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{  $countItems > 0 ? round($sum/$countItems) : 0 }} / {{ $positivesAnswers }}</span></td>
                               </tr>
                             @endif
@@ -297,14 +291,12 @@
         </div>
       @endif
     </div>
-  @else
-    <p class="alert alert-default">Aucune donnée disponible !</p>
   @endif
 </div>
 
 {{-- ****************** Objectifs ********************** --}}
-<div class="mt-20"><p class="section-title">Objectifs</p></div>
-@if(!empty($objectifs))
+@if(count($objectifs) > 0)
+  <div class="mt-20"><p class="section-title">Objectifs</p></div>
   <div class="box-body">
     <h4 class="alert alert-info p-5">Mentor : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
     <div class="table-responsive">
@@ -404,8 +396,6 @@
       </table>
     </div>
   </div>
-@else
-  @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
 @endif
 
 {{-- ****************** Commentaires ********************** --}}

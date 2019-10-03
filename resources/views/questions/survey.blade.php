@@ -10,8 +10,11 @@
   .pointer {
     cursor: pointer;
   }
-  .array-table tbody tr td {
+  .array-table tbody tr td label.table-radio-item {
     cursor: pointer;
+    display: block;
+    margin: 0;
+    height: 100%;
   }
   .array-qst-note {
     background: #e6d3b0 !important;
@@ -87,6 +90,8 @@
                         @php($answersColumns = json_decode($q->options, true))
                         @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
                         @php($positivesAnswers = 0)
+                        @php($options = json_decode($q->options, true))
+                        @php($showNote = isset($options['show_global_note']) ? 1 : 0)
                         @if (!empty($answersColumns))
                           <div class="table-responsive">
                           <table class="table table-hover array-table">
@@ -98,8 +103,7 @@
                                   @php($positivesAnswers ++)
                                 @endif
                                 <th class="text-center">
-                                  <label for="">{{ $answer['value'] }}</label>
-                                  <p class="m-0">{{ $answer['id'] }}</p>
+                                  <label for="">{{ $answer['id'] != 'n/a' && $showNote ? $answer['id'] . ' = ' : ''  }} {{ $answer['value'] }}</label>
                                 </th>
                               @endforeach
                             </tr>
@@ -123,8 +127,6 @@
                                   @endforeach
                                 </tr>
                               @endforeach
-                              @php($options = json_decode($q->options, true))
-                              @php($showNote = isset($options['show_global_note']) ? 1 : 0)
                               @if ($showNote == 1)
                                 <tr class="array-qst-note">
                                   <td colspan="2">Note globale obtenue par le collaborateur</td>

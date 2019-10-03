@@ -148,7 +148,7 @@ class Objectif extends Model
             $total += self::getSectionSubTotal($e, $user, $mentor, $profil, $objectif->id);
         }
 
-        return round($total / $c);
+        return $c > 0 ? round($total / $c) : 0;
     }
 
 
