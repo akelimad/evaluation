@@ -130,7 +130,7 @@ class UserController extends Controller
       'service' => 'numeric',
       'mle' => 'numeric',
     ];
-    $query = User::where('email', $request->email)->where('society_id', User::getOwner()->id);
+    $query = User::where('email', $request->email);
     if ($id) {
       $user = User::findOrFail($id);
       if (!empty($request->password) || !empty($request->password_confirmation)) {

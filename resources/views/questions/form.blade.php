@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" id="optionsContainer">
     <label for="type" class="col-md-2 control-label">Options</label>
     <div class="col-md-10">
       @php($showNote = 0)
@@ -188,6 +188,7 @@
           $('.valueContainer').hide()
           $('.indexContainer').removeClass('col-md-6').addClass('col-md-12')
           $('#array-type-wrap').show()
+          $('#optionsContainer').show()
         } else {
           $('.valueContainer').hide()
           $('.indexContainer label').hide()
@@ -198,6 +199,7 @@
         $('#addLine-wrap').hide()
         $('#array-type-wrap').hide()
         $('#addLine-wrap #choiceField').prop('required', false).attr('name', '')
+        $('#optionsContainer').hide()
       }
     }
 
