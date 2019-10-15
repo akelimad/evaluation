@@ -80,7 +80,10 @@
                               <input type="radio" name="answers[{{$q->id}}][ansr]" value="{{ $child->id }}" id="user-{{ $child->id }}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}> {{ $child->titre }}
                             </div>
                             <div class="col-md-11">
-                              <label class="pull-right pointer" for="user-{{ $child->id }}">{{ json_decode($child->options)->label }}</label>
+                              @php($options = json_decode($child->options, true))
+                              <label class="pull-right pointer" for="user-{{ $child->id }}">
+                                {{ isset($options['label']) ? $options['label'] : 'vide' }}
+                              </label>
                             </div>
                           </div>
                         @endforeach

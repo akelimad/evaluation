@@ -210,7 +210,8 @@
                             <input type="radio" name="answers[{{$q->id}}][ansr]" value="{{ $child->id }}" id="mentor-{{ $child->id }}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer == $child->id ? 'checked' : '' }}> {{ $child->titre }}
                           </div>
                           <div class="col-md-10">
-                            {{ json_decode($child->options)->label }}
+                            @php($options = json_decode($child->options, true))
+                            {{ isset($options['label']) ? $options['label'] : 'vide' }}
                           </div>
                           <div class="clearfix"></div>
                         </div>

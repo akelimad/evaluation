@@ -35,9 +35,10 @@
                   @elseif ($q->type == "rate")
                     <div class="row">
                       @foreach($q->children as $child)
-                        <div class="col-md-2"><input type="radio"> {{ $child->titre }}</div>
+                        <div class="col-md-2"><input type="radio" disabled> {{ $child->titre }}</div>
                         <div class="col-md-10">
-                          <label class="pull-right">{{ json_decode($child->options)->label }}</label>
+                          @php($options = json_decode($child->options, true))
+                          <label class="">{{ isset($options['label']) ? $options['label'] : 'vide' }}</label>
                         </div>
                       @endforeach
                     </div>
