@@ -114,6 +114,7 @@ Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsIntervie
 Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu')->name('entretien.apercu');
 Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
+Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'EvaluationController@index');
 

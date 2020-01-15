@@ -160,6 +160,7 @@
                     <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
                 </li>
                 @endrole
+
                 @role(["MENTOR", "COLLABORATEUR"])
                 <li class="{{ Request::is('/') ? 'active' : '' }}">
                     <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>Mes entretiens</span></a>
@@ -168,18 +169,23 @@
                 @role(["ADMIN", "RH"])
                 <li class="{{ Request::is('users') ? 'active' : '' }}"><a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a></li>
                 @endrole
+                @role(["ADMIN"])
+                <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
+                    <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> Questionnaires</a>
+                </li>
+                @endrole
                 @role(["ADMIN", "RH"])
                 <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>Entretiens</span></a></li>
                 <li class="{{ Request::is('entretiens/evaluations') ? 'active' : '' }}"><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-pencil"></i> <span>Evaluations en cours</span> </a></li>
                 <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>Calendrier des entretiens</span></a></li>
                 @endrole
                 @role(["ADMIN"])
-                <li class="treeview {{ Request::is('config*') ? 'active menu-open' : '' }}">
+                <li class="treeview {{ Request::is('config*') && !Request::is('config/surveys') ? 'active menu-open' : '' }}">
                     <a href="#">
                         <i class="fa fa-gears"></i> <span>Configuration</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
-                    <ul class="treeview-menu" style="{{ Request::is('config*') ? 'display: block;' : '' }}">
+                    <ul class="treeview-menu" style="{{ Request::is('config*') && !Request::is('config/surveys') ? 'display: block;' : '' }}">
                         <li class="{{ Request::is('config/settings/general') ? 'active' : '' }}">
                             <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> Paramètres</a>
                         </li>
@@ -188,9 +194,6 @@
                         </li>
                         <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
                             <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Compétences </a>
-                        </li>
-                        <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
-                            <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> Questionnaires</a>
                         </li>
                         <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
                             <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Courriers automatiques</a>

@@ -72,11 +72,26 @@
                                         @endforeach
                                         <td class="text-center">
                                             {{ csrf_field() }}
-                                            <button type="submit" class="btn-success icon-fill" data-toggle="tooltip" title="Mettre à jour"><i class="fa fa-refresh"></i></button>
-                                            <a href="javascript:void(0)" onclick="return chmEntretien.show({{{$e->id}}})" class="bg-navy icon-fill" title="Voir" data-toggle="tooltip"> <i class="fa fa-eye"></i> </a>
-                                            <a href="javascript:void(0)" onclick="return chmEntretien.form({{{$e->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Modifier"> <i class="fa fa-pencil"></i></a>
-                                            <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{$e->id}} }, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer l'entretien"> <i class="fa fa-trash"></i> </a>
-                                            <div class="clearfix"></div>
+                                            <div class="btn-group">
+                                                <button aria-expanded="false" aria-haspopup="true" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li>
+                                                        <button type="submit" class="form-control no-border text-left pl-20"><i class="fa fa-refresh"></i> Mettre à jour</button>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="return chmEntretien.show({{{$e->id}}})" class=""><i class="fa fa-eye"></i> Voir</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="return chmEntretien.form({{{$e->id}}})" class=""><i class="fa fa-pencil"></i> Modifier</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ url('entretiens/'.$e->id.'/notation/download') }}" class=""><i class="fa fa-download"></i> Télécharger la notation</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{$e->id}} }, {width: 450})" class="" ><i class="fa fa-trash"></i> Supprimer</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </td>
                                         </form>
                                     </tr>
@@ -98,6 +113,15 @@
 @section('javascript')
 <script>
     $(document).ready(function() {
+        $('.table-responsive').on('show.bs.dropdown', function () {
+            console.log('show')
+            $('.table-responsive').css('overflow', 'inherit')
+        })
+        $('.table-responsive').on('hide.bs.dropdown', function () {
+            console.log('hide')
+            $('.table-responsive').css('overflow', 'auto')
+        })
+
         $('.checkbox-eval').change(function() {
             if(this.checked) {
                 $(this).closest('td').find('select').prop('required', true)

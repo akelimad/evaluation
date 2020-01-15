@@ -28,7 +28,7 @@ use App\Action;
 use App\Email;
 use App\Entretien_evaluation;
 use App\Answer;
-
+use Excel;
 class EntretienController extends Controller
 {
   public function __construct()
@@ -530,4 +530,17 @@ class EntretienController extends Controller
     $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
     MailerController::send(Auth::user(), $entretien, $submit_email);
   }
+
+  public function downloadNotation(Entretien $id)
+  {
+    $entretiens = Entretien::all();
+    Excel::create('Export Data',function($excel) use ($entretiens){
+      $excel->sheet('Sheet 1',function($sheet) use ($entretiens){
+        $sheet->loadView('xls.entretiens', [
+          'entretiens' => $entretiens
+        ]);
+      });
+    })->export('xlsx');
+  }
+
 }

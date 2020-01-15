@@ -27,6 +27,8 @@
                                     <li><i class="fa fa-hand-o-right"></i> La colonne prénom correspond au champ name</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne nom correspond au champ last_name</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne email correspond au champ email</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne fonction correspond au champ function</li>
+                                    <li><i class="fa fa-hand-o-right"></i> La colonne département correspond au champ department</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne rôle correspond au champ qui sert à associer les rôles, si l'utilisateur est un collaborateur veuillez saisir COLLABORATEUR, s'il est mentor et en même temps collaborateur veuillez saisir le 1er rôle suivi d'un (,) puis un espace( ) puis le 2em rôle. ex: COLLABORATEUR, MENTOR. <br> N.B: Voici les rôles disponible : RH, MENTOR, COLLABORATEUR. Il faut les saisir en majuscule.</li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne <b>mentor email</b>, elle est indesponsable pour récuperer ID du mentor, si l'utilisateur n'as pas un mentor il faut mettre 0 </li>
                                     <li><i class="fa fa-hand-o-right"></i> La colonne tel mobile correspond au champ tel</li>
