@@ -1,4 +1,4 @@
-Prénom;Nom;Email;Rôle :  RH, MENTOR, COLLABORATEUR;Mentor email;Telephone mobile
-rh;demo;rh@exemple.com;RH;0;06 07 08 09 02
-mentor;demo;mentorA@exemple.com;MENTOR;0;06 07 08 09 02
-collaborateur;demo;coll@exemple.com;COLLABORATEUR;mentorA@exemple.com;06 07 08 09 02
+Prénom;Nom;Email;fonction;Departement/direction/division/service/cellule…;Rôle :  RH, MENTOR, COLLABORATEUR;Mentor email;Telephone mobile
+rh;demo;rh@demo.com;fonction 1;departement 1;RH;0;06 07 08 09 02
+mentor A;demo;mentor-a@demo.com;fonction 2;departement 2;MENTOR;0;06 07 08 09 02
+collaborateur A;demo;coll-a@demo.com;fonction 3;departement 3;COLLABORATEUR;mentor-a@demo.com;06 07 08 09 02

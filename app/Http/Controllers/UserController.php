@@ -213,7 +213,7 @@ class UserController extends Controller
     Session::push('session_csv_data', $csv_data);
     Session::push('session_csv_headers', $csv_header_fields);
     //dd(json_encode($csv_data));
-    return view('users.data.import_fields', compact('csv_header_fields', 'csv_values_fields', 'csv_data'));
+    return view('users.data.import_fields', compact('csv_header_fields', 'csv_data'));
   }
 
   public function getRoleByName($rolesName)
@@ -238,8 +238,17 @@ class UserController extends Controller
     $added = 0;
     $updated = 0;
     foreach ($csv_data as $row) {
-      if (!empty($row[$fields[0]]) && !empty($row[$fields[1]]) && !empty($row[$fields[2]]) && $row[$fields[3]] && !empty($row[$fields[4]]) || $row[$fields[4]] == "0") {
-        $existUser = User::where('email', $row[$fields[2]])->first();
+      $prenom = $row[$fields[0]];
+      $nom = $row[$fields[1]];
+      $email = $row[$fields[2]];
+      $fonction = $row[$fields[3]];
+      $department = $row[$fields[4]];
+      $roles = $row[$fields[5]];
+      $mentorEmail = $row[$fields[6]];
+      $tel = $row[$fields[7]];
+
+      if (!empty($prenom) && !empty($nom) && !empty($email) && !empty($roles) && (!empty($mentorEmail) || $mentorEmail == '0')) {
+        $existUser = User::where('email', $email)->first();
         if ($existUser) {
           $user = $existUser;
           $updated += 1;
@@ -248,13 +257,15 @@ class UserController extends Controller
           $user->id = $count + 1;
           $added += 1;
         }
-        $user->name = $row[$fields[0]];
-        $user->last_name = $row[$fields[1]];
-        $user->email = $row[$fields[2]];
+        $user->name = $prenom;
+        $user->last_name = $nom;
+        $user->email = $email;
         $user->password = bcrypt("password");
-        $user->tel = $row[$fields[5]];
+        $user->tel = $tel;
         $user->status = 1;
-        $mentor = User::where('email', '=', $row[$fields[4]])->first();
+        $user->function = $this->getFunctionIdByName($fonction);
+        $user->service = $this->getDepartmentIdByName($department);
+        $mentor = User::where('email', '=', $email)->first();
         if ($mentor != null) {
           $user->user_id = $mentor->id;
         } else {
@@ -262,7 +273,7 @@ class UserController extends Controller
         }
         $user->society_id = Auth::user()->id;
         $user->save();
-        $user->roles()->sync($this->getRoleByName($row[$fields[3]]));
+        $user->roles()->sync($this->getRoleByName($roles));
         $count++;
       } else {
         return redirect('users')->with('exist_already', 'Une erreur est survenu lors l\'importation. il se peut que un des champs obligatoire(Prénom, nom, email, role, Mentor email) est vide!');
@@ -385,6 +396,34 @@ class UserController extends Controller
     echo view('users/permissions.edit', ['p' => $p]);
     $content = ob_get_clean();
     return ['title' => 'Modifier une permission', 'content' => $content];
+  }
+
+  public function getFunctionIdByName($function) {
+    $user_id = Auth::user()->id;
+    $func = Fonction::where('title', $function)->where('user_id', $user_id)->first();
+    if (isset($func->id)) {
+      return $func->id;
+    } else {
+      $f = new Fonction();
+      $f->user_id = $user_id;
+      $f->title = $function;
+      $f->save();
+      return $f->id;
+    }
+  }
+
+  public function getDepartmentIdByName($department) {
+    $user_id = Auth::user()->id;
+    $dept = Department::where('title', $department)->where('user_id', $user_id)->first();
+    if (isset($dept->id)) {
+      return $dept->id;
+    } else {
+      $d = new Department();
+      $d->user_id = $user_id;
+      $d->title = $department;
+      $d->save();
+      return $d->id;
+    }
   }
 
 
