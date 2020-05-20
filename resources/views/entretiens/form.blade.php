@@ -20,11 +20,11 @@
   </div>
   <div class="form-group">
     <div class="col-md-6">
-      <label for="titre" class="control-label">Période d'évaluation de</label>
+      <label for="titre" class="control-label">Période d’entretien du</label>
       <input type="text" name="start_periode" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->start_periode) ? Carbon\Carbon::parse($entretien->start_periode)->format('d-m-Y') : null }}" readonly="" required="">
     </div>
     <div class="col-md-6">
-      <label for="titre" class="control-label">à</label>
+      <label for="titre" class="control-label">au</label>
       <input type="text" name="end_periode" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->end_periode) ? Carbon\Carbon::parse($entretien->end_periode)->format('d-m-Y') : null }}" readonly="" required="">
     </div>
   </div>
@@ -44,7 +44,7 @@
 <script>
   $(function () {
     $('.datepicker').datepicker({
-      startDate: new Date(),
+      //startDate: new Date(),
       autoclose: true,
       format: 'dd-mm-yyyy',
       language: 'fr',
