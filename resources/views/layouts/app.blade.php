@@ -167,11 +167,13 @@
                 </li>
                 @endrole
                 @role(["ADMIN", "RH"])
-                <li class="{{ Request::is('users') ? 'active' : '' }}"><a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a></li>
+                <li class="{{ Request::is('users') ? 'active' : '' }}">
+                    <a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a>
+                </li>
                 @endrole
                 @role(["ADMIN"])
                 <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
-                    <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> Questionnaires</a>
+                    <a href="{{ url('config/surveys') }}"><i class="fa fa-question"></i> <span>Questionnaires</span></a>
                 </li>
                 @endrole
                 @role(["ADMIN", "RH"])
@@ -271,7 +273,6 @@
 <script src="{{asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('js/jquery.slimscroll.min.js')}}"></script>
-<script src="{{asset('js/chart.min.js')}}"></script>
 <!-- FastClick -->
 <script src="{{asset('js/fastclick.js')}}"></script>
 <script src="{{asset('js/select2.full.min.js')}}"></script>

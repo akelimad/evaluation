@@ -155,6 +155,7 @@ class Entretien extends Model
     {
         $entretienEvalSurveyId = Evaluation::surveyId($entretien_id, 1);
         $survey = Survey::find($entretienEvalSurveyId);
+        if (!$survey) return false;
         $c = 0;
         foreach ($survey->groupes as $group) {
             if (!empty($group->notation_type)) {

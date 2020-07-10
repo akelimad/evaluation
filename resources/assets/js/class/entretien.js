@@ -21,12 +21,10 @@ export default class chmEntretien {
 
   static form (id = null) {
     window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/form'), data: {id: id}}, {
+      width: 800,
       form: {
         class: 'allInputsFormValidation form-horizontal',
         callback: 'chmEntretien.store'
-      },
-      footer: {
-        label: 'Sauvegarder'
       }
     })
   }
@@ -113,14 +111,14 @@ export default class chmEntretien {
 
   static delete (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({
+    window.chmModal.show({
       type: 'POST',
       url: window.chmSite.url('entretiens/' + params.eid + '/delete'),
       data: {'_token': token, '_method': 'DELETE'}
     }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
-    object.modal.attr('chm-modal-action', 'reload')
+    window.location.href = 'entretiens/index'
   }
 
   static submission (params) {

@@ -62,17 +62,15 @@ class HomeController extends Controller
 
         $finished = $inProgress_query->where('mentor_submitted', 1)->where('user_submitted', 1);
         $finished = count($inProgress_query->get());
-        $users = User::getUsers()->get();
-        $nbMentors = 0;
-        $nbColls = 0;
-        foreach ($users as $user) {
-            if( count($user->children) > 0 ){
-                $nbMentors +=1;
-            }
-            if( $user->parent != null ){
-                $nbColls +=1;
-            }
-        }
+
+        $nbMentors = User::whereHas('roles', function($query) use ($society) {
+            $query->where('name', 'MENTOR');
+        })->where('society_id', $society->id)->count();
+
+        $nbColls = User::whereHas('roles', function($query) use ($society) {
+            $query->where('name', 'COLLABORATEUR');
+        })->where('society_id', $society->id)->count();
+
 
         if($inProgress > 0) $taux  = $this->cutNum(($finished / $inProgress) * 100);
 

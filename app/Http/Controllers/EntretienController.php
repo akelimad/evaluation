@@ -62,11 +62,9 @@ class EntretienController extends Controller
 
   public function show($id)
   {
-    ob_start();
     $e = Entretien::findOrFail($id);
-    echo view('entretiens.show', compact('e'));
-    $content = ob_get_clean();
-    return ['title' => "Détails de l'entretien", 'content' => $content];
+
+    return view('entretiens.show', compact('e'));
   }
 
   /**
@@ -134,20 +132,21 @@ class EntretienController extends Controller
   public function form(Request $request)
   {
     $id = $request->id;
+    $evaluations = Evaluation::all()->sortBy('sort_order');
     ob_start();
     if (isset($id) && is_numeric($id)) {
       $entretien = Entretien::findOrFail($id);
-      $title = "Modifier l'entretien";
+      $title = "Modifier la campagne";
     } else {
       $entretien = new Entretien();
-      $title = "Ajouter un entretien";
+      $title = "Ajouter une campagne";
     }
     $e_users = [];
     foreach ($entretien->users as $user) {
       $e_users[] = $user->id;
     }
     $users = User::getUsers()->where('user_id', '<>', 0)->get();
-    echo view('entretiens.form', compact('users', 'e_users', 'entretien'));
+    echo view('entretiens.form', compact('users', 'e_users', 'entretien', 'evaluations'));
     $content = ob_get_clean();
     return ['title' => $title, 'content' => $content];
   }
@@ -161,6 +160,8 @@ class EntretienController extends Controller
     $id = $request->id;
     $selectedUsers = $request->usersId;
     $entretienUsers = $removedUsers = [];
+    $evaluationsId = $request->evaluationsId;
+
     $url=url('config/settings/general');
     if(Evaluation::maxNote() == 0) {
       return ["status" => "danger", "message" => "Veuillez définir tout d'abord la note maximale dans <a href='$url' target='_blank'>Paramétres</a> !"];
@@ -194,7 +195,9 @@ class EntretienController extends Controller
     $validator = \Validator::make($request->all(), $rules, $messages);
     $messages = $validator->errors();
     $surveyEval = Survey::getAll()->where('evaluation_id', 1)->where('type', 0)->first();
-    //$surveyCarreer = Survey::getAll()->where('evaluation_id', 2)->where('type', 0)->first();
+    $surveyCarreer = Survey::getAll()->where('evaluation_id', 2)->where('type', 0)->first();
+    $surveyObj = EntretienObjectif::getAll()->first();
+
     if (!$surveyEval) {
       $url_survey = url('config/surveys');
       $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation n'a été trouvé ! il faut le créer tout d'abord dans <a href='$url_survey' target='_blank'>Questionnaires</a>");
@@ -227,12 +230,14 @@ class EntretienController extends Controller
     $entretien->start_periode = $start_periode;
     $entretien->end_periode = $end_periode;
     $entretien->save();
+    $entretien->evaluations()->attach($evaluationsId);
     if (empty($id)) {
-      $entretien->evaluations()->attach($evaluations);
       $surveyId = null;
       foreach ($evaluations as $evalId) {
+        if (!in_array($evalId, [1, 2, 9])) continue; // evaluations, carrieres, objectifs
         if($evalId == 1) $surveyId = $surveyEval->id;
-        //if($evalId == 2) $surveyId = $surveyCarreer->id;
+        if($evalId == 2) $surveyId = $surveyCarreer->id;
+        if($evalId == 9) $surveyId = $surveyObj->id;
         Entretien_evaluation::where('entretien_id', $entretien->id)
           ->where('evaluation_id', $evalId)->update(['survey_id'=>$surveyId]);
       }
@@ -486,15 +491,17 @@ class EntretienController extends Controller
     $user = Auth::user();
     if($user->hasRole('ADMIN') OR $user->hasRole('RH')) {
       $entretien = Entretien::findOrFail($eid);
-      $entretien->delete();
       $entretien->users()->detach();
       $entretien->skills()->delete();
+      $entretien->evaluations()->detach();
       \DB::table('skill_user')->where('entretien_id', $eid)->delete();
       \DB::table('answers')->where('entretien_id', $eid)->delete();
       \DB::table('objectif_user')->where('entretien_id', $eid)->delete();
       $entretien->formations()->delete();
       $entretien->salaries()->delete();
       $entretien->comments()->delete();
+      $entretien->delete();
+      return ["status" => "success", "message" => "Entretien a été supprimée avec succès !"];
     } else {
       return ["status" => "danger", "message" => "Stop ! Vous n'avez pas la permission !"];
     }

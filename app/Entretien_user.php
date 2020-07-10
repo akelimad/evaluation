@@ -23,4 +23,27 @@ class Entretien_user extends Model
           ->where('mentor_submitted', 1)
           ->first();
     }
+
+    public static function countResponse($entretienId, $profile, $status) {
+        $results = Entretien_user::where('entretien_id', $entretienId)
+          ->where($profile.'_submitted', $status)->get();
+
+        return count($results);
+    }
+
+    public static function getStatus($userId, $entretienId, $profile) {
+        $results = Entretien_user::where('user_id', $userId)
+          ->where('entretien_id', $entretienId)->first();
+        $property = $profile.'_submitted';
+        $status = $results->$property;
+        if ($status == 0) {
+            $status = "Non commencé";
+        } else if ($status == 1) {
+            $status = "En cours";
+        } else {
+            $status = "Fini";
+        }
+
+        return $status;
+    }
 }
