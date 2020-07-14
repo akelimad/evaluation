@@ -31,19 +31,28 @@ class Entretien_user extends Model
         return count($results);
     }
 
-    public static function getStatus($userId, $entretienId, $profile) {
+    public static function getStatus($userId, $mentorId, $entretienId, $profile) {
         $results = Entretien_user::where('user_id', $userId)
+          ->where('mentor_id', $mentorId)
           ->where('entretien_id', $entretienId)->first();
         $property = $profile.'_submitted';
-        $status = $results->$property;
-        if ($status == 0) {
-            $status = "Non commencé";
-        } else if ($status == 1) {
-            $status = "En cours";
+        if (!$results) {
+            $status = 0;
         } else {
-            $status = "Fini";
+            $status = $results->$property;
         }
 
-        return $status;
+        if ($status == 0) {
+            $statusInfo['name'] = "Non commencé";
+            $statusInfo['labelClass'] = 'bg-gray';
+        } else if ($status == 1) {
+            $statusInfo['name'] = "En cours";
+            $statusInfo['labelClass'] = 'bg-yellow';
+        } else {
+            $statusInfo['name'] = "Fini";
+            $statusInfo['labelClass'] = 'bg-green';
+        }
+
+        return $statusInfo;
     }
 }

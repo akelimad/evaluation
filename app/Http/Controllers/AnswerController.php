@@ -95,9 +95,17 @@ class AnswerController extends Controller
             }
         }
         $note = $grpCount > 0 ? $note/$grpCount : 0;
+        if (Auth::user()->id == $uid) {
+            $proporty = 'user_suibmitted';
+        } else {
+            $proporty = 'mentor_submitted';
+        }
         Entretien_user::where('user_id', $uid)
             ->where('entretien_id', $eid)
-            ->update(['note' => Answer::cutNum($note)]);
+            ->update([
+              'note' => Answer::cutNum($note),
+              $proporty => 1 // means coll or mentor start responding
+            ]);
 
         return redirect()->back();
     }

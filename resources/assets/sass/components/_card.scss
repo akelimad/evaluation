@@ -20,6 +20,10 @@
   position: relative;
   border-top-left-radius: .25rem;
   border-top-right-radius: .25rem;
+  .card-tools {
+    float: right;
+    margin-right: -.625rem;
+  }
 }
 .card-title {
   float: left;

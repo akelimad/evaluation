@@ -21,18 +21,16 @@ class SurveyController extends Controller
     public function form(Request $request)
     {
         $id = $request->id;
-        ob_start();
-        if(isset($id) && is_numeric($id)) {
+        if (isset($id) && is_numeric($id)) {
             $survey = Survey::findOrFail($id);
-            $title = "Modifier le questionnaire";
+            $pageTitle = "Modifier le questionnaire";
         } else {
             $survey = new Survey();
-            $title = "Ajouter un questionnaire";
+            $pageTitle = "Ajouter un questionnaire";
         }
         $evaluations = Evaluation::all();
-        echo view('surveys.form', compact('survey', 'evaluations'));
-        $content = ob_get_clean();
-        return ['title' => $title, 'content' => $content];
+
+        return view('surveys.form', compact('survey', 'pageTitle', 'evaluations'));
     }
 
     public function store(Request $request)

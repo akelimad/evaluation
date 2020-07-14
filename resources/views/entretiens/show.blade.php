@@ -18,10 +18,16 @@
 	<section class="content">
 		<div class="row mb-20">
 			<div class="col-md-12">
-				<a href="{{ route('entretiens') }}"><i class="fa fa-long-arrow-left"></i> Retour</a>
+				<h3><a href="{{ route('entretiens') }}"><i class="fa fa-angle-left"></i> Retour</a></h3>
 			</div>
 			<div class="col-md-12">
-				<h3>Suivi de la campagne : {{ $e->titre }} <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{$e->id}} }, {width: 450})" class="btn btn-danger pull-right"><i class="fa fa-trash"></i> Supprimer</a></h3>
+				<h3>Suivi de la campagne : {{ $e->titre }}
+
+					<a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{ $e->id }} }, {width: 450})" class="btn btn-danger pull-right"><i class="fa fa-trash"></i> Supprimer</a>
+
+					<a href="javascript:void(0)" onclick="return chmEntretien.form({{{$e->id}}})" class="btn btn-success pull-right mr-10"><i class="fa fa-pencil"></i> Modifier</a>
+
+				</h3>
 			</div>
 		</div>
 		<div class="row mb-15">
@@ -74,7 +80,8 @@
 												<span>{{$user->name. " ".$user->last_name}}</span>
 											</div>
 											<div class="col-sm-6">
-												<span class="badge pull-right">{{ \App\Entretien_user::getStatus($user->id, $e->id, 'user') }}</span>
+												@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'user') )
+												<span class="badge {{ $statusInfo['labelClass'] }} pull-right">{{ $statusInfo['name'] }}</span>
 											</div>
 											<div class="clearfix"></div>
 										</li>
@@ -90,7 +97,8 @@
 												<span>{{$user->parent->name. " ".$user->parent->last_name}}</span>
 											</div>
 											<div class="col-sm-6">
-												<span class="badge pull-right">{{ \App\Entretien_user::getStatus($user->parent->id, $e->id, 'mentor') }}</span>
+												@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'mentor'))
+												<span class="badge {{ $statusInfo['labelClass'] }} pull-right">{{ $statusInfo['name'] }}</span>
 											</div>
 											<div class="clearfix"></div>
 										</li>
@@ -152,7 +160,11 @@
 					type: 'doughnut',
 					data: {
 						datasets: [{
-							data: [1, 2, 3],
+							data: [
+								{{ $countMentorNotStart }},
+								{{ $countMentorInprogress }},
+								{{ $countMentorFinished }}
+							],
 							backgroundColor: [
 								"gray",
 								"orange",

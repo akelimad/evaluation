@@ -146,7 +146,9 @@ class EntretienController extends Controller
       $e_users[] = $user->id;
     }
     $users = User::getUsers()->where('user_id', '<>', 0)->get();
-    echo view('entretiens.form', compact('users', 'e_users', 'entretien', 'evaluations'));
+    $entretienEvalIds = $entretien->evaluations()->pluck('evaluation_id')->toArray();
+    $entretienEvalSurveyIds = $entretien->evaluations()->pluck('survey_id')->toArray();
+    echo view('entretiens.form', compact('users', 'e_users', 'entretien', 'evaluations', 'entretienEvalIds', 'entretienEvalSurveyIds'));
     $content = ob_get_clean();
     return ['title' => $title, 'content' => $content];
   }
@@ -160,7 +162,7 @@ class EntretienController extends Controller
     $id = $request->id;
     $selectedUsers = $request->usersId;
     $entretienUsers = $removedUsers = [];
-    $evaluationsId = $request->evaluationsId;
+    $evaluationsId = $request->items;
 
     $url=url('config/settings/general');
     if(Evaluation::maxNote() == 0) {
@@ -226,20 +228,19 @@ class EntretienController extends Controller
     $entretien->date = $date;
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
+    $entretien->model = $request->model;
     $entretien->user_id = User::getOwner()->id;
     $entretien->start_periode = $start_periode;
     $entretien->end_periode = $end_periode;
     $entretien->save();
-    $entretien->evaluations()->attach($evaluationsId);
-    if (empty($id)) {
-      $surveyId = null;
-      foreach ($evaluations as $evalId) {
-        if (!in_array($evalId, [1, 2, 9])) continue; // evaluations, carrieres, objectifs
-        if($evalId == 1) $surveyId = $surveyEval->id;
-        if($evalId == 2) $surveyId = $surveyCarreer->id;
-        if($evalId == 9) $surveyId = $surveyObj->id;
-        Entretien_evaluation::where('entretien_id', $entretien->id)
-          ->where('evaluation_id', $evalId)->update(['survey_id'=>$surveyId]);
+
+    // attach evaluations ID
+    if (!empty($request->items)) {
+      $entretien->evaluations()->sync(array_keys($request->items));
+      foreach ($request->items as $evaluationId => $value) {
+        $surveyId = isset($value['survey_id']) && intval($value['survey_id']) > 0 ? $value['survey_id'] : null;
+        if (is_null($surveyId) && in_array($evaluationId, [1, 2, 9])) continue;
+        Entretien_evaluation::where('entretien_id', $entretien->id)->where('evaluation_id', $evaluationId)->update(['survey_id'=>$surveyId]);
       }
     }
 
@@ -514,14 +515,14 @@ class EntretienController extends Controller
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)
         ->update([
-          'user_submitted' => 1,
+          'user_submitted' => 2,
           'user_updated_at' => date('Y-m-d H:i:s'),
         ]);
     } else { // this is a mentor
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)
         ->update([
-          'mentor_submitted' => 1,
+          'mentor_submitted' => 2,
           'mentor_updated_at' => date('Y-m-d H:i:s'),
         ]);
       $rh_validate = Email::getAll()->where('ref', 'rh_val')->first();

@@ -64,6 +64,9 @@
   .caption {
     font-size: 0.8em;
   }
+  .evals-wrapper, .carreers-wrapper, .objectifs-wrapper {
+    display: none;
+  }
 </style>
 
 <form method="POST" action="" id="entretienForm" role="form" class="allInputsFormValidation form-horizontal" onsubmit="return chmEntretien.store(event)">
@@ -134,14 +137,13 @@
             <button type="button" class="btn btn-primary next pull-right">Continuer</button>
           </div>
         </div>
-
         <div class="step-content" data-step="2" style="display: none;">
           <div class="form-group">
             <div class="col-md-12">
               <label for="titre" class="control-label required">Modèle</label>
-              <select name="model" id="model" class="form-control">
+              <select name="model" id="model" class="form-control" chm-validate="required">
                 <option value=""></option>
-                <option value="Entretien annuel">Entretien annuel</option>
+                <option value="Entretien annuel" {{ $entretien->model == 'Entretien annuel' ? 'selected':'' }}>Entretien annuel</option>
               </select>
             </div>
           </div>
@@ -150,19 +152,49 @@
             <button type="button" class="btn btn-primary next pull-right">Continuer</button>
           </div>
         </div>
-
         <div class="step-content" data-step="3" style="display: none;">
           <div class="form-group">
             <div class="col-md-12">
               <label for="titre" class="control-label required mb-10">Items</label>
-              <button type="button" class="btn btn-info btn-xs ml-20 mb-0" onclick="return sellectAll(this)"><i class="fa fa-check-square"></i> Tout sélectionner</button>
-              <button type="button" class="btn btn-danger btn-xs ml-10 mb-0" onclick="return desellectAll(this)"><i class="fa fa-square"></i> Tout désélectionner</button>
               <div class="eval-items-container mt-5">
                 @foreach($evaluations as $evaluation)
                   <div class="form-check">
-                    <input type="checkbox" name="evaluationsId[]" class="form-check-input" id="eval-{{ $evaluation->id }}" value="{{ $evaluation->id }}">
+                    <input type="checkbox" name="items[{{$evaluation->id}}][survey_id]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
                   </div>
+                  @if ($evaluation->title == "Evaluations")
+                    <div class="evals-wrapper mb-10">
+                      <select name="items[{{$evaluation->id}}][survey_id]" id="" class="form-control">
+                        <option value="">Veuillez sélectionner</option>
+                        @foreach(App\Survey::getAll()->where('evaluation_id', 1)->get() as $s)
+                          <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
+                        @endforeach
+                      </select>
+                      <p class=""><a href="/config/surveys">Ajouter un nouveau ?</a></p>
+                    </div>
+                  @endif
+                  @if ($evaluation->title == "Carrières")
+                    <div class="carreers-wrapper mb-10">
+                      <select name="items[{{$evaluation->id}}][survey_id]" id="" class="form-control">
+                        <option value="">Veuillez sélectionner</option>
+                        @foreach(App\Survey::getAll()->where('evaluation_id', 2)->get() as $s)
+                          <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
+                        @endforeach
+                      </select>
+                      <p class=""><a href="/config/surveys">Ajouter un nouveau ?</a></p>
+                    </div>
+                  @endif
+                  @if ($evaluation->title == "Objectifs")
+                    <div class="objectifs-wrapper mb-10">
+                      <select name="items[{{$evaluation->id}}][survey_id]" id="" class="form-control">
+                        <option value="">Veuillez sélectionner</option>
+                        @foreach(App\EntretienObjectif::getAll()->get() as $s)
+                          <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
+                        @endforeach
+                      </select>
+                      <p class=""><a href="/config/entretienObjectif">Ajouter un nouveau ?</a></p>
+                    </div>
+                  @endif
                 @endforeach
               </div>
             </div>
@@ -172,12 +204,11 @@
             <button type="button" class="btn btn-primary next pull-right">Continuer</button>
           </div>
         </div>
-
         <div class="step-content" data-step="4" style="display: none;">
           <div class="form-group">
             <div class="col-md-12">
               <label for="users_id" class="control-label required">Participants</label>
-              <select name="usersId[]" id="users_id" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" >
+              <select name="usersId[]" id="users_id" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" chm-validate="required">
                 @foreach($users as $user)
                   <option value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}> {{ $user->name." ".$user->last_name }} </option>
                 @endforeach
@@ -190,18 +221,17 @@
             <button type="button" class="btn btn-primary next pull-right">Continuer</button>
           </div>
         </div>
-
         <div class="step-content" data-step="5" style="display: none;">
           <div class="form-group">
             <div class="col-md-12">
               <div class="form-group">
                 <div class="col-md-6">
                   <label for="date" class="control-label required">Date de l'entretien</label>
-                  <input type="text" name="date" id="interview-startdate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date) ? Carbon\Carbon::parse($entretien->date)->format('d-m-Y') : null }}" readonly="" required="">
+                  <input type="text" name="date" id="interview-startdate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date) ? Carbon\Carbon::parse($entretien->date)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
                 </div>
                 <div class="col-md-6">
                   <label for="date_limit" class="control-label required">Date de clôture</label>
-                  <input type="text" name="date_limit" id="interview-enddate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" readonly="" required="">
+                  <input type="text" name="date_limit" id="interview-enddate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
                 </div>
               </div>
             </div>
@@ -211,7 +241,6 @@
             <button type="button" class="btn btn-primary next pull-right">Continuer</button>
           </div>
         </div>
-
         <div class="step-content" data-step="6" style="display: none;">
           <div class="summary">
             <p><b>Récapitulatif</b></p>
@@ -239,48 +268,7 @@
             <button type="button" class="btn btn-default previous pull-left">Retour</button>
           </div>
         </div>
-
       </div>
-
-<div class="content">
-  <input type="hidden" name="type" value="annuel">
-  <input type="hidden" name="id" value="{{ $entretien->id }}">
-  {{ csrf_field() }}
-  <div class="form-group">
-    <div class="col-md-6">
-      <label for="date" class="control-label required">Date de l'entretien</label>
-      <input type="text" name="date" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date) ? Carbon\Carbon::parse($entretien->date)->format('d-m-Y') : null }}" readonly="" required="">
-    </div>
-    <div class="col-md-6">
-      <label for="date_limit" class="control-label required">Date de clôture</label>
-      <input type="text" name="date_limit" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" readonly="" required="">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-md-12">
-      <label for="titre" class="control-label required">Titre</label>
-      <input type="text" name="titre" class="form-control" id="titre" placeholder="" value="{{isset($entretien->titre) ? $entretien->titre : null }}" required="" chm-validate="required">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-md-6">
-      <label for="titre" class="control-label">Période d’entretien du</label>
-      <input type="text" name="start_periode" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->start_periode) ? Carbon\Carbon::parse($entretien->start_periode)->format('d-m-Y') : null }}" readonly="" required="">
-    </div>
-    <div class="col-md-6">
-      <label for="titre" class="control-label">au</label>
-      <input type="text" name="end_periode" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->end_periode) ? Carbon\Carbon::parse($entretien->end_periode)->format('d-m-Y') : null }}" readonly="" required="">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-md-12">
-      <label for="users_id" class="control-label required">Collaborateur à évaluer</label>
-      <select name="usersId[]" id="users_id" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" required>
-        @foreach($users as $user)
-          <option value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}> {{ $user->name." ".$user->last_name }} </option>
-        @endforeach
-      </select>
-      <input type="checkbox" id="check-all"> <label for="check-all">Tout sélectionner</label>
     </div>
   </div>
 </form>
@@ -311,9 +299,18 @@
     $('#interview-enddate-td').html(interview_enddate)
   }
 
+  function  showHideCountryErrorBlock() {
+    var countChecked = $('.eval-item-checkbox:checked').length
+    if (countChecked == 0) {
+      chmForm.showErrorBlock('.eval-items-container', "Veuillez choisir au moins un élément")
+    } else {
+      $('.eval-items-container').removeClass('chm-has-error').next('.chm-error-block').remove()
+    }
+  }
+
   $(function () {
     $('.datepicker').datepicker({
-      //startDate: new Date(),
+      startDate: new Date(),
       autoclose: true,
       format: 'dd-mm-yyyy',
       language: 'fr',
@@ -331,11 +328,54 @@
       }
     });
 
+    $('.eval-item-checkbox').on('change', function() {
+      showHideCountryErrorBlock()
+
+      if ($(this).next('label').text() == 'Evaluations' && $(this).is(':checked')) {
+        $('.evals-wrapper').show()
+      } else if ($(this).next('label').text() == 'Evaluations' && !$(this).is(':checked')) {
+        $('.evals-wrapper').hide()
+      }
+      if ($(this).next('label').text() == 'Carrières' && $(this).is(':checked')) {
+        $('.carreers-wrapper').show()
+      } else if ($(this).next('label').text() == 'Carrières' && !$(this).is(':checked')) {
+        $('.carreers-wrapper').hide()
+      }
+      if ($(this).next('label').text() == 'Objectifs' && $(this).is(':checked')) {
+        $('.objectifs-wrapper').show()
+      } else if ($(this).next('label').text() == 'Objectifs' && !$(this).is(':checked')) {
+        $('.objectifs-wrapper').hide()
+      }
+    })
+    @if($entretien->id > 0)
+      $('.eval-item-checkbox').trigger('change')
+    @endif
+
     $(document).on('click', 'button.next', function (e) {
-      getdata()
       var $container = $(this).closest('.step-content')
       var stepNbr = $container.attr('data-step')
       var $step = $('.step[data-step="'+ stepNbr +'"]')
+
+      var isValid = true
+      $(this).closest('.step-content').find('.form-control').each(function () {
+        if (!chmForm.isValid(this)) {
+          isValid = false;
+        }
+      })
+      if (stepNbr == 3) {
+        showHideCountryErrorBlock()
+        var countChecked = $('.eval-item-checkbox:checked').length
+        if (countChecked == 0) {
+          isValid = false;
+        }
+      }
+      if (!isValid) {
+        return false
+      }
+
+
+      getdata()
+
       $step.removeClass('active').next().addClass('active')
       if (!$step.next().find('.circle i').hasClass('fa-check')) {
         $step.next().find('.circle i').toggleClass('fa-check fa-circle')

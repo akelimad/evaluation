@@ -20,7 +20,7 @@
           <div class="box-header">
             <h3 class="box-title">Liste des questionnaires <span class="badge">{{$surveys->total()}}</span></h3>
             <div class="box-tools mb40">
-              <a href="javascript:void(0)" onclick="return chmSurvey.form({})" class="btn bg-maroon" title="" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
+              <a href="{{ route('survey.form') }}" class="btn bg-maroon" title="" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
             </div>
           </div>
           <p class="help-block">Ces questionnaires vont vous permettre de les utiliser pour l'évaluation annuelle.<br> Vous pouvez créer autant de questionnaires et allez vers la page des <a href="{{ url('entretiens/index') }}" target="_blank">entretiens</a> pour choisir quel questionnaire sera utilisé lors de l'évaluation.</p>

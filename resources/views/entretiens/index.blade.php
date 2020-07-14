@@ -54,12 +54,13 @@
 @section('javascript')
   <script>
     $(document).ready(function () {
+      if (chmUrl.getParam('deleted') == 1) {
+        window.location.href = 'entretiens/index'
+      }
       $('.table-responsive').on('show.bs.dropdown', function () {
-        console.log('show')
         $('.table-responsive').css('overflow', 'inherit')
       })
       $('.table-responsive').on('hide.bs.dropdown', function () {
-        console.log('hide')
         $('.table-responsive').css('overflow', 'auto')
       })
 

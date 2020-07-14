@@ -12,7 +12,7 @@ class Entretien extends Model
     public static function answered($eid, $uid)
     {
         $eu = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)
-            ->where('user_submitted', 1)
+            ->where('user_submitted', 2)
             ->first();
         if($eu) {
             return $eu;
@@ -23,7 +23,7 @@ class Entretien extends Model
     public static function answeredMentor($eid, $uid, $mid)
     {
         $eu = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', $mid)
-            ->where('mentor_submitted', 1)
+            ->where('mentor_submitted', 2)
             ->first();
         if($eu) {
             return $eu;

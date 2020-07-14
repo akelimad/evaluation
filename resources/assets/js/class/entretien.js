@@ -118,7 +118,7 @@ export default class chmEntretien {
     }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })
-    window.location.href = 'entretiens/index'
+    window.location.href = 'entretiens/index?deleted=1'
   }
 
   static submission (params) {

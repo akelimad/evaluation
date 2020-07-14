@@ -1,5 +1,13 @@
 import $ from 'jquery'
 
+export default function trans (msgid) {
+  if ('etaTrans' in window && msgid in window.etaTrans) {
+    return window.etaTrans[msgid]
+  } else {
+    return msgid
+  }
+}
+
 window.showNumberOfSelectedItems = (target) => {
   var $ul = $(target).next('span').find('ul')
   $ul.hide()
