@@ -40,10 +40,10 @@ class SurveyController extends Controller
     $groups = $request->groups;
     $survey_id = $request->id;
 
-    if (empty($survey_id)) {
-      $survey = new Survey();
-    } else {
+    if ($survey_id > 0) {
       $survey = Survey::findOrFail($survey_id);
+    } else {
+      $survey = new Survey();
     }
     // save survey
     $survey->title = $request->title;

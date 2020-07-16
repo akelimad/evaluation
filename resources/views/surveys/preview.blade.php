@@ -17,16 +17,16 @@
                     <textarea class="form-control" readonly=""></textarea>
                   @elseif($q->type == "checkbox")
                     @foreach($q->children as $child)
-                      <div class="survey-checkbox">
-                        <input type="{{$q->type}}">
-                        <label>{{ $child->titre }}</label>
+                      <div class="survey-checkbox d-block w-100">
+                        <label><input type="{{$q->type}}"> {{ $child->titre }}</label>
                       </div>
                     @endforeach
                     <div class="clearfix"></div>
                   @elseif($q->type == "radio")
                     @foreach($q->children as $child)
-                      <input type="{{$q->type}}">
-                      <label>{{ $child->titre }}</label>
+                      <div>
+                        <label><input type="{{$q->type}}" name="question[{{ $q->id }}]"> {{ $child->titre }}</label>
+                      </div>
                     @endforeach
                   @elseif ($q->type == "slider")
                     <div class="" style="margin-top: 30px;">

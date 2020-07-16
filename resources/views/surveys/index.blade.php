@@ -30,7 +30,6 @@
                 <tr>
                   <th>Titre</th>
                   <th>Section</th>
-                  <th>Type</th>
                   <th>Description</th>
                   <th class="text-center">Actions</th>
                 </tr>
@@ -38,7 +37,6 @@
                   <tr>
                     <td> {{ $survey->title }}</td>
                     <td> {{ is_numeric($survey->evaluation_id) ? App\Evaluation::findOrFail($survey->evaluation_id)->title : '' }}</td>
-                    <td> {{ $survey->type == 0 ? 'Standard':'Personnalisé' }}</td>
                     <td> {{ $survey->description ? $survey->description : '---' }} </td>
                     <td class="text-center">
                       <a href="{{ route('survey.form', ['id' => $survey->id]) }}" class="btn-primary icon-fill" title="Modifier" data-toggle="tooltip"> <i class="glyphicon glyphicon-pencil"></i> </a>

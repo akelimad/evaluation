@@ -184,9 +184,11 @@ i {
 }
 
 .content-wrapper {
-  background: #cdd8e4;
+  background: #e0e5ea;
 }
-
+.highlight {
+  border: 1px dashed red !important;
+}
 .portlet-title > .nav-tabs {
   background: none;
   margin: 0;

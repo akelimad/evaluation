@@ -21,47 +21,74 @@
                 <label for="">Description</label>
                 <textarea name="" id="" class="form-control" v-model="description"></textarea>
               </div>
-              <div class="form-group" :class="{'has-error': errors.has('section')}">
-                <label for="">Section</label>
-                <select name="section" id="" class="form-control" v-model="section" v-validate="'required'">
+              <div class="form-group">
+                <label for="">Evaluations</label>
+                <select name="section" id="" class="form-control" v-model="section">
                   <option value=""></option>
                   @foreach($evaluations as $eval)
-                    @if($eval->title =="Evaluations" || $eval->title =="Carrières")
+                    @if($eval->title != "Commentaires")
                       <option value="{{$eval->id}}" {{ $eval->id == $survey->evaluation_id ? 'selected':''}}>{{$eval->title}}</option>
                     @endif
                   @endforeach
                 </select>
-                <span v-show="errors.has('section')" class="help-block">@{{ errors.first('section') }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div v-if="groups.length <= 0" class="row mb-30">
+        <div class="col-md-4 col-md-offset-4">
+          <label for="">Entrer le nombre des blocks pour ce questionnaire</label>
+          <div class="input-group" :class="{'has-error': errors.has('number')}">
+            <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes">
+            <span class="input-group-btn">
+              <button class="btn btn-success" @click="addGroups()" type="button">Valider</button>
+            </span>
+            <div class="clearfix"></div>
+          </div>
+          <span v-show="errors.has('number')" class="help-block text-red">@{{ errors.first('number') }}</span>
+        </div>
+      </div>
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">
-          <div class="card mb-40" v-for="(group, grpIndex) in groups">
+          <div class="card mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
             <div class="card-header">
               <div class="form-group" v-if="group.edit" :class="{'has-error': errors.has('group')}">
-                <input name="group" v-model="group.title" class="form-control" @blur="updateGroup(group)" @keyup.enter="updateGroup(group)" v-focus placeholder="Entrez le titre du groupe de questions" v-validate="'required'" @keypress.enter.prevent>
-                <span v-show="errors.has('group')" class="help-block">@{{ errors.first('group') }}</span>
+                <div class="row">
+                  <div class="col-md-11">
+                    <input name="group" v-model="group.title" class="form-control" @blur="updateGroup(group)" @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du block" v-validate="'required'" @keypress.enter.prevent v-focus>
+                    <span v-show="errors.has('group')" class="help-block">@{{ errors.first('group') }}</span>
+                  </div>
+                  <div class="col-md-1">
+                    <button type="button" class="btn btn-tool btn-xs pull-right text-danger" data-toggle="tooltip" title="Supprimer ce block" @click="removeGroup(grpIndex)"><i class="fa fa-trash"></i></button>
+                  </div>
+                </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
-                <label @click="group.edit = true;" class="mb-0">@{{ group.title }}</label>
-                <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeGroup(grpIndex)"><i class="fa fa-trash"></i></button>
+                <label @click="group.edit = true;" class="mb-0">Block @{{ grpIndex + 1 }} - @{{ group.title }}</label>
+                <button type="button" class="btn btn-tool btn-xs pull-right text-danger" data-toggle="tooltip" title="Supprimer ce block" @click="removeGroup(grpIndex)"><i class="fa fa-trash"></i></button>
+
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil"></i></button>
               </h3>
             </div>
             <div class="box-body">
-              <div class="panel panel-default" v-for="(question, qIndex) in group.questions">
+              <div class="panel panel-default" v-for="(question, qIndex) in group.questions" :class="{highlight:question.active}">
                 <div class="panel-heading">
                   <div class="form-group" v-if="question.edit" :class="{'has-error': errors.has('question')}">
-                    <input name="question" v-model="question.title" class="form-control" @blur="updateQuestion(question)" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
-                    <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
+                    <div class="row">
+                      <div class="col-md-11">
+                        <input name="question" v-model="question.title" class="form-control" @blur="updateQuestion(question)" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
+                        <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
+                      </div>
+                      <div class="col-md-1">
+                        <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex)"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </div>
                   </div>
                   <p v-else class="m-0">
-                    <label @click="question.edit = true;" class="mb-0">@{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
+                    <label @click="question.edit = true;" class="mb-0">Question @{{ qIndex + 1 }} - @{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
                     <span class="d-inline-block">
-                      <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeQuestion(grpIndex, qIndex)"><i class="fa fa-trash"></i></button>
+                      <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex)"><i class="fa fa-trash"></i></button>
                       <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)"><i class="fa fa-pencil"></i></button>
                     </span>
                   </p>
@@ -71,7 +98,7 @@
                   <ul class="list-unstyled">
                     <li v-for="(choice, cIndex) in group.questions[qIndex].choices" class="mb-10">
                       <div v-if="choice.edit" class="form-group">
-                        <input name="choice" v-model="choice.title" class="form-control" @blur="updateChoice(grpIndex, qIndex, cIndex, choice)" @keyup.enter="updateChoice(grpIndex, qIndex, cIndex, choice)" v-focus placeholder="Ajouter une option" v-validate="'required'" @keypress.enter.prevent>
+                        <input name="choice" v-model="choice.title" class="form-control" @blur="updateChoice(grpIndex, qIndex, cIndex, choice)" @keyup.enter="updateChoice(grpIndex, qIndex, cIndex, choice)" v-focus placeholder="Entrez l'option de réponse" v-validate="'required'" @keypress.enter.prevent>
                       </div>
                       <p v-else class="m-0 text-muted">
                         <label @click="choice.edit = true;" class="mb-0">@{{ cIndex + 1 }} | @{{ choice.title }}</label>
@@ -79,7 +106,7 @@
                         <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editChoice(choice)"><i class="fa fa-pencil"></i></button>
                       </p>
                     </li>
-                    <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option</a>
+                    <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
                   </ul>
                 </div>
               </div>
@@ -98,7 +125,7 @@
             </div>
           </div>
           <div class="add-new-section-btn">
-            <button type="button" class="btn btn-success" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un groupe de questions</button>
+            <button v-if="groups.length > 0" type="button" class="btn btn-success" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
           </div>
         </div>
       </div>
@@ -106,7 +133,7 @@
         <div class="col-md-8 col-md-offset-2" v-if="groups.length > 0">
           <div class="card">
             <div class="card-body">
-              <button class="btn btn-primary pull-right"><i class="fa fa-save"></i> Enregistrer</button>
+              <button class="btn btn-primary pull-right" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
             </div>
           </div>
         </div>
@@ -125,6 +152,7 @@
     new Vue({
       el: '#content',
       data: {
+        number: 1,
         id: "{{ $survey->id }}",
         title: "{!! $survey->title !!}",
         description: "{!! $survey->description !!}",
@@ -149,18 +177,31 @@
                     },
                     @endforeach
                   ],
-                  edit: false
+                  edit: false,
+                  active: false
                 },
                 @endif
               @endforeach
             ],
             edit: false,
+            active: false
           },
           @endforeach
         ],
-        submit: false
+        submitted: false,
       },
       methods: {
+        addGroups: function () {
+          for (let i = 0; i < this.number; i++) {
+            this.groups.push({
+              id: null,
+              title: "",
+              edit: true,
+              active: false,
+              questions: []
+            })
+          }
+        },
         getQuestionType: function (type) {
           switch (type) {
             case 'text':
@@ -194,15 +235,22 @@
             id: null,
             title: "",
             edit: true,
+            active: false,
             questions: []
           })
         },
         removeGroup: function (index) {
+          this.groups[index].active = true
           if (this.groups.length > 1) {
             var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
-            if (confirmation) this.groups.splice(index, 1)
+            if (confirmation) {
+              setTimeout(() => this.groups.splice(index, 1), 300)
+            } else {
+              this.groups[index].active = false
+            }
           } else {
-            alert("Le questionnaire doit avoir au moins un groupe, vous ne pouvez pas supprimer ce groupe !")
+            this.groups[index].active = false
+            alert("Le questionnaire doit avoir au moins un block, vous ne pouvez pas supprimer ce dernier block !")
           }
         },
         editQuestion: function (question) {
@@ -220,17 +268,22 @@
                 title: "",
                 type: qType,
                 edit: true,
+                active: false,
                 choices: []
               }
           )
         },
         removeQuestion: function (grpIndex, qIndex) {
+          this.groups[grpIndex].questions[qIndex].active = true
           if (this.groups[grpIndex].questions.length > 1) {
             var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
             if (confirmation) {
-              this.groups[grpIndex].questions.splice(qIndex, 1)
+              setTimeout(() => this.groups[grpIndex].questions.splice(qIndex, 1), 300);
+            } else {
+              this.groups[grpIndex].questions[qIndex].active = false
             }
           } else {
+            this.groups[grpIndex].questions[qIndex].active = false
             alert("La section doit avoir au moins une question !")
           }
         },
@@ -261,6 +314,7 @@
         handleSubmit: function () {
           this.$validator.validateAll().then((result) => {
             if (result) {
+              this.submitted = true
               axios.post("{{ route('survey.store') }}", {
                 id: this.id,
                 title: this.title,
@@ -268,13 +322,15 @@
                 section: this.section,
                 groups: this.groups,
               }).then(function (response) {
-                swal({
-                  title: "Succès",
-                  text: "Les informations ont bien été enregistrées",
-                  type: "success"
-                }).then(function () {
-                  window.location.href = "{{ route('surveys-list') }}"
-                });
+                if (response.status == 200) {
+                  swal({
+                    title: "Succès",
+                    text: "Les informations ont bien été enregistrées",
+                    type: "success"
+                  }).then(function () {
+                    window.location.href = "{{ route('surveys-list') }}"
+                  });
+                }
               }).catch(function (error) {
                 console.log(error)
               });
