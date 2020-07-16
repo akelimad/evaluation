@@ -94,9 +94,9 @@
                     <th>Date d'expiration</th>
                     <th>Collaborateur</th>
                     <th>Type d'évaluation</th>
-                    <th>Mentor</th>
+                    <th>Manager</th>
                     <th class="text-center">Coll.</th>
-                    <th class="text-center">Mentor</th>
+                    <th class="text-center">Manager</th>
                     <th class="text-center">RH</th>
                     <th class="text-center">Note</th>
                     <th class="text-center">Actions</th>

@@ -76,8 +76,8 @@
       <input id="mle" type="text" class="form-control" name="mle" value="{{ isset($user) ? $user->mle : '' }}">
     </div>
     <div class="col-md-6">
-      <label for="date_recruiting" class="control-label">Date d'embauche</label>
-      <input id="date_recruiting" type="text" class="form-control datepicker" name="date_recruiting" value="{{ !empty($user->date_recruiting) ? Carbon\Carbon::parse($user->date_recruiting)->format('d/m/Y') : '' }}" readonly>
+      <label for="date_recruiting" class="control-label">Date de recrutement</label>
+      <input id="date_recruiting" type="text" class="form-control datepicker" name="date_recruiting" value="{{ !empty($user->date_recruiting) ? $user->date_recruiting : '' }}" readonly>
     </div>
   </div>
   @role(['ROOT', 'ADMIN', 'RH'])
@@ -92,7 +92,7 @@
         </select>
       </div>
       <div class="col-md-6">
-        <label for="user_id" class="control-label">Mentor</label>
+        <label for="user_id" class="control-label">Manager</label>
         <select name="user_id" id="user_id" class="form-control" @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
           <option value="">=== Select ===</option>
           @foreach($users as $u)
@@ -104,6 +104,16 @@
     </div>
   @endif
   @endrole
+
+  <div class="form-group">
+    <div class="col-md-6">
+      <label for="password" class="control-label">Equipe</label>
+      <select name="" id="" class="form-control">
+        <option value=""></option>
+        <option value=""></option>
+      </select>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -114,7 +124,7 @@
     $('.datepicker').datepicker({
       endDate: new Date(),
       autoclose: true,
-      format: 'dd-mm-yyyy',
+      format: 'dd/mm/yyyy',
       language: 'fr',
       todayHighlight: true,
     })

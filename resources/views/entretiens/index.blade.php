@@ -29,10 +29,10 @@
       <div class="row">
         @foreach($entretiens as $e)
           <div class="col-sm-4">
-            <div class="box box-primary">
+            <div class="box box-primary pt-5">
               <div class="box-header with-border">
                 <h3 class="box-title" title="{{ $e->titre }}" data-toggle="tooltip">{{ str_limit($e->titre, 20) }}</h3>
-                <span class="label label-success pull-right pl-10 pr-10 p-10 font-18">Actif</span>
+                <span class="label label-success pull-right pl-10 pr-10 p-5 font-14">Actif</span>
               </div>
               <div class="box-body">
                 <p><b>Date de l'entretien :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</span></p>

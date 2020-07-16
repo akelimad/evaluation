@@ -299,7 +299,7 @@
 @if(count($objectifs) > 0)
   <div class="mt-20"><p class="section-title">Objectifs</p></div>
   <div class="box-body">
-    <h4 class="alert alert-info p-5">Mentor : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
+    <h4 class="alert alert-info p-5">Manager : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
     <div class="table-responsive">
       <table class="table table-hover">
         <tr>

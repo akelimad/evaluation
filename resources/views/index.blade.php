@@ -8,7 +8,7 @@
                     <div class="box-body box-profile box-widget widget-user">
                         <h3 class="widget-user-username">Bienvenue {{Auth::user()->displayName()}}</h3>
                         @if(!Auth::user()->hasRole('ADMIN'))
-                        <p>Voici les informations de votre Mentor :</p>
+                        <p>Voici les informations de votre Manager :</p>
                         @endif
                         @if(Auth::user()->hasRole('ADMIN'))
                         <div class="home-box-img-profile">
@@ -34,7 +34,7 @@
                             <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
                         </ul>
                         @role(["COLLABORATEUR"])
-                        <p> <i>N'hésitez pas à solliciter votre Mentor si vous avez la moindre question concernant votre suivi RH.</i> </p>
+                        <p> <i>N'hésitez pas à solliciter votre Manager si vous avez la moindre question concernant votre suivi RH.</i> </p>
                         @endrole
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                                                 <th>Titre </th>
                                                 <th>Date d'expiration</th>
                                                 <th class="text-center">Collaborateur</th>
-                                                <th class="text-center">Mentor</th>
+                                                <th class="text-center">Manager</th>
                                                 <th class="text-center">RH</th>
                                             </tr>
                                         </thead>
@@ -173,7 +173,7 @@
                                                 <th>Fonction</th>
                                                 <th>Type d'évaluation</th>
                                                 <th class="text-center">Collaborateur</th>
-                                                <th class="text-center">Mentor</th>
+                                                <th class="text-center">Manager</th>
                                                 <th class="text-center">RH</th>
                                             </tr>
                                         </thead>

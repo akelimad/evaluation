@@ -203,6 +203,9 @@
                         <li class="{{ Request::is('config/roles') ? 'active' : '' }}">
                             <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> Rôles</a>
                         </li>
+                        <li class="{{ Request::is('config/teams') ? 'active' : '' }}">
+                            <a href="{{ route('teams') }}"><i class="fa fa-users"></i> Equipes</a>
+                        </li>
                     </ul>
                 </li>
                 @endrole

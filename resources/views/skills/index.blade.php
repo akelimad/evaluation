@@ -24,9 +24,9 @@
                                                 <th>Famille</th>
                                                 <th>Catégorie</th>
                                                 <th>Compétence</th>
-                                                <th>Objectif (Mentor)</th>
+                                                <th>Objectif (Manager)</th>
                                                 <th>Coll.</th>
-                                                <th>Mentor</th>
+                                                <th>Manager</th>
                                                 <th>Ecart</th>
                                             </tr>
                                             @php($totalObjectif = 0)

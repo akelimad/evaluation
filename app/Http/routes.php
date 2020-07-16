@@ -18,7 +18,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');
 Route::get('profile', 'UserController@profile');
 
-Route::get('user/{id}', 'UserController@show');
+Route::get('user/{id}', 'UserController@show')->name('user.profile');
 Route::get('users/form', 'UserController@formUser');
 Route::post('users/store', 'UserController@storeUser');
 
@@ -169,3 +169,8 @@ Route::put('entretiens/{eid}/u/{user}/submit', 'EntretienController@submission')
 Route::post('answers/store', 'AnswerController@store');
 
 Route::post('config/settings/store', 'SettingController@store');
+
+Route::get('config/teams', 'TeamController@index')->name('teams');
+Route::get('configs/teams/form', 'TeamController@form')->name('team.form');
+Route::post('configs/teams/store', 'TeamController@store')->name('team.store');
+Route::delete('configs/teams/{id}/delete', 'TeamController@delete')->name('team.delete');

@@ -128,6 +128,11 @@ class User extends Authenticatable
     return $this->hasMany('App\Survey');
   }
 
+  public function getTeams()
+  {
+    return $this->hasMany('App\Team');
+  }
+
   public function getEmails()
   {
     return $this->hasMany('App\Email');
@@ -217,6 +222,10 @@ class User extends Authenticatable
       return $user->name.' '.$user->last_name;
     }
     return "anonymous";
+  }
+
+  public function fullname() {
+    return $this->name . " " . $this->last_name;
   }
 
 

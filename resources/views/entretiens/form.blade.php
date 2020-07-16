@@ -263,7 +263,7 @@
             </table>
           </div>
           <div class="actions">
-            <button type="submit" class="btn btn-primary btn-block submit">Lancer la compagne</button>
+            <button type="submit" class="btn btn-primary btn-block submit">Lancer la campagne</button>
             <p class="mt-10">NB: un email sera immédiatement envoyé aux collaborateurs sélectionnés</p>
             <button type="button" class="btn btn-default previous pull-left">Retour</button>
           </div>
