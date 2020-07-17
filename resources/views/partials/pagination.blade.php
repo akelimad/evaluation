@@ -17,6 +17,7 @@
 </div>
 
 @section('javascript')
+
 <script>
     $(function() {
         $("#per_page_select").change(function() {

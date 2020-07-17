@@ -177,7 +177,7 @@
                 </li>
                 @endrole
                 @role(["ADMIN", "RH"])
-                <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>Entretiens</span></a></li>
+                <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>Campagnes</span></a></li>
                 <li class="{{ Request::is('entretiens/evaluations') ? 'active' : '' }}"><a href="{{ url('entretiens/evaluations') }}"><i class="fa fa-pencil"></i> <span>Evaluations en cours</span> </a></li>
                 <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>Calendrier des entretiens</span></a></li>
                 @endrole
@@ -224,7 +224,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             <ol class="breadcrumb">
-                <li><a href="{{url('/')}}"><i class="fa fa-home"></i> Accueil</a></li>
+                <li><a href="{{ route('home') }}" class="text-blue"><i class="fa fa-home"></i> Accueil</a></li>
                 @yield('breadcrumb')
             </ol>
         </section>

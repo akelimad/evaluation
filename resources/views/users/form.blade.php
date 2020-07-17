@@ -108,9 +108,11 @@
   <div class="form-group">
     <div class="col-md-6">
       <label for="password" class="control-label">Equipe</label>
-      <select name="" id="" class="form-control">
+      <select name="team_id" id="team_id" class="form-control">
         <option value=""></option>
-        <option value=""></option>
+        @foreach($teams as $team)
+          <option value="{{ $team->id }}" {{ in_array($team->id, $userTeamsId) ? 'selected':'' }}>{{ $team->name }}</option>
+        @endforeach
       </select>
     </div>
   </div>

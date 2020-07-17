@@ -21,7 +21,7 @@ export default class chmForm {
         $(target).find('#g-recaptcha-response').length === 1 &&
         $(target).find('#g-recaptcha-response').val() === ''
     ) {
-      var errorMsg = trans("Veuillez cocher la case 'Je ne suis pas un rebot'.")
+      var errorMsg = trans('Veuillez cocher la case "Je ne suis pas un rebot".')
       var errorBlock = $('<div class="chm-error-block" id="chm-error-captcha">' + errorMsg + '</div>')
       if ($('#chm-error-captcha').length === 0) {
         $(target).find('#g-recaptcha-response').closest('.g-recaptcha').append(errorBlock)
@@ -32,7 +32,7 @@ export default class chmForm {
     // Disable submit button
     var btn = $(document.activeElement)
     var btnHtml = btn.html()
-    var loadingLabel = trans("En traitement ...")
+    var loadingLabel = trans('En traitement ...')
     var loadingAttr = $(target).attr('chm-loading-label')
     if (loadingAttr !== undefined) {
       loadingLabel = loadingAttr
@@ -84,9 +84,9 @@ export default class chmForm {
               window.chmModal.alert(alertTitle, errors, alertParams)
             } else {
               if (response.status !== 'success') {
-                window.chmAlert.danger(trans("Veuillez vérifier les messages d'erreurs"))
+                window.chmAlert.danger(trans('Veuillez vérifier les messages d\'erreurs'))
               }
-              //var dismissible = (response.data.dismissible && response.data.dismissible === true)
+              // var dismissible = (response.data.dismissible && response.data.dismissible === true)
               window.chmForm.showMessagesBlock(response.status, response.message, target)
             }
           } else if (response.status === 'alert') {
@@ -120,7 +120,7 @@ export default class chmForm {
           }
         }
       } catch (e) {
-        window.chmAlert.error(trans("Une erreur est survenue:") + ' ' + e.message)
+        window.chmAlert.error(trans('Une erreur est survenue:') + ' ' + e.message)
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       var message = jqXHR.status + ' - ' + jqXHR.statusText
@@ -162,7 +162,7 @@ export default class chmForm {
       try {
         params = $.parseJSON(value)
       } catch (e) {
-        window.chmAlert.warning(trans("Le format JSON donné est incorrect."))
+        window.chmAlert.warning(trans('Le format JSON donné est incorrect.'))
       }
     }
     return params
@@ -187,7 +187,7 @@ export default class chmForm {
       if ($(form).closest('.chm-modal').length === 0) {
         $('body, html').animate({scrollTop: $('.chm-error-block').first().offset().top - 120}, 1000)
       } else {
-        window.chmAlert.error(trans("Merci de remplir tous les champs obligatoires."))
+        window.chmAlert.error(trans('Merci de remplir tous les champs obligatoires.'))
       }
     }
 
@@ -221,22 +221,22 @@ export default class chmForm {
           let $colActions = $($colInput).next('#' + colname + 'Actions')
           let fileName = $($colActions).find('input.file_name').val()
           if (fileName === undefined || fileName === '') {
-            errorMsg = trans("Veuillez choisir un fichier.")
+            errorMsg = trans('Veuillez choisir un fichier.')
             return false
           }
         } else if ($(target).is('[type="checkbox"], [type="radio"]')) {
           if ($(':' + $(target).attr('type') + '[name="' + $(target).attr('name') + '"]:checked').length < 1) {
-            errorMsg = trans("Veuillez cocher un élément.")
+            errorMsg = trans('Veuillez cocher un élément.')
             return false
           }
         } else if ($(target).next().is('.note-editor')) {
           let content = $(target).summernote('code')
           if (content === '<p><br></p>' || content === '') {
-            errorMsg = trans("Veuillez remplir ce champ.")
+            errorMsg = trans('Veuillez remplir ce champ.')
             return false
           }
         } else if ($.trim($(target).val()).length === 0) {
-          errorMsg = trans("Veuillez remplir ce champ.")
+          errorMsg = trans('Veuillez remplir ce champ.')
           return false
         }
       } else if ($(target).val() !== null && $(target).val().length > 0) {
@@ -248,99 +248,99 @@ export default class chmForm {
             patern = patern.replace(/\/+$/g, '')
             patern = new RegExp(patern)
             if (!patern.test($(target).val())) {
-              errorMsg = trans("Ce champ doit contenir une valeur valide.")
+              errorMsg = trans('Ce champ doit contenir une valeur valide.')
               return false
             }
             break
           case 'valid_email':
             if (!chmForm.isValidEmail($(target).val())) {
-              errorMsg = trans("Format de l'email est incorrect")
+              errorMsg = trans('Format de l\'email est incorrect')
               return false
             }
             break
           case 'password_strength':
             if (!chmForm.passwordStrength($(target).val())) {
-              errorMsg = trans("Le mot de passe est faible, il doit être composé de caractères (a-z) et de chiffres (0-9)")
+              errorMsg = trans('Le mot de passe est faible, il doit être composé de caractères (a-z) et de chiffres (0-9)')
               return false
             }
             break
           case 'valid_url':
             if (!chmForm.isValidUrl($(target).val())) {
-              errorMsg = trans("Format de l'url est incorrect.")
+              errorMsg = trans('Format de l\'url est incorrect.')
               return false
             }
             break
           case 'valid_name': // \u0600-\u06FF
             var patern = /^[أ-يa-zÀ-ú\s-_'’]*$/i
             if (!patern.test(trimedValue)) {
-              errorMsg = trans("Charactères autorisés : a-z - _ ' ’")
+              errorMsg = trans('haractères autorisés : a-z - _ \' ’')
               return false
             }
             break
           case 'french_date':
             patern = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/
             if (!patern.test(trimedValue)) {
-              errorMsg = trans("Format autorisé: <b>jj/mm/aaaa</b>")
+              errorMsg = trans('Format autorisé: <b>jj/mm/aaaa</b>')
               return false
             }
             break
           case 'string':
             patern = /^[أ-يa-zÀ-ú\s\-_"°^'’.,:+*&#()%@€£$!?{}]*$/i
             if (!patern.test(trimedValue)) {
-              errorMsg = trans("Charactères autorisés : a-z - _ \" ° ^ ' ’ . , : + * & # () % @ € £ $ ! ?")
+              errorMsg = trans('Charactères autorisés : a-z - _ " ° ^ \' ’ . , : + * & # () % @ € £ $ ! ?')
               return false
             }
             break
           case 'alpha_numeric':
             patern = /^[أ-يa-z0-9À-ú\s\-_"°^'’.,:+*&#()%@€£$!?{}]*$/i
             if (!patern.test(trimedValue)) {
-              errorMsg = trans("Charactères autorisés : 0-9 a-z - _ \" ° ^ ' ’ . , :")
+              errorMsg = trans('Charactères autorisés : 0-9 a-z - _ " ° ^ \' ’ . , :')
               return false
             }
             break
           case 'html':
             patern = /^[0-9أ-يa-zÀ-ú\s-_"°^'’.,:+;*&#{}()%@€£$!?\\</>=]*$/i
             if (!patern.test(trimedValue)) {
-              errorMsg = trans("Charactères autorisés : 0-9 a-z - _ \" ° ^ ' ’ . , : + ; * & # {} () % @ € £ $ ! ? / \\ <> =")
+              errorMsg = trans('Charactères autorisés : 0-9 a-z - _ " ° ^ \' ’ . , : + ; * & # {} () % @ € £ $ ! ? / \ <> =')
               return false
             }
             break
           case 'numeric':
             if (!$.isNumeric($(target).val())) {
-              errorMsg = trans("Ce champ doit être un nombre valide.")
+              errorMsg = trans('Ce champ doit être un nombre valide.')
               return false
             }
             break
           case 'integer':
             if (!/^\d+$/.test($(target).val())) {
-              errorMsg = trans("Ce champ doit être un entier.")
+              errorMsg = trans('Ce champ doit être un entier.')
               return false
             }
             break
           case 'phone':
             patern = /^[0-9+]+$/i
             if (!patern.test($(target).val())) {
-              errorMsg = trans("Ce champ n'est pas un numéro de téléphone valide.")
+              errorMsg = trans('Ce champ n\'est pas un numéro de téléphone valide.')
               return false
             }
             break
           case 'dial_code':
             patern = /^\+[0-9+]{1,3}$/i
             if (!patern.test($(target).val())) {
-              errorMsg = trans("Ce champ doit commencer par <b>+</b> suivi par le code, ex: +212")
+              errorMsg = trans('Ce champ doit commencer par <b>+</b> suivi par le code, ex: +212')
               return false
             }
             break
           case 'min_len':
             if (trimedValue.length < rule[1]) {
-              var msg = trans("Ce champ doit contenir au moins {param} caractères.")
+              var msg = trans('Ce champ doit contenir au moins {param} caractères.')
               errorMsg = msg.replace('{param}', rule[1])
               return false
             }
             break
           case 'max_len':
             if (trimedValue.length > rule[1]) {
-              msg = trans("Ce champ doit comporter au plus {param} caractères.")
+              msg = trans('Ce champ doit comporter au plus {param} caractères.')
               errorMsg = msg.replace('{param}', rule[1])
               return false
             }
@@ -348,7 +348,7 @@ export default class chmForm {
           case 'file_max_size':
             let size = $(target).get(0).files[0].size
             if (size > (rule[1] * 1024)) {
-              msg = trans("La taille maximale du fichier est de {param} KB. Veuillez compresser votre fichier en utilisant le site <a target='_blank' href='{site}' style='color:#fff;'>{site}</a>")
+              msg = trans('La taille maximale du fichier est de {param} KB. Veuillez compresser votre fichier en utilisant le site <a target="_blank" href="{site}" style="color:#fff;">{site}</a>')
               msg = msg.replace('{param}', rule[1])
               errorMsg = msg.replace(/{site}/g, 'http://www.smallpdf.com/fr')
               $(target).trigger('chmFileSelected', [0, null])
@@ -360,7 +360,7 @@ export default class chmForm {
             let ext = $(target).get(0).files[0].name.split('.').pop().toLowerCase()
             let extensions = rule[1].split(';')
             if (extensions.indexOf(ext) === -1) {
-              msg = trans("Extensions autorisées: ({param})")
+              msg = trans('Extensions autorisées: ({param})')
               errorMsg = msg.replace('{param}', '.' + rule[1].replace(/;/g, ', .'))
               $(target).trigger('chmFileSelected', [0, null])
               $(target).val('').clone(true)
@@ -369,7 +369,7 @@ export default class chmForm {
             break
         }
       } else if ($(target).attr('required') !== undefined && $(target).val() !== null && $(target).val().length === 0) {
-        errorMsg = trans("Veuillez remplir ce champ.")
+        errorMsg = trans('Veuillez remplir ce champ.')
       }
     })
 
@@ -429,7 +429,7 @@ export default class chmForm {
       var elAfter = $(target).next('.note-editor')
       $(errorBlock).css('top', '6px')
     } else if ($(target).next().is('.cke')) {
-      var elAfter = $(target).next('.cke')
+      elAfter = $(target).next('.cke')
       $(errorBlock).css('top', '6px')
     } else if ($(target).next().is('.bootstrap-tagsinput')) {
       elAfter = $(target).next('.bootstrap-tagsinput')
@@ -567,7 +567,7 @@ export default class chmForm {
     }
 
     $(target).hide()
-    let $rBtn = $('<button title="' + trans("Vous pouvez soumettre ce formulaire à la fin de la date limite") + '" type="button" disabled class="' + $(target).attr('class') + '" data-remaining-value>' + remaining + '</button>')
+    let $rBtn = $('<button title="' + trans('Vous pouvez soumettre ce formulaire à la fin de la date limite') + '" type="button" disabled class="' + $(target).attr('class') + '" data-remaining-value>' + remaining + '</button>')
 
     $($rBtn).insertAfter($(target))
 
@@ -663,9 +663,8 @@ $(document).ready(function () {
   })
 
   // show the selected file in custom file input bootstrap4
-  $(document).on('change', '.custom-file-input', function() {
-    let fileName = $(this).val().split("\\").pop()
-    $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+  $(document).on('change', '.custom-file-input', function () {
+    let fileName = $(this).val().split('\\').pop()
+    $(this).siblings('.custom-file-label').addClass('selected').html(fileName)
   })
-
 })

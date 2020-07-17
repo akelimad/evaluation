@@ -13,7 +13,7 @@
 
 Route::auth();
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@dashboard');
 Route::get('profile', 'UserController@profile');
@@ -23,7 +23,7 @@ Route::get('users/form', 'UserController@formUser');
 Route::post('users/store', 'UserController@storeUser');
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
-	Route::get('users', 'UserController@indexUsers');
+	Route::get('users', 'UserController@indexUsers')->name('users');
 	Route::delete('user/{id}/delete', 'UserController@deleteUser');
 	Route::get('users/import', 'UserController@importUsers');
 	Route::post('users/import_parse', 'UserController@parseImport');

@@ -27,8 +27,9 @@ class TeamController extends Controller
       $team = new Team();
       $title = "Ajouter une équipe";
     }
-
-    echo view('teams.form', compact('team', 'pageTitle'));
+    $collaborators = User::getUsers()->where('user_id', '<>', 0)->get();
+    $teamUsers = $team->users()->get()->pluck('id')->toArray();
+    echo view('teams.form', compact('team', 'pageTitle', 'collaborators', 'teamUsers'));
     $content = ob_get_clean();
 
     return ['title' => $title, 'content' => $content];
@@ -36,6 +37,8 @@ class TeamController extends Controller
 
   public function store(Request $request)
   {
+    $teamUsersId = $request->usersId;
+
     $id = $request->id;
     if ($id > 0) {
       $team = Team::find($id);
@@ -46,6 +49,9 @@ class TeamController extends Controller
     $team->name = $request->name;
     $team->description = $request->description;
     $team->save();
+    if (!empty($teamUsersId)) {
+      $team->users()->sync($teamUsersId);
+    }
 
     return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
   }
@@ -53,9 +59,9 @@ class TeamController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function delete($id)
+  public function delete($tid)
   {
-    $team = Team::find($id);
+    $team = Team::find($tid);
     $team->delete();
     return ["status" => "success", "message" => "L'équipe a été supprimée avec succès !"];
   }

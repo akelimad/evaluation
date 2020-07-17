@@ -168,11 +168,11 @@
                   {{ $g->name }}
                   @if ($g->notation_type == 'section')
                     @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id))
-                      @if(App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations')
+                      @if(!is_null(App\Evaluation::findOrFail($g->survey->evaluation_id)) && App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations')
                         <input type="text" data-group-source="{{$g->id}}" class="notation inputNote" min="1"
                                max="{{App\Setting::get('max_note')}}" placeholder="Note"
                                value="{{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}"
-                               @if($g->notation_type == 'section' && App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;"
+                               @if($g->notation_type == 'section' && App\Evaluation::findOrFail($g->survey->evaluation_id) && App\Evaluation::findOrFail($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;"
                                required @else style="display: none;" @endif>
                       @endif
                       @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
@@ -318,7 +318,7 @@
         @if (Route::current()->getName() != 'entretien.apercu')
         <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
         @endif
-        @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id))
+        @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) && Route::current()->getName() != 'entretien.apercu')
           <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Enregistrer
           </button>
         @endif

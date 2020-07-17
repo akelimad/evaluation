@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Profil')
 @section('breadcrumb')
-  <li>Profil</li>
+  <li><a href="{{ route('users') }}" class="text-blue">Utilisateurs</a></li>
+  <li>Profil de {{ $user->fullname() }}</li>
 @endsection
 @section('content')
   <section class="content profile">
@@ -95,16 +96,39 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-md-3">Equipe</label>
+                  <label class="control-label col-md-3">Nom de l'équipe</label>
                   <div class="col-md-9">
-                    ---
+                    @forelse($user->teams as $team)
+                      <span class="badge">{{ $team->name }}</span>
+                    @empty
+                      ---
+                    @endforelse
                   </div>
                   <div class="clearfix"></div>
                 </div>
               </div>
               <div class="tab-pane" id="entretiens">
                 <div class="p-30">
-                  entretiens content
+                  <div class="table-responsive">
+                    <table class="table table-hover font-18">
+                      <tbody>
+                      @forelse($user->entretiens as $entretien)
+                        <tr>
+                          <td>
+                            <span><i class="fa fa-search fa-1x fa-fw"></i> <a href="javascript:void(0)" onclick="return chmEntretien.apercu({eid: {{$entretien->id}}, uid: {{$user->id}} })">{{ $entretien->titre }} </a></span>
+                            <span class="label label-{{ $entretien->isActif() ? 'success':'danger' }} pl-10 pr-10 ml-30 font-14">{{ $entretien->getStatus() }}</span></td>
+                          <td>{{ date('d/m/Y', strtotime($entretien->date_limit)) }}</td>
+                        </tr>
+                      @empty
+                        <tr>
+                          <td colspan="2">
+                            <div class="alert alert-info">Aucun résultat trouvé</div>
+                          </td>
+                        </tr>
+                      @endforelse
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
               <div class="tab-pane" id="feedback">
@@ -118,10 +142,8 @@
                   <form action="{{ url('config/settings/store') }}" method="post">
                     {{ csrf_field() }}
                     <div class="col-md-4">
-                      <input type="checkbox" name="settings[toggle_sidebar]" id="toggle-sidebar"
-                             value="1" {{isset($settings->toggle_sidebar) && $settings->toggle_sidebar == 1 ? 'checked' : ''}}>
+                      <input type="checkbox" name="settings[toggle_sidebar]" id="toggle-sidebar" value="1" {{isset($settings->toggle_sidebar) && $settings->toggle_sidebar == 1 ? 'checked' : ''}}>
                       <label for="toggle-sidebar">Toggle side bar</label>
-
                       <p class="help-block">Permet de réduire la taille du side bar.</p>
                     </div>
                     <div class="col-md-12">

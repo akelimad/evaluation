@@ -53,7 +53,7 @@ export default class Team {
     var token = $('input[name="_token"]').val()
     var object = window.chmModal.show({
       type: 'POST',
-      url: window.chmSite.url('configs/teams/' + params.sid + '/delete'),
+      url: window.chmSite.url('configs/teams/' + params.tid + '/delete'),
       data: {'_token': token, '_method': 'DELETE'}
     }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'

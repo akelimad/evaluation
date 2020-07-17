@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use App\Fonction;
+use App\Team;
 use Illuminate\Http\Request;
 
 use Maatwebsite\Excel\Facades\Excel;
@@ -111,7 +112,9 @@ class UserController extends Controller
     $users = User::getUsers()->get();
     $fonctions = Fonction::getAll()->get();
     $departments = Department::getAll()->get();
-    echo view('users.form', compact('departments', 'fonctions', 'user', 'roles', 'roles_ids', 'users'));
+    $teams = Team::getAll()->get();
+    $userTeamsId = $user->teams()->get()->pluck('id')->toArray();
+    echo view('users.form', compact('departments', 'fonctions', 'user', 'roles', 'roles_ids', 'users', 'teams', 'userTeamsId'));
     $content = ob_get_clean();
     return ['title' => $title, 'content' => $content];
   }
@@ -177,6 +180,7 @@ class UserController extends Controller
     if ($request->roles != null) {
       $user->roles()->sync($request->roles);
     }
+    $user->teams()->sync([$request->team_id]);
     if ($user->save()) {
       return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
     } else {

@@ -134,7 +134,7 @@
             </div>
           </div>
           <div class="actions">
-            <button type="button" class="btn btn-primary next pull-right">Continuer</button>
+            <button type="button" class="btn btn-primary next pull-right">Continuer <i class="fa fa-long-arrow-right"></i></button>
           </div>
         </div>
         <div class="step-content" data-step="2" style="display: none;">
@@ -148,21 +148,21 @@
             </div>
           </div>
           <div class="actions">
-            <button type="button" class="btn btn-default previous pull-left">Retour</button>
-            <button type="button" class="btn btn-primary next pull-right">Continuer</button>
+            <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
+            <button type="button" class="btn btn-primary next pull-right">Continuer <i class="fa fa-long-arrow-right"></i></button>
           </div>
         </div>
         <div class="step-content" data-step="3" style="display: none;">
           <div class="form-group">
             <div class="col-md-12">
-              <label for="titre" class="control-label required mb-10">Items</label>
+              <label for="titre" class="control-label required mb-10">Choisissez le type d'évaluation</label>
               <div class="eval-items-container mt-5">
                 @foreach($evaluations as $evaluation)
                   <div class="form-check">
                     <input type="checkbox" name="items[{{$evaluation->id}}][survey_id]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
                   </div>
-                  @if ($evaluation->title == "Evaluations")
+                  @if ($evaluation->title == "Entretien annuel")
                     <div class="evals-wrapper mb-10">
                       <select name="items[{{$evaluation->id}}][survey_id]" id="" class="form-control">
                         <option value="">Veuillez sélectionner</option>
@@ -200,8 +200,8 @@
             </div>
           </div>
           <div class="actions">
-            <button type="button" class="btn btn-default previous pull-left">Retour</button>
-            <button type="button" class="btn btn-primary next pull-right">Continuer</button>
+            <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
+            <button type="button" class="btn btn-primary next pull-right">Continuer <i class="fa fa-long-arrow-right"></i></button>
           </div>
         </div>
         <div class="step-content" data-step="4" style="display: none;">
@@ -217,28 +217,26 @@
             </div>
           </div>
           <div class="actions">
-            <button type="button" class="btn btn-default previous pull-left">Retour</button>
-            <button type="button" class="btn btn-primary next pull-right">Continuer</button>
+            <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
+            <button type="button" class="btn btn-primary next pull-right">Continuer <i class="fa fa-long-arrow-right"></i></button>
           </div>
         </div>
         <div class="step-content" data-step="5" style="display: none;">
           <div class="form-group">
             <div class="col-md-12">
-              <div class="form-group">
-                <div class="col-md-6">
-                  <label for="date" class="control-label required">Date de l'entretien</label>
-                  <input type="text" name="date" id="interview-startdate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date) ? Carbon\Carbon::parse($entretien->date)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
-                </div>
-                <div class="col-md-6">
-                  <label for="date_limit" class="control-label required">Date de clôture</label>
-                  <input type="text" name="date_limit" id="interview-enddate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
-                </div>
-              </div>
+              <label for="date" class="control-label required">Date limite pour l'auto-évaluation</label>
+              <input type="text" name="date" id="interview-startdate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date) ? Carbon\Carbon::parse($entretien->date)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <label for="date_limit" class="control-label required">Date limite pour l'évaluation manager</label>
+              <input type="text" name="date_limit" id="interview-enddate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
             </div>
           </div>
           <div class="actions">
-            <button type="button" class="btn btn-default previous pull-left">Retour</button>
-            <button type="button" class="btn btn-primary next pull-right">Continuer</button>
+            <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
+            <button type="button" class="btn btn-primary next pull-right">Continuer <i class="fa fa-long-arrow-right"></i></button>
           </div>
         </div>
         <div class="step-content" data-step="6" style="display: none;">
@@ -255,26 +253,23 @@
                 <td class="">Participants</td><td id="participants-td"></td>
               </tr>
               <tr>
-                <td class="">Date de l'entretien</td><td id="interview-startdate-td"></td>
+                <td class="">Date limite pour l'auto-évaluation</td><td id="interview-startdate-td"></td>
               </tr>
               <tr>
-                <td class="">Date de clôture</td><td id="interview-enddate-td"></td>
+                <td class="">Date limite pour l'évaluation manager</td><td id="interview-enddate-td"></td>
               </tr>
             </table>
           </div>
           <div class="actions">
-            <button type="submit" class="btn btn-primary btn-block submit">Lancer la campagne</button>
+            <button type="submit" class="btn btn-primary btn-block submit">{{ $entretien->id > 0 ? 'Mettre à jour' : 'Lancer la campagne' }}</button>
             <p class="mt-10">NB: un email sera immédiatement envoyé aux collaborateurs sélectionnés</p>
-            <button type="button" class="btn btn-default previous pull-left">Retour</button>
+            <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </form>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css">
-<script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
 
 <script>
 
@@ -294,7 +289,7 @@
 
     $('#titre-td').html(titre)
     $('#model-td').html(model)
-    $('#participants-td').html(countParticipants + " participants")
+    $('#participants-td').html(countParticipants)
     $('#interview-startdate-td').html(interview_sartdate)
     $('#interview-enddate-td').html(interview_enddate)
   }
@@ -331,9 +326,9 @@
     $('.eval-item-checkbox').on('change', function() {
       showHideCountryErrorBlock()
 
-      if ($(this).next('label').text() == 'Evaluations' && $(this).is(':checked')) {
+      if ($(this).next('label').text() == 'Entretien annuel' && $(this).is(':checked')) {
         $('.evals-wrapper').show()
-      } else if ($(this).next('label').text() == 'Evaluations' && !$(this).is(':checked')) {
+      } else if ($(this).next('label').text() == 'Entretien annuel' && !$(this).is(':checked')) {
         $('.evals-wrapper').hide()
       }
       if ($(this).next('label').text() == 'Carrières' && $(this).is(':checked')) {

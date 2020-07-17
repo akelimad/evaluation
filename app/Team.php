@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
 
-  public function user()
+  public function users()
   {
-    return $this->belongsTo('App\User');
+    return $this->belongsToMany(User::class);
   }
 
   public static function getAll()

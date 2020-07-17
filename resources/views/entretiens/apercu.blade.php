@@ -7,14 +7,14 @@
       sur l'entretien : {{ $e->titre }}
     </p>
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-      @if(in_array('Evaluations', $entreEvalsTitle))
+      @if(in_array('Entretien annuel', $entreEvalsTitle))
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="heading-evaluations">
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-evaluations"
                  aria-controls="collapse-evaluations" style="padding: 10px 15px;">
                 <i class="more-less fa fa-angle-right"></i>
-                Evaluations
+                Entretien annuel
               </a>
             </h4>
           </div>

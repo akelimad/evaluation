@@ -10,7 +10,7 @@
         <div class="small-box bg-aqua">
           <div class="inner">
             <h3> {{ $inProgress }} </h3>
-            <p>Eentretiens en cours</p>
+            <p>Campages en cours</p>
           </div>
           <div class="icon"><i class="fa fa-comments"></i></div>
           <a href="" class="small-box-footer"> </a>
@@ -20,7 +20,7 @@
         <div class="small-box bg-green">
           <div class="inner">
             <h3> {{ $finished }} </h3>
-            <p>Entretiens terminés</p>
+            <p>Campages terminées</p>
           </div>
           <div class="icon"><i class="fa fa-comments"></i></div>
           <a href="" class="small-box-footer"></a>
@@ -52,7 +52,7 @@
         <div class="small-box bg-navy">
           <div class="inner">
             <h3>{{ $taux }} %</h3>
-            <p>Taux de réalisations des entretiens</p>
+            <p>Taux de réalisations des campagnes</p>
           </div>
           <div class="icon"><i class="fa fa-users"></i></div>
           <a href="" class="small-box-footer"></a>

@@ -137,7 +137,7 @@
                     <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
                     <td class="text-center">
                       {{ csrf_field() }}
-                      <div class="btn-group">
+                      <div class="btn-group dropdown">
                         <button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>
                         <ul class="dropdown-menu dropdown-menu-right">
                           <li>
@@ -173,12 +173,4 @@
       </div>
     </div>
   </section>
-@endsection
-
-@section('javascript')
-  <script>
-    $(function () {
-
-    })
-  </script>
 @endsection

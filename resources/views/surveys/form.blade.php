@@ -1,13 +1,12 @@
 @extends('layouts.app')
-
+@section('title', $survey->id > 0 ? "Modifier le questionnaire" : "Ajouter un questionnaire")
+@section('breadcrumb')
+  <li><a href="{{ route('surveys-list') }}" class="text-blue">Questionnaires</a></li>
+  <li>{{ $survey->id > 0 ? $survey->title : 'Ajouter' }}</li>
+@endsection
 @section('content')
   <div class="content" id="content">
     <form @submit.prevent="handleSubmit()" action="" method="post" novalidate>
-      <div class="row mb-20">
-        <div class="col-md-12">
-          <h3><a href="{{ route('surveys-list') }}"><i class="fa fa-angle-left"></i> Retourner aux questionnaires</a></h3>
-        </div>
-      </div>
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">
           <div class="card">
@@ -65,7 +64,7 @@
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
-                <label @click="group.edit = true;" class="mb-0">Block @{{ grpIndex + 1 }} - @{{ group.title }}</label>
+                <label @click="group.edit = true;" class="mb-0">Block @{{ grpIndex + 1 }} : @{{ group.title }}</label>
                 <button type="button" class="btn btn-tool btn-xs pull-right text-danger" data-toggle="tooltip" title="Supprimer ce block" @click="removeGroup(grpIndex)"><i class="fa fa-trash"></i></button>
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil"></i></button>
@@ -86,7 +85,7 @@
                     </div>
                   </div>
                   <p v-else class="m-0">
-                    <label @click="question.edit = true;" class="mb-0">Question @{{ qIndex + 1 }} - @{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
+                    <label @click="question.edit = true;" class="mb-0">Question @{{ qIndex + 1 }} : @{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
                     <span class="d-inline-block">
                       <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex)"><i class="fa fa-trash"></i></button>
                       <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)"><i class="fa fa-pencil"></i></button>
@@ -125,7 +124,7 @@
             </div>
           </div>
           <div class="add-new-section-btn">
-            <button v-if="groups.length > 0" type="button" class="btn btn-success" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
+            <button v-if="groups.length > 0" type="button" class="btn btn-success pull-right" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
           </div>
         </div>
       </div>

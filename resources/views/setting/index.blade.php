@@ -19,7 +19,7 @@
             </div>
             <div class="col-md-9">
                 <div class="box box-primary">
-                    <div class="card">
+                    <div class="card p-20">
                         <form action="{{url('config/settings/store')}}" method="post">
                             {{ csrf_field() }}
                             <div class="row">

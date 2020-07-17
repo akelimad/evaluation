@@ -64,9 +64,11 @@ class Answer extends Model
                 ->where('mentor_id', $user->parent->id)
                 ->where('entretien_id', $eid)
                 ->first();
-            return $answer->note;
+            if ($answer) {
+                return $answer->note;
+            }
         }
-        return '';
+        return 0;
     }
 
     public static function formated($number)

@@ -133,6 +133,11 @@ class User extends Authenticatable
     return $this->hasMany('App\Team');
   }
 
+  public function teams()
+  {
+    return $this->belongsToMany(Team::class);
+  }
+
   public function getEmails()
   {
     return $this->hasMany('App\Email');

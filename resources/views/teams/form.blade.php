@@ -9,5 +9,18 @@
     <label for="description" class="control-label">Description</label>
       <textarea class="form-control" name="description" rows="3" placeholder="Description ....">{{ isset($team->description) ? $team->description: '' }}</textarea>
   </div>
+  <div class="form-group">
+    <label for="users_id" class="control-label">Collaborateurs</label>
+    <select name="usersId[]" id="users_id" class="form-control select2 w-100" multiple data-placeholder="Choisir ...">
+      @foreach($collaborators as $user)
+        <option value="{{ $user->id }}" {{ in_array($user->id, $teamUsers) ? 'selected':''}}> {{ $user->name." ".$user->last_name }} </option>
+      @endforeach
+    </select>
+  </div>
 </div>
-  
+
+<script>
+  $(document).ready(function () {
+    $('.select2').select2()
+  })
+</script>

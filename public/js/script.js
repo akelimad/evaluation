@@ -1,6 +1,32 @@
 $(window).on('load', function() {
     $('.spinner-wp').fadeOut();
 });
+
+function tableResponsive () {
+    $.fn.hasScrollBar = function (direction) {
+        if (this.get(0) !== undefined) {
+            if (direction === 'vertical') {
+                return this.get(0).scrollHeight > this.innerHeight()
+            } else if (direction === 'horizontal') {
+                return this.get(0).scrollWidth > this.innerWidth()
+            }
+        }
+        return false
+    }
+    var hasHorizScrollBar = $('.table-responsive').hasScrollBar('horizontal')
+    if (hasHorizScrollBar) {
+        $('.btn-group').on('hide.bs.dropdown', function () {
+            console.log('on hide')
+            $('.table-responsive').css('overflow', 'auto')
+        })
+    } else {
+        $('.btn-group').on('show.bs.dropdown', function () {
+            console.log('on show')
+            $('.table-responsive').css('overflow', 'inherit')
+        })
+    }
+}
+
 $(function(){
     var baseUrl =  $("base").attr("href")
 
@@ -166,5 +192,12 @@ $(function(){
         $(".showFormBtn i").toggleClass("fa-chevron-down fa-chevron-up")
         $(".criteresForm").fadeToggle()
     })
-  
+
+    // fix table action overflow
+    var actionsHeight = $('.dropdown-menu').innerHeight()
+    $('.table-responsive').css('min-height', actionsHeight)
+    tableResponsive()
+    $(window).on('resize', function () {
+        if ($('.table-responsive').length > 0) tableResponsive()
+    })
 })

@@ -185,14 +185,13 @@ class EntretienController extends Controller
       'titre' => 'required|min:3|max:50|regex:/^[0-9a-zÀ-ú\s\-_"°^\'’.,:]*$/i',
     ];
     $messages = [
-      'date.required' => "La date de l'entretien est obligatoire",
-      'date_limit.required' => "La date de clôture de l'entretien est obligatoire",
-      'date_limit.after' => "La date de clôture doit être une date postérieure à la date de l'entretien",
-      'end_periode.after' => "La date fin de la période de l'évaluation doit être une date postérieure à la date de début de la période d'évaluation",
-      'titre.required' => "Le titre est obligatoire",
-      'titre.min' => "Le titre ne peut pas contenir moins de :min lettres",
-      'titre.max' => "Le titre ne peut pas contenir plus de :max lettres",
-      'titre.regex' => "Le titre ne peut contenir que les caractères :regex",
+      'date.required' => "La date limite de l'évalué est obligatoire",
+      'date_limit.required' => "La date de limite de l'évaluateur est obligatoire",
+      'date_limit.after' => "La date limite de l'évaluateur doit être une date supérieure à la date limite de l'évaluateur",
+      'titre.required' => "Le titre de la campagne est obligatoire",
+      'titre.min' => "Le titre de la campagne ne peut pas contenir moins de :min caractères",
+      'titre.max' => "Le titre de la campagne ne peut pas contenir plus de :max caractères",
+      'titre.regex' => "Le titre de la campagne ne peut contenir que les caractères :regex",
     ];
     $validator = \Validator::make($request->all(), $rules, $messages);
     $messages = $validator->errors();
@@ -223,15 +222,17 @@ class EntretienController extends Controller
     }
 
     $evaluations = Evaluation::where('title', '<>', 'Compétences')->pluck('id')->toArray(); //to get ids of all object in one array
-    $start_periode = !empty($request->start_periode) ? Carbon::createFromFormat('d-m-Y', $request->start_periode) : null;
-    $end_periode = !empty($request->end_periode) ? Carbon::createFromFormat('d-m-Y', $request->end_periode) : null;
     $entretien->date = $date;
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
     $entretien->model = $request->model;
     $entretien->user_id = User::getOwner()->id;
-    $entretien->start_periode = $start_periode;
-    $entretien->end_periode = $end_periode;
+
+    // update status
+    if (date('Y-m-d', strtotime('now')) < $date_limit) {
+      $entretien->status = Entretien::ACTIF_STATUS;
+    }
+
     $entretien->save();
 
     // attach evaluations ID
