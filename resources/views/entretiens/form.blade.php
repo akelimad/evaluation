@@ -164,7 +164,7 @@
                   </div>
                   @if ($evaluation->title == "Entretien annuel")
                     <div class="evals-wrapper mb-10">
-                      <select name="items[{{$evaluation->id}}][survey_id]" id="" class="form-control">
+                      <select name="items[{{$evaluation->id}}][survey_id]" id="entretien" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\Survey::getAll()->where('evaluation_id', 1)->get() as $s)
                           <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
@@ -175,7 +175,7 @@
                   @endif
                   @if ($evaluation->title == "Carrières")
                     <div class="carreers-wrapper mb-10">
-                      <select name="items[{{$evaluation->id}}][survey_id]" id="" class="form-control">
+                      <select name="items[{{$evaluation->id}}][survey_id]" id="carreer" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\Survey::getAll()->where('evaluation_id', 2)->get() as $s)
                           <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
@@ -186,7 +186,7 @@
                   @endif
                   @if ($evaluation->title == "Objectifs")
                     <div class="objectifs-wrapper mb-10">
-                      <select name="items[{{$evaluation->id}}][survey_id]" id="" class="form-control">
+                      <select name="items[{{$evaluation->id}}][survey_id]" id="objectif" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\EntretienObjectif::getAll()->get() as $s)
                           <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
@@ -328,18 +328,24 @@
 
       if ($(this).next('label').text() == 'Entretien annuel' && $(this).is(':checked')) {
         $('.evals-wrapper').show()
+        chmForm.setRule($('select#entretien'), 'required')
       } else if ($(this).next('label').text() == 'Entretien annuel' && !$(this).is(':checked')) {
         $('.evals-wrapper').hide()
+        chmForm.setRule($('select#entretien'), 'required', false)
       }
       if ($(this).next('label').text() == 'Carrières' && $(this).is(':checked')) {
         $('.carreers-wrapper').show()
+        chmForm.setRule($('select#carreer'), 'required')
       } else if ($(this).next('label').text() == 'Carrières' && !$(this).is(':checked')) {
         $('.carreers-wrapper').hide()
+        chmForm.setRule($('select#carreer'), 'required', false)
       }
       if ($(this).next('label').text() == 'Objectifs' && $(this).is(':checked')) {
         $('.objectifs-wrapper').show()
+        chmForm.setRule($('select#objectif'), 'required')
       } else if ($(this).next('label').text() == 'Objectifs' && !$(this).is(':checked')) {
         $('.objectifs-wrapper').hide()
+        chmForm.setRule($('select#objectif'), 'required', false)
       }
     })
     @if($entretien->id > 0)

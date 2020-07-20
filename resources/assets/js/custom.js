@@ -50,5 +50,4 @@ $(document).ready(function () {
     $(this).closest('tr').remove()
     $table.trigger('chmLineDeleted')
   })
-
 })

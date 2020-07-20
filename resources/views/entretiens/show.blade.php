@@ -47,7 +47,7 @@
 						<h3 class="card-title text-muted font-22">Auto-évalutions</h3>
 					</div>
 					<div class="card-body">
-						<canvas id="collChart" class="chartjs-render-monitor"></canvas>
+						<canvas id="collChart" style="height: 230px;"></canvas>
 					</div>
 				</div>
 			</div>

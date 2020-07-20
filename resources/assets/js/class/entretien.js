@@ -136,26 +136,26 @@ export default class chmEntretien {
 
   static reminder (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({
+    window.chmModal.show({
       type: 'POST',
       url: window.chmSite.url('entretien/' + params.eid + '/users/delete'),
       data: {'_token': token, '_method': 'DELETE', params: params}
     }, {
       message: '<i class="fa fa-send"></i>&nbsp;Soumission en cours...'
     })
-    //object.modal.attr('chm-modal-action', 'reload')
+    // object.modal.attr('chm-modal-action', 'reload')
   }
 
   static deleteUsers (params) {
     var token = $('input[name="_token"]').val()
-    window.chmModal.show({
+    var object = window.chmModal.show({
       type: 'POST',
       url: window.chmSite.url('entretien/' + params.eid + '/users/delete'),
       data: {'_token': token, '_method': 'DELETE', params: params}
     }, {
       message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Suppression en cours...'
     })
-    window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'window.chmModal.reload'})
+    object.modal.attr('chm-modal-action', 'reload')
   }
 
 }
