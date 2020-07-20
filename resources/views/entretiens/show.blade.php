@@ -23,7 +23,6 @@
 					<a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{ $e->id }} }, {width: 450})" class="btn btn-danger pull-right"><i class="fa fa-trash"></i> Supprimer</a>
 
 					<a href="javascript:void(0)" onclick="return chmEntretien.form({{{$e->id}}})" class="btn btn-success pull-right mr-10"><i class="fa fa-pencil"></i> Modifier</a>
-
 				</h2>
 			</div>
 		</div>
@@ -68,19 +67,25 @@
 				<div class="box box-default">
 					<div class="box-body">
 						<div class="table-responsive">
-							<table class="table table-striped">
+							<table class="table table-striped table-bordered" id="usersEntretiensTable">
 								<thead>
 								<tr>
+									<th class="text-center">
+										<input type="checkbox" id="check-all" id="select-all">
+									</th>
 									<th>Evalué</th>
 									<th></th>
 									<th>Evaluateur</th>
 									<th></th>
-									<th></th>
+									<th class="text-center">Actions</th>
 								</tr>
 								</thead>
 								<tbody>
 								@foreach($e->users as $user)
 									<tr>
+										<td class="text-center">
+											<input type="checkbox" class="raw_cb" data-value="{{ $user->id }}" name="users_records[]" value="{{ $user->id }}">
+										</td>
 										<td>{{ $user->fullname() }}</td>
 										<td>
 											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'user') )
@@ -91,18 +96,18 @@
 											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'mentor'))
 											<span class="badge {{ $statusInfo['labelClass'] }}">{{ $statusInfo['name'] }}</span>
 										</td>
-										<td>
-											<div class="btn-group dropdown pull-right">
+										<td class="text-center">
+											<div class="btn-group dropdown">
 												<button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-ellipsis-v"></i></button>
 												<ul class="dropdown-menu dropdown-menu-right">
 													<li>
-														<a href="#"><i class="fa fa-bell-o"></i> Rappeler à l'évalué de remplir son entretien</a>
+														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, uids: [{{$user->id}}]})"><i class="fa fa-bell-o"></i> Rappeler à l'évalué de remplir son entretien</a>
 													</li>
 													<li>
-														<a href="#"><i class="fa fa-bell-o"></i> Rappeler à l'évaluateur de remplir son entretien</a>
+														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, uids: [{{$user->id}}]})"><i class="fa fa-bell-o"></i> Rappeler à l'évaluateur de remplir son entretien</a>
 													</li>
 													<li class="delete">
-														<a href="#"><i class="fa fa-trash"></i> Supprimer</a>
+														<a href="javascript:void(0)" onclick="return chmEntretien.deleteUsers({eid: {{$e->id}}, uids: [{{$user->id}}]})"><i class="fa fa-trash"></i> Supprimer</a>
 													</li>
 												</ul>
 											</div>
@@ -111,6 +116,18 @@
 								@endforeach
 								</tbody>
 							</table>
+							<div class="bulk-action-container">
+								<form action="" method="post">
+									<input type="hidden" name="entretien_id" id="entretien_id" value="{{ $e->id }}">
+									<select name="" id="bulkActions" style="width: 150px; height: 26px">
+										<option value="">Actions groupées</option>
+										<option value="reminder">Rappeler à l'évalué de remplir son entretien</option>
+										<option value="reminder">Rappeler à l'évaluateur de remplir son entretien</option>
+										<option value="delete">Supprimer</option>
+									</select>
+									<button type="submit" id="butlkActionsSubmit">Appliquer</button>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -121,8 +138,72 @@
 
 @section('javascript')
 	<script src="{{asset('js/chart.min.js')}}"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
+	<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
+	<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 	<script>
 		$(document).ready(function () {
+			var oTable = $('#usersEntretiensTable').DataTable({
+				lengthMenu: [3, 5, 10, 20, 50, 100],
+				language: {
+					url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/French.json",
+					searchPlaceholder: "Rechercher dans tous les champs ..."
+				},
+				order: [], //Initial no order
+				columnDefs: [
+					{orderable: false, className: 'select-checkbox', targets: [0, 5]}
+				],
+				initComplete: function () {
+					$('.dataTables_filter input[type="search"]').css({ 'width': '230px', 'display': 'inline-block' });
+				},
+			})
+
+			var countCheckedInPage = 0
+
+			$('#check-all').on("change", function() {
+				var pageRows = oTable.rows({page: 'current'}).nodes()
+				var checkAllChecked = $(this).is(':checked')
+				$.each(pageRows, function (index, row) {
+					$(row).find('.raw_cb').prop('checked', checkAllChecked);
+				})
+			})
+			$('.raw_cb').on("change", function() {
+				var pageRows = oTable.rows({page: 'current'}).nodes()
+				var checkedRows = oTable.$(".raw_cb:checked", { "page": "current" })
+				$('#check-all').prop('checked', pageRows.length == checkedRows.length)
+			})
+
+			$('#usersEntretiensTable').on('page.dt', function () {
+				countCheckedInPage = 0
+				$('#check-all').prop('checked', false)
+			});
+
+			$('#butlkActionsSubmit').on('click', function (e) {
+				e.preventDefault()
+				var eid = $('#entretien_id').val()
+				var usersId = [];
+				var method = $('#bulkActions option:selected').val()
+				var selectedRows = oTable.$(".raw_cb:checked", { "page": "all" })
+				$.each(selectedRows, function (index, row) {
+					usersId.push($(row).data('value'))
+				})
+				if (usersId.length < 1) {
+					alert('Merci de cocher une cocher au moins une ligne.')
+					return
+				}
+				if (method == '') {
+					alert('Merci de choisir une action.')
+					return
+				}
+				if (method == 'reminder') {
+					return chmEntretien.reminder({eid: eid, usersId: usersId})
+				} else {
+					return chmEntretien.deleteUsers({eid: eid, usersId: usersId})
+				}
+			})
+
 			var chartOptions = {
 				responsive: true,
 				legend: {

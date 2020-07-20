@@ -7,6 +7,7 @@ use App\Fonction;
 use Illuminate\Http\Request;
 use App\Http\Mail\MailerController;
 use Auth;
+use Illuminate\Support\Facades\Input;
 use Session;
 use DB;
 use App\User;
@@ -52,12 +53,31 @@ class EntretienController extends Controller
   /**
    * Display a listing of the resource.
    */
-  public function indexEntretien()
+  public function indexEntretien(Request $request)
   {
+    $per_page = $selected = 6;
+    if (isset($request->per_page) && $request->per_page != "all") {
+      $per_page = $request->per_page;
+      $selected = $per_page;
+    } else if (isset($request->per_page) && $request->per_page == "all" || $request->status == 'all') {
+      $per_page = 500;
+      $selected = "all";
+    }
+    $query = Entretien::getAll();
+    if ($status = $request->get('status', Entretien::ACTIF_STATUS)) {
+      if ($status == Entretien::ACTIF_STATUS) {
+        $query->where('date_limit', '>=', date('Y-m-d'));
+      } else if ($status == Entretien::FINISHED_STATUS) {
+        $query->where('date_limit', '<', date('Y-m-d'));
+      }
+    }
+    $query->orderBy('id', 'DESC');
+
     $evaluations = Evaluation::all()->sortBy('sort_order');
     $objectifs = EntretienObjectif::getAll()->get();
-    $entretiens = Entretien::getAll()->paginate(15);
-    return view('entretiens.index', compact('entretiens', 'evaluations', 'objectifs'));
+    $results = $query->paginate($per_page);
+    $results->appends(Input::except('page'));
+    return view('entretiens.index', compact('results', 'selected', 'evaluations', 'objectifs'));
   }
 
   public function show($id)
@@ -195,31 +215,12 @@ class EntretienController extends Controller
     ];
     $validator = \Validator::make($request->all(), $rules, $messages);
     $messages = $validator->errors();
-    $surveyEval = Survey::getAll()->where('evaluation_id', 1)->where('type', 0)->first();
-    $surveyCarreer = Survey::getAll()->where('evaluation_id', 2)->where('type', 0)->first();
-    $surveyObj = EntretienObjectif::getAll()->first();
-
-    if (!$surveyEval) {
-      $url_survey = url('config/surveys');
-      $messages->add('null_survey_obj', "Aucun questionnaire standard de l'évaluation n'a été trouvé ! il faut le créer tout d'abord dans <a href='$url_survey' target='_blank'>Questionnaires</a>");
-    }
-    $hasAlreadyInt = [];
-    if(!empty($request->date) && !empty($request->date_limit)) {
-      $date = Carbon::createFromFormat('d-m-Y', $request->date);
-      $date_limit = Carbon::createFromFormat('d-m-Y', $request->date_limit);
-      foreach ($selectedUsers as $uid) {
-        if (Entretien::existInterview($entretien->id, $uid, $date, $date_limit)) {
-          $hasAlreadyInt[] = User::findOrFail($uid)->name;
-        }
-      }
-    }
-    if (count($hasAlreadyInt) > 0) {
-      $messages->add('existInterview', "Il ya déjà un entretien programmé pour les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!");
-    }
 
     if (count($messages) > 0) {
       return ["status" => "danger", "message" => $messages];
     }
+    $date = date('Y-m-d', strtotime($request->date));
+    $date_limit = date('Y-m-d', strtotime($request->date_limit));
 
     $evaluations = Evaluation::where('title', '<>', 'Compétences')->pluck('id')->toArray(); //to get ids of all object in one array
     $entretien->date = $date;

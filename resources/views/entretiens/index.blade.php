@@ -7,7 +7,7 @@
   <section class="content entretiens-list">
     <div class="row mb-30">
       <div class="col-md-8 col-sm-8">
-        <h2 class="pageName m-0"><i class="fa fa-comments-o"></i> Campagnes <span class="badge">{{$entretiens->total()}}</span></h2>
+        <h2 class="pageName m-0"><i class="fa fa-comments-o"></i> Campagnes <span class="badge">{{$results->total()}}</span></h2>
       </div>
       <div class="col-md-4 col-sm-4">
         <div class="pull-right">
@@ -18,17 +18,17 @@
 
     <div class="row mb-30">
       <div class="col-md-12">
-        <a href="" class="btn bg-gray-active"> <i class="fa fa-spinner"></i> Actif</a>
-        <a href="" class="btn"> <i class="fa fa-archive"></i> Archivé</a>
-        <a href="" class="btn"> <i class="fa fa-list"></i> Tout</a>
+        <a href="{{ route('entretiens', ['status' => \App\Entretien::ACTIF_STATUS]) }}" class="btn {{ request()->get('status', \App\Entretien::ACTIF_STATUS) == \App\Entretien::ACTIF_STATUS ? 'bg-gray-active':'' }}"> <i class="fa fa-spinner"></i> {{ \App\Entretien::ACTIF_STATUS }}</a>
+        <a href="{{ route('entretiens', ['status' => \App\Entretien::FINISHED_STATUS]) }}" class="btn {{ request()->get('status') == \App\Entretien::FINISHED_STATUS ? 'bg-gray-active':'' }}"> <i class="fa fa-calendar-times-o"></i> {{ \App\Entretien::FINISHED_STATUS }}</a>
+        <a href="{{ route('entretiens', ['status' => 'all']) }}" class="btn {{ request()->get('status') == 'all' ? 'bg-gray-active':'' }}"> <i class="fa fa-list"></i> Tout</a>
       </div>
     </div>
 
-    @if(count($entretiens)>0)
+    @if(count($results)>0)
       <div class="row">
-        @foreach($entretiens as $e)
+        @foreach($results as $e)
           <div class="col-sm-4">
-            <div class="box box-primary pt-5">
+            <div class="box box-primary box-hover pt-5">
               <div class="box-header with-border">
                 <h3 class="box-title" title="{{ $e->titre }}" data-toggle="tooltip">{{ str_limit($e->titre, 20) }}</h3>
                 <span class="label label-{{ $e->isActif() ? 'success':'danger' }} pull-right pl-10 pr-10 p-5 font-14">{{ $e->getStatus() }}</span>
@@ -36,6 +36,7 @@
               <div class="box-body">
                 <p><b>Date limite pour l'auto-évaluation :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</span></p>
                 <p><b>Date limite pour l'évaluation manager :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</span></p>
+                <p><b>Nombre de collaborateurs impliqués :</b> <span class="badge pull-right">{{ $e->users->count() }}</span></p>
               </div>
               <div class="box-footer">
                 <a href="{{ route('entretien.show', ['id' => $e->id]) }}" class="btn btn-primary pull-right"><i class="fa fa-gear"></i> Gérer la campagne</a>
@@ -44,6 +45,7 @@
           </div>
         @endforeach
       </div>
+      @include('partials.pagination')
     @else
       @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
     @endif

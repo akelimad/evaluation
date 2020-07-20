@@ -174,3 +174,6 @@ Route::get('config/teams', 'TeamController@index')->name('teams');
 Route::get('configs/teams/form', 'TeamController@form')->name('team.form');
 Route::post('configs/teams/store', 'TeamController@store')->name('team.store');
 Route::delete('configs/teams/{id}/delete', 'TeamController@delete')->name('team.delete');
+
+Route::post('entretien/{id}/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
+Route::delete('entretien/{id}/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');

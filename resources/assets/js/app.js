@@ -10,6 +10,7 @@ import chmUrl from './class/url'
 import chmCookie from './class/cookie'
 import chmModal from './class/modal'
 import chmFilter from './class/filter'
+import chmAlert from './class/alert'
 
 import chmUser from './class/user'
 import chmRole from './class/role'
@@ -44,6 +45,7 @@ window.chmUrl = chmUrl
 window.chmCookie = chmCookie
 window.chmModal = chmModal
 window.chmFilter = chmFilter
+window.chmAlert = chmAlert
 
 window.chmUser = chmUser
 window.chmRole = chmRole

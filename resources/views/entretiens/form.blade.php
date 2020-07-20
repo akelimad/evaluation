@@ -28,10 +28,10 @@
   .circle {
     background: gray;
     position: relative;
-    width: 1.5em;
-    height: 1.5em;
-    line-height: 1.5em;
-    border-radius: 100%;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    border-radius: 50%;
     color: #fff;
     text-align: center;
     box-shadow: 0 0 0 3px #fff;
@@ -244,25 +244,25 @@
             <p><b>Récapitulatif</b></p>
             <table class="table table-bordered table-striped">
               <tr>
-                <td class="" width="50%">Titre</td><td id="titre-td"></td>
+                <td width="50%"><b>Titre</b></td><td id="titre-td"></td>
               </tr>
               <tr>
-                <td class="">Modèle</td><td id="model-td"></td>
+                <td><b>Modèle</b></td><td id="model-td"></td>
               </tr>
               <tr>
-                <td class="">Participants</td><td id="participants-td"></td>
+                <td><b>Participants</b></td><td id="participants-td"></td>
               </tr>
               <tr>
-                <td class="">Date limite pour l'auto-évaluation</td><td id="interview-startdate-td"></td>
+                <td><b>Date limite pour l'auto-évaluation</b></td><td id="interview-startdate-td"></td>
               </tr>
               <tr>
-                <td class="">Date limite pour l'évaluation manager</td><td id="interview-enddate-td"></td>
+                <td><b>Date limite pour l'évaluation manager</b></td><td id="interview-enddate-td"></td>
               </tr>
             </table>
           </div>
           <div class="actions">
             <button type="submit" class="btn btn-primary btn-block submit">{{ $entretien->id > 0 ? 'Mettre à jour' : 'Lancer la campagne' }}</button>
-            <p class="mt-10">NB: un email sera immédiatement envoyé aux collaborateurs sélectionnés</p>
+            <p class="mt-10">NB: Un email sera immédiatement envoyé aux collaborateurs sélectionnés</p>
             <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
           </div>
         </div>

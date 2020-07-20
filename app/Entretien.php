@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class Entretien extends Model
 {
   const ACTIF_STATUS = "Actif";
-  const ARCHIVED_STATUS = "Fini";
+  const FINISHED_STATUS = "Fini";
 
   public static function answered($eid, $uid)
   {
@@ -173,7 +173,7 @@ class Entretien extends Model
   public function getStatus() {
     $status = $this::ACTIF_STATUS;
     if (date('Y-m-d', strtotime('now')) > $this->date_limit) {
-      $status = $this::ARCHIVED_STATUS;
+      $status = $this::FINISHED_STATUS;
     }
 
     return $status;
@@ -183,8 +183,8 @@ class Entretien extends Model
     return $this->getStatus() == $this::ACTIF_STATUS;
   }
 
-  public function isArchived() {
-    return $this->getStatus() == $this::ARCHIVED_STATUS;
+  public function isFinished() {
+    return $this->getStatus() == $this::FINISHED_STATUS;
   }
 
 

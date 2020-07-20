@@ -1,0 +1,8 @@
+.box-hover {
+  transition: all .5s ease-in-outckl;
+  &:hover {
+    -webkit-box-shadow: 0px 3px 0px 0px #3c8dbc;
+    -moz-box-shadow: 0px 3px 0px 0px #3c8dbc;
+    box-shadow: 0px 3px 0px 0px #3c8dbc;
+  }
+}

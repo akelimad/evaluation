@@ -103,6 +103,7 @@
                   <th>Département</th>
                   <th>Manager</th>
                   <th>Créé le</th>
+                  <th class="text-center">Statut</th>
                   <th class="text-center">Actions</th>
                 </tr>
                 @foreach($results as $key => $user)
@@ -112,7 +113,7 @@
                         <input type="checkbox" class="usersId checkItem" autocomplete="off" value="{{$user->id}}">
                       </div>
                     </td>
-                    <td><span><i class="fa fa-circle text-danger font-12"></i></span> <a href="{{url('user/'.$user->id)}}">{{ $user->name }}</a></td>
+                    <td><a href="{{url('user/'.$user->id)}}">{{ $user->name }}</a></td>
                     <td><a href="{{url('user/'.$user->id)}}">{{ $user->last_name }}</a></td>
                     <td> {{ $user->email }} </td>
                     <td>
@@ -134,7 +135,10 @@
                         ---
                       @endif
                     </td>
-                    <td> {{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}} </td>
+                    <td>{{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}}</td>
+                    <td class="text-center">
+                      <span><i class="fa fa-circle text-danger font-12" title="Déconnecté"></i></span>
+                    </td>
                     <td class="text-center">
                       {{ csrf_field() }}
                       <div class="btn-group dropdown">

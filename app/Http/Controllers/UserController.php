@@ -166,6 +166,8 @@ class UserController extends Controller
     $user->status = 1;
     if ($request->user_id != null) {
       $user->user_id = $request->user_id;
+    } else {
+      $user->user_id = 0;
     }
     $user->society_id = User::getOwner()->id;
     $user->save();
