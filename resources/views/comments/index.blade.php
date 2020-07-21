@@ -4,9 +4,11 @@
     <section class="content comments">
         <div class="row">
             <div class="col-md-12">
-                @if(Session::has('mentor_comment'))
-                    @include('partials.alerts.success', ['messages' => Session::get('mentor_comment') ])
-                @endif
+                <div class="mb-20">
+                    @if(Session::has('mentor_comment'))
+                        @include('partials.alerts.success', ['messages' => Session::get('mentor_comment') ])
+                    @endif
+                </div>
                 <div class="box box-primary direct-chat direct-chat-warning card">
                     <h3 class="mb40"> Liste des commentaires pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }} </h3>
                     <div class="nav-tabs-custom">
@@ -57,7 +59,7 @@
                                         </div>
                                         @if(($user->id == Auth::user()->id && App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id)) or ($user->id != Auth::user()->id))
                                         <div class="col-md-6">
-                                            <h4 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du mentor : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
+                                            <h4 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du manager : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
                                             <div class="direct-chat-msg right">
                                                 <div class="direct-chat-info clearfix">
                                                     <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>

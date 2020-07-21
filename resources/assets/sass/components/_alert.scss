@@ -33,24 +33,35 @@
     color: #3c763d;
     background-color: #dff2d5;
     border: 1px solid #83b655;
+  }
+  &.chm-alerts.alert-success {
     box-shadow: inset 41px 0 #83b655;
   }
+
   &.alert-warning {
     color: #8a6d3b;
     background-color: #fcf8e1;
     border: 1px solid #f6c342;
+  }
+  &.chm-alerts.alert-warning {
     box-shadow: inset 41px 0 #f6c342;
   }
+
   &.alert-info {
     color: #040e11;
     background-color: #b5cee9;
     border: 1px solid #4fa4ff;
+  }
+  &.chm-alerts.alert-info {
     box-shadow: inset 41px 0 #4fa4ff;
   }
+
   &.alert-danger {
     color: #5b503e;
     background-color: #ffcbd0;
     border: 1px solid #dc3545;
+  }
+  &.chm-alerts.alert-danger {
     box-shadow: inset 41px 0 #dc3545;
   }
 }

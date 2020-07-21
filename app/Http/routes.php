@@ -154,9 +154,9 @@ Route::post('entretiens/{eid}/u/{uid}/salaires/store', 'SalarieController@store'
 Route::get('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edit');
 
 Route::get('entretiens/{eid}/u/{uid}/commentaires', 'CommentController@index');
-Route::get('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create');
+Route::any('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create');
 Route::post('entretiens/{eid}/u/{uid}/commentaires/store', 'CommentController@store');
-Route::get('entretiens/{eid}/u/{uid}/commentaires/{id}/edit', 'CommentController@edit');
+Route::any('entretiens/{eid}/u/{uid}/commentaires/{id}/edit', 'CommentController@edit');
 Route::put('entretiens/{eid}/u/{uid}/commentaires/{cid}/mentorUpdate', 'CommentController@mentorUpdate');
 
 Route::get('entretiens/{eid}/u/{uid}/carrieres', 'CarreerController@index');

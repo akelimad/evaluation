@@ -42,8 +42,11 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($eid, $uid)
+    public function create($eid, $uid, Request $request)
     {
+        if ($request->method() == "POST") {
+            return $this->store($eid, $request);
+        }
         ob_start();
         $e = Entretien::findOrFail($eid);
         $user = User::findOrFail($uid);
@@ -102,8 +105,11 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($eid, $uid ,$cid)
+    public function edit($eid, $uid ,$cid, Request $request)
     {
+        if ($request->method() == "POST") {
+            return $this->store($eid, $request);
+        }
         ob_start();
         $e = Entretien::findOrFail($eid);
         $user = User::findOrFail($uid);

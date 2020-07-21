@@ -122,7 +122,7 @@
                       @empty
                         <tr>
                           <td colspan="2">
-                            <div class="alert alert-info">Aucun résultat trouvé</div>
+                            <div class="alert alert-info font-14">Aucun résultat trouvé</div>
                           </td>
                         </tr>
                       @endforelse
@@ -142,8 +142,10 @@
                   <form action="{{ url('config/settings/store') }}" method="post">
                     {{ csrf_field() }}
                     <div class="col-md-4">
-                      <input type="checkbox" name="settings[toggle_sidebar]" id="toggle-sidebar" value="1" {{isset($settings->toggle_sidebar) && $settings->toggle_sidebar == 1 ? 'checked' : ''}}>
-                      <label for="toggle-sidebar">Toggle side bar</label>
+                      <div class="form-check">
+                        <input type="checkbox" name="settings[toggle_sidebar]" id="toggle-sidebar" value="1" {{isset($settings->toggle_sidebar) && $settings->toggle_sidebar == 1 ? 'checked' : ''}}>
+                        <label for="toggle-sidebar">Toggle side bar</label>
+                      </div>
                       <p class="help-block">Permet de réduire la taille du side bar.</p>
                     </div>
                     <div class="col-md-12">
