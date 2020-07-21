@@ -55,9 +55,6 @@
 @section('javascript')
   <script>
     $(document).ready(function () {
-      if (chmUrl.getParam('deleted') == 1) {
-        window.location.href = 'entretiens/index'
-      }
       $('.table-responsive').on('show.bs.dropdown', function () {
         $('.table-responsive').css('overflow', 'inherit')
       })

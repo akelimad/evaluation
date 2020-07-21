@@ -96,7 +96,7 @@ class AnswerController extends Controller
         }
         $note = $grpCount > 0 ? $note/$grpCount : 0;
         if (Auth::user()->id == $uid) {
-            $proporty = 'user_suibmitted';
+            $proporty = 'user_submitted';
         } else {
             $proporty = 'mentor_submitted';
         }

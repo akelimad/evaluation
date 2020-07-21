@@ -34,7 +34,8 @@ class Evaluation extends Model
             'â' => 'a',
             'ê' => 'e',
         ];
-        return $str = strtolower(strtr( $str, $unwanted_array ));
+        $str = strtolower(strtr( $str, $unwanted_array ));
+        return str_replace(' ', '-', $str);
     }
 
     public static function surveyId($eid, $evalId)

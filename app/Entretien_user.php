@@ -12,7 +12,7 @@ class Entretien_user extends Model
     public static function userHasSubmitedEval($eid, $uid) {
         return Entretien_user::where('entretien_id', $eid)
           ->where('user_id', $uid)
-          ->where('user_submitted', 1)
+          ->where('user_submitted', 2)
           ->first();
     }
 
@@ -20,7 +20,7 @@ class Entretien_user extends Model
         return Entretien_user::where('entretien_id', $eid)
           ->where('user_id', $uid)
           ->where('mentor_id', $mentor_id)
-          ->where('mentor_submitted', 1)
+          ->where('mentor_submitted', 2)
           ->first();
     }
 

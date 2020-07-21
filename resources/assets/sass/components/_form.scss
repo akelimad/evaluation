@@ -258,3 +258,15 @@ label[for="profile_attachement"]:after {
 [chm-search] label {
   text-align: left;
 }
+.form-check {
+  label {
+    display: inline-block;
+  }
+}
+.row {
+  margin-bottom: 20px;
+}
+.control-label {
+  font-weight: bold;
+  font-size: 15px;
+}

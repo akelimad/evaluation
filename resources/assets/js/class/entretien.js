@@ -7,7 +7,6 @@ export default class chmEntretien {
     $('.usersId:checked').each(function (index) {
       ids[index] = $(this).val()
     })
-    console.log(ids)
     window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/list'), data: {ids: ids}}, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
@@ -22,10 +21,6 @@ export default class chmEntretien {
   static form (id = null) {
     window.chmModal.show({type: 'GET', url: window.chmSite.url('entretiens/form'), data: {id: id}}, {
       width: 800,
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmEntretien.store'
-      }
     })
   }
 
@@ -63,7 +58,7 @@ export default class chmEntretien {
       if (response.status !== 'success') {
         window.chmModal.showAlertMessage(response.status, response.message)
       } else {
-        window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'window.chmModal.reload'})
+        window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'location.reload()'})
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       var message = jqXHR.status + ' - ' + jqXHR.statusText
@@ -98,7 +93,7 @@ export default class chmEntretien {
       if (response.status !== 'success') {
         window.chmModal.showAlertMessage(response.status, response.message)
       } else {
-        window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'window.chmModal.reload'})
+        window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'location.reload()'})
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       var message = jqXHR.status + ' - ' + jqXHR.statusText
@@ -116,9 +111,15 @@ export default class chmEntretien {
       url: window.chmSite.url('entretiens/' + params.eid + '/delete'),
       data: {'_token': token, '_method': 'DELETE'}
     }, {
-      message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
+      message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...',
+      onSuccess: function (response) {
+        if (response.status !== 'success') {
+          window.chmModal.showAlertMessage(response.status, response.message)
+        } else {
+          window.location.href = response.redirectUrl
+        }
+      }
     })
-    window.location.href = 'entretiens/index?deleted=1'
   }
 
   static submission (params) {
@@ -138,24 +139,36 @@ export default class chmEntretien {
     var token = $('input[name="_token"]').val()
     window.chmModal.show({
       type: 'POST',
-      url: window.chmSite.url('entretien/' + params.eid + '/users/delete'),
-      data: {'_token': token, '_method': 'DELETE', params: params}
+      url: window.chmSite.url('entretien/' + params.eid + '/users/reminder'),
+      data: {'_token': token, '_method': 'POST', params: params},
     }, {
-      message: '<i class="fa fa-send"></i>&nbsp;Soumission en cours...'
+      message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Relance en cours...',
+      onSuccess: function (response) {
+        if (response.status !== 'success') {
+          window.chmModal.showAlertMessage(response.status, response.message)
+        } else {
+          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415})
+        }
+      }
     })
-    // object.modal.attr('chm-modal-action', 'reload')
   }
 
   static deleteUsers (params) {
     var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({
+    window.chmModal.show({
       type: 'POST',
       url: window.chmSite.url('entretien/' + params.eid + '/users/delete'),
-      data: {'_token': token, '_method': 'DELETE', params: params}
+      data: {'_token': token, '_method': 'DELETE', params: params},
     }, {
-      message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Suppression en cours...'
+      message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Suppression en cours...',
+      onSuccess: function (response) {
+        if (response.status !== 'success') {
+          window.chmModal.showAlertMessage(response.status, response.message)
+        } else {
+          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'location.reload()'})
+        }
+      }
     })
-    object.modal.attr('chm-modal-action', 'reload')
   }
 
 }

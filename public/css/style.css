@@ -417,9 +417,9 @@ i {
 }
 
 .empty {
-  padding: 4px;
-  display: inline-block;
-  border-radius: 50%;
+  padding: 4px !important;
+  display: inline-block !important;
+  border-radius: 50% !important;
 }
 
 .sidebar {

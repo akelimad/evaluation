@@ -11,7 +11,9 @@
 .navbar-nav {
   > li {
     > a {
-      padding: 20px 15px !important;
+      padding: 0 15px!important;
+      line-height: 50px !important;
+      height: 50px;
     }
   }
 }

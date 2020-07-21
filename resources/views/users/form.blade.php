@@ -1,7 +1,7 @@
 <div class="content">
   <input type="hidden" name="id" value="{{ isset($user) ? $user->id : null }}">
   {{ csrf_field() }}
-  <div class="form-group">
+  <div class="row">
     <div class="col-md-6">
       <label for="name" class="control-label">Prénom <span class="asterisk">*</span></label>
       <input type="text" name="name" class="form-control" id="name" placeholder="Prénom" required="" value="{{ isset($user) ? $user->name : '' }}">
@@ -11,7 +11,7 @@
       <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Nom" required="" value="{{ isset($user) ? $user->last_name : ''  }}">
     </div>
   </div>
-  <div class="form-group">
+  <div class="row">
     <div class="col-md-6">
       <label for="email" class="control-label">Email <span class="asterisk">*</span></label>
       <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com" required="" value="{{ isset($user) ? $user->email : ''  }}">
@@ -34,7 +34,7 @@
       @endif
     </div>
   </div>
-  <div class="form-group">
+  <div class="row">
     <div class="col-md-6">
       <label for="password" class="control-label">Mot de passe</label>
       <input id="password" type="password" class="form-control" name="password" {{ isset($user) ? '':'required' }}>
@@ -44,7 +44,7 @@
       <input id="password-confirm" type="password" class="form-control" name="password_confirmation" {{ isset($user) ? '':'required' }}>
     </div>
   </div>
-  <div class="form-group">
+  <div class="row">
     <div class="col-md-6">
       <label for="tel" class="control-label">Téléphone mobile</label>
       <input type="text" name="tel" class="form-control" id="tel" placeholder="ex: 0606060606" value="{{ isset($user) ? $user->tel : ''  }}" pattern="^((06)|(07))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
@@ -70,7 +70,7 @@
       </select>
     </div>
   </div>
-  <div class="form-group">
+  <div class="row">
     <div class="col-md-6">
       <label for="password" class="control-label">Matricule</label>
       <input id="mle" type="text" class="form-control" name="mle" value="{{ isset($user) ? $user->mle : '' }}">
@@ -82,7 +82,7 @@
   </div>
   @role(['ROOT', 'ADMIN', 'RH'])
   @if(Auth::user()->hasRole('ADMIN') && Auth::user()->id != $user->id)
-    <div class="form-group">
+    <div class="row">
       <div class="col-md-6">
         <label for="role" class="control-label">Rôle<span class="asterisk">*</span></label>
         <select name="roles[]" id="role" class="form-control" multiple required @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
@@ -105,7 +105,7 @@
   @endif
   @endrole
 
-  <div class="form-group">
+  <div class="row">
     <div class="col-md-6">
       <label for="password" class="control-label">Equipe</label>
       <select name="team_id" id="team_id" class="form-control">

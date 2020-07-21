@@ -504,7 +504,11 @@ class EntretienController extends Controller
       $entretien->salaries()->delete();
       $entretien->comments()->delete();
       $entretien->delete();
-      return ["status" => "success", "message" => "Entretien a été supprimée avec succès !"];
+      return [
+        "status" => "success",
+        "message" => "Entretien a été supprimée avec succès !",
+        "redirectUrl" => route('entretiens', [])
+      ];
     } else {
       return ["status" => "danger", "message" => "Stop ! Vous n'avez pas la permission !"];
     }

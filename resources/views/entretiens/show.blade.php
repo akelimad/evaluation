@@ -33,8 +33,8 @@
 						<div class="row">
 							<div class="col-md-6 mb-20"><b>Campagne :</b> {{ $e->titre }}</div>
 							<div class="col-md-6 mb-20"><b>Participants :</b> {{ $countInterviewUsers }}</div>
-							<div class="col-md-6 mb-sm-20"><b>Date de l'entretien :</b> {{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</div>
-							<div class="col-md-6 "><b>Date de clôture :</b> {{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</div>
+							<div class="col-md-6 mb-sm-20"><b>Date limite pour l'auto-évaluation :</b> {{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</div>
+							<div class="col-md-6 "><b>Date limite pour l'évaluation manager :</b> {{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</div>
 						</div>
 					</div>
 				</div>
@@ -70,14 +70,14 @@
 							<table class="table table-striped table-bordered" id="usersEntretiensTable">
 								<thead>
 								<tr>
-									<th class="text-center">
+									<th class="text-center" style="width: 10px;">
 										<input type="checkbox" id="check-all" id="select-all">
 									</th>
 									<th>Evalué</th>
 									<th></th>
 									<th>Evaluateur</th>
 									<th></th>
-									<th class="text-center">Actions</th>
+									<th class="text-center" style="width: 30px;">Actions</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -101,13 +101,13 @@
 												<button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-ellipsis-v"></i></button>
 												<ul class="dropdown-menu dropdown-menu-right">
 													<li>
-														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, uids: [{{$user->id}}]})"><i class="fa fa-bell-o"></i> Rappeler à l'évalué de remplir son entretien</a>
+														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, usersId: [{{$user->id}}], role: 'coll'})"><i class="fa fa-bell-o"></i> Rappeler à l'évalué de remplir son entretien</a>
 													</li>
 													<li>
-														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, uids: [{{$user->id}}]})"><i class="fa fa-bell-o"></i> Rappeler à l'évaluateur de remplir son entretien</a>
+														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, usersId: [{{$user->id}}], role: 'mentor'})"><i class="fa fa-bell-o"></i> Rappeler à l'évaluateur de remplir son entretien</a>
 													</li>
 													<li class="delete">
-														<a href="javascript:void(0)" onclick="return chmEntretien.deleteUsers({eid: {{$e->id}}, uids: [{{$user->id}}]})"><i class="fa fa-trash"></i> Supprimer</a>
+														<a href="javascript:void(0)" onclick="chmModal.confirm(this, '', 'Etes-vous sûr de vouloir supprimer ?', 'chmEntretien.deleteUsers', {eid: {{$e->id}}, usersId: [{{$user->id}}]}, {width: 450}); return false;"><i class="fa fa-trash"></i> Supprimer</a>
 													</li>
 												</ul>
 											</div>
@@ -119,13 +119,13 @@
 							<div class="bulk-action-container">
 								<form action="" method="post">
 									<input type="hidden" name="entretien_id" id="entretien_id" value="{{ $e->id }}">
-									<select name="" id="bulkActions" style="width: 150px; height: 26px">
+									<select name="" id="bulkActions" class="form-control" style="width: 150px; display: inline-block">
 										<option value="">Actions groupées</option>
-										<option value="reminder">Rappeler à l'évalué de remplir son entretien</option>
-										<option value="reminder">Rappeler à l'évaluateur de remplir son entretien</option>
+										<option value="reminder-coll">Rappeler à l'évalué de remplir son entretien</option>
+										<option value="reminder-mentor">Rappeler à l'évaluateur de remplir son entretien</option>
 										<option value="delete">Supprimer</option>
 									</select>
-									<button type="submit" id="butlkActionsSubmit">Appliquer</button>
+									<button type="submit" class="btn btn-primary" id="butlkActionsSubmit" style="height: 34px;">Appliquer</button>
 								</form>
 							</div>
 						</div>
@@ -146,7 +146,7 @@
 	<script>
 		$(document).ready(function () {
 			var oTable = $('#usersEntretiensTable').DataTable({
-				lengthMenu: [3, 5, 10, 20, 50, 100],
+				lengthMenu: [5, 10, 20, 50, 100],
 				language: {
 					url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/French.json",
 					searchPlaceholder: "Rechercher dans tous les champs ..."
@@ -190,15 +190,17 @@
 					usersId.push($(row).data('value'))
 				})
 				if (usersId.length < 1) {
-					alert('Merci de cocher une cocher au moins une ligne.')
+					window.chmAlert.error('Vous devez choisir au moins une ligne.')
 					return
 				}
 				if (method == '') {
-					alert('Merci de choisir une action.')
+					window.chmAlert.error('Merci de choisir une action.')
 					return
 				}
-				if (method == 'reminder') {
-					return chmEntretien.reminder({eid: eid, usersId: usersId})
+				if (method == 'reminder-coll') {
+					return chmEntretien.reminder({eid: eid, usersId: usersId, role: 'coll'})
+				} else if (method == 'reminder-mentor') {
+					return chmEntretien.reminder({eid: eid, usersId: usersId, role: 'mentor'})
 				} else {
 					return chmEntretien.deleteUsers({eid: eid, usersId: usersId})
 				}

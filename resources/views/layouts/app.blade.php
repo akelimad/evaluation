@@ -262,7 +262,7 @@
     <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
+<div class="chm-float-alert"></div>
 
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('js/bootstrap.min.js')}}"></script>

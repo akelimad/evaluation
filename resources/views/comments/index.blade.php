@@ -86,7 +86,9 @@
                                     </div>
                                 </div>
                             @else
-                                @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
+                                <div class="mb-20">
+                                    @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
+                                </div>
                             @endif
                             <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
                             @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)

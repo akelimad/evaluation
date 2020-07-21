@@ -116,7 +116,7 @@ Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 
-Route::get('entretiens/{e_id}/u/{uid}/evaluations', 'EvaluationController@index');
+Route::get('entretiens/{e_id}/u/{uid}/entretien-annuel', 'EvaluationController@index');
 
 
 Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index');

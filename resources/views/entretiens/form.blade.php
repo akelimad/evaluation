@@ -69,7 +69,7 @@
   }
 </style>
 
-<form method="POST" action="" id="entretienForm" role="form" class="allInputsFormValidation form-horizontal" onsubmit="return chmEntretien.store(event)">
+<form method="POST" action="" id="entretienForm" role="form" class="allInputsFormValidation form-vertical" onsubmit="return chmEntretien.store(event)">
   <div class="content p-30">
     <input type="hidden" name="type" value="annuel">
     <input type="hidden" name="id" value="{{ $entretien->id }}">
@@ -127,7 +127,7 @@
       </div>
       <div class="col-md-9">
         <div class="step-content" data-step="1">
-          <div class="form-group">
+          <div class="row">
             <div class="col-md-12">
               <label for="titre" class="control-label required">Titre</label>
               <input type="text" name="titre" class="form-control" id="titre" placeholder="" value="{{isset($entretien->titre) ? $entretien->titre : null }}" chm-validate="required">
@@ -138,7 +138,7 @@
           </div>
         </div>
         <div class="step-content" data-step="2" style="display: none;">
-          <div class="form-group">
+          <div class="row">
             <div class="col-md-12">
               <label for="titre" class="control-label required">Modèle</label>
               <select name="model" id="model" class="form-control" chm-validate="required">
@@ -153,7 +153,7 @@
           </div>
         </div>
         <div class="step-content" data-step="3" style="display: none;">
-          <div class="form-group">
+          <div class="row">
             <div class="col-md-12">
               <label for="titre" class="control-label required mb-10">Choisissez le type d'évaluation</label>
               <div class="eval-items-container mt-5">
@@ -205,7 +205,7 @@
           </div>
         </div>
         <div class="step-content" data-step="4" style="display: none;">
-          <div class="form-group">
+          <div class="row">
             <div class="col-md-12">
               <label for="users_id" class="control-label required">Participants</label>
               <select name="usersId[]" id="users_id" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" chm-validate="required">
@@ -213,7 +213,9 @@
                   <option value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}> {{ $user->name." ".$user->last_name }} </option>
                 @endforeach
               </select>
-              <input type="checkbox" id="check-all"> <label for="check-all">Tout sélectionner</label>
+              <div class="form-check">
+                <input type="checkbox" id="check-all"> <label for="check-all">Tout sélectionner</label>
+              </div>
             </div>
           </div>
           <div class="actions">
@@ -222,13 +224,13 @@
           </div>
         </div>
         <div class="step-content" data-step="5" style="display: none;">
-          <div class="form-group">
+          <div class="row">
             <div class="col-md-12">
               <label for="date" class="control-label required">Date limite pour l'auto-évaluation</label>
               <input type="text" name="date" id="interview-startdate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date) ? Carbon\Carbon::parse($entretien->date)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
             </div>
           </div>
-          <div class="form-group">
+          <div class="row">
             <div class="col-md-12">
               <label for="date_limit" class="control-label required">Date limite pour l'évaluation manager</label>
               <input type="text" name="date_limit" id="interview-enddate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
