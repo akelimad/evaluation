@@ -43,10 +43,10 @@
                         <button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>
                         <ul class="dropdown-menu dropdown-menu-right">
                           <li>
-                            <a href="{{ route('survey.form', ['id' => $survey->id]) }}" class=""><i class="fa fa-edit"></i> Modifier</a>
+                            <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$survey->id}} })" class=""><i class="fa fa-eye"></i> Visualiser</a>
                           </li>
                           <li>
-                            <a href="javascript:void(0)" onclick="return chmSurvey.show({id: {{$survey->id}} })" class=""><i class="fa fa-eye"></i> Visualiser</a>
+                            <a href="{{ route('survey.form', ['id' => $survey->id]) }}" class=""><i class="fa fa-edit"></i> Modifier</a>
                           </li>
                           <li>
                             <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer le questionnaire ?', 'Etes-vous sur de vouloir supprimer ce questionnaire ?','chmSurvey.delete', {sid: {{$survey->id}} }, {width: 450})" class=""><i class="fa fa-trash"></i> Supprimer</a>

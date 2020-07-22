@@ -11,25 +11,31 @@
         <div class="col-md-8 col-md-offset-2">
           <div class="card">
             <div class="card-body">
-              <div class="form-group mb-30" :class="{'has-error': errors.has('title')}">
-                <label for="">Titre du questionnaire</label>
-                <input type="text" name="title" v-model="title" class="form-control" v-validate="'required'" placeholder="" @keypress.enter.prevent>
-                <span v-show="errors.has('title')" class="help-block">@{{ errors.first('title') }}</span>
+              <div class="row" :class="{'has-error': errors.has('title')}">
+                <div class="col-md-12">
+                  <label for="" class="control-label required">Titre du questionnaire</label>
+                  <input type="text" name="title" v-model="title" class="form-control" v-validate="'required'" placeholder="" @keypress.enter.prevent>
+                  <span v-show="errors.has('title')" class="help-block">@{{ errors.first('title') }}</span>
+                </div>
               </div>
-              <div class="form-group mb-30">
-                <label for="">Description</label>
-                <textarea name="" id="" class="form-control" v-model="description"></textarea>
+              <div class="row mb-30">
+                <div class="col-md-12">
+                  <label for="" class="control-label">Description</label>
+                  <textarea name="" id="" class="form-control" v-model="description"></textarea>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="">Evaluations</label>
-                <select name="section" id="" class="form-control" v-model="section">
-                  <option value=""></option>
-                  @foreach($evaluations as $eval)
-                    @if($eval->title != "Commentaires")
-                      <option value="{{$eval->id}}" {{ $eval->id == $survey->evaluation_id ? 'selected':''}}>{{$eval->title}}</option>
-                    @endif
-                  @endforeach
-                </select>
+              <div class="row">
+                <div class="col-md-12">
+                  <label for="" class="control-label">Evaluations</label>
+                  <select name="section" id="" class="form-control" v-model="section">
+                    <option value=""></option>
+                    @foreach($evaluations as $eval)
+                      @if($eval->title != "Commentaires")
+                        <option value="{{$eval->id}}" {{ $eval->id == $survey->evaluation_id ? 'selected':''}}>{{$eval->title}}</option>
+                      @endif
+                    @endforeach
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -64,7 +70,7 @@
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
-                <label @click="group.edit = true;" class="mb-0">Block @{{ grpIndex + 1 }} : @{{ group.title }}</label>
+                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">Block @{{ grpIndex + 1 }} : @{{ group.title }}</label>
                 <button type="button" class="btn btn-tool btn-xs pull-right text-danger" data-toggle="tooltip" title="Supprimer ce block" @click="removeGroup(grpIndex)"><i class="fa fa-trash"></i></button>
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil"></i></button>
@@ -72,8 +78,8 @@
             </div>
             <div class="box-body">
               <div class="panel panel-default" v-for="(question, qIndex) in group.questions" :class="{highlight:question.active}">
-                <div class="panel-heading">
-                  <div class="form-group" v-if="question.edit" :class="{'has-error': errors.has('question')}">
+                <div class="panel-heading pt-5 pb-5">
+                  <div class="form-group mb-0" v-if="question.edit" :class="{'has-error': errors.has('question')}">
                     <div class="row">
                       <div class="col-md-11">
                         <input name="question" v-model="question.title" class="form-control" @blur="updateQuestion(question)" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
@@ -85,7 +91,7 @@
                     </div>
                   </div>
                   <p v-else class="m-0">
-                    <label @click="question.edit = true;" class="mb-0">Question @{{ qIndex + 1 }} : @{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
+                    <label @click="question.edit = true;" class="pull-left control-label mb-0">Question @{{ qIndex + 1 }} : @{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
                     <span class="d-inline-block">
                       <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex)"><i class="fa fa-trash"></i></button>
                       <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)"><i class="fa fa-pencil"></i></button>

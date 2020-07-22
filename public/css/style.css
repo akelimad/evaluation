@@ -213,7 +213,7 @@ i {
   width: 100%;
 }
 .dropdown-menu>li>a {
-  padding: 10px 20px;
+  padding: 10px 20px !important;
 }
 .pull-right>.dropdown-menu {
   min-width: 100%;
@@ -1032,4 +1032,7 @@ p.help-block {
 
 .slider.slider-horizontal {
   width: 100% !important;
+}
+.chm-modal-content .content{
+  padding: 0px !important;
 }

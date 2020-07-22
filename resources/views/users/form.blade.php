@@ -49,23 +49,32 @@
       <label for="tel" class="control-label">Téléphone mobile</label>
       <input type="text" name="tel" class="form-control" id="tel" placeholder="ex: 0606060606" value="{{ isset($user) ? $user->tel : ''  }}" pattern="^((06)|(07))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
+      <label for="password" class="control-label">Equipe</label>
+      <select name="team_id" id="team_id" class="form-control">
+        <option value=""></option>
+        @foreach($teams as $team)
+          <option value="{{ $team->id }}" {{ in_array($team->id, $userTeamsId) ? 'selected':'' }}>{{ $team->name }}</option>
+        @endforeach
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
       <label for="function" class="control-label">Fonction</label>
       <select name="function" id="function" class="form-control">
         <option value=""></option>
         @foreach($fonctions as $func)
-          <option
-              value="{{ $func->id }}" {{ (isset($user->function) && $user->function == $func->id) ? 'selected':'' }}>{{ $func->title }}</option>
+          <option value="{{ $func->id }}" {{ (isset($user->function) && $user->function == $func->id) ? 'selected':'' }}>{{ $func->title }}</option>
         @endforeach
       </select>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
       <label for="service" class="control-label">Département</label>
       <select name="service" id="service" class="form-control">
         <option value=""></option>
         @foreach($departments as $dep)
-          <option
-              value="{{ $dep->id }}" {{ (isset($user->service) && $user->service == $dep->id) ? 'selected':'' }}>{{ $dep->title }}</option>
+          <option value="{{ $dep->id }}" {{ (isset($user->service) && $user->service == $dep->id) ? 'selected':'' }}>{{ $dep->title }}</option>
         @endforeach
       </select>
     </div>
@@ -104,18 +113,6 @@
     </div>
   @endif
   @endrole
-
-  <div class="row">
-    <div class="col-md-6">
-      <label for="password" class="control-label">Equipe</label>
-      <select name="team_id" id="team_id" class="form-control">
-        <option value=""></option>
-        @foreach($teams as $team)
-          <option value="{{ $team->id }}" {{ in_array($team->id, $userTeamsId) ? 'selected':'' }}>{{ $team->name }}</option>
-        @endforeach
-      </select>
-    </div>
-  </div>
 </div>
 
 <script>

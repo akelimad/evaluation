@@ -19,7 +19,7 @@ Route::get('/dashboard', 'HomeController@dashboard');
 Route::get('profile', 'UserController@profile');
 
 Route::get('user/{id}', 'UserController@show')->name('user.profile');
-Route::get('users/form', 'UserController@formUser');
+Route::any('users/form', 'UserController@formUser');
 Route::post('users/store', 'UserController@storeUser');
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
@@ -36,7 +36,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::get('config/surveys', 'SurveyController@index')->name('surveys-list');
-	Route::get('surveys/form', 'SurveyController@form')->name('survey.form');
+	Route::get('config/surveys/form', 'SurveyController@form')->name('survey.form');
 	Route::post('surveys/store', 'SurveyController@store')->name('survey.store');
 	Route::delete('surveys/{id}/delete', 'SurveyController@destroy');
 	Route::get('surveys/{id}', 'SurveyController@show');
@@ -55,18 +55,18 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::delete('surveys/{sid}/groupes/{gid}/questions/{qid}/delete', 'QuestionController@destroy');
 	Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 
-	Route::get('config/skills', 'SkillController@indexAdmin');
+	Route::get('config/skills', 'SkillController@indexAdmin')->name('config.skills');
 	Route::get('skills/create', 'SkillController@create');
 	Route::post('skills/store', 'SkillController@store');
 	Route::get('skills/{id}/edit', 'SkillController@edit');
 	Route::delete('skills/{eid}/delete', 'SkillController@destroy');
 
-	Route::get('config/emails', 'EmailController@index');
+	Route::get('config/emails', 'EmailController@index')->name('config.emails');;
 	Route::get('emails/form', 'EmailController@form');
 	Route::post('emails/store', 'EmailController@store');
 	Route::delete('emails/{id}/delete', 'EmailController@delete');
 
-	Route::get('config/settings/general', 'SettingController@general');
+	Route::get('config/settings/general', 'SettingController@general')->name('general.settings');
 
 	Route::get('config/setting/departments', 'DepartmentController@index');
 	Route::get('department/form', 'DepartmentController@form');
@@ -78,7 +78,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::post('function/store', 'FonctionController@store');
 	Route::delete('function/delete', 'FonctionController@delete');
 
-	Route::get('config/roles', 'UserController@indexRoles');
+	Route::get('config/roles', 'UserController@indexRoles')->name('config.roles');
 	Route::get('role/create', 'UserController@createRole');
 	Route::post('role/store', 'UserController@storeRole');
 	Route::get('role/{id}/edit', 'UserController@editRole');
@@ -127,10 +127,9 @@ Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::get('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs');
 
-Route::get('config/entretienObjectif', 'EntretienObjectifController@index');
-Route::get('entretienObjectif/create', 'EntretienObjectifController@create');
-Route::get('entretienObjectif/{id}/edit', 'EntretienObjectifController@edit');
-Route::post('entretienObjectif/store', 'EntretienObjectifController@store');
+Route::get('config/entretienObjectif', 'EntretienObjectifController@index')->name('config.objectifs');
+Route::get('entretienObjectif/form', 'EntretienObjectifController@form')->name('config.objectifs.form');
+Route::post('entretienObjectif/store', 'EntretienObjectifController@store')->name('config.objectifs.store');
 Route::get('entretienObjectif/{id}', 'EntretienObjectifController@show');
 Route::delete('entretienObjectif/{id}/delete', 'EntretienObjectifController@destroy');
 

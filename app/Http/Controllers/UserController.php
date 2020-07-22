@@ -92,6 +92,9 @@ class UserController extends Controller
 
   public function formUser(Request $request)
   {
+    if ($request->method() == "POST") {
+      return $this->storeUser($request);
+    }
     $id = $request->id;
     $roles_ids = [];
     ob_start();

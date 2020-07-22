@@ -30,7 +30,7 @@
 			<div class="col-md-12">
 				<div class="box box-default">
 					<div class="box-body">
-						<div class="row">
+						<div class="row mb-0">
 							<div class="col-md-6 mb-20"><b>Campagne :</b> {{ $e->titre }}</div>
 							<div class="col-md-6 mb-20"><b>Participants :</b> {{ $countInterviewUsers }}</div>
 							<div class="col-md-6 mb-sm-20"><b>Date limite pour l'auto-évaluation :</b> {{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</div>

@@ -50,4 +50,10 @@ $(document).ready(function () {
     $(this).closest('tr').remove()
     $table.trigger('chmLineDeleted')
   })
+
+  $('body').on('chmFormSuccess', function (event, response) {
+    if (response.status == 'success') {
+      window.location.reload()
+    }
+  })
 })

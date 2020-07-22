@@ -13,14 +13,14 @@ class EntretienObjectif extends Model
   }
 
   public static function getAll()
-    {
-      $user = \Auth::user();
-      if(!empty($user->society_id)){ // this user is not owner
-        $objectifs = $user->owner->entretiensObjectifs();
-      } else {
-        $objectifs = $user->entretiensObjectifs();
-      }
-      return $objectifs;
+  {
+    $user = \Auth::user();
+    if(!empty($user->society_id)){ // this user is not owner
+      $objectifs = $user->owner->entretiensObjectifs();
+    } else {
+      $objectifs = $user->entretiensObjectifs();
     }
+    return $objectifs;
+  }
 
 }
