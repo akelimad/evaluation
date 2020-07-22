@@ -29,14 +29,15 @@
                   </div>
                 </div>
                 <div class="col-md-6" v-show="objectif.type == 'Equipe'">
-                  <div class="form-group">
+                  <div class="form-group" :class="{'has-error': errors.has('team')}">
                     <label for="description" class="control-label">Choisissez l'équipe</label>
-                    <select name="" id="" class="form-control" v-model="objectif.team">
+                    <select name="team" id="team" class="form-control" v-model="objectif.team" v-validate="objectif.type == 'Equipe' ? 'required' : ''">
                       <option value=""></option>
                       @foreach($teams as $team)
                       <option value="{{ $team->id }}">{{ $team->name }}</option>
                       @endforeach
                     </select>
+                    <span v-show="errors.has('team')" class="help-block">@{{ errors.first('team') }}</span>
                   </div>
                 </div>
               </div>
@@ -61,7 +62,7 @@
                 <div class="col-md-4">
                   <div class="form-group" :class="{'has-error': errors.has('deadline')}">
                     <label for="description" class="required control-label">Echéance</label>
-                    <input type="text" name="deadline" id="deadline" class="form-control" placeholder="Choisir une date" v-model="objectif.deadline">
+                    <vuejs-datepicker :language="fr" :format="customFormatter" v-model="objectif.deadline"></vuejs-datepicker>
                     <span v-show="errors.has('deadline')" class="help-block">@{{ errors.first('deadline') }}</span>
                   </div>
                 </div>
@@ -119,6 +120,8 @@
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
+  <script src="https://unpkg.com/vuejs-datepicker"></script>
+  <script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fr.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 <script>
   $(document).ready(function () {
@@ -126,7 +129,8 @@
     new Vue({
       el: '#content',
       data: {
-        isEditMode: {{ $objectif->id > 0  }},
+        fr: vdp_translation_fr.js,
+        mode: "{{ $objectif->id > 0 ? 'edit' : 'add' }}",
         objectifs: [
           {
             id: null,
@@ -148,7 +152,11 @@
         ],
         submitted: false,
       },
+      components: { vuejsDatepicker },
       methods: {
+        customFormatter: function (date) {
+          return moment(date).format('DD/MM/YYYY');
+        },
         addObjectf: function () {
           this.objectifs.push({
             id: null,
@@ -222,14 +230,6 @@
           }
         }
       }
-    })
-
-    $('.datepicker').datepicker({
-      startDate: new Date(),
-      autoclose: true,
-      format: 'dd/mm/yyyy',
-      language: 'fr',
-      todayHighlight: true,
     })
   })
 </script>
