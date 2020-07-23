@@ -19,17 +19,21 @@
               <table class="table table-hover table-striped table-inversed-blue">
                 <tr>
                   <th>Id</th>
+                  <th>Type</th>
+                  <th>Equipe</th>
                   <th>Titre</th>
                   <th>Description</th>
-                  <th>Date</th>
+                  <th>Date d'échéance</th>
                   <th class="text-center">Actions</th>
                 </tr>
                 @foreach($objectifs as $key => $objectif)
                   <tr>
                     <td>{{ $objectif->id }}</td>
-                    <td>{{ $objectif->title }}</td>
-                    <td>{{ $objectif->description ? str_limit($objectif->description, 50) : '---' }}</td>
-                    <td>{{ date('d/m/Y H:i', strtotime($objectif->created_at)) }}</td>
+                    <td>{{ $objectif->type }}</td>
+                    <td>{{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</td>
+                    <td title="{{ $objectif->title }}">{{ $objectif->title ? str_limit($objectif->title, 30) : '' }}</td>
+                    <td title="{{ $objectif->description }}">{{ $objectif->description ? str_limit($objectif->description, 50) : '---' }}</td>
+                    <td>{{ date('d/m/Y', strtotime($objectif->deadline)) }}</td>
                     <td class="text-center">
                       <div class="btn-group">
                         <button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>

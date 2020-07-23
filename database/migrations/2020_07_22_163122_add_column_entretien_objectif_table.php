@@ -13,6 +13,8 @@ class AddColumnEntretienObjectifTable extends Migration
     public function up()
     {
         Schema::table('entretien_objectifs', function (Blueprint $table) {
+            $table->string('type')->after('id')->nullable();
+            $table->string('team')->after('type')->nullable();
             $table->date('deadline')->after('description')->nullable();
             $table->text('indicators')->after('deadline')->nullable();
         });

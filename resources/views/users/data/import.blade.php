@@ -33,21 +33,23 @@
                   {{ csrf_field() }}
                   <div class="input-group form-group col-md-6">
                     <label class="input-group-btn">
-                                            <span class="btn btn-primary">
-                                                Parcourir <input type="file" name="usersDataCsv" style="display: none;"
-                                                                 required="" accept=".csv">
-                                            </span>
+                      <span class="btn btn-primary">
+                        Parcourir <input type="file" name="usersDataCsv" style="display: none;" equired="" accept=".csv">
+                      </span>
                     </label>
                     <input type="text" class="form-control" readonly="">
                   </div>
-                  <div class="form-group">
-                    <label for="header">
-                      <input type="checkbox" id="header" name="header" checked=""> Le fichier contient les titres des
-                      champs
-                    </label>
+                  <div class="row mt-10">
+                    <div class="col-md-12">
+                      <label for="header">
+                        <input type="checkbox" id="header" name="header" checked=""> Le fichier contient les titres des champs
+                      </label>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-success"> Valider l'importation</button>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <button type="submit" class="btn btn-success"> Valider l'importation</button>
+                    </div>
                   </div>
                 </form>
               </div>

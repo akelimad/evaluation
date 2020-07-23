@@ -168,7 +168,8 @@ class EntretienController extends Controller
     $users = User::getUsers()->where('user_id', '<>', 0)->get();
     $entretienEvalIds = $entretien->evaluations()->pluck('evaluation_id')->toArray();
     $entretienEvalSurveyIds = $entretien->evaluations()->pluck('survey_id')->toArray();
-    echo view('entretiens.form', compact('users', 'e_users', 'entretien', 'evaluations', 'entretienEvalIds', 'entretienEvalSurveyIds'));
+    $objectifs = EntretienObjectif::getAll()->get();
+    echo view('entretiens.form', compact('users', 'e_users', 'entretien', 'evaluations', 'entretienEvalIds', 'entretienEvalSurveyIds', 'objectifs'));
     $content = ob_get_clean();
     return ['title' => $title, 'content' => $content];
   }
@@ -240,9 +241,8 @@ class EntretienController extends Controller
     if (!empty($request->items)) {
       $entretien->evaluations()->sync(array_keys($request->items));
       foreach ($request->items as $evaluationId => $value) {
-        $surveyId = isset($value['survey_id']) && intval($value['survey_id']) > 0 ? $value['survey_id'] : null;
-        if (is_null($surveyId) && in_array($evaluationId, [1, 2, 9])) continue;
-        Entretien_evaluation::where('entretien_id', $entretien->id)->where('evaluation_id', $evaluationId)->update(['survey_id'=>$surveyId]);
+        $objectsId = isset($value['object_id']) && !empty($value['object_id']) ? $value['object_id'] : [];
+        Entretien_evaluation::where('entretien_id', $entretien->id)->where('evaluation_id', $evaluationId)->update(['survey_id'=> json_encode($objectsId)]);
       }
     }
 

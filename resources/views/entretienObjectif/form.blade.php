@@ -62,7 +62,7 @@
                 <div class="col-md-4">
                   <div class="form-group" :class="{'has-error': errors.has('deadline')}">
                     <label for="description" class="required control-label">Echéance</label>
-                    <vuejs-datepicker :language="fr" :format="customFormatter" v-model="objectif.deadline"></vuejs-datepicker>
+                    <date-picker name="deadline" v-model="objectif.deadline" v-validate="'required'" :config="{format: 'DD-MM-YYYY', locale: 'fr', minDate: new Date(), ignoreReadonly: true}" readonly></date-picker>
                     <span v-show="errors.has('deadline')" class="help-block">@{{ errors.first('deadline') }}</span>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
               </div>
             </div>
           </div>
-          <div class="addObjContainer mb-20">
+          <div v-if="mode == 'add'" class="addObjContainer mb-20">
             <button type="button" class="btn btn-primary" @click="addObjectf()"><i class="fa fa-plus"></i> Créer un nouvel objectif</button>
           </div>
           <div v-if="objectifs.length > 0" class="card" >
@@ -119,44 +119,43 @@
 @section('javascript')
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/fr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pc-bootstrap4-datetimepicker@4.17/build/js/bootstrap-datetimepicker.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
-  <script src="https://unpkg.com/vuejs-datepicker"></script>
-  <script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fr.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-bootstrap-datetimepicker@5"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 <script>
   $(document).ready(function () {
     Vue.use(VeeValidate);
+    Vue.component('date-picker', VueBootstrapDatetimePicker);
     new Vue({
       el: '#content',
       data: {
-        fr: vdp_translation_fr.js,
         mode: "{{ $objectif->id > 0 ? 'edit' : 'add' }}",
         objectifs: [
           {
-            id: null,
-            type: '',
-            team: '',
-            title: '',
-            description: '',
-            deadline: '',
+            id: "{{ $objectif->id > 0 ? $objectif->id : 0 }}",
+            type: "{{ $objectif->type }}",
+            team: "{{ $objectif->team }}",
+            title: "{{ $objectif->title }}",
+            description: "{{ $objectif->description }}",
+            deadline: "{{ date('d-m-Y', strtotime($objectif->deadline)) }}",
             indicators: [
+              @foreach($objectif->getIndicators() as $indicator)
               {
-                id: null,
-                title: '',
-                fixed: '',
-                realized: '',
-                ponderation: '',
-              }
+                id: "{{ isset($indicator['id']) ? $indicator['id'] : 0 }}",
+                title: "{{ isset($indicator['title']) ? $indicator['title'] : '' }}",
+                fixed: "{{ isset($indicator['fixed']) ? $indicator['fixed'] : '' }}",
+                realized: "{{ isset($indicator['realized']) ? $indicator['realized'] : '' }}",
+                ponderation: "{{ isset($indicator['ponderation']) ? $indicator['ponderation'] : '' }}",
+              },
+              @endforeach
             ]
           },
         ],
         submitted: false,
       },
-      components: { vuejsDatepicker },
       methods: {
-        customFormatter: function (date) {
-          return moment(date).format('DD/MM/YYYY');
-        },
         addObjectf: function () {
           this.objectifs.push({
             id: null,
@@ -182,7 +181,6 @@
         addIndicator: function (oIndex) {
           var sumPonderation = 0
           this.objectifs[oIndex].indicators.forEach(function(obj) {
-            console.log(obj.ponderation)
             sumPonderation += parseInt(obj.ponderation)
           })
           if (sumPonderation >= 100) {
@@ -201,6 +199,22 @@
           this.objectifs[oIndex].indicators.splice(indexIndicator, 1);
         },
         handleSubmit: function () {
+          var ponderationIsValid = true
+          this.objectifs.forEach(function(obj, index) {
+            var sumPonderation = 0
+            obj.indicators.forEach(function(indicator) {
+              sumPonderation += parseInt(indicator.ponderation)
+            })
+            if (sumPonderation > 100) {
+              ponderationIsValid = false;
+              return false;
+            }
+          })
+
+          if (!ponderationIsValid) {
+            swal({title: "Attention", text: "La somme de pondérations des indicateurs ne doit pas dépasser 100 pour chaque objectif !", type: "warning"})
+            return
+          }
           this.$validator.validateAll().then((result) => {
             if (result) {
               this.submitted = true;
@@ -217,7 +231,8 @@
                   });
                 }
               }).catch(function (error) {
-                console.log(error)
+                swal({title: "Erreur", text: error, type: "danger"})
+                this.submitted = false
               });
             }
           })

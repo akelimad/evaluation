@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Team;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -49,25 +51,28 @@ class EntretienObjectifController extends Controller
    */
   public function store(Request $request)
   {
-    $isEditMode = $request->isEditMode;
     $objectifs = $request->objectifs;
-    if ($isEditMode) {
-      $id = $objectifs[0]['id'];
-      $objectif = EntretienObjectif::findOrFail($id);
-    } else {
-      if (!empty($objectifs)) {
-        foreach ($objectifs as $objectif) {}
+    $user_id = User::getOwner()->id;
+
+    if (!empty($objectifs)) {
+      foreach ($objectifs as $objectif) {
+        $id = $objectif['id'];
+        $entretienObjectif = EntretienObjectif::find($id);
+        if (!$entretienObjectif) {
+          $entretienObjectif = new EntretienObjectif();
+        }
+        $entretienObjectif->type = $objectif['type'];
+        $entretienObjectif->team = $objectif['type'] == 'Equipe' ? $objectif['team'] : null;
+        $entretienObjectif->title = $objectif['title'];
+        $entretienObjectif->description = $objectif['description'];
+        $entretienObjectif->deadline = date("Y-m-d", strtotime($objectif['deadline']));
+        $entretienObjectif->setIndicators($this->validateIndicators($objectif['indicators']));
+        $entretienObjectif->user_id = $user_id;
+        $entretienObjectif->save();
       }
-      $objectif = new EntretienObjectif();
-    }
-    $objectif->title = $request->title;
-    $objectif->description = $request->description;
-    $objectif->user_id = Auth::user()->id;
-    $objectif->save();
-    if ($objectif->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return response()->json(['status' => 'success', 'message' => 'Les informations ont été sauvegardées avec succès.']);
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return response()->json(['status' => 'error', 'message' => 'Une erreur est survenue, réessayez plus tard.']);
     }
   }
 
@@ -80,8 +85,8 @@ class EntretienObjectifController extends Controller
   public function show($id)
   {
     ob_start();
-    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $id)->paginate(10);
-    echo view('entretienObjectif.show', compact('objectifs'));
+    $objectif = EntretienObjectif::find($id);
+    echo view('entretienObjectif.show', compact('objectif'));
     $content = ob_get_clean();
     return ['title' => "Détails de l'objectif", 'content' => $content];
   }
@@ -108,5 +113,24 @@ class EntretienObjectifController extends Controller
   {
     $objectif = EntretienObjectif::findOrFail($id)->delete();
     $sub = Objectif::where('entretienobjectif_id', $id)->delete();
+
+    return ['status' => 'success', 'message' => "La suppression a bien été effectuée"];
+  }
+
+  public function validateIndicators($indicators) {
+    $newArray = [];
+    if (empty($indicators)) return $newArray;
+    foreach ($indicators as $indicator) {
+      if (
+        !isset($indicator['title']) || empty($indicator['title']) ||
+        !isset($indicator['fixed']) || empty($indicator['fixed']) ||
+        !isset($indicator['ponderation']) || empty($indicator['ponderation'])
+      ) {
+        continue;
+      }
+      $newArray[] = $indicator;
+    }
+
+    return $newArray;
   }
 }

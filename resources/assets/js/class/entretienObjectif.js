@@ -74,9 +74,15 @@ export default class chmEntretienObjectif {
       url: window.chmSite.url('entretienObjectif/' + params.id + '/delete'),
       data: {'_token': token, '_method': 'DELETE'}
     }, {
-      message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
+      message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...',
+      onSuccess: function (response) {
+        if (response.status !== 'success') {
+          window.chmModal.showAlertMessage(response.status, response.message)
+        } else {
+          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'location.reload()'})
+        }
+      }
     })
-    object.modal.attr('chm-modal-action', 'reload')
   }
 
 }

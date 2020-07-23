@@ -67,6 +67,9 @@
   .evals-wrapper, .carreers-wrapper, .objectifs-wrapper {
     display: none;
   }
+  .select2-container {
+    width: 100% !important;
+  }
 </style>
 
 <form method="POST" action="" id="entretienForm" role="form" class="allInputsFormValidation form-vertical" onsubmit="return chmEntretien.store(event)">
@@ -159,40 +162,43 @@
               <div class="eval-items-container mt-5">
                 @foreach($evaluations as $evaluation)
                   <div class="form-check">
-                    <input type="checkbox" name="items[{{$evaluation->id}}][survey_id]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
+                    <input type="checkbox" name="items[{{$evaluation->id}}][]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
                   </div>
                   @if ($evaluation->title == "Entretien annuel")
                     <div class="evals-wrapper mb-10">
-                      <select name="items[{{$evaluation->id}}][survey_id]" id="entretien" class="form-control">
+                      <select name="items[{{$evaluation->id}}][object_id][]" id="entretien" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\Survey::getAll()->where('evaluation_id', 1)->get() as $s)
                           <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
-                      <p class=""><a href="/config/surveys">Ajouter un nouveau ?</a></p>
+                      <p class=""><a href="/config/surveys" target="_blank">Ajouter un nouveau ?</a></p>
                     </div>
                   @endif
                   @if ($evaluation->title == "Carrières")
                     <div class="carreers-wrapper mb-10">
-                      <select name="items[{{$evaluation->id}}][survey_id]" id="carreer" class="form-control">
+                      <select name="items[{{$evaluation->id}}][object_id][]" id="carreer" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\Survey::getAll()->where('evaluation_id', 2)->get() as $s)
                           <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
-                      <p class=""><a href="/config/surveys">Ajouter un nouveau ?</a></p>
+                      <p class=""><a href="/config/surveys" target="_blank">Ajouter un nouveau ?</a></p>
                     </div>
                   @endif
                   @if ($evaluation->title == "Objectifs")
-                    <div class="objectifs-wrapper mb-10">
-                      <select name="items[{{$evaluation->id}}][survey_id]" id="objectif" class="form-control">
-                        <option value="">Veuillez sélectionner</option>
-                        @foreach(App\EntretienObjectif::getAll()->get() as $s)
-                          <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
-                        @endforeach
-                      </select>
-                      <p class=""><a href="/config/entretienObjectif">Ajouter un nouveau ?</a></p>
+                    <div class="objectifs-wrapper mb-10 w-100">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <select name="items[{{$evaluation->id}}][object_id][]" id="objectif" class="form-control select2" multiple>
+                            @foreach(App\EntretienObjectif::getAll()->get() as $s)
+                              <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
+                            @endforeach
+                          </select>
+                          <p class=""><a href="/config/entretienObjectif" target="_blank">Ajouter un nouveau ?</a></p>
+                        </div>
+                      </div>
                     </div>
                   @endif
                 @endforeach
