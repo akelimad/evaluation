@@ -205,14 +205,14 @@
             obj.indicators.forEach(function(indicator) {
               sumPonderation += parseInt(indicator.ponderation)
             })
-            if (sumPonderation > 100) {
+            if (sumPonderation != 100) {
               ponderationIsValid = false;
               return false;
             }
           })
 
           if (!ponderationIsValid) {
-            swal({title: "Attention", text: "La somme de pondérations des indicateurs ne doit pas dépasser 100 pour chaque objectif !", type: "warning"})
+            swal({title: "Attention", text: "La somme de pondérations des indicateurs doit 100 pour chaque objectif !", type: "warning"})
             return
           }
           this.$validator.validateAll().then((result) => {
