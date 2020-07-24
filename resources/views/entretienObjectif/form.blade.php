@@ -60,10 +60,9 @@
               </div>
               <div class="row">
                 <div class="col-md-4">
-                  <div class="form-group" :class="{'has-error': errors.has('deadline')}">
+                  <div class="form-group">
                     <label for="description" class="required control-label">Echéance</label>
-                    <date-picker name="deadline" v-model="objectif.deadline" v-validate="'required'" :config="{format: 'DD-MM-YYYY', locale: 'fr', minDate: new Date(), ignoreReadonly: true}" readonly></date-picker>
-                    <span v-show="errors.has('deadline')" class="help-block">@{{ errors.first('deadline') }}</span>
+                    <date-picker name="deadline" v-model="objectif.deadline" :config="{format: 'DD-MM-YYYY', locale: 'fr', minDate: new Date(), ignoreReadonly: true}" readonly></date-picker>
                   </div>
                 </div>
               </div>
@@ -199,24 +198,24 @@
           this.objectifs[oIndex].indicators.splice(indexIndicator, 1);
         },
         handleSubmit: function () {
-          var ponderationIsValid = true
-          this.objectifs.forEach(function(obj, index) {
-            var sumPonderation = 0
-            obj.indicators.forEach(function(indicator) {
-              sumPonderation += parseInt(indicator.ponderation)
-            })
-            if (sumPonderation != 100) {
-              ponderationIsValid = false;
-              return false;
-            }
-          })
-
-          if (!ponderationIsValid) {
-            swal({title: "Attention", text: "La somme de pondérations des indicateurs doit 100 pour chaque objectif !", type: "warning"})
-            return
-          }
           this.$validator.validateAll().then((result) => {
             if (result) {
+              var ponderationIsValid = true
+              this.objectifs.forEach(function(obj, index) {
+                var sumPonderation = 0
+                obj.indicators.forEach(function(indicator) {
+                  sumPonderation += parseInt(indicator.ponderation)
+                })
+                if (sumPonderation != 100) {
+                  ponderationIsValid = false;
+                  return false;
+                }
+              })
+
+              if (!ponderationIsValid) {
+                swal({title: "Attention", text: "La somme de pondérations des indicateurs doit être égale à 100 pour chaque objectif !", type: "warning"})
+                return
+              }
               this.submitted = true;
               axios.post("{{ route('config.objectifs.store') }}", {
                 objectifs: this.objectifs

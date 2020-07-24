@@ -161,6 +161,7 @@
               <label for="titre" class="control-label required mb-10">Choisissez le type d'évaluation</label>
               <div class="eval-items-container mt-5">
                 @foreach($evaluations as $evaluation)
+                  @php($itemsId = \App\Entretien_evaluation::getItemsId($entretien->id, $evaluation->id))
                   <div class="form-check">
                     <input type="checkbox" name="items[{{$evaluation->id}}][]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
@@ -170,7 +171,7 @@
                       <select name="items[{{$evaluation->id}}][object_id][]" id="entretien" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\Survey::getAll()->where('evaluation_id', 1)->get() as $s)
-                          <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
+                          <option value="{{ $s->id }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
                       <p class=""><a href="/config/surveys" target="_blank">Ajouter un nouveau ?</a></p>
@@ -181,7 +182,7 @@
                       <select name="items[{{$evaluation->id}}][object_id][]" id="carreer" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\Survey::getAll()->where('evaluation_id', 2)->get() as $s)
-                          <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
+                          <option value="{{ $s->id }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
                       <p class=""><a href="/config/surveys" target="_blank">Ajouter un nouveau ?</a></p>
@@ -193,7 +194,7 @@
                         <div class="col-md-12">
                           <select name="items[{{$evaluation->id}}][object_id][]" id="objectif" class="form-control select2" multiple>
                             @foreach(App\EntretienObjectif::getAll()->get() as $s)
-                              <option value="{{ $s->id }}" {{ in_array($s->id, $entretienEvalSurveyIds) ? 'selected':'' }}>{{ $s->title }}</option>
+                              <option value="{{ $s->id }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                             @endforeach
                           </select>
                           <p class=""><a href="/config/entretienObjectif" target="_blank">Ajouter un nouveau ?</a></p>

@@ -71,7 +71,7 @@
                                     @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                                 @endif
                                 @if(!App\Entretien::answered($e->id, $user->id) && $user->id == Auth::user()->id)
-                                <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn"><i class="fa fa-plus"></i> Demander une formation</a>
+                                <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn mt-20"><i class="fa fa-plus"></i> Demander une formation</a>
                                 @endif
                                 </div>
                             </div>

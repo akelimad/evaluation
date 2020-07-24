@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entretien_evaluation;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -31,14 +32,10 @@ class CarreerController extends Controller
      */
     public function index($eid, $uid)
     {
-        // $e = Entretien::findOrFail($eid);
-        // $user = User::findOrFail($uid);
-        // $carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
-        // $evaluations = $e->evaluations;
-        // return view('carreers.index', compact('carreers', 'e', 'user', 'evaluations') );
         $entretien = Entretien::findOrFail($eid);
         $evaluations = Entretien::findEvaluations($entretien);
-        $sid = Evaluation::surveyId($eid, 2);
+        $sid = Entretien_evaluation::getItemsId($eid, 1);
+        $sid = isset($sid[0]) ? $sid[0] : 0;
         $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;
         $user = User::findOrFail($uid);

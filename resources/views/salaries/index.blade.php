@@ -48,10 +48,12 @@
 
                             {{ $salaries->links() }}
 
-                            <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-                            @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                            <a onclick="return chmSalary.create({eid: {{$e->id}} , uid: {{$user->id}} })" data-id="{{$e->id}}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un salaire</a>
-                            @endif
+                            <div class="mt-20">
+                                <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
+                                @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
+                                    <a onclick="return chmSalary.create({eid: {{$e->id}} , uid: {{$user->id}} })" data-id="{{$e->id}}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un salaire</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <div class="callout callout-info">

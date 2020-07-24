@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entretien_evaluation;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -23,11 +24,13 @@ class EvaluationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($e_id, $uid)
+    public function index($eid, $uid)
     {
-        $entretien = Entretien::findOrFail($e_id);
+        $entretien = Entretien::findOrFail($eid);
         $evaluations = Entretien::findEvaluations($entretien);
-        $sid = Evaluation::surveyId($e_id, 1);
+
+        $sid = Entretien_evaluation::getItemsId($eid, 1);
+        $sid = isset($sid[0]) ? $sid[0] : 0;
         $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;
         $user = User::findOrFail($uid);
