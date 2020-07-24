@@ -31,7 +31,7 @@ class SkillController extends Controller
     public function index($e_id, $uid)
     {
         $e = Entretien::findOrFail($e_id);
-        $evaluations = $e->evaluations;
+        $evaluations = Entretien::findEvaluations($e);
         $skills = $e->skills()->paginate(15);
         $user = $e->users()->where('entretien_user.user_id', $uid)->first();
         return view('skills.index', compact('e', 'evaluations','skills', 'user'));

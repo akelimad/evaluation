@@ -42,7 +42,8 @@ class Evaluation extends Model
     {
         $result =  Entretien_evaluation::select('survey_id')
         ->where('entretien_id', $eid)->where('evaluation_id', $evalId)->first();
-        return $result ? $result->survey_id : '';
+        $itemsData = json_decode($result->survey_id) ?: [];
+        return count($itemsData) > 1 ? $itemsData : $itemsData[0];
     }
 
     public static function maxNote()

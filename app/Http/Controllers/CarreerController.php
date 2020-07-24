@@ -34,7 +34,7 @@ class CarreerController extends Controller
     {
         $entretien = Entretien::findOrFail($eid);
         $evaluations = Entretien::findEvaluations($entretien);
-        $sid = Entretien_evaluation::getItemsId($eid, 1);
+        $sid = Entretien_evaluation::getItemsId($eid, 2);
         $sid = isset($sid[0]) ? $sid[0] : 0;
         $survey = Survey::findOrFail($sid);
         $groupes = $survey->groupes;

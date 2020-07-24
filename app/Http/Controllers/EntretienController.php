@@ -542,6 +542,12 @@ class EntretienController extends Controller
     }
     $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
     MailerController::send(Auth::user(), $entretien, $submit_email);
+
+    return [
+      'status' => "success",
+      'message' => "Les informations ont bien été été soumis, Un email a bien été envoyé aux responsables RH",
+      'redirectUrl' => route('home')
+    ];
   }
 
   public function downloadNotation(Entretien $id)

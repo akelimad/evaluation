@@ -56,6 +56,8 @@
     $.widget.bridge('uibutton', $.ui.button);
   </script>
 
+  @yield('style')
+
 </head>
 <body
     class="hold-transition skin-blue sidebar-mini {{App\Setting::get('toggle_sidebar') == 1 ? 'sidebar-collapse':''}}">
@@ -188,7 +190,7 @@
         @endrole
         @role(["ADMIN", "RH"])
         <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>Campagnes</span></a></li>
-        <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>Calendrier des entretiens</span></a></li>
+        <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>Calendrier des campagnes</span></a></li>
         @endrole
         @role(["ADMIN"])
         @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams']))

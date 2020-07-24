@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entretien_evaluation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
@@ -36,30 +37,23 @@ class ObjectifController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index($e_id, $uid)
+  public function index($eid, $uid)
   {
-    $entretien = Entretien::findOrFail($e_id);
+    $entretien = Entretien::findOrFail($eid);
     $evaluations = Entretien::findEvaluations($entretien);
-    $obj_id = 0;
-    foreach ($evaluations as $key => $evaluation) {
-      if ($evaluation->title != "Objectifs") continue;
-      $obj_id = $evaluation->survey_id;
-    }
-    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $obj_id)->get();
 
-    $total = 0;
-    if (count($objectifs) > 0) {
-      foreach ($objectifs as $obj) {
-        $total += $obj->sousTotal;
-      }
-    }
+    $itemsId = Entretien_evaluation::getItemsId($eid, 9);
+    $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
+    $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
+
+
     $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
     return view('objectifs.index', [
       'evaluations' => $evaluations,
-      'objectifs' => $objectifs,
+      'objectifsPersonnal' => $objectifsPersonnal,
+      'objectifsTeam' => $objectifsTeam,
       'e' => $entretien,
       'user' => $user,
-      'total' => $objectifs->count() > 0 ? $this->cutNum($total / $objectifs->count()) : 0,
     ]);
   }
 
@@ -228,7 +222,6 @@ class ObjectifController extends Controller
 
   public function updateNoteObjectifs(Request $request)
   {
-    //dd($request->objectifs);
     $auth = Auth::user();
     $user_id = $request->user_id;
     if ($auth->id == $user_id) {
@@ -238,6 +231,30 @@ class ObjectifController extends Controller
       $user = User::findOrFail($user_id);
       $mentor_id = $auth->id;
     }
+
+    if (!empty($request->objectifs)) {
+      foreach ($request->objectifs as $objectid_id => $indicatorData) {
+        $object = Objectif_user::where('objectif_id', $objectid_id)->where('user_id', $user->id)->where('entretien_id', $request->entretien_id);
+        $objectif_user = $object->first();
+
+        $data['objectif_id'] = $objectid_id;
+        $data['user_id'] = $user_id;
+        $data['mentor_id'] = $mentor_id;
+        $data['entretien_id'] = $request->entretien_id;
+        $data['indicators_data'] = json_encode([$indicatorData]);
+
+        if (!$objectif_user) {
+          $objectif_user = new Objectif_user();
+          $objectif_user->save($data);
+        } else {
+          $object->update($data);
+        }
+      }
+    }
+
+    return redirect()->back();
+
+
     // dump($user);
     // dump($mentor_id);
     // die();

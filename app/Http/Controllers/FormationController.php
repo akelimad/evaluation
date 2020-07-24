@@ -37,8 +37,11 @@ class FormationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($e_id)
+    public function create($e_id, Request $request)
     {
+        if ($request->method() == 'POST') {
+            return $this->store($e_id, $request);
+        }
         ob_start();
         $entretien = Entretien::findOrFail($e_id);
         echo view('formations.form', ['e' => $entretien]);
@@ -57,7 +60,7 @@ class FormationController extends Controller
         $validator = Validator::make($request->all(), [
             'date'      => 'required',
             'exercice'  => 'required',
-            'title'     => "required|regex:/^[A-Za-z\/\s\.'-]+$/",
+            'title'     => "required|regex:/^[A-Za-z0-9\/\s\.'-]+$/",
         ]);
         if ($validator->fails()) {
             return ["status" => "danger", "message" => $validator->errors()->all()];
@@ -101,8 +104,11 @@ class FormationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($e_id, $id)
+    public function edit($e_id, $id, Request $request)
     {
+        if ($request->method() == 'POST') {
+            return $this->store($e_id, $request);
+        }
         ob_start();
         $entretien = Entretien::findOrFail($e_id);
         $formation = Formation::findOrFail($id);

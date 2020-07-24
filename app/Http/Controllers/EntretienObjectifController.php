@@ -120,7 +120,7 @@ class EntretienObjectifController extends Controller
   public function validateIndicators($indicators) {
     $newArray = [];
     if (empty($indicators)) return $newArray;
-    foreach ($indicators as $indicator) {
+    foreach ($indicators as $key => $indicator) {
       if (
         !isset($indicator['title']) || empty($indicator['title']) ||
         !isset($indicator['fixed']) || empty($indicator['fixed']) ||
@@ -128,6 +128,7 @@ class EntretienObjectifController extends Controller
       ) {
         continue;
       }
+      $indicator['id'] = $key + 1;
       $newArray[] = $indicator;
     }
 

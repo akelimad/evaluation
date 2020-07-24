@@ -125,7 +125,7 @@ Route::get('skills/updateUserSkills', 'SkillController@updateUserSkills');
 Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
-Route::get('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs');
+Route::post('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs')->name('updateNoteObjectifs');
 
 Route::get('config/entretienObjectif', 'EntretienObjectifController@index')->name('config.objectifs');
 Route::get('entretienObjectif/form', 'EntretienObjectifController@form')->name('config.objectifs.form');
@@ -142,9 +142,9 @@ Route::delete('entretienObjectif/{oid}/groupes/{gid}/delete', 'ObjectifControlle
 
 
 Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index');
-Route::get('entretiens/{e_id}/formations/create', 'FormationController@create');
+Route::any('entretiens/{e_id}/formations/create', 'FormationController@create');
 Route::post('entretiens/{e_id}/formations/store', 'FormationController@store');
-Route::get('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit');
+Route::any('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit');
 Route::put('entretiens/formations/{id}/mentorUpdate', 'FormationController@update'); //update status & realise
 
 Route::get('entretiens/{eid}/u/{uid}/salaires', 'SalarieController@index');

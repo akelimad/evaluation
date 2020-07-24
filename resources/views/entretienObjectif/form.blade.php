@@ -136,14 +136,14 @@
             id: "{{ $objectif->id > 0 ? $objectif->id : 0 }}",
             type: "{{ $objectif->type }}",
             team: "{{ $objectif->team }}",
-            title: "{{ $objectif->title }}",
+            title: "{!! $objectif->title !!}",
             description: "{{ $objectif->description }}",
             deadline: "{{ date('d-m-Y', strtotime($objectif->deadline)) }}",
             indicators: [
               @foreach($objectif->getIndicators() as $indicator)
               {
                 id: "{{ isset($indicator['id']) ? $indicator['id'] : 0 }}",
-                title: "{{ isset($indicator['title']) ? $indicator['title'] : '' }}",
+                title: "{!! isset($indicator['title']) ? $indicator['title'] : '' !!}",
                 fixed: "{{ isset($indicator['fixed']) ? $indicator['fixed'] : '' }}",
                 realized: "{{ isset($indicator['realized']) ? $indicator['realized'] : '' }}",
                 ponderation: "{{ isset($indicator['ponderation']) ? $indicator['ponderation'] : '' }}",
@@ -157,7 +157,7 @@
       methods: {
         addObjectf: function () {
           this.objectifs.push({
-            id: null,
+            id: 0,
             type: '',
             team: '',
             title: '',
@@ -165,7 +165,7 @@
             deadline: '',
             indicators: [
               {
-                id: null,
+                id: 0,
                 title: '',
                 fixed: '',
                 realized: '',
@@ -187,7 +187,7 @@
             return
           }
           this.objectifs[oIndex].indicators.push({
-            id: null,
+            id: 0,
             title: '',
             fixed: '',
             realized: '',

@@ -1,5 +1,21 @@
 @extends('layouts.app')
-
+@section('style')
+  <style>
+    .objectifs-type .nav-tabs>li>a {
+      padding: 10px 50px;
+    }
+    .objectifs-type .nav-tabs>li.active>a,
+    .objectifs-type .nav-tabs>li.active>a:focus,
+    .objectifs-type .nav-tabs>li.active>a:hover {
+      border: none;
+      border-bottom: 3px solid #3c8dbc;
+      color: #3c8dbc;
+    }
+    table tbody tr td {
+      padding: 15px 8px !important;
+    }
+  </style>
+@endsection
 @section('content')
   <section class="content objectifs">
     <div class="row">
@@ -10,273 +26,139 @@
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
-              @if(!empty($objectifs))
-                <div class="box-body no-padding mb40">
+              <div class="box-body no-padding mb40">
+                <form action="{{ route('updateNoteObjectifs') }}" method="post">
+                  <input type="hidden" name="entretien_id" value="{{$e->id}}">
+                  <input type="hidden" name="user_id" value="{{$user->id}}">
+                  {{ csrf_field() }}
                   <div class="row">
-                    <div class="{{ $user->id != Auth::user()->id ? 'col-md-6':'col-md-12' }}">
-                      @if ($user->id != Auth::user()->id)
-                        <h4 class="alert alert-info p-5">{{ $user->name." ".$user->last_name }}</h4>
-                      @endif
-                      <div class="table-responsive">
-                        <form action="{{url('objectifs/updateNoteObjectifs')}}">
-                          <input type="hidden" name="entretien_id" value="{{$e->id}}">
-                          <input type="hidden" name="user_id" value="{{$user->id}}">
-                          <table class="table table-hover">
-                          <tr>
-                            <th width="20%">Critères d'évaluation</th>
-                            <th>Notation (%)</th>
-                            <th>Apréciation</th>
-                            <th class="text-center">Pondération (%)</th>
-                          </tr>
-                          @foreach($objectifs as $objectif)
-                            <tr>
-                              <td colspan="4" class="objectifTitle text-center">
-                                {{ $objectif->title }}
-                              </td>
-                            </tr>
-                            @foreach($objectif->children as $sub)
-                              <tr class=" {{ count($sub->children) <= 0 ? 'objectifRow' : '' }}" id="{{ count($sub->children) <= 0 ? 'userObjectifRow-' . $sub->id : '' }}" data-userobjrow="{{ $sub->id }}">
-                                <td style="max-width: 6%">{{ $sub->title }}</td>
-                                <td class="criteres text-center slider-note {{$user->id != Auth::user()->id ? 'disabled':''}}">
-                                  @if (count($sub->children) <= 0)
-                                    <input type="text" class="slider userNote userObjSection-{{ $sub->id }}"
-                                           data-objectif="{{ $sub->id }}" data-section="{{ $objectif->id }}" required=""
-                                           name="objectifs[{{$objectif->id}}][{{$sub->id}}][userNote]" data-provide="slider"
-                                           data-slider-min="0" data-slider-max="200" data-slider-step="1"
-                                           data-slider-value="{{App\Objectif::getObjectif($e->id, $user, null, $sub->id) ? App\Objectif::getObjectif($e->id, $user, null, $sub->id)->userNote : '0' }}"
-                                           data-slider-tooltip="always">
-                                    <input type="hidden" name="objectifs[{{$objectif->id}}][{{$sub->id}}][realise]"
-                                           value="">
-                                  @endif
-                                </td>
-                                <td>
-                                  @if (count($sub->children) <= 0)
-                                    <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][userAppr]"
-                                           class="form-control"
-                                           value="{{App\Objectif::getObjectif($e->id, $user, null, $sub->id) ? App\Objectif::getObjectif($e->id, $user, null, $sub->id)->userAppreciation : '' }}"
-                                           placeholder="Révision de l'objectif ..."
-                                           title="Révision de l'objectif (optionnel) + date de la révision"
-                                           data-toggle="tooltip">
-                                  @endif
-                                </td>
-                                <td class="text-center">
-                                  <span class="ponderation">{{ $sub->ponderation }}</span>
-                                </td>
-                              </tr>
-                              @if (count($sub->children) > 0)
-                                @foreach($sub->children as $subObj)
-                                  <tr class="subObjectifRow">
-                                    <td class="pl-30"><i class="fa fa-minus"></i> {{ $subObj->title }}</td>
-                                    <td class="{{$user->id != Auth::user()->id ? 'disabled':''}}">
-                                      <input type="text" class="slider userNote userSubObjSection-{{ $sub->id }}" data-objectif="{{ $sub->id }}" data-section="{{ $objectif->id }}" required="" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][userNote]" data-provide="slider"
+                    <div class="col-md-12 objectifs-type">
+                      <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#personnel">Personnel</a></li>
+                        <li><a data-toggle="tab" href="#team">Equipe</a></li>
+                      </ul>
+                      <div class="tab-content pt-30">
+                        <div id="personnel" class="tab-pane fade in active">
+                          @php($total = 0)
+                          @forelse($objectifsPersonnal as $objectif)
+                            <div class="item">
+                              <p class="bg-gray p-5">
+                                <b>Titre :</b> {{ $objectif->title }}
+                                <span class="pull-right font-20">{{ \App\Objectif::getTotalNote($e->id, $user->id, $objectif->id) }} %</span>
+                              </p>
+                            </div>
+                            <div class="item">
+                              <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
+                            </div>
+                            <div class="item">
+                              <p class="mb-0"><b>Indicateurs :</b></p>
+                              <table class="table">
+                                <thead>
+                                <tr>
+                                  <th width="28%">Titre</th>
+                                  <th width="10%" class="text-center">Objectif fixé</th>
+                                  <th width="50%" class="text-center">Réalisé</th>
+                                  <th width="50%" class="text-center">En %</th>
+                                  <th width="12%" class="text-center">Pondération %</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($objectif->getIndicators() as $indicator)
+                                  <tr>
+                                    <td>{{ $indicator['title'] }}</td>
+                                    <td class="text-center">{{ $indicator['fixed'] }}</td>
+                                    <td>
+                                      <input type="text"
+                                             class="slider"
+                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][realized]"
+                                             data-provide="slider"
                                              data-slider-min="0"
-                                             data-slider-max="200"
+                                             data-slider-max="{{ $indicator['fixed'] * 2 }}"
                                              data-slider-step="1"
-                                             data-slider-value="{{App\Objectif::getObjectif($e->id, $user, null, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, null, $subObj->id)->userNote : '0' }}"
+                                             data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id']) }}"
                                              data-slider-tooltip="always">
                                     </td>
-                                    <td>
-                                      <input type="text" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][userAppr]"
-                                             class="form-control"
-                                             value="{{App\Objectif::getObjectif($e->id, $user, null, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, null, $subObj->id)->userAppreciation : '' }}"
-                                             placeholder="Révision de l'objectif ..."
-                                             title="Révision de l'objectif (optionnel) + date de la révision"
-                                             data-toggle="tooltip">
+                                    <td class="text-center">
+                                      {{ $total += (\App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id']) / $indicator['fixed']) * 100 }}
                                     </td>
-                                    <td><span class="ponderation">{{ $subObj->ponderation }}</span></td>
+                                    <td class="text-center">{{ $indicator['ponderation'] }}</td>
                                   </tr>
                                 @endforeach
-                                <tr style="background: #cae5f1;">
-                                  <td>Sous total (%)</td>
-                                  <td colspan="3">
-                                    <span class="badge badge-success pull-right userSubTotalObjectif userSubTotalObjectif-{{ $objectif->id }}" id="userSubTotalSubObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
-                                  </td>
-                                </tr>
-                              @endif
-                              @if (count($sub->children) <= 0)
-                                <tr style="background: #cae5f1;">
-                                  <td>Sous total (%)</td>
-                                  <td colspan="3">
-                                    <span class="badge badge-success pull-right userSubTotalObjectif userSubTotalObjectif-{{ $objectif->id }}" id="userSubTotalObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
-                                  </td>
-                                  </td>
-                                </tr>
-                              @endif
-                            @endforeach
-                            @if (!empty($objectif->extra_fields))
-                              @foreach (json_decode($objectif->extra_fields) as $key => $field)
-                                <tr>
-                                  <td>
-                                    {{ $field->label }}
-                                  </td>
-                                  <td colspan="4">
-                                    @if ($field->type == 'text')
-                                      <input type="text" name="user_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user, null, $sub->id, $key) }}">
-                                    @elseif ($field->type == 'textarea')
-                                      <textarea name="user_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id, $user, null, $sub->id, $key) }}</textarea>
-                                    @endif
-                                  </td>
-                                </tr>
-                              @endforeach
-                            @endif
+                                </tbody>
+                              </table>
+                            </div>
+                          @empty
                             <tr>
-                              <td colspan="4" class="sousTotal">
-                                <span>Sous total de la section (%)</span>
-                                <span class="badge badge-success pull-right userSubTotalSection" id="userSubTotalSection-{{$objectif->id}}">0</span>
+                              <td>
+                                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                               </td>
                             </tr>
-                          @endforeach
-                          <tr>
-                            <td colspan="4" class="btn-warning" valign="middle">
-                              <span>TOTAL DE L'ÉVALUATION (%)</span>
-                                <span class="btn-default pull-right badge userTotalNote">0</span>
-                            </td>
-                          </tr>
-                        </table>
-                          @if(!App\Entretien_user::userHasSubmitedEval($e->id, $user->id))
-                            <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Sauvegarder
-                            </button>
-                          @endif
-                        </form>
-                      </div>
-                    </div>
-                    @if ($user->id != Auth::user()->id)
-                      <div class="col-md-6">
-                        <h4 class="alert alert-info p-5">{{ $user->parent->name." ".$user->parent->last_name }}</h4>
-                        <div class="table-responsive">
-                          <form action="{{url('objectifs/updateNoteObjectifs')}}">
-                            <input type="hidden" name="entretien_id" value="{{$e->id}}">
-                            <input type="hidden" name="user_id" value="{{$user->id}}">
-                            <table class="table table-hover">
-                              <tr>
-                                <th width="20%">Critères d'évaluation</th>
-                                <th>Notation (%)</th>
-                                <th>Apréciation</th>
-                                <th class="text-center">Pondération (%)</th>
-                              </tr>
-                              @foreach($objectifs as $objectif)
-                                <input type="hidden" name="parentObjectif[]" value="{{$objectif->id}}">
+                          @endforelse
+                        </div>
+                        <div id="team" class="tab-pane fade">
+                          @forelse($objectifsTeam as $objectif)
+                            <div class="item">
+                              <p class="bg-gray p-5"><b>Titre :</b> {{ $objectif->title }}</p>
+                            </div>
+                            <div class="item">
+                              <p><b>Equipe :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
+                            </div>
+                            <div class="item">
+                              <p><b>Date d'échéance :</b> {{ $objectif->deadline }}</p>
+                            </div>
+                            <div class="item">
+                              <p class="mb-0"><b>Indicateurs :</b></p>
+                              <table class="table">
+                                <thead>
                                 <tr>
-                                  <td colspan="4" class="objectifTitle text-center">
-                                    {{ $objectif->title }}
-                                  </td>
+                                  <th width="28%" class="text-center">Titre</th>
+                                  <th width="10%" class="text-center">Objectif fixé</th>
+                                  <th width="50%" class="text-center">
+                                    Réalisé <span title="Cette valeur ne peut être remplie que par les managers" data-toggle="tooltip"><i class="fa fa-question-circle font-16"></i></span>
+                                  </th>
+                                  <th width="12%" class="text-center">Pondération %</th>
                                 </tr>
-                                @foreach($objectif->children as $sub)
-                                  <tr class=" {{ count($sub->children) <= 0 ? 'objectifRow' : '' }}" id="{{ count($sub->children) <= 0 ? 'mentorObjectifRow-' . $sub->id : '' }}" data-mentorobjrow="{{ $sub->id }}">
-                                    <td style="max-width: 6%">{{ $sub->title }}</td>
-                                    <td class="criteres text-center slider-note">
-                                      @if (count($sub->children) <= 0)
-                                        <input type="text" class="slider mentorNote mentorObjSection-{{ $sub->id }}" data-objectif="{{ $sub->id }}" data-section="{{ $objectif->id }}" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorNote]" data-provide="slider"
-                                         data-slider-min="0"
-                                         data-slider-max="200"
-                                         data-slider-step="1"
-                                         data-slider-value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorNote : '0' }}"
-                                         data-slider-tooltip="always">
-                                      @endif
-                                    </td>
+                                </thead>
+                                <tbody>
+                                @foreach($objectif->getIndicators() as $indicator)
+                                  <tr>
+                                    <td>{{ $indicator['title'] }}</td>
+                                    <td class="text-center">{{ $indicator['fixed'] }}</td>
                                     <td>
-                                      @if (count($sub->children) <= 0)
-                                        <input type="text" name="objectifs[{{$objectif->id}}][{{$sub->id}}][mentorAppr]"
-                                             class="form-control"
-                                             value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $sub->id)->mentorAppreciation : '' }}"
-                                             placeholder="Révision de l'objectif ..."
-                                             title="Révision de l'objectif (optionnel) + date de la révision"
-                                             data-toggle="tooltip">
-                                      @endif
+                                      <input type="text"
+                                             class="slider"
+                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][]"
+                                             data-provide="slider"
+                                             data-slider-min="0"
+                                             data-slider-max="{{ $indicator['fixed'] * 2 }}"
+                                             data-slider-step="1"
+                                             data-slider-value=""
+                                             data-slider-tooltip="always"
+                                             data-slider-enabled="{{ $user->id != Auth::user()->id }}">
                                     </td>
-                                    <td class="text-center">
-                                      <span class="ponderation">{{ $sub->ponderation }}</span>
-                                    </td>
+                                    <td class="text-center">{{ $indicator['ponderation'] }}</td>
                                   </tr>
-                                  @if (count($sub->children) > 0)
-                                    @foreach($sub->children as $subObj)
-                                      <tr class="subObjectifRow">
-                                        <td class="pl-30"><i class="fa fa-minus"></i> {{ $subObj->title }}</td>
-                                        <td class="criteres text-center slider-note">
-                                          <input type="text" class="slider mentorNote mentorSubObjSection-{{ $sub->id }}"
-                                                 data-objectif="{{ $sub->id }}" data-section="{{ $objectif->id }}"
-                                                 name="objectifs[{{$objectif->id}}][{{$subObj->id}}][mentorNote]"
-                                                 data-provide="slider" data-slider-min="0" data-slider-max="200"
-                                                 data-slider-step="1"
-                                                 data-slider-value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorNote : '0' }}"
-                                                 data-slider-tooltip="always">
-                                        </td>
-                                        <td>
-                                          <input type="text" name="objectifs[{{$objectif->id}}][{{$subObj->id}}][mentorAppr]"
-                                                 class="form-control"
-                                                 value="{{App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id) ? App\Objectif::getObjectif($e->id, $user, $user->parent, $subObj->id)->mentorAppreciation : '' }}"
-                                                 placeholder="Révision de l'objectif ..."
-                                                 title="Révision de l'objectif (optionnel) + date de la révision"
-                                                 data-toggle="tooltip">
-                                        </td>
-                                        <td><span class="ponderation">{{ $subObj->ponderation }}</span></td>
-                                      </tr>
-                                    @endforeach
-                                    <tr style="background: #cae5f1;">
-                                      <td>Sous total (%)</td>
-                                      <td colspan="3">
-                                        <span class="badge badge-success pull-right mentorSubTotalObjectif mentorSubTotalObjectif-{{ $objectif->id }}" id="mentorSubTotalSubObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
-                                      </td>
-                                    </tr>
-                                  @endif
-                                  @if (count($sub->children) <= 0)
-                                    <tr style="background: #cae5f1;">
-                                      <td>Sous total (%)</td>
-                                      <td colspan="3">
-                                        <span class="badge badge-success pull-right mentorSubTotalObjectif mentorSubTotalObjectif-{{ $objectif->id }}" id="mentorSubTotalObjectif-{{ $sub->id }}" data-ponderation="{{ $sub->ponderation }}">0</span>
-                                      </td>
-                                      </td>
-                                    </tr>
-                                  @endif
                                 @endforeach
-                                @if (!empty($objectif->extra_fields))
-                                  @foreach (json_decode($objectif->extra_fields) as $key => $field)
-                                    <tr>
-                                      <td>
-                                        {{ $field->label }}
-                                      </td>
-                                      <td colspan="4">
-                                        @if ($field->type == 'text')
-                                          <input type="text" name="mentor_extra_fields_data[{{$key}}]" class="form-control" value="{{ App\Objectif::getExtraFieldData($e->id, $user, $user->parent, $sub->id, $key, false) }}">
-                                        @elseif ($field->type == 'textarea')
-                                          <textarea name="mentor_extra_fields_data[{{$key}}]" class="form-control">{{ App\Objectif::getExtraFieldData($e->id, $user, $user->parent, $sub->id, $key, false) }}</textarea>
-                                        @endif
-                                      </td>
-                                    </tr>
-                                  @endforeach
-                                @endif
-                                <tr>
-                                  <td colspan="3" class="sousTotal">
-                                    <span>Sous total de la section (%)</span>
-                                  </td>
-                                  <td colspan="3" class="sousTotal">
-                                    <span class="badge badge-success pull-right mentorSubTotalSection" id="mentorSubTotalSection-{{$objectif->id}}">0</span>
-                                  </td>
-                                </tr>
-                              @endforeach
-                              <tr>
-                                <td colspan="3" class="btn-warning"
-                                    valign="middle">
-                                  <span>TOTAL DE L'ÉVALUATION (%)</span>
-                                </td>
-                                <td colspan="3" class="btn-warning" valign="middle">
-                                  <span class="btn-default pull-right badge mentorTotalNote">0</span>
-                                </td>
-                              </tr>
-                            </table>
-                            @if(!App\Entretien_user::mentorHasSubmitedEval($e->id, $user->id, $user->parent->id))
-                              <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Sauvegarder
-                              </button>
-                            @endif
-                          </form>
+                                </tbody>
+                              </table>
+                            </div>
+                          @empty
+                            <tr>
+                              <td>
+                                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
+                              </td>
+                            </tr>
+                          @endforelse
+                        </div>
+                        <div class="save-action">
+                          <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Enregistrer tout</button>
+                          <div class="clearfix"></div>
                         </div>
                       </div>
-                    @endif
+                    </div>
                   </div>
-                </div>
-              @else
-                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
-              @endif
+                </form>
+              </div>
             </div>
           </div>
           <div class="callout callout-info">

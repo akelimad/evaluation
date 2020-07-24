@@ -138,17 +138,22 @@ class Objectif extends Model
         return $sectionsubTotal;
     }
 
-    public static function getTotalNote($e, $user, $mentor, $profil)
+    public static function getTotalNote($eid, $user_id, $objectif_id)
     {
         $total = 0;
-        $objectifs = self::getObjectifs($e);
-        $c = 0;
-        foreach ($objectifs as $objectif) {
-            $c ++;
-            $total += self::getSectionSubTotal($e, $user, $mentor, $profil, $objectif->id);
+        $objectif = EntretienObjectif::find($objectif_id);
+        if (!$objectif) return $total;
+        $data = json_decode($objectif->indicators, true) ?: [];
+        if (!empty($data)) {
+            foreach ($data as $indicator) {
+                if (!isset($indicator['realized'])) continue;
+                $total += Objectif_user::getRealised($eid, $user_id, $objectif_id, $indicator['id']);
+                $total = $total * ($indicator['ponderation'] / 100);
+            }
+            $total = round($total);
         }
 
-        return $c > 0 ? round($total / $c) : 0;
+        return $total;
     }
 
 
