@@ -425,13 +425,11 @@ class EntretienController extends Controller
     $e = Entretien::findOrFail($eid);
     $user = User::findOrFail($uid);
     $evaluations = Entretien::findEvaluations($e);
-    $obj_id = 0;
-    foreach ($evaluations as $key => $evaluation) {
-      if ($evaluation->title != "Objectifs") continue;
-      $obj_id = $evaluation->survey_id;
-    }
-    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $obj_id)->get();
-    $evalTitle = [];
+
+    $itemsId = Entretien_evaluation::getItemsId($eid, 9);
+    $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
+    $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
+
     $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->where('status', 2)->get();
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->paginate(10);
     $skills = Skill::where('entretien_id', $eid)->get();
@@ -440,7 +438,7 @@ class EntretienController extends Controller
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifs', 'formations', 'skills', 'comment', 'evaluations'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifsPersonnal', 'objectifsTeam', 'formations', 'skills', 'comment', 'evaluations'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }

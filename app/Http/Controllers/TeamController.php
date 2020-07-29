@@ -18,6 +18,9 @@ class TeamController extends Controller
 
   public function form(Request $request)
   {
+    if ($request->method() == 'POST') {
+      return $this->store($request);
+    }
     ob_start();
     $id = $request->id;
     if (isset($id) && is_numeric($id)) {

@@ -101,6 +101,9 @@
 												<button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-ellipsis-v"></i></button>
 												<ul class="dropdown-menu dropdown-menu-right">
 													<li>
+														<a href="javascript:void(0)" onclick="return chmEntretien.apercu({eid: {{$e->id}}, uid: {{$user->id}} })"><i class="fa fa-search"></i> Aperçu</a>
+													</li>
+													<li>
 														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, usersId: [{{$user->id}}], role: 'coll'})"><i class="fa fa-bell-o"></i> Rappeler à l'évalué de remplir son entretien</a>
 													</li>
 													<li>

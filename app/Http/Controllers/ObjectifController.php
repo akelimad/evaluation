@@ -239,13 +239,13 @@ class ObjectifController extends Controller
 
         $data['objectif_id'] = $objectid_id;
         $data['user_id'] = $user_id;
-        $data['mentor_id'] = $mentor_id;
         $data['entretien_id'] = $request->entretien_id;
+        $data['mentor_id'] = $mentor_id;
         $data['indicators_data'] = json_encode([$indicatorData]);
 
         if (!$objectif_user) {
           $objectif_user = new Objectif_user();
-          $objectif_user->save($data);
+          $objectif_user->create($data);
         } else {
           $object->update($data);
         }

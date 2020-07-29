@@ -16,6 +16,7 @@
     }
   </style>
 @endsection
+@php($isMentor = count(Auth::user()->children)>0 && $user->id != Auth::user()->id)
 @section('content')
   <section class="content objectifs">
     <div class="row">
@@ -32,14 +33,14 @@
                   <input type="hidden" name="user_id" value="{{$user->id}}">
                   {{ csrf_field() }}
                   <div class="row">
-                    <div class="col-md-12 objectifs-type">
+                    <div class="col-md-{{ !$isMentor ? '12':'6'  }} objectifs-type">
+                      <h4 class="alert alert-info p-5">{{ $user->fullname() }}</h4>
                       <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#personnel">Personnel</a></li>
-                        <li><a data-toggle="tab" href="#team">Equipe</a></li>
+                        <li class="active"><a data-toggle="tab" href="#user-personnel">Personnel</a></li>
+                        <li><a data-toggle="tab" href="#user-team">Equipe</a></li>
                       </ul>
                       <div class="tab-content pt-30">
-                        <div id="personnel" class="tab-pane fade in active">
-                          @php($total = 0)
+                        <div id="user-personnel" class="tab-pane fade in active">
                           @forelse($objectifsPersonnal as $objectif)
                             <div class="item">
                               <p class="bg-gray p-5">
@@ -56,10 +57,10 @@
                                 <thead>
                                 <tr>
                                   <th width="28%">Titre</th>
-                                  <th width="10%" class="text-center">Objectif fixé</th>
-                                  <th width="50%" class="text-center">Réalisé</th>
-                                  <th width="50%" class="text-center">En %</th>
-                                  <th width="12%" class="text-center">Pondération %</th>
+                                  <th width="12%" class="text-center"><span title="Objectif fixé" data-toggle="tooltip">O <i class="fa fa-question-circle"></i></span></th>
+                                  <th width="40%" class="text-center">Réalisé</th>
+                                  <th width="10%" class="text-center">En %</th>
+                                  <th width="10%" class="text-center"><span title="Pondération en %" data-toggle="tooltip">P <i class="fa fa-question-circle"></i></span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -70,16 +71,17 @@
                                     <td>
                                       <input type="text"
                                              class="slider"
-                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][realized]"
+                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][user_realized]"
                                              data-provide="slider"
                                              data-slider-min="0"
                                              data-slider-max="{{ $indicator['fixed'] * 2 }}"
                                              data-slider-step="1"
                                              data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id']) }}"
+                                             data-slider-enabled="{{ $user->id == Auth::user()->id }}"
                                              data-slider-tooltip="always">
                                     </td>
                                     <td class="text-center">
-                                      {{ $total += (\App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id']) / $indicator['fixed']) * 100 }}
+                                      {{ round((\App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id']) / $indicator['fixed']) * 100) }}
                                     </td>
                                     <td class="text-center">{{ $indicator['ponderation'] }}</td>
                                   </tr>
@@ -95,16 +97,19 @@
                             </tr>
                           @endforelse
                         </div>
-                        <div id="team" class="tab-pane fade">
+                        <div id="user-team" class="tab-pane fade">
                           @forelse($objectifsTeam as $objectif)
                             <div class="item">
-                              <p class="bg-gray p-5"><b>Titre :</b> {{ $objectif->title }}</p>
+                              <p class="bg-gray p-5"><b>Titre :</b>
+                                {{ $objectif->title }}
+                                <span class="pull-right font-20">0 %</span>
+                              </p>
                             </div>
                             <div class="item">
                               <p><b>Equipe :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
                             </div>
                             <div class="item">
-                              <p><b>Date d'échéance :</b> {{ $objectif->deadline }}</p>
+                              <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
                             </div>
                             <div class="item">
                               <p class="mb-0"><b>Indicateurs :</b></p>
@@ -112,11 +117,11 @@
                                 <thead>
                                 <tr>
                                   <th width="28%" class="text-center">Titre</th>
-                                  <th width="10%" class="text-center">Objectif fixé</th>
-                                  <th width="50%" class="text-center">
+                                  <th width="12%" class="text-center"><span title="Objectif fixé" data-toggle="tooltip">O <i class="fa fa-question-circle"></i></span></th>
+                                  <th width="48%" class="text-center">
                                     Réalisé <span title="Cette valeur ne peut être remplie que par les managers" data-toggle="tooltip"><i class="fa fa-question-circle font-16"></i></span>
                                   </th>
-                                  <th width="12%" class="text-center">Pondération %</th>
+                                  <th width="12%" class="text-center"><span title="Pondération en %" data-toggle="tooltip">P <i class="fa fa-question-circle"></i></span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -127,14 +132,14 @@
                                     <td>
                                       <input type="text"
                                              class="slider"
-                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][]"
+                                             name=""
                                              data-provide="slider"
                                              data-slider-min="0"
                                              data-slider-max="{{ $indicator['fixed'] * 2 }}"
                                              data-slider-step="1"
                                              data-slider-value=""
                                              data-slider-tooltip="always"
-                                             data-slider-enabled="{{ $user->id != Auth::user()->id }}">
+                                             data-slider-enabled="false">
                                     </td>
                                     <td class="text-center">{{ $indicator['ponderation'] }}</td>
                                   </tr>
@@ -150,10 +155,129 @@
                             </tr>
                           @endforelse
                         </div>
-                        <div class="save-action">
-                          <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Enregistrer tout</button>
-                          <div class="clearfix"></div>
+                      </div>
+                    </div>
+<!-- *************************************************************************************** !-->
+                    @if($isMentor)
+                      <div class="col-md-6 objectifs-type">
+                      <h4 class="alert alert-info p-5">{{ $user->parent->fullname() }}</h4>
+                      <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#mentor-personnel">Personnel</a></li>
+                        <li><a data-toggle="tab" href="#mentor-team">Equipe</a></li>
+                      </ul>
+                      <div class="tab-content pt-30">
+                        <div id="mentor-personnel" class="tab-pane fade in active">
+                          @forelse($objectifsPersonnal as $objectif)
+                            <div class="item">
+                              <p class="bg-gray p-5">
+                                <b>Titre :</b> {{ $objectif->title }}
+                                <span class="pull-right font-20">{{ \App\Objectif::getTotalNote($e->id, $user->id, $objectif->id, 'mentor_personnal') }} %</span>
+                              </p>
+                            </div>
+                            <div class="item">
+                              <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
+                            </div>
+                            <div class="item">
+                              <p class="mb-0"><b>Indicateurs :</b></p>
+                              <table class="table">
+                                <thead>
+                                <tr>
+                                  <th width="80%" class="text-center">Réalisé</th>
+                                  <th width="20%" class="text-center">En %</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($objectif->getIndicators() as $indicator)
+                                  <tr>
+                                    <td>
+                                      <input type="text"
+                                             class="slider"
+                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_personnal_realized]"
+                                             data-provide="slider"
+                                             data-slider-min="0"
+                                             data-slider-max="{{ $indicator['fixed'] * 2 }}"
+                                             data-slider-step="1"
+                                             data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor_personnal') }}"
+                                             data-slider-tooltip="always">
+                                    </td>
+                                    <td class="text-center">
+                                      {{ round((\App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor') / $indicator['fixed']) * 100) }}
+                                    </td>
+                                  </tr>
+                                @endforeach
+                                </tbody>
+                              </table>
+                            </div>
+                          @empty
+                            <tr>
+                              <td>
+                                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
+                              </td>
+                            </tr>
+                          @endforelse
                         </div>
+                        <div id="mentor-team" class="tab-pane fade">
+                          @forelse($objectifsTeam as $objectif)
+                            <div class="item">
+                              <p class="bg-gray p-5"><b>Titre :</b>
+                                {{ $objectif->title }}
+                                <span class="pull-right font-20">{{ \App\Objectif::getTotalNote($e->id, $user->id, $objectif->id, 'mentor_team') }} %</span>
+                              </p>
+                            </div>
+                            <div class="item">
+                              <p><b>Equipe :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
+                            </div>
+                            <div class="item">
+                              <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
+                            </div>
+                            <div class="item">
+                              <p class="mb-0"><b>Indicateurs :</b></p>
+                              <table class="table">
+                                <thead>
+                                <tr>
+                                  <th width="90%" class="text-center">Réalisé <span title="Cette valeur ne peut être remplie que par les managers" data-toggle="tooltip"><i class="fa fa-question-circle font-16"></i></span>
+                                  </th>
+                                  <th width="10%" class="text-center"><span title="Pondération en %" data-toggle="tooltip">P <i class="fa fa-question-circle"></i></span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($objectif->getIndicators() as $indicator)
+                                  <tr>
+                                    <td>
+                                      <input type="text"
+                                             class="slider"
+                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_team_realized]"
+                                             data-provide="slider"
+                                             data-slider-min="0"
+                                             data-slider-max="{{ $indicator['fixed'] * 2 }}"
+                                             data-slider-step="1"
+                                             data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor_team') }}"
+                                             data-slider-tooltip="always"
+                                             data-slider-enabled="true">
+                                    </td>
+                                    <td class="text-center">{{ $indicator['ponderation'] }}</td>
+                                  </tr>
+                                @endforeach
+                                </tbody>
+                              </table>
+                            </div>
+                          @empty
+                            <tr>
+                              <td>
+                                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
+                              </td>
+                            </tr>
+                          @endforelse
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="save-action mt-20">
+                        <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Enregistrer tout</button>
+                        <div class="clearfix"></div>
                       </div>
                     </div>
                   </div>
@@ -176,60 +300,7 @@
 @section('javascript')
   <script>
     $(document).ready(function () {
-      // Calculate sub total & total in real-time
-      var userTypes
-      @if ($user->id == Auth::user()->id)
-        userTypes = ['user']
-      @else
-        userTypes = ['user', 'mentor']
-      @endif
-      $.each(userTypes, function (i, userType) {
-        $('.slider').on('change', function (ev) {
-          var objectifId = $(this).data('objectif')
-          var sectionId = $(this).data('section')
-          var subObjectifs = $('.'+ userType +'SubObjSection-' + objectifId)
-          var total = sectionTotal = SubTotalObjectif = SubTotalSubObjectif = note = ponderation = objPonderation = 0
 
-          // calculate sub total of objectif that have own sub objectifs
-          $.each(subObjectifs, function (i, el) {
-            note = $(el).closest('.subObjectifRow').find('.' + userType + 'Note').val()
-            ponderation = $(el).closest('.subObjectifRow').find('.ponderation').text()
-            SubTotalSubObjectif += parseInt(note) * parseInt(ponderation)
-          })
-          objPonderation = $('[data-'+ userType +'objrow="'+ objectifId +'"]').find('.ponderation').text()
-          objPonderation = parseInt(objPonderation) / 100
-          SubTotalSubObjectif = Math.round((SubTotalSubObjectif / 100) * objPonderation)
-          $('#'+ userType +'SubTotalSubObjectif-' + objectifId).text(SubTotalSubObjectif)
-
-          // calculate sub total of objectif that have'nt sub objectifs
-          $.each($('#' + userType + 'ObjectifRow-' + objectifId), function (i, el) {
-            note = $(el).closest('.objectifRow').find('.' + userType + 'Note').val()
-            ponderation = $(el).closest('.objectifRow').find('.ponderation').text()
-            SubTotalObjectif += parseInt(note) * (parseInt(ponderation) / 100)
-          })
-          SubTotalObjectif = Math.round(SubTotalObjectif)
-          $('#'+ userType +'SubTotalObjectif-' + objectifId).text(SubTotalObjectif)
-
-          // calculate sub total of section
-          var countObjs = 0
-          $.each($('.'+ userType +'SubTotalObjectif-' + sectionId), function (i, el) {
-            countObjs += 1
-            sectionTotal += parseInt($(el).text())
-          })
-          sectionTotal = sectionTotal / countObjs
-          $('#' + userType + 'SubTotalSection-' + sectionId).text(Math.round(sectionTotal))
-
-          // calculate total note of evaluation
-          var countSections = 0
-          $.each($('.' + userType + 'SubTotalSection'), function (i, el) {
-            countSections += 1
-            total += parseInt($(el).text())
-          })
-          total = total / countSections
-          $('.' + userType + 'TotalNote').text(Math.round(total))
-        })
-      })
-      $('.slider').trigger('change')
     })
   </script>
 @endsection
