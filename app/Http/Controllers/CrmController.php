@@ -27,6 +27,9 @@ class CrmController extends Controller
 
   public function form(Request $request)
   {
+    if ($request->method() == 'POST') {
+      return $this->store($request);
+    }
     $id = $request->id;
     ob_start();
     if( isset($id) && is_numeric($id) ) {

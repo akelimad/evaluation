@@ -41,6 +41,7 @@ class UserController extends Controller
     $department = $request->service;
     $function = $request->function;
     $role = $request->role;
+    $team = $request->team;
 
     $per_page = $selected = 10;
     if (isset($request->per_page) && $request->per_page != "all") {
@@ -71,6 +72,12 @@ class UserController extends Controller
       });
       $params = true;
     }
+    if (!empty($team)){
+      $query->whereHas('teams', function ($query) use ($team) {
+        $query->where('team_id', '=', $team);
+      });
+      $params = true;
+    }
     $users = $query->paginate($per_page);
     $fonctions = Fonction::getAll()->get();
     $departments = Department::getAll()->get();
@@ -86,7 +93,8 @@ class UserController extends Controller
       'department' => $department,
       'function' => $function,
       'role' => $role,
-      'params' => $params
+      'params' => $params,
+      'teams' => Team::getAll()->get(),
     ]);
   }
 

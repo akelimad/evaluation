@@ -96,7 +96,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
 	Route::delete('crm/logo/remove', 'CrmController@removeLogo');
 });
 Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() {
-	Route::get('crm/form', 'CrmController@form');
+	Route::any('crm/form', 'CrmController@form');
 	Route::post('crm/store', 'CrmController@store');
 });
 

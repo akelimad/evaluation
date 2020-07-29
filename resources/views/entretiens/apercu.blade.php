@@ -182,7 +182,7 @@
                   <div id="personnel" class="tab-pane fade in active">
                     @forelse($objectifsPersonnal as $key => $objectif)
                       <h3 class="bg-gray p-5 mt-0">{{ $objectif->title }}</h3>
-                      <canvas class="chart" id="personnelChart{{$key+1}}" style="max-height: 600px;"></canvas>
+                      <canvas class="chart" id="personnelChart{{$key+1}}" style="max-height: 400px;"></canvas>
                     @empty
                       <p>Aucun résultat trouvé !</p>
                     @endforelse
@@ -191,7 +191,7 @@
                     <div id="personnel" class="tab-pane fade in active">
                       @forelse($objectifsTeam as $key => $objectif)
                         <h3 class="bg-gray p-5 mt-0">{{ $objectif->title }}</h3>
-                        <canvas class="chart" id="teamChart{{$key+1}}" style="max-height: 600px;"></canvas>
+                        <canvas class="chart" id="teamChart{{$key+1}}" style="max-height: 400px;"></canvas>
                       @empty
                         <p>Aucun résultat trouvé !</p>
                       @endforelse
@@ -431,27 +431,37 @@
     }
 
     @foreach($objectifsPersonnal as $key => $objectif)
-    @php($collValues = \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['collValues'])
-    @php($mentorValues = \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['mentorValues'])
+    @php($collValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['collValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['collValues'] : [])
+    @php($mentorValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['mentorValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['mentorValues'] : [])
     if (document.getElementById('personnelChart{{$key+1}}')) {
       let myChart{{$key+1}} = new Chart(document.getElementById('personnelChart{{$key+1}}'), {
         type: 'radar',
         data: {
           labels: [
-            @foreach($objectif->getIndicators() as $key => $indicator)
-            "{{ $indicator['title'] }}",
-            @endforeach
+              @if(!empty($objectif->getIndicators()))
+                @foreach($objectif->getIndicators() as $key => $indicator)
+                "{{ $indicator['title'] }}",
+                @endforeach
+              @endif
           ],
           datasets: [
             {
               label: "",
               borderColor: 'green',
-              data: [@foreach($collValues as $value) {{ $value }}, @endforeach]
+              data: [
+                  @if(!empty($collValues))
+                    @foreach($collValues as $value) {{ $value }}, @endforeach
+                  @endif
+              ]
             },
             {
               label: "",
               borderColor: 'red',
-              data: [@foreach($mentorValues as $value) {{ $value }}, @endforeach]
+              data: [
+                @if(!empty($mentorValues))
+                  @foreach($mentorValues as $value) {{ $value }}, @endforeach
+                @endif
+              ]
             },
           ]
         },
@@ -461,7 +471,7 @@
     @endforeach
 
     @foreach($objectifsTeam as $key => $objectif)
-    @php($teamValues = \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['teamValues'])
+    @php($teamValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['teamValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['teamValues'] : [])
     if (document.getElementById('teamChart{{$key+1}}')) {
       let myChart{{$key+1}} = new Chart(document.getElementById('teamChart{{$key+1}}'), {
         type: 'radar',
