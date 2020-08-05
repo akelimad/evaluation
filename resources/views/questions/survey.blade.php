@@ -31,7 +31,7 @@
         <div class="panel-group">
           @foreach($groupes as $g)
             @if(count($g->questions)>0)
-              <div class="panel panel-info">
+              <div class="panel panel-info mb-20">
                 <div class="panel-heading">{{ $g->name }}</div>
                 <div class="panel-body">
                   @forelse($g->questions as $q)

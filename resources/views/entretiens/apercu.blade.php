@@ -182,7 +182,7 @@
                   <div id="personnel" class="tab-pane fade in active">
                     @forelse($objectifsPersonnal as $key => $objectif)
                       <h3 class="bg-gray p-5 mt-0">{{ $objectif->title }}</h3>
-                      <canvas class="chart" id="personnelChart{{$key+1}}" style="max-height: 400px;"></canvas>
+                      <canvas class="chart" id="personnelChart{{$key+1}}" style="max-height: 600px;"></canvas>
                     @empty
                       <p>Aucun résultat trouvé !</p>
                     @endforelse
@@ -191,7 +191,7 @@
                     <div id="personnel" class="tab-pane fade in active">
                       @forelse($objectifsTeam as $key => $objectif)
                         <h3 class="bg-gray p-5 mt-0">{{ $objectif->title }}</h3>
-                        <canvas class="chart" id="teamChart{{$key+1}}" style="max-height: 400px;"></canvas>
+                        <canvas class="chart" id="teamChart{{$key+1}}" style="max-height: 600px;"></canvas>
                       @empty
                         <p>Aucun résultat trouvé !</p>
                       @endforelse
