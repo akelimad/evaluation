@@ -32,7 +32,7 @@ class TeamController extends Controller
     }
     $collaborators = User::getUsers()->where('user_id', '<>', 0)->get();
     $teamUsers = $team->users()->get()->pluck('id')->toArray();
-    echo view('teams.form', compact('team', 'pageTitle', 'collaborators', 'teamUsers'));
+    echo view('teams.form', compact('team', 'title', 'collaborators', 'teamUsers'));
     $content = ob_get_clean();
 
     return ['title' => $title, 'content' => $content];

@@ -60,7 +60,7 @@ class HomeController extends Controller
             ->where('e.user_id', $society->id);
         $inProgress = count($inProgress_query->get());
 
-        $finished = $inProgress_query->where('mentor_submitted', 1)->where('user_submitted', 1);
+        $inProgress_query->where('mentor_submitted', 2)->where('user_submitted', 2);
         $finished = count($inProgress_query->get());
 
         $nbMentors = User::whereHas('roles', function($query) use ($society) {

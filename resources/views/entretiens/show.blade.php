@@ -54,7 +54,7 @@
 			<div class="col-md-6">
 				<div class="card card-danger p-0">
 					<div class="card-header text-center">
-						<h3 class="card-title text-muted font-22">Evaluations Manager</h3>
+						<h3 class="card-title text-muted font-22">Evaluations {{ $e->isFeedback360() ? "des collègues" : "Manager" }} </h3>
 					</div>
 					<div class="card-body">
 						<canvas id="managerChart" style="height: 230px;"></canvas>
@@ -75,23 +75,24 @@
 									</th>
 									<th>Evalué</th>
 									<th></th>
-									<th>Evaluateur</th>
+									<th>{{ $e->isFeedback360() ? "Collègue" : "Evaluateur" }}</th>
 									<th></th>
 									<th class="text-center" style="width: 30px;">Actions</th>
 								</tr>
 								</thead>
 								<tbody>
-								@foreach($e->users as $user)
+								@foreach($entrentiensList as $user)
+									@if ($e->isFeedback360() && $e->users[0]->id == $user->id) @continue @endif
 									<tr>
 										<td class="text-center">
 											<input type="checkbox" class="raw_cb" data-value="{{ $user->id }}" name="users_records[]" value="{{ $user->id }}">
 										</td>
-										<td>{{ $user->fullname() }}</td>
+										<td>{{ $e->isFeedback360() ? $e->users[0]->fullname() : $user->fullname() }}</td>
 										<td>
 											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'user') )
 											<span class="badge {{ $statusInfo['labelClass'] }}">{{ $statusInfo['name'] }}</span>
 										</td>
-										<td>{{ $user->parent->fullname() }}</td>
+										<td>{{ $e->isFeedback360() ? $user->fullname() : $user->parent->fullname() }}</td>
 										<td>
 											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'mentor'))
 											<span class="badge {{ $statusInfo['labelClass'] }}">{{ $statusInfo['name'] }}</span>

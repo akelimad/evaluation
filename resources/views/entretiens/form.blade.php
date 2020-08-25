@@ -147,7 +147,22 @@
               <select name="model" id="model" class="form-control" chm-validate="required">
                 <option value=""></option>
                 <option value="Entretien annuel" {{ $entretien->model == 'Entretien annuel' ? 'selected':'' }}>Entretien annuel</option>
+                <option value="Feedback 360" {{ $entretien->model == 'Feedback 360' ? 'selected':'' }}>Feedback 360</option>
               </select>
+              <div class="feedback-360-options mt-15">
+                <div class="form-check mb-15">
+                  <input type="checkbox" id="auto-eval" name="options[]" value="auto_eval" {{ in_array('auto_eval', $entretien->getOptions()) ? 'checked':'' }}> <label for="auto-eval" class="font-14 mb-0"><b>Auto-évaluation</b></label>
+                  <span class="text-muted font-12 d-block">Si cette option est activée, l'évalué va pouvoir faire l'auto-évaluation</span>
+                </div>
+                <div class="form-check mb-15">
+                  <input type="checkbox" id="anonym" name="options[]" value="anonym" {{ in_array('anonym', $entretien->getOptions()) ? 'checked':'' }}> <label for="anonym" class="font-14 mb-0"><b>Réponses anonymes</b></label>
+                  <span class="text-muted font-12 d-block">Si cette option est activée, le nom des collègues n'est pas affiché sur l'écran des résultats</span>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="block" name="options[]" value="hide_results" {{ in_array('hide_results', $entretien->getOptions()) ? 'checked':'' }}> <label for="block" class="font-14 mb-0"><b>Bloquer le partage</b></label>
+                  <span class="text-muted font-12 d-block">Si cette option est activée, il ne sera pas possible aux évalués de voir les résultats. seuls le responsable de l'évaluation et les admins auront accès aux résultats</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="actions">
@@ -163,7 +178,7 @@
                 @foreach($evaluations as $evaluation)
                   @php($itemsId = \App\Entretien_evaluation::getItemsId($entretien->id, $evaluation->id))
                   <div class="form-check">
-                    <input type="checkbox" name="items[{{$evaluation->id}}][]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }} {{ $evaluation->title == "Commentaires" ? 'checked':'' }}>
+                    <input type="checkbox" name="items[{{$evaluation->id}}][]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
                   </div>
                   @if ($evaluation->title == "Entretien annuel")
@@ -239,7 +254,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <label for="date_limit" class="control-label required">Date limite pour l'évaluation manager</label>
+              <label for="date_limit" id="date_limit_label" class="control-label required">Date limite pour l'évaluation manager</label>
               <input type="text" name="date_limit" id="interview-enddate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
             </div>
           </div>
@@ -265,7 +280,7 @@
                 <td><b>Date limite pour l'auto-évaluation</b></td><td id="interview-startdate-td"></td>
               </tr>
               <tr>
-                <td><b>Date limite pour l'évaluation manager</b></td><td id="interview-enddate-td"></td>
+                <td id="date_limit_td"></td><td id="interview-enddate-td"></td>
               </tr>
             </table>
           </div>
@@ -372,6 +387,31 @@
           isValid = false;
         }
       })
+      if (stepNbr == 2) {
+        $('.form-check-input').each(function (index, element) {
+          var itemLabel = $(element).closest('.form-check').find('label').text()
+          var labelText = ""
+          if ($('select#model').val() == 'Feedback 360') {
+            labelText = "Date limite pour les collègues"
+            if (itemLabel != 'Entretien annuel') {
+              $(element).closest('.form-check').hide()
+            } else {
+              $(element).closest('.form-check').show()
+            }
+            $('#users_id').select2({
+              maximumSelectionLength: 1
+            })
+          } else {
+            labelText = "Date limite pour l'évaluation manager"
+            $(element).closest('.form-check').show()
+            $('#users_id').select2({
+              maximumSelectionLength: -1 // no limit
+            })
+          }
+          $('#date_limit_label').text(labelText)
+          $('#date_limit_td').html('<b>'+labelText+'</b>')
+        })
+      }
       if (stepNbr == 3) {
         showHideCountryErrorBlock()
         var countChecked = $('.eval-item-checkbox:checked').length
@@ -400,6 +440,17 @@
       $step.removeClass('active').prev().addClass('active')
       $container.hide().prev('.step-content').show()
     })
+
+    $('select#model').on('change', function () {
+      var val = $(this).val()
+      if (val == "Feedback 360") {
+        $('.feedback-360-options').show()
+      } else {
+        $('.feedback-360-options').hide()
+        $('.feedback-360-options').find(':checkbox').prop('checked', false)
+      }
+    })
+    $('select#model').trigger('change')
 
   })
 </script>

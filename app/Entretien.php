@@ -187,5 +187,17 @@ class Entretien extends Model
     return $this->getStatus() == $this::FINISHED_STATUS;
   }
 
+  public function getOptions() {
+    return json_decode($this->options, true) ?: [];
+  }
+
+  public function isAnnualInterview() {
+    return $this->model == "Entretien annuel";
+  }
+
+  public function isFeedback360() {
+    return $this->model == "Feedback 360";
+  }
+
 
 }

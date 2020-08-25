@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Entretiens')
+@section('title', 'Camp
+agnes')
 @section('breadcrumb')
   <li>Campagnes</li>
 @endsection
@@ -35,7 +36,7 @@
               </div>
               <div class="box-body">
                 <p><b>Date limite pour l'auto-évaluation :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</span></p>
-                <p><b>Date limite pour l'évaluation manager :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</span></p>
+                <p><b>Date limite pour l'évaluation {{ $e->model == "Feedback 360" ? " des collègues":"manager" }} :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</span></p>
                 <p><b>Nombre de collaborateurs impliqués :</b> <span class="badge pull-right">{{ $e->users->count() }}</span></p>
               </div>
               <div class="box-footer">

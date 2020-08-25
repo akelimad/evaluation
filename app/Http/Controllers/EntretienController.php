@@ -83,8 +83,19 @@ class EntretienController extends Controller
   public function show($id)
   {
     $e = Entretien::findOrFail($id);
+    if ($e->isFeedback360()) {
+      $teamsUsers = [];
+      if (!empty($e->users[0]->teams)) {
+        foreach ($e->users[0]->teams as $team) {
+          $teamsUsers[] = $team->users;
+        }
+      }
+      $entrentiensList = $teamsUsers[0];
+    } else {
+      $entrentiensList = $e->users;
+    }
 
-    return view('entretiens.show', compact('e'));
+    return view('entretiens.show', compact('e', 'entrentiensList'));
   }
 
   /**
@@ -179,6 +190,7 @@ class EntretienController extends Controller
    */
   public function store(Request $request)
   {
+    $model = $request->model;
     $id = $request->id;
     $selectedUsers = $request->usersId;
     $entretienUsers = $removedUsers = [];
@@ -214,6 +226,26 @@ class EntretienController extends Controller
       'titre.regex' => "Le titre de la campagne ne peut contenir que les caractères :regex",
     ];
     $validator = \Validator::make($request->all(), $rules, $messages);
+    if ($model == "Feedback 360") {
+      if (count($selectedUsers) > 1) {
+        $validator->getMessageBag()->add('user', "Vous ne pouvez pas sélectionner plus que 1 participant pour le feedback 360");
+      }
+      foreach ($selectedUsers as $key => $uid) {
+        $user = User::find($uid);
+        $userTeams = $user->teams;
+        if ($userTeams->count() <= 0) {
+          $validator->getMessageBag()->add('teams_'.$uid, sprintf("Le collaborateur (trice) (%s) n'est affecté(e) à aucune équipe", $user->fullname()));
+        }
+        $countCollaboratorInTeams = 0;
+        foreach ($userTeams as $team) {
+          $countCollaboratorInTeams += $team->users->count();
+        }
+        if ($countCollaboratorInTeams < 2) {
+          $validator->getMessageBag()->add('team_coll'.$uid, sprintf("Le collaborateur (trice) (%s) n'a pas des collègues dans ses équipes", $user->fullname()));
+        }
+      }
+    }
+
     $messages = $validator->errors();
 
     if (count($messages) > 0) {
@@ -227,6 +259,7 @@ class EntretienController extends Controller
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
     $entretien->model = $request->model;
+    $entretien->options = json_encode($request->options);
     $entretien->user_id = User::getOwner()->id;
 
     // update status
@@ -238,8 +271,14 @@ class EntretienController extends Controller
 
     // attach evaluations ID
     if (!empty($request->items)) {
-      $entretien->evaluations()->sync(array_keys($request->items));
+      $clearedArrayKeys = [];
       foreach ($request->items as $evaluationId => $value) {
+        if (isset($value['object_id']) && isset($value['object_id'][0]) && empty($value['object_id'][0])) continue;
+        $clearedArrayKeys[] = $evaluationId;
+      }
+      $entretien->evaluations()->sync($clearedArrayKeys);
+      foreach ($request->items as $evaluationId => $value) {
+        if (isset($value['object_id']) && isset($value['object_id'][0]) && empty($value['object_id'][0])) continue;
         $objectsId = isset($value['object_id']) && !empty($value['object_id']) ? $value['object_id'] : [];
         Entretien_evaluation::where('entretien_id', $entretien->id)->where('evaluation_id', $evaluationId)->update(['survey_id'=> json_encode($objectsId)]);
       }
