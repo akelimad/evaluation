@@ -233,5 +233,16 @@ class User extends Authenticatable
     return $this->name . " " . $this->last_name;
   }
 
+  /**
+   * @return Bool Whether the user is active or not
+   */
+  public function isOnline()
+  {
+    // Delay during which the user will be considered as still active
+    $delay = (new \DateTime('1 minutes ago'))->format('Y-m-d H:i:s');
+
+    return $this->last_activity_at > $delay;
+  }
+
 
 }

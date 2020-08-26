@@ -30,6 +30,9 @@ class FonctionController extends Controller
      */
     public function form(Request $request)
     {
+        if ($request->method() == 'POST') {
+            return $this->store($request);
+        }
         $id = $request->id;
         ob_start();
         if(isset($id) && is_numeric($id)) {
@@ -83,6 +86,7 @@ class FonctionController extends Controller
         $id = $request->id;
         $fonction = Fonction::findOrFail($id);
         $fonction->delete();
+        return ["status" => "success", "message" => "La fonction a été supprimée avec succès !"];
     }
 
 }

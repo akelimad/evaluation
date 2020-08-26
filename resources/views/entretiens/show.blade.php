@@ -110,8 +110,11 @@
 													<li>
 														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, usersId: [{{$user->id}}], role: 'mentor'})"><i class="fa fa-bell-o"></i> Rappeler à l'évaluateur de remplir son entretien</a>
 													</li>
-													<li class="delete">
-														<a href="javascript:void(0)" onclick="chmModal.confirm(this, '', 'Etes-vous sûr de vouloir supprimer ?', 'chmEntretien.deleteUsers', {eid: {{$e->id}}, usersId: [{{$user->id}}]}, {width: 450}); return false;"><i class="fa fa-trash"></i> Supprimer</a>
+													<li>
+														<a href="javascript:void(0)" onclick="return chmEntretien.reOpen({eid: {{$e->id}}, uid: {{$user->id}}, parent_id: {{$user->parent->id}}})"><i class="fa fa-refresh"></i> Réouvrir</a>
+													</li>
+													<li>
+														<a href="javascript:void(0)" class="delete" onclick="chmModal.confirm(this, '', 'Etes-vous sûr de vouloir supprimer ?', 'chmEntretien.deleteUsers', {eid: {{$e->id}}, usersId: [{{$user->id}}]}, {width: 450}); return false;"><i class="fa fa-trash"></i> Supprimer</a>
 													</li>
 												</ul>
 											</div>

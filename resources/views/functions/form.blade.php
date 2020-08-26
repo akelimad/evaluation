@@ -14,7 +14,6 @@
         </td>
         @if (!isset($fonction->id))
           <td>
-            <label class="control-label">&nbsp;</label>
             <button type="button" class="btn btn-success addLine pull-right dept-duplicate-btn" chm-duplicate><i class="fa fa-plus"></i></button>
           </td>
         @endif

@@ -25,7 +25,16 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6" :class="{'has-error': errors.has('model')}">
+                  <label for="" class="control-label required">Modèle</label>
+                  <select name="model" id="" class="form-control" v-model="model" v-validate="'required'">
+                    <option value=""></option>
+                    <option value="Entretien annuel">Entretien annuel</option>
+                    <option value="Feedback 360">Feedback 360</option>
+                  </select>
+                  <span v-show="errors.has('model')" class="help-block">@{{ errors.first('model') }}</span>
+                </div>
+                <div class="col-md-6" v-if="model == 'Entretien annuel'">
                   <label for="" class="control-label">Evaluations</label>
                   <select name="section" id="" class="form-control" v-model="section">
                     <option value=""></option>
@@ -161,6 +170,7 @@
         id: "{{ $survey->id }}",
         title: "{!! $survey->title !!}",
         description: "{!! $survey->description !!}",
+        model: "{!! $survey->model !!}",
         section: "{{ $survey->evaluation_id }}",
         groups: [
           @foreach($survey->groupes as $group)
@@ -324,6 +334,7 @@
                 id: this.id,
                 title: this.title,
                 description: this.description,
+                model: this.model,
                 section: this.section,
                 groups: this.groups,
               }).then(function (response) {

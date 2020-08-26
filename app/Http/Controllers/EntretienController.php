@@ -599,4 +599,35 @@ class EntretienController extends Controller
     })->export('xlsx');
   }
 
+  public function reopen(Request $request)
+  {
+    if ($request->method() == 'POST') {
+      $fields = $request->fields;
+      $params = json_decode($request->params, true);
+      $fieldsToUpdate = [];
+      $row = Entretien_user::where('user_id', $params['uid'])->where('mentor_id', $params['parent_id'])
+        ->where('entretien_id', $params['eid'])->first();
+      if (in_array('user', $fields)) {
+        $fieldsToUpdate['user_submitted'] = $row->user_submitted == 2 ? 1 : $row->user_submitted;
+      }
+      if (in_array('mentor', $fields)) {
+        $fieldsToUpdate['mentor_submitted'] = $row->mentor_submitted == 2 ? 1 : $row->mentor_submitted;
+      }
+      Entretien_user::where('user_id', $params['uid'])->where('mentor_id', $params['parent_id'])
+        ->where('entretien_id', $params['eid'])
+        ->update($fieldsToUpdate);
+      return [
+        'status' => "success",
+        'message' => "L'opération a été effectué avec succès",
+        'redirectUrl' => route('home')
+      ];
+    }
+    ob_start();
+    $params = $request['params'];
+    $e = Entretien::find($params['eid']);
+    echo view('entretiens.reopen', compact('e', 'params'));
+    $content = ob_get_clean();
+    return ['title' => "Réouvrir", 'content' => $content];
+  }
+
 }

@@ -30,6 +30,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
 	Route::post('users/import_process', 'UserController@processImport');
 	Route::get('entretiens/index', 'EntretienController@indexEntretien')->name('entretiens');
 	Route::get('entretiens/{id}/show', 'EntretienController@show')->name('entretien.show');
+	Route::any('entretiens/{id}/reopen', 'EntretienController@reopen')->name('entretien.reopen');
 	Route::get('entretiens/evaluations', 'EntretienController@entretiensEval');
 	Route::get('entretiens/calendar', 'EntretienController@calendar');
 });
@@ -69,12 +70,12 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::get('config/settings/general', 'SettingController@general')->name('general.settings');
 
 	Route::get('config/setting/departments', 'DepartmentController@index');
-	Route::get('department/form', 'DepartmentController@form');
+	Route::any('department/form', 'DepartmentController@form');
 	Route::post('department/store', 'DepartmentController@store');
 	Route::delete('department/delete', 'DepartmentController@delete');
 
 	Route::get('config/setting/functions', 'FonctionController@index');
-	Route::get('function/form', 'FonctionController@form');
+	Route::any('function/form', 'FonctionController@form');
 	Route::post('function/store', 'FonctionController@store');
 	Route::delete('function/delete', 'FonctionController@delete');
 

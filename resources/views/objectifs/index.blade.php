@@ -285,6 +285,9 @@
               </div>
             </div>
           </div>
+
+          @include('partials.submit-eval')
+
           <div class="callout callout-info">
             <p class="">
               <i class="fa fa-info-circle fa-2x"></i>

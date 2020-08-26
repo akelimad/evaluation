@@ -21,7 +21,7 @@
       {{--@include('partials.alerts.info', ['messages' => "1 : Insuffisant (I) | 2 : En dessous des attentes (ED) | 3 : En ligne avec les attentes (EL) | 4: Au-dessus des attentes (AD) | 5 : Remarquable (R)" ])--}}
     {{--</div>--}}
     <div class="col-md-6">
-      <h4 class="alert alert-info">Auto-évaluation remplie par : {{ $user->name." ".$user->last_name }} </h4>
+      <h4 class="alert alert-info">Auto-évaluation de : {{ $user->name." ".$user->last_name }} </h4>
 
       <div class="panel-group">
         @foreach($groupes as $g)

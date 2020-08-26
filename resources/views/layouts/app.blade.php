@@ -173,27 +173,32 @@
           <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>Mes entretiens</span></a>
         </li>
         @endrole
-        @role(["ADMIN", "RH"])
-        <li class="{{ Request::is('users') ? 'active' : '' }}">
-          <a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a>
-        </li>
-        @endrole
-        @role(["ADMIN"])
-        <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
-          <a href="{{ url('config/surveys') }}"><i class="fa fa-pencil"></i> <span>Questionnaires</span></a>
-        </li>
-        @role(["ADMIN", "RH", "MENTOR"])
-        <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
-          <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>
-        </li>
-        @endrole
-        @endrole
+
+        {{--@role(["ADMIN", "RH"])--}}
+        {{--<li class="{{ Request::is('users') ? 'active' : '' }}">--}}
+          {{--<a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a>--}}
+        {{--</li>--}}
+        {{--@endrole--}}
+        {{----}}
+        {{--@role(["ADMIN"])--}}
+        {{--<li class="{{ Request::is('config/surveys') ? 'active' : '' }}">--}}
+          {{--<a href="{{ url('config/surveys') }}"><i class="fa fa-pencil"></i> <span>Questionnaires</span></a>--}}
+        {{--</li>--}}
+        {{--@endrole--}}
+        {{----}}
+        {{--@role(["ADMIN", "RH", "MENTOR"])--}}
+        {{--<li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">--}}
+          {{--<a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>--}}
+        {{--</li>--}}
+        {{--@endrole--}}
+
         @role(["ADMIN", "RH"])
         <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>Campagnes</span></a></li>
         <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>Calendrier des campagnes</span></a></li>
         @endrole
+
         @role(["ADMIN"])
-        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams']))
+        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'surveys-list', 'config.objectifs']))
         <li class="treeview {{ $isConfig ? 'active menu-open' : '' }}">
           <a href="#">
             <i class="fa fa-gears"></i> <span>Configuration</span>
@@ -202,6 +207,15 @@
           <ul class="treeview-menu" style="{{ $isConfig ? 'display: block;' : '' }}">
             <li class="{{ Request::is('config/settings/general') ? 'active' : '' }}">
               <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> Paramètres</a>
+            </li>
+            <li class="{{ Request::is('users') ? 'active' : '' }}">
+              <a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a>
+            </li>
+            <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
+              <a href="{{ url('config/surveys') }}"><i class="fa fa-pencil"></i> <span>Questionnaires</span></a>
+            </li>
+            <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
+              <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>
             </li>
             <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
               <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Compétences </a>
@@ -218,12 +232,13 @@
           </ul>
         </li>
         @endrole
-        @role(["ROOT"])
 
+        @role(["ROOT"])
         <li class="{{ Request::is('crm') ? 'active' : '' }}">
           <a href="{{ url('crm') }}"><i class="fa fa-cog"></i> <span>Comptes des sociétés</span></a>
         </li>
         @endrole
+
       </ul>
     </section>
     <!-- /.sidebar -->

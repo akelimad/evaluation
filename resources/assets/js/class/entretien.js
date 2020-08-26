@@ -159,6 +159,22 @@ export default class chmEntretien {
     })
   }
 
+  static reOpen (params) {
+    window.chmModal.show({
+      type: 'GET',
+      url: window.chmSite.url('entretiens/' + params.eid + '/reopen'),
+      data: {params},
+    }, {
+      form: {
+        class: 'allInputsFormValidation form-horizontal',
+        callback: ''
+      },
+      footer: {
+        label: 'Sauvegarder'
+      }
+    })
+  }
+
   static deleteUsers (params) {
     var token = $('input[name="_token"]').val()
     window.chmModal.show({

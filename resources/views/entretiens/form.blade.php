@@ -186,7 +186,7 @@
                       <select name="items[{{$evaluation->id}}][object_id][]" id="entretien" class="form-control">
                         <option value="">Veuillez sélectionner</option>
                         @foreach(App\Survey::getAll()->where('evaluation_id', 1)->get() as $s)
-                          <option value="{{ $s->id }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
+                          <option value="{{ $s->id }}" data-model="{{ $s->model }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
                       <p class=""><a href="/config/surveys" target="_blank">Ajouter un nouveau ?</a></p>
@@ -442,12 +442,21 @@
     })
 
     $('select#model').on('change', function () {
+      $('select#entretien option').hide()
       var val = $(this).val()
       if (val == "Feedback 360") {
         $('.feedback-360-options').show()
+
+        $('select#entretien option').filter(function () {
+          return $(this).data('model') == "Feedback 360"
+        }).show()
       } else {
         $('.feedback-360-options').hide()
         $('.feedback-360-options').find(':checkbox').prop('checked', false)
+
+        $('select#entretien option').filter(function () {
+          return $(this).data('model') == "Entretien annuel"
+        }).show()
       }
     })
     $('select#model').trigger('change')

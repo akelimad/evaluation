@@ -30,6 +30,9 @@ class DepartmentController extends Controller
      */
     public function form(Request $request)
     {
+        if ($request->method() == 'POST') {
+            return $this->store($request);
+        }
         $id = $request->id;
         ob_start();
         if(isset($id) && is_numeric($id)) {
@@ -83,6 +86,7 @@ class DepartmentController extends Controller
         $id = $request->id;
         $department = Department::findOrFail($id);
         $department->delete();
+        return ["status" => "success", "message" => "Le département a été supprimé avec succès !"];
     }
 
 }

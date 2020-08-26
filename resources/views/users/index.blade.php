@@ -146,7 +146,9 @@
                     </td>
                     <td>{{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}}</td>
                     <td class="text-center">
-                      <span><i class="fa fa-circle text-danger font-12" title="Déconnecté"></i></span>
+                      @php($isOnline = $user->isOnline())
+                      @php($date = $user->last_activity_at != null ? date('d/m/Y H:i', strtotime($user->last_activity_at)) : '---')
+                      <span><i class="fa fa-circle text-{{ $isOnline ? 'success':'danger' }} font-12" title="{{ $isOnline ? 'En ligne':"Déconnecté, dernière visite : ". $date  }}"></i></span>
                     </td>
                     <td class="text-center">
                       {{ csrf_field() }}

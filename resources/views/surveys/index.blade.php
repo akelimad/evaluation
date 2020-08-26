@@ -29,14 +29,16 @@
               <table class="table table-hover table-strped table-inversed-blue">
                 <tr>
                   <th>Titre</th>
+                  <th>Modèle</th>
                   <th>Section</th>
                   <th>Description</th>
                   <th class="text-center">Actions</th>
                 </tr>
                 @foreach($surveys as $key => $survey)
                   <tr>
-                    <td> {{ $survey->title }}</td>
-                    <td> {{ is_numeric($survey->evaluation_id) ? App\Evaluation::findOrFail($survey->evaluation_id)->title : '' }}</td>
+                    <td>{{ $survey->title }}</td>
+                    <td>{{ $survey->model or '---' }}</td>
+                    <td>{{ $survey->evaluation_id > 0 ? App\Evaluation::findOrFail($survey->evaluation_id)->title : '---' }}</td>
                     <td> {{ $survey->description ? $survey->description : '---' }} </td>
                     <td class="text-center">
                       <div class="btn-group">

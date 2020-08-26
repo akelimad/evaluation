@@ -48,7 +48,8 @@ class SurveyController extends Controller
     // save survey
     $survey->title = $request->title;
     $survey->description = $request->description;
-    $survey->evaluation_id = $request->section;
+    $survey->model = $request->model;
+    $survey->evaluation_id = in_array($request->model, ['Entretien annuel', 'Feedback 360']) ? 1 : $request->section;
     $survey->user_id = User::getOwner()->id;
     $survey->save();
 
@@ -117,5 +118,6 @@ class SurveyController extends Controller
       }
     }
     $survey->delete();
+    return ["status" => "success", "message" => "Le questionnaire a été supprimé avec succès !"];
   }
 }
