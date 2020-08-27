@@ -84,8 +84,7 @@ class EmailController extends Controller
 
   public function delete(Request $request)
   {
-    dd($request->id);
-    $email = Email::find($id);
+    $email = Email::find($request->id);
     $email->delete();
     return ["status" => "success", "message" => "L'email a été supprimé avec succès !"];
   }
