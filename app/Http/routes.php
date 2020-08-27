@@ -63,7 +63,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::delete('skills/{eid}/delete', 'SkillController@destroy');
 
 	Route::get('config/emails', 'EmailController@index')->name('config.emails');;
-	Route::get('emails/form', 'EmailController@form');
+	Route::any('emails/form', 'EmailController@form');
 	Route::post('emails/store', 'EmailController@store');
 	Route::delete('emails/{id}/delete', 'EmailController@delete');
 
@@ -171,6 +171,7 @@ Route::post('answers/store', 'AnswerController@store');
 Route::post('config/settings/store', 'SettingController@store');
 
 Route::get('config/teams', 'TeamController@index')->name('teams');
+Route::get('config/teams/{id}/get-users', 'TeamController@get')->name('get-users');
 Route::any('configs/teams/form', 'TeamController@form')->name('team.form');
 Route::post('configs/teams/store', 'TeamController@store')->name('team.store');
 Route::delete('configs/teams/{id}/delete', 'TeamController@delete')->name('team.delete');

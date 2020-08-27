@@ -244,5 +244,16 @@ class User extends Authenticatable
     return $this->last_activity_at > $delay;
   }
 
+  public function getTeamsMembers() {
+    $teamsUsers = [];
+    if (!empty($this->teams)) {
+      foreach ($this->teams as $team) {
+        $teamsUsers[] = $team->users;
+      }
+    }
+
+    return $teamsUsers[0] ? $teamsUsers[0] : [];
+  }
+
 
 }

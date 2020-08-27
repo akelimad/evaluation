@@ -34,7 +34,7 @@
                                         {{ csrf_field() }} 
                                         <a href="javascript:void(0)" onclick="return chmEmail.form({{{$email->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer" > <i class="glyphicon glyphicon-pencil"></i> 
                                         </a>
-                                        <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer le template ?', 'Etes-vous sur de vouloir supprimer ce template ?','chmEmail.delete', {{{$email->id}}}, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer"><i class="fa fa-trash"></i></a>
+                                        <a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer le template ?', 'Etes-vous sur de vouloir supprimer ce template ?','chmEmail.delete', {tid:{{$email->id}}}, {width: 450})" class="btn-danger icon-fill" data-toggle="tooltip" title="Supprimer"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                                 @endforeach

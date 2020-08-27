@@ -68,4 +68,12 @@ class TeamController extends Controller
     $team->delete();
     return ["status" => "success", "message" => "L'équipe a été supprimée avec succès !"];
   }
+
+  public function get(Request $request) {
+    $team = Team::find($request->id);
+    $users = $team->users;
+
+    return response()->json($users);
+  }
+
 }

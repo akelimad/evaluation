@@ -90,7 +90,7 @@ class EntretienController extends Controller
           $teamsUsers[] = $team->users;
         }
       }
-      $entrentiensList = $teamsUsers[0];
+      $entrentiensList = isset($teamsUsers[0]) ? $teamsUsers[0] : [];
     } else {
       $entrentiensList = $e->users;
     }
@@ -291,11 +291,18 @@ class EntretienController extends Controller
 
     foreach ($selectedUsers as $uid) {
       $user = User::findOrFail($uid);
-      $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
-      MailerController::send($user, $entretien, $collEmail);
-      if (!in_array($user->parent->id, $already_sent)) {
-        MailerController::send($user->parent, $entretien, $mentorEmail);
-        $already_sent[] = $user->parent->id;
+      if ($entretien->model == "Feedback 360") {
+        $userTeamsMembers = $user->getTeamsMembers();
+        foreach ($userTeamsMembers as $member) {
+          $entretien->users()->attach([$uid => ['mentor_id' => $member->id]]);
+        }
+      } else {
+        $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
+        MailerController::send($user, $entretien, $collEmail);
+        if (!in_array($user->parent->id, $already_sent)) {
+          MailerController::send($user->parent, $entretien, $mentorEmail);
+          $already_sent[] = $user->parent->id;
+        }
       }
     }
 
