@@ -218,7 +218,7 @@
               <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>
             </li>
             <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
-              <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Compétences </a>
+              <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Fiches métiers</a>
             </li>
             <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
               <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Courriers automatiques</a>
@@ -314,6 +314,7 @@
 <script src="{{asset('js/sweetalert2.min.js')}}"></script>
 <script src="{{asset('js/script.js')}}?v={{ time() }}"></script>
 <script src="{{ App\Asset::path('app.js') }}"></script>
+
 @yield('javascript')
 </body>
 </html>

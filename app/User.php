@@ -82,14 +82,6 @@ class User extends Authenticatable
     return $this->belongsToMany('App\Objectif');
   }
 
-  /**
-   * Get the skills for the given user.
-   */
-  public function skills()
-  {
-    return $this->belongsToMany('App\Skill');
-  }
-
   public function formations()
   {
     return $this->hasMany('App\Formation');
@@ -116,6 +108,11 @@ class User extends Authenticatable
   public function fonctions()
   {
     return $this->hasMany('App\Fonction');
+  }
+
+  public function skills()
+  {
+    return $this->hasMany('App\Skill');
   }
 
   public function getEntretiens()

@@ -228,16 +228,18 @@
             <div class="col-md-12 mb-15">
               <label for="users_id" class="control-label required">Personne(s) à évaluer</label>
               <div class="separator mb-10">
-                <label for="">Equipes :</label>
-                <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" chm-validate="required">
+                <label for="">Sélectionnez les équipes : <input type="checkbox" id="selectAllTeams"> <label
+                      for="selectAllTeams" class="d-inline">Tout sélectionner</label></label>
+                <select name="teamsIdToEvaluate[]" id="teams_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
                   @foreach(\App\Team::getAll()->get() as $team)
                     <option data-id="{{ $team->id }}" id="team-{{ $team->id }}" value="{{ $team->id }}">{{ $team->name . " (". count($team->users) .")" }}</option>
                   @endforeach
                 </select>
               </div>
               <div class="separator">
-                <label for="">Et / ou sélectionner des utilisateurs</label>
-                <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" chm-validate="required">
+                <label for="">Et / ou sélectionner des utilisateurs : <input type="checkbox" id="selectAllUsers"> <label
+                      for="selectAllUsers" class="d-inline">Tout sélectionner</label></label>
+                <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
                   @foreach($users as $user)
                     <option value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->name." ".$user->last_name }}</option>
                   @endforeach
@@ -352,13 +354,19 @@
     })
     $('.select2').select2()
 
-    $("#check-all").change(function () {
-      if ($("#check-all").is(':checked')) {
-        $(".select2 > option").prop("selected", "selected");
-        $(".select2").trigger("change");
-      } else {
-        $(".select2 > option").removeAttr("selected");
-        $(".select2").trigger("change");
+    $("#selectAllTeams").on('change', function(){
+      if($(this).is(':checked')){
+        $('#teams_id_to_evaluate').select2('destroy').find('option').prop('selected', 'selected').end().select2();
+      }else{
+        $('#teams_id_to_evaluate').select2('destroy').find('option').prop('selected', false).end().select2();
+      }
+    });
+
+    $("#selectAllUsers").on('change', function(){
+      if($(this).is(':checked')){
+        $('#users_id_to_evaluate').select2('destroy').find('option').prop('selected', 'selected').end().select2();
+      }else{
+        $('#users_id_to_evaluate').select2('destroy').find('option').prop('selected', false).end().select2();
       }
     });
 
@@ -442,6 +450,12 @@
         showHideEvalsErrorBlock()
         var countChecked = $('.eval-item-checkbox:checked').length
         if (countChecked == 0) {
+          isValid = false;
+        }
+      }
+      if (stepNbr == 4) {
+        if ($('#teams_id_to_evaluate').val().length == 0 && $('#users_id_to_evaluate').val().length == 0) {
+          chmForm.showErrorBlock('#users_id_to_evaluate', "Veuillez choisir au moins une équipe ou un utilisateur")
           isValid = false;
         }
       }

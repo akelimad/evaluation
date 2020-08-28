@@ -39,17 +39,17 @@
                               <td>{{ Carbon\Carbon::parse($f->date)->format('d/m/Y')}}</td>
                               <td>{{$f->exercice}}</td>
                               <td>{{$f->title}}</td>
-                              <td><a title="{{$f->coll_comment}}" data-toggle="tooltip"><i
-                                      class="fa fa-comment"></i></a></td>
+                              <td><a title="{{$f->coll_comment}}" data-toggle="tooltip"><i class="fa fa-comment"></i></a></td>
                               <td>
                                 @if($user->id == Auth::user()->id)
-                                  <span
-                                      class="label label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif"> @if($f->status == 0)
-                                      En attente @elseif($f->status == 1)Refusé @elseif($f->status == 2)
-                                      Accepté @endif </span>
+                                  <span class="label">
+                                    @if($f->status == 0)En attente
+                                    @elseif($f->status == 1)Refusé
+                                    @elseif($f->status == 2)Accepté
+                                    @endif
+                                  </span>
                                 @else
-                                  <select name="status" id="status"
-                                          class="label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif" {{$user->id == Auth::user()->id ? 'disabled':'' }} >
+                                  <select name="status" id="status" class="" {{$user->id == Auth::user()->id ? 'disabled':'' }} >
                                     <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
                                     <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
                                     <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>
@@ -57,18 +57,14 @@
                                 @endif
                               </td>
                               <td>
-                                <input type="checkbox"
-                                       name="done" {{$f->done == 1 ? 'checked':''}} {{$user->id == Auth::user()->id ? 'disabled':'' }} >
+                                <input type="checkbox" name="done" {{$f->done == 1 ? 'checked':''}} {{$user->id == Auth::user()->id ? 'disabled':'' }} >
                               </td>
                               <td class="text-center">
                                 @if($user->id == Auth::user()->id && !App\Entretien::answered($e->id, $user->id))
-                                  <a href="javascript:void(0)"
-                                     onclick="return chmFormation.edit({e_id: {{$e->id}} , id: {{$f->id}} })"
-                                     class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
+                                  <a href="javascript:void(0)" onclick="return chmFormation.edit({e_id: {{$e->id}} , id: {{$f->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                 @endif
                                 @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                                  <button type="submit" class="btn-success icon-fill" data-toggle="tooltip"
-                                          title="Mettre à jour"><i class="fa fa-refresh"></i></button>
+                                  <button type="submit" class="btn-success icon-fill" data-toggle="tooltip" title="Mettre à jour"><i class="fa fa-refresh"></i></button>
                                 @endif
                               </td>
                             </tr>
@@ -109,9 +105,7 @@
                             <td> {{$f->title}} </td>
                             <td> {{$f->entretien->titre}} </td>
                             <td>
-                              <select name="status" id="status"
-                                      class="label-@if($f->status == 0)default @elseif($f->status == 1)danger @elseif($f->status == 2)success @endif"
-                                      disabled="">
+                              <select name="status" id="status" class="" disabled="">
                                 <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
                                 <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
                                 <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>

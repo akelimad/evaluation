@@ -57,9 +57,9 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 
 	Route::get('config/skills', 'SkillController@indexAdmin')->name('config.skills');
-	Route::get('skills/create', 'SkillController@create');
+	Route::any('skills/create', 'SkillController@create');
 	Route::post('skills/store', 'SkillController@store');
-	Route::get('skills/{id}/edit', 'SkillController@edit');
+	Route::any('skills/{id}/edit', 'SkillController@edit');
 	Route::delete('skills/{eid}/delete', 'SkillController@destroy');
 
 	Route::get('config/emails', 'EmailController@index')->name('config.emails');;
@@ -149,9 +149,9 @@ Route::any('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit')
 Route::put('entretiens/formations/{id}/mentorUpdate', 'FormationController@update'); //update status & realise
 
 Route::get('entretiens/{eid}/u/{uid}/salaires', 'SalarieController@index');
-Route::get('entretiens/{eid}/u/{uid}/salaires/create', 'SalarieController@create');
+Route::any('entretiens/{eid}/u/{uid}/salaires/create', 'SalarieController@create');
 Route::post('entretiens/{eid}/u/{uid}/salaires/store', 'SalarieController@store');
-Route::get('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edit');
+Route::any('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edit');
 
 Route::get('entretiens/{eid}/u/{uid}/commentaires', 'CommentController@index');
 Route::any('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create');

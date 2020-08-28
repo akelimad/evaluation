@@ -6,9 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 class Skill extends Model
 {
-    public function entretien()
+    protected $fillable = [
+      'function_id', 'title', 'description', 'savoir', 'savoir_faire', 'savoir_etre', 'mobilite_pro', 'user_id'
+    ];
+
+    public function user()
     {
-        return $this->belongsTo('App\Entretien');
+        return $this->belongsTo('App\User');
+    }
+
+    public static function getAll()
+    {
+        $user = \Auth::user();
+        if(!empty($user->society_id)){ // this user is not owner
+            $skills = $user->owner->skills();
+        } else {
+            $skills = $user->skills();
+        }
+        return $skills;
+    }
+
+    public function fonction()
+    {
+        return $this->belongsTo('App\Fonction');
     }
 
     public function users()

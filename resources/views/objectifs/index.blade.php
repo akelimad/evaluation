@@ -273,14 +273,16 @@
                     </div>
                     @endif
                   </div>
+                  @if(!App\Entretien::answered($e->id, Auth::user()->id))
                   <div class="row">
                     <div class="col-md-12">
                       <div class="save-action mt-20">
-                        <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-check"></i> Enregistrer tout</button>
+                        <button type="submit" class="btn btn-success" > <i class="fa fa-check"></i> Enregistrer tout</button>
                         <div class="clearfix"></div>
                       </div>
                     </div>
                   </div>
+                  @endif
                 </form>
               </div>
             </div>

@@ -6,7 +6,7 @@
       {{ $user->parent ? $user->parent->name : $user->name }} {{ $user->parent ? $user->parent->last_name : $user->last_name }}
       sur l'entretien : {{ $e->titre }}
     </p>
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group" id="accordion">
       @if(in_array('Entretien annuel', $entreEvalsTitle))
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="heading-evaluations">
@@ -170,8 +170,7 @@
               </a>
             </h4>
           </div>
-          <div id="collapse-objectifs" class="panel-collapse collapse in" role="tabpanel"
-               aria-labelledby="heading-objectifs">
+          <div id="collapse-objectifs" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-objectifs">
             <div class="panel-body objectifs">
               <div class="box-body no-padding mb40">
                 <ul class="nav nav-tabs">
@@ -195,8 +194,10 @@
                       @empty
                         <p>Aucun résultat trouvé !</p>
                       @endforelse
+                    </div>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -212,8 +213,7 @@
               </a>
             </h4>
           </div>
-          <div id="collapse-formations" class="panel-collapse collapse in" role="tabpanel"
-               aria-labelledby="heading-formations">
+          <div id="collapse-formations" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-formations">
             <div class="panel-body">
               <p class="help-block">
                 Liste des formations souhaitées de la part de {{ $user->name." ".$user->last_name }} acceptées

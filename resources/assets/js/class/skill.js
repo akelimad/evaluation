@@ -11,7 +11,7 @@ export default class chmSkill {
       footer: {
         label: 'Sauvegarder'
       },
-      width: 876
+      width: 700
     })
   }
 
@@ -24,7 +24,7 @@ export default class chmSkill {
       footer: {
         label: 'Mettre à jour'
       },
-      width: 876
+      width: 700
     })
   }
 
@@ -70,9 +70,9 @@ export default class chmSkill {
   static delete (params) {
     var token = $('input[name="_token"]').val()
     var object = window.chmModal.show({
-      type: 'POST',
+      type: 'DELETE',
       url: window.chmSite.url('skills/' + params.eid + '/delete'),
-      data: {'_token': token, '_method': 'DELETE'}
+      data: {'_token': token, params: params}
     }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
     })

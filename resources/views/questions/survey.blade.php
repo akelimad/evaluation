@@ -19,6 +19,7 @@
   .array-qst-note {
     background: #e6d3b0 !important;
   }
+
 </style>
 <div class="row">
   <div class="col-md-12 survey">

@@ -667,7 +667,6 @@ ul.user-data li i {
 
 .survey label.questionTitle {
   display: block;
-  background: #e6e6e6;
   padding: 6px 3px;
 }
 
@@ -1039,4 +1038,17 @@ p.help-block {
 }
 .chm-modal-content .content{
   padding: 0px !important;
+}
+.bootstrap-tagsinput {
+  width: 100%;
+  line-height: 38px !important;
+  height: 38px;
+  padding: 0px 6px !important;
+  height: auto !important;
+}
+.bootstrap-tagsinput .tag {
+  font-size: 13px;
+}
+.bootstrap-tagsinput input:focus {
+  min-width: 200px;
 }

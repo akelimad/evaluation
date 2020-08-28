@@ -1,80 +1,73 @@
-
 <div class="content">
-    <input type="hidden" name="id" value="{{ isset($entretien) ? $entretien->id : null }}">
-    {{ csrf_field() }}
-    <div class="row form-group">
-        <div class="col-md-12">
-            <label for="entretien" class="control-label required required">Entretien</label>
-            <select name="entretien_id" id="entretien" class="form-control">
-                @if( isset($entretien) )
-                    <option value="{{ $entretien->id }}"> {{ $entretien->titre }} </option>
-                @else
-                    @foreach( $entretiens as $e )
-                    <option value="{{ $e->id }}"> {{ $e->titre }} </option>
-                    @endforeach
-                @endif
-            </select>
-        </div>
+  <input type="hidden" name="id" value="{{ $skill->id > 0 ? $skill->id : null }}">
+  {{ csrf_field() }}
+  <div class="row">
+    <div class="col-md-6">
+      <label for="entretien" class="control-label required">Fonction</label>
+      <select name="function_id" id="function_id" class="form-control" chm-validate="required">
+        <option value=""></option>
+        @foreach(App\Fonction::getAll()->get() as $function)
+          <option value="{{ $function->id }}" {{ $skill->function_id == $function->id ? 'selected':'' }}>{{ $function->title }}</option>
+        @endforeach
+      </select>
     </div>
-    <div id="addLine-wrap">
-        <table class="table mb-10" id="entretienSkillsTable" data-count="{{ count($skills) }}">
-            <tbody>
-            @php($i = 0)
-            @foreach($skills as $key => $s)
-                @php($i ++)
-                @php($islast = count($skills) == $i)
-                @php ($class = $islast ? 'btn btn-success addLine' : 'btn btn-danger deleteLine')
-                @php ($icon = $islast ? 'fa fa-plus' : 'fa fa-minus')
-                <tr>
-                    <td>
-                        <label for="axe" class="control-label required">Axe</label>
-                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][axe]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_axe" placeholder="" value="{{isset($s->axe) ? $s->axe :''}}" required="">
-                    </td>
-                    <td>
-                        <label for="famille" class="control-label required">Famille</label>
-                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][famille]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_famille" placeholder="" value="{{isset($s->famille) ? $s->famille :''}}" required="">
-                    </td>
-                    <td>
-                        <label for="categorie" class="control-label required">Catégorie</label>
-                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][categorie]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_categorie" placeholder="" value="{{isset($s->categorie) ? $s->categorie :''}}" required="">
-                    </td>
-                    <td>
-                        <label for="competence" class="control-label required">Compétence</label>
-                        <input type="text" class="form-control" name="skills[{{ isset($s->id) ? $s->id : 1 }}][competence]" id="skills_{{ isset($s->id) ? $s->id : 1 }}_competence" placeholder="" value="{{isset($s->competence) ? $s->competence :''}}" required="">
-                    </td>
-                    <td>
-                        <label class="control-label">&nbsp;</label>
-                        <button type="button" class="{{ $class }} pull-right skills-duplicate-btn" chm-duplicate><i class="{{$icon}}"></i></button>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="" class="control-label required">Titre</label>
+        <input type="text" name="title" id="title" class="form-control" chm-validate="required" value="{{ $skill->title }}">
+      </div>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="" class="control-label">Description</label>
+        <textarea name="description" id="description" class="form-control">{{ $skill->description }}</textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="" class="control-label required">Savoir</label>
+        <input type="text" name="savoir" id="savoir" class="form-control tagsinput" chm-validate="required" value="{{ $skill->savoir }}">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="" class="control-label required">Savoir-faire</label>
+        <input type="text" name="savoir_faire" id="savoir_faire" class="form-control tagsinput" chm-validate="required" value="{{ $skill->savoir_faire }}">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="" class="control-label required">Savoir-être</label>
+        <input type="text" name="savoir_etre" id="savoir_etre" class="form-control tagsinput" chm-validate="required" value="{{ $skill->savoir_etre }}">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="" class="control-label required">Mobilité professionnelle</label>
+        <input type="text" name="mobilite_pro" id="mobilite_pro" class="form-control tagsinput" chm-validate="required" value="{{ $skill->mobilite_pro }}">
+      </div>
+    </div>
+  </div>
 </div>
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <script>
-    $(document).ready(function () {
-
-        $('body').on('click', '.skills-duplicate-btn',function (event) {
-            var $row = $('#entretienSkillsTable tr:last').find('[chm-duplicate]').closest('tr')
-            var count = $('#entretienSkillsTable').data('count')
-            $($row).find('input, select').each(function(key, value) {
-                var id = $(this).attr('id')
-                var name = $(this).attr('name')
-                var index = name.split('skills[').pop().split(']').shift()
-                if (key == 0) {
-                    count += 1
-                    $('#entretienSkillsTable').data('count', count)
-                }
-                name = name.replace('['+ index +']', '['+ count +']')
-                $(this).attr('name', name)
-                id = id.replace('_'+ index + '_', '_'+ count + '_')
-                $(this).attr('id', id)
-            })
-            $row.find('input').removeClass('chm-has-error')
-            $row.find('.chm-error-block').remove()
-        })
-
-    })
+  $(document).ready(function () {
+    setTimeout(function () {
+      $('.tagsinput').tagsinput()
+    }, 500)
+  })
 </script>

@@ -183,8 +183,7 @@
                         @php($gNote += App\Answer::getGrpNote($g->id, $user->id, $e->id))
                       @endif
                     @else
-                      <span class="pull-right">Note : {{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}
-                        / {{App\Survey::countGroups($survey->id)}}</span>
+                      {{--<span class="pull-right">Note : {{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id) : 0}} / {{App\Survey::countGroups($survey->id)}}</span>--}}
                       @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
                         @php($gNote += App\Answer::getGrpNote($g->id, $user->id, $e->id))
                       @endif

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 ini_set('max_execution_time', 300); //5 minutes
 
 use App\Fonction;
+use App\Team;
 use Illuminate\Http\Request;
 use App\Http\Mail\MailerController;
 use Auth;
@@ -192,7 +193,27 @@ class EntretienController extends Controller
   {
     $model = $request->model;
     $id = $request->id;
-    $selectedUsers = $request->usersId;
+    $selectedUsers = [];
+    if (!empty($request->teamsIdToEvaluate)) {
+      foreach ($request->teamsIdToEvaluate as $team_id) {
+        $team = Team::find($team_id);
+        if (!empty($team->users)) {
+          $teamUsersId = $team->users->pluck('id')->toArray();
+          foreach ($teamUsersId as $user_id) {
+            $selectedUsers[] = $user_id;
+          }
+        }
+      }
+    }
+    if (!empty($request->usersIdToEvaluates)) {
+      foreach ($request->usersIdToEvaluates as $user_id) {
+        $selectedUsers[] = $user_id;
+      }
+    }
+
+    $selectedUsers = array_unique($selectedUsers);
+
+
     $entretienUsers = $removedUsers = [];
     $evaluationsId = $request->items;
 
@@ -226,6 +247,9 @@ class EntretienController extends Controller
       'titre.regex' => "Le titre de la campagne ne peut contenir que les caractères :regex",
     ];
     $validator = \Validator::make($request->all(), $rules, $messages);
+    if (empty($selectedUsers) && $id <= 0) {
+      $validator->getMessageBag()->add('users_empty', "Aucun utilisateur trouvé, veuillez sélectionner les personnes à évaluer");
+    }
     if ($model == "Feedback 360") {
       if (count($selectedUsers) > 1) {
         $validator->getMessageBag()->add('user', "Vous ne pouvez pas sélectionner plus que 1 participant pour le feedback 360");
