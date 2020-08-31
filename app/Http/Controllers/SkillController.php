@@ -32,9 +32,9 @@ class SkillController extends Controller
   {
     $e = Entretien::findOrFail($e_id);
     $evaluations = Entretien::findEvaluations($e);
-    $skills = $e->skills()->paginate(15);
     $user = $e->users()->where('entretien_user.user_id', $uid)->first();
-    return view('skills.index', compact('e', 'evaluations', 'skills', 'user'));
+    $skill = Skill::where('function_id', $user->function)->first();
+    return view('skills.index', compact('e', 'evaluations', 'skill', 'user'));
   }
 
   /**
@@ -74,6 +74,7 @@ class SkillController extends Controller
    */
   public function store(Request $request)
   {
+    $skillData = $request->all();
     $rules = [
       'function_id' => 'required',
       'title' => 'required',
@@ -82,12 +83,24 @@ class SkillController extends Controller
       'savoir_etre' => 'required',
       'mobilite_pro' => 'required',
     ];
-    $validator = \Validator::make($request->all(), $rules);
-    if ($validator->fails()) {
-      return ["status" => "danger", "message" => $validator->errors()->all()];
+    $validator = \Validator::make($skillData, $rules);
+    $functionAlreayHasSkills = Skill::where('function_id', $skillData['function_id']);//->get()->count() > 0;
+    if ($skillData['id'] > 0) {
+      $functionAlreayHasSkills->where('id', '<>', $skillData['id']);
     }
-    $skillData = $request->all();
+    $functionAlreayHasSkills = $functionAlreayHasSkills->get()->count() > 0;
+    if ($functionAlreayHasSkills) {
+      $validator->getMessageBag()->add('funct_exists', "Cett fonction a déjà une fiche métier");
+    }
+    $messages = $validator->errors();
+    if (count($messages) > 0) {
+      return ["status" => "danger", "message" => $messages];
+    }
+
     $skillData['user_id'] = User::getOwner()->id;
+    $skillData['savoir'] = json_encode($this->convertStringToArray($skillData['savoir']));
+    $skillData['savoir_faire'] = json_encode($this->convertStringToArray($skillData['savoir_faire']));
+    $skillData['savoir_etre'] = json_encode($this->convertStringToArray($skillData['savoir_etre']));
     if ($skillData['id'] > 0) {
       $skill = Skill::find($skillData['id']);
       $skill->update($skillData);
@@ -140,22 +153,21 @@ class SkillController extends Controller
    */
   public function updateUserSkills(Request $request)
   {
-    //dd($request->skills);
-    foreach ($request->skills as $id => $value) {
-      $user = User::findOrFail($request->user_id);
-      $user->skills()->sync([$id =>
-        [
-          'mentor_id' => $request->mentor_id,
-          'entretien_id' => $request->entretien_id,
-          'objectif' => $value['objectif'] != "" ? $value['objectif'] : 0,
-          'auto' => $value['auto'] != "" ? $value['auto'] : 0,
-          'nplus1' => $value['nplus1'] != "" ? $value['nplus1'] : 0,
-          'ecart' => $value['ecart'] != "" ? $value['ecart'] : 0,
-        ]
-      ], false);
+    $data = $request->except(['_token']);
+    $data['user_notes'] = json_encode($data['user_notes']);
+    $data['mentor_notes'] = json_encode(isset($data['mentor_notes']) ? $data['mentor_notes'] : []);
 
+    $model = $skill_user = Skill_user::where('skill_id', $data['skill_id'])
+      ->where('entretien_id', $data['entretien_id'])
+      ->where('user_id', $data['user_id']);
+    $skill_user = $model->first();
+    if (is_null($skill_user)) {
+      $skill_user = Skill_user::create($data);
+    } else {
+      $model->update($data);
     }
-    return redirect()->back()->with("success_update", "Les informations ont été sauvegardées avec succès !");
+
+    return redirect()->back()->with("note_update", "Les informations ont été sauvegardées avec succès !");
   }
 
   /**
@@ -170,4 +182,17 @@ class SkillController extends Controller
     $skill->delete();
     return ["status" => "success", "message" => "La fiche métier a été supprimée avec succès !"];
   }
+
+  public function convertStringToArray($str, $delimeter = ',') {
+    $values = explode($delimeter, $str);
+    $newarray = [];
+    if (!empty($values)) {
+      foreach ($values as $key => $value) {
+        $newarray[$key+1] = $value;
+      }
+    }
+
+    return $newarray;
+  }
+
 }

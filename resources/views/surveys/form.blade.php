@@ -26,7 +26,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6" :class="{'has-error': errors.has('model')}">
-                  <label for="" class="control-label required">Modèle</label>
+                  <label for="" class="control-label required">Type</label>
                   <select name="model" id="" class="form-control" v-model="model" v-validate="'required'">
                     <option value=""></option>
                     <option value="Entretien annuel">Entretien annuel</option>
@@ -39,7 +39,7 @@
                   <select name="section" id="" class="form-control" v-model="section">
                     <option value=""></option>
                     @foreach($evaluations as $eval)
-                      @if($eval->title != "Commentaires")
+                      @if(in_array($eval->title, ['Evaluation annuelle', 'Carrières']))
                         <option value="{{$eval->id}}" {{ $eval->id == $survey->evaluation_id ? 'selected':''}}>{{$eval->title}}</option>
                       @endif
                     @endforeach
@@ -74,15 +74,15 @@
                     <span v-show="errors.has('group')" class="help-block">@{{ errors.first('group') }}</span>
                   </div>
                   <div class="col-md-1">
-                    <button type="button" class="btn btn-tool btn-xs pull-right text-danger" data-toggle="tooltip" title="Supprimer ce block" @click="removeGroup(grpIndex)"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
                   </div>
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
                 <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">Block @{{ grpIndex + 1 }} : @{{ group.title }}</label>
-                <button type="button" class="btn btn-tool btn-xs pull-right text-danger" data-toggle="tooltip" title="Supprimer ce block" @click="removeGroup(grpIndex)"><i class="fa fa-trash"></i></button>
+                <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
 
-                <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
               </h3>
             </div>
             <div class="box-body">
@@ -95,15 +95,15 @@
                         <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
                       </div>
                       <div class="col-md-1">
-                        <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex)"><i class="fa fa-trash"></i></button>
+                        <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
                       </div>
                     </div>
                   </div>
                   <p v-else class="m-0">
                     <label @click="question.edit = true;" class="pull-left control-label mb-0">Question @{{ qIndex + 1 }} : @{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
                     <span class="d-inline-block">
-                      <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex)"><i class="fa fa-trash"></i></button>
-                      <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)"><i class="fa fa-pencil"></i></button>
+                      <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
+                      <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
                     </span>
                   </p>
                   <div class="clearfix"></div>
@@ -115,7 +115,7 @@
                         <input name="choice" v-model="choice.title" class="form-control" @blur="updateChoice(grpIndex, qIndex, cIndex, choice)" @keyup.enter="updateChoice(grpIndex, qIndex, cIndex, choice)" v-focus placeholder="Entrez l'option de réponse" v-validate="'required'" @keypress.enter.prevent>
                       </div>
                       <p v-else class="m-0 text-muted">
-                        <label @click="choice.edit = true;" class="mb-0">@{{ cIndex + 1 }} | @{{ choice.title }}</label>
+                        <label @click="choice.edit = true;" class="mb-0 d-inline">@{{ cIndex + 1 }} | @{{ choice.title }}</label>
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeChoice(grpIndex, qIndex, cIndex)"><i class="fa fa-trash"></i></button>
                         <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editChoice(choice)"><i class="fa fa-pencil"></i></button>
                       </p>
@@ -254,11 +254,16 @@
             questions: []
           })
         },
-        removeGroup: function (index) {
+        removeGroup: function (index, group) {
           this.groups[index].active = true
           if (this.groups.length > 1) {
             var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
             if (confirmation) {
+              if (this.id > 0) {
+                axios.delete('surveys/'+this.id+'/groupes/'+group.id+'/delete', {
+                }).then(function (response) {
+                })
+              }
               setTimeout(() => this.groups.splice(index, 1), 300)
             } else {
               this.groups[index].active = false
@@ -288,18 +293,23 @@
               }
           )
         },
-        removeQuestion: function (grpIndex, qIndex) {
+        removeQuestion: function (grpIndex, qIndex, group, question) {
           this.groups[grpIndex].questions[qIndex].active = true
           if (this.groups[grpIndex].questions.length > 1) {
             var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
             if (confirmation) {
+              if (this.id > 0) {
+                axios.delete('surveys/'+this.id+'/groupes/'+group.id+'/questions/'+question.id+'/delete', {
+                }).then(function (response) {
+                })
+              }
               setTimeout(() => this.groups[grpIndex].questions.splice(qIndex, 1), 300);
             } else {
               this.groups[grpIndex].questions[qIndex].active = false
             }
           } else {
             this.groups[grpIndex].questions[qIndex].active = false
-            alert("La section doit avoir au moins une question !")
+            alert("Le block doit avoir au moins une question !")
           }
         },
         addNewChoice: function(grpIndex, qIndex, choice) {
@@ -338,15 +348,14 @@
                 section: this.section,
                 groups: this.groups,
               }).then(function (response) {
-                if (response.status == 200) {
-                  swal({
-                    title: "Succès",
-                    text: "Les informations ont bien été enregistrées",
-                    type: "success"
-                  }).then(function () {
-                    window.location.href = "{{ route('surveys-list') }}"
-                  });
-                }
+                var success = response.data.status == 'success'
+                swal({
+                  title: response.data.status == 'success' ? "Enregistré" : "Erreur",
+                  text: response.data.message,
+                  type: response.data.status
+                }).then(function () {
+                  if (success) window.location.href = "{{ route('surveys-list') }}"
+                });
               }).catch(function (error) {
                 console.log(error)
               });

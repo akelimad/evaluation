@@ -40,6 +40,22 @@ class SurveyController extends Controller
     $groups = $request->groups;
     $survey_id = $request->id;
 
+    if (!empty($groups)) {
+      foreach ($groups as $group) {
+        if (empty($group['questions'])) {
+          return ["status" => "error", "message" => 'Veuillez ajouter des questions au block : ' . $group['title']];
+        } else {
+          foreach ($group['questions'] as $question) {
+            if (in_array($question['type'], ['radio', 'checkbox', 'select']) && empty($question['choices'])) {
+              return ["status" => "error", "message" => 'Veuillez ajouter des choix de réponse pour la question : '. $question['title']];
+            }
+          }
+        }
+      }
+    } else {
+      return ["status" => "error", "message" => 'Veuillez ajouter des blocks au questionnaire'];
+    }
+
     if ($survey_id > 0) {
       $survey = Survey::findOrFail($survey_id);
     } else {
@@ -49,7 +65,7 @@ class SurveyController extends Controller
     $survey->title = $request->title;
     $survey->description = $request->description;
     $survey->model = $request->model;
-    $survey->evaluation_id = in_array($request->model, ['Entretien annuel', 'Feedback 360']) ? 1 : $request->section;
+    $survey->evaluation_id = $request->section;
     $survey->user_id = User::getOwner()->id;
     $survey->save();
 

@@ -1,6 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Camp
-agnes')
+@section('title', 'Campagnes')
 @section('breadcrumb')
   <li>Campagnes</li>
 @endsection

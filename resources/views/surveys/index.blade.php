@@ -29,7 +29,7 @@
               <table class="table table-hover table-strped table-inversed-blue">
                 <tr>
                   <th>Titre</th>
-                  <th>Modèle</th>
+                  <th>Type</th>
                   <th>Section</th>
                   <th>Description</th>
                   <th class="text-center">Actions</th>

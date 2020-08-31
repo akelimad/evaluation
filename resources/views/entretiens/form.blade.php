@@ -92,7 +92,7 @@
             <div class="circle"><i class="fa fa-circle"></i></div>
           </div>
           <div>
-            <div class="title">Modèle</div>
+            <div class="title">Type</div>
           </div>
         </div>
         <div class="step" data-step="3">
@@ -143,7 +143,7 @@
         <div class="step-content" data-step="2" style="display: none;">
           <div class="row">
             <div class="col-md-12">
-              <label for="titre" class="control-label required">Modèle</label>
+              <label for="titre" class="control-label required">Type</label>
               <select name="model" id="model" class="form-control" chm-validate="required">
                 <option value=""></option>
                 <option value="Entretien annuel" {{ $entretien->model == 'Entretien annuel' ? 'selected':'' }}>Entretien annuel</option>
@@ -173,7 +173,7 @@
         <div class="step-content" data-step="3" style="display: none;">
           <div class="row">
             <div class="col-md-12">
-              <label for="titre" class="control-label required mb-10">Choisissez le type d'évaluation</label>
+              <label for="titre" class="control-label required mb-10">Choisissez le contenu d'évaluation</label>
               <div class="eval-items-container mt-5">
                 @foreach($evaluations as $evaluation)
                   @php($itemsId = \App\Entretien_evaluation::getItemsId($entretien->id, $evaluation->id))
@@ -181,7 +181,7 @@
                     <input type="checkbox" name="items[{{$evaluation->id}}][]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" id="eval-{{$evaluation->id}}-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
                   </div>
-                  @if ($evaluation->title == "Entretien annuel")
+                  @if ($evaluation->title == "Evaluation annuelle")
                     <div class="evals-wrapper mb-10">
                       <select name="items[{{$evaluation->id}}][object_id][]" id="entretien" class="form-control">
                         <option value="">Veuillez sélectionner</option>
@@ -278,7 +278,7 @@
                 <td width="50%"><b>Titre</b></td><td id="titre-td"></td>
               </tr>
               <tr>
-                <td><b>Modèle</b></td><td id="model-td"></td>
+                <td><b>Type</b></td><td id="model-td"></td>
               </tr>
               <tr>
                 <td><b>Participants</b></td><td id="participants-td"></td>
@@ -375,10 +375,10 @@
 
       var labelText = $(this).next('label').text()
 
-      if ($.inArray(labelText, ['Entretien annuel', 'Feedback 360']) !== -1 && $(this).is(':checked')) {
+      if ($.inArray(labelText, ['Evaluation annuelle', 'Feedback 360']) !== -1 && $(this).is(':checked')) {
         $('.evals-wrapper').show()
         chmForm.setRule($('select#entretien'), 'required')
-      } else if ($.inArray(labelText, ['Entretien annuel', 'Feedback 360']) !== -1 && !$(this).is(':checked')) {
+      } else if ($.inArray(labelText, ['Evaluation annuelle', 'Feedback 360']) !== -1 && !$(this).is(':checked')) {
         $('.evals-wrapper').hide()
         chmForm.setRule($('select#entretien'), 'required', false)
       }
@@ -494,7 +494,7 @@
         $('.carreers-wrapper').hide()
         $('.objectifs-wrapper').hide()
       } else {
-        $('#eval-1-label').html('Entretien annuel')
+        $('#eval-1-label').html('Evaluation annuelle')
         $('.feedback-360-options').hide()
         $('.feedback-360-options').find(':checkbox').prop('checked', false)
 

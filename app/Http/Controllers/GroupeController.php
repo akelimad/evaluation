@@ -120,7 +120,8 @@ class GroupeController extends Controller
     public function destroy($sid, $gid)
     {
         $groupe = Groupe::findOrFail($gid);
+        $groupe->questions()->delete();
         $groupe->delete();
-        return redirect('surveys/'.$sid.'/groupes');
+        return ["status" => "success", "message" => 'Le groupe a bien été supprimé !'];
     }
 }

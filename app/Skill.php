@@ -59,4 +59,25 @@ class Skill extends Model
         }
     }
 
+    public function getDataAsArray($field) {
+        $array = json_decode($this->$field, true) ?: [$this->$field];
+
+        return $array;
+    }
+
+    public function getDataAsStr($field) {
+        $array = implode(',', $this->getDataAsArray($field));
+
+        return $array;
+    }
+
+    public static function getNote($entretien_id, $user_id, $mentor_id, $field, $skill_item_id, $profile) {
+        $skill_user = Skill_user::where('entretien_id', $entretien_id)->where('user_id', $user_id)->where('mentor_id', $mentor_id)->first();
+        $profile = $profile.'_notes';
+        $notes = $skill_user->$profile;
+        $notes = json_decode($notes, true) ?: [];
+
+        return isset($notes[$field][$skill_item_id]) ? $notes[$field][$skill_item_id] : 0;
+    }
+
 }

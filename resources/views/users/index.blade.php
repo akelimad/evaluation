@@ -109,7 +109,7 @@
                   <th>Nom</th>
                   <th>Email</th>
                   <th>Rôle</th>
-                  <th>Département</th>
+                  <th>Fonction</th>
                   <th>Manager</th>
                   <th>Créé le</th>
                   <th class="text-center">Statut</th>
@@ -135,7 +135,7 @@
                       @endif
                     </td>
                     <td>
-                      {{ is_numeric($user->service) ? App\Department::findOrFail($user->service)->title : '---' }}
+                      {{ is_numeric($user->function) ? App\Fonction::findOrFail($user->function)->title : '---' }}
                     </td>
                     <td>
                       @if($user->parent)

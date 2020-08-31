@@ -117,11 +117,11 @@ Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 
-Route::get('entretiens/{e_id}/u/{uid}/entretien-annuel', 'EvaluationController@index');
+Route::get('entretiens/{e_id}/u/{uid}/evaluation-annuelle', 'EvaluationController@index');
 
 
 Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index');
-Route::get('skills/updateUserSkills', 'SkillController@updateUserSkills');
+Route::post('skills/updateUserSkills', 'SkillController@updateUserSkills');
 
 Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');

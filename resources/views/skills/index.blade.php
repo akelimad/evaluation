@@ -8,91 +8,110 @@
           @include('partials.alerts.success', ['messages' => Session::get('success_update') ])
         @endif
         <div class="box box-primary card">
-          <h3 class="mb40"> Liste des compétences <span class="badge">{{$skills->total()}}</span> pour : {{$e->titre}}
+          <h3 class="mb40"> Liste des compétences pour : {{$e->titre}} - {{ $user->fullname() }}
           </h3>
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
-              @if(count($skills)>0)
-                <div class="box-body table-responsive no-padding mb40">
-                  <form action="{{ url('skills/updateUserSkills') }}">
-                    <input type="hidden" name="entretien_id" value="{{$e->id}}">
-                    <input type="hidden" name="user_id" value="{{$user->id}}">
-                    <input type="hidden" name="mentor_id"
-                           value="{{App\User::getMentor($user->id) ? App\User::getMentor($user->id)->id : 0}}">
-                    <table class="table table-hover table-striped text-center">
-                      <tr>
-                        <th>Axe</th>
-                        <th>Famille</th>
-                        <th>Catégorie</th>
-                        <th>Compétence</th>
-                        <th>Objectif (Manager)</th>
-                        <th>Coll.</th>
-                        <th>Manager</th>
-                        <th>Ecart</th>
-                      </tr>
-                      @php($totalObjectif = 0)
-                      @php($totalAuto = 0)
-                      @php($totalNplus1 = 0)
-                      @php($totalEcart = 0)
-                      @foreach($skills as $skill)
-                        <tr>
-                          <td> {{ $skill->axe ? $skill->axe : '---' }}</td>
-                          <td> {{ $skill->famille ? $skill->famille : '---' }} </td>
-                          <td> {{ $skill->categorie ? $skill->categorie : '---' }} </td>
-                          <td> {{ $skill->competence ? $skill->competence : '---' }} </td>
-                          <td>
-                            <input type="number" min="0" max="10" name="skills[{{$skill->id}}][objectif]"
-                                   value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->objectif : '' }}"
-                                   id="objectif-{{ $skill->id }}"
-                                   data-id="" {{$user->id == Auth::user()->id ? 'readonly':'' }}>
-                            @php($totalObjectif += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->objectif : 0)
-                          </td>
-                          <td>
-                            <input type="number" min="0" max="10" name="skills[{{$skill->id}}][auto]"
-                                   value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->auto : '' }}"
-                                   id="auto"
-                                   data-id="{{ $skill->id }}" {{$user->id != Auth::user()->id ? 'readonly':'' }} >
-                            @php($totalAuto += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->auto : 0)
-                          </td>
-                          <td>
-                            <input type="number" min="0" max="10" name="skills[{{$skill->id}}][nplus1]"
-                                   value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->nplus1 : '' }}"
-                                   class="nplus1"
-                                   data-id="{{ $skill->id }}" {{$user->id == Auth::user()->id ? 'readonly':'' }}>
-                            @php($totalNplus1 += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->nplus1 : 0)
-                          </td>
-                          <td>
-                            <input type="number" name="skills[{{$skill->id}}][ecart]"
-                                   value="{{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->ecart : '' }}"
-                                   id="ecart-{{ $skill->id }}"
-                                   data-id="" {{$user->id == Auth::user()->id ? 'readonly':'' }}>
-                            @php($totalEcart += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->ecart : 0)
-                          </td>
-                        </tr>
-                      @endforeach
-                      <tr>
-                        <td colspan="4">
-                          Totaux des compétences :
-                        </td>
-                        <td><span class="badge">{{$totalObjectif}}</span></td>
-                        <td><span class="badge">{{$totalAuto}}</span></td>
-                        <td><span class="badge">{{$totalNplus1}}</span></td>
-                        <td><span class="badge">{{$totalEcart}}</span></td>
-                      </tr>
-                    </table>
-                    @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
-                      <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Enregistrer
-                      </button>
-                    @endif
-                    @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
-                      <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Enregistrer
-                      </button>
-                    @endif
-                  </form>
-                  {{ $skills->links() }}
-                </div>
+              @if ($skill)
+                <form action="{{ url('skills/updateUserSkills') }}" method="post">
+                  {{ csrf_field() }}
+                  <input type="hidden" name="skill_id" value="{{ $skill->id }}">
+                  <input type="hidden" name="entretien_id" value="{{ $e->id }}">
+                  <input type="hidden" name="user_id" value="{{ $user->id }}">
+                  <input type="hidden" name="mentor_id" value="{{ $user->parent->id }}">
+                  <div class="row mb-0">
+                    <div class="col-md-12">
+                      <p class="m-0 styled-title">Fiche métier : {{ $skill->title }}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="row mb-0">
+                        <div class="col-md-12">
+                          <h3 class="border-bottom">Savoir</h3>
+                          @foreach($skill->getDataAsArray('savoir') as $key => $item)
+                            <div class="row">
+                              <div class="col-md-6">
+                                <p>{{ $item }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <input type="text"
+                                       class="slider"
+                                       name="user_notes[savoir][{{ $key }}]"
+                                       data-provide="slider"
+                                       data-slider-min="0"
+                                       data-slider-max="10"
+                                       data-slider-step="0.5"
+                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir', $key, 'user') }}"
+                                       data-slider-enabled="true"
+                                       data-slider-tooltip="always"
+                                >
+                              </div>
+                            </div>
+                          @endforeach
+
+                          <h3 class="border-bottom">Savoir-faire</h3>
+                          @foreach($skill->getDataAsArray('savoir_faire') as $key => $item)
+                            <div class="row">
+                              <div class="col-md-6">
+                                <p>{{ $item }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <input type="text"
+                                       class="slider"
+                                       name="user_notes[savoir_faire][{{ $key }}]"
+                                       data-provide="slider"
+                                       data-slider-min="0"
+                                       data-slider-max="10"
+                                       data-slider-step="0.5"
+                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_faire', $key, 'user') }}"
+                                       data-slider-enabled="true"
+                                       data-slider-tooltip="always"
+                                >
+                              </div>
+                            </div>
+                          @endforeach
+
+                          <h3 class="border-bottom">Savoir-être</h3>
+                          @foreach($skill->getDataAsArray('savoir_etre') as $key => $item)
+                            <div class="row">
+                              <div class="col-md-6">
+                                <p>{{ $item }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <input type="text"
+                                       class="slider"
+                                       name="user_notes[savoir_etre][{{ $key }}]"
+                                       data-provide="slider"
+                                       data-slider-min="0"
+                                       data-slider-max="10"
+                                       data-slider-step="0.5"
+                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_faire', $key, 'user') }}"
+                                       data-slider-enabled="true"
+                                       data-slider-tooltip="always"
+                                >
+                              </div>
+                            </div>
+                          @endforeach
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
+                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Enregistrer
+                        </button>
+                      @endif
+                      @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
+                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Enregistrer
+                        </button>
+                      @endif
+                    </div>
+                  </div>
+                </form>
               @else
                 @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
               @endif

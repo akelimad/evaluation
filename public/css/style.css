@@ -1052,3 +1052,11 @@ p.help-block {
 .bootstrap-tagsinput input:focus {
   min-width: 200px;
 }
+.styled-title {
+  background: #afb5da85;
+  padding: 3px 5px;
+  font-size: 22px;
+}
+.border-bottom {
+  border-bottom: 1px solid gray;
+}

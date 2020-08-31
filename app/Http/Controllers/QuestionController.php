@@ -105,6 +105,6 @@ class QuestionController extends Controller
     $question = Question::findOrFail($qid);
     $question->delete();
     $question->children()->delete();
-    return redirect('surveys/'.$sid.'/groupes/'.$gid.'/questions');
+    return ["status" => "success", "message" => 'La question a bien été supprimée !'];
   }
 }

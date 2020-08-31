@@ -2,6 +2,14 @@
   <input type="hidden" name="id" value="{{ $skill->id > 0 ? $skill->id : null }}">
   {{ csrf_field() }}
   <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="" class="control-label required">Titre</label>
+        <input type="text" name="title" id="title" class="form-control" chm-validate="required" value="{{ $skill->title }}">
+      </div>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-6">
       <label for="entretien" class="control-label required">Fonction</label>
       <select name="function_id" id="function_id" class="form-control" chm-validate="required">
@@ -15,14 +23,6 @@
   <div class="row">
     <div class="col-md-12">
       <div class="form-group">
-        <label for="" class="control-label required">Titre</label>
-        <input type="text" name="title" id="title" class="form-control" chm-validate="required" value="{{ $skill->title }}">
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="form-group">
         <label for="" class="control-label">Description</label>
         <textarea name="description" id="description" class="form-control">{{ $skill->description }}</textarea>
       </div>
@@ -30,33 +30,35 @@
   </div>
   <div class="row">
     <div class="col-md-12">
+      <h3 class="styled-title">Compétences</h3>
+    </div>
+    <div class="col-md-12 mb-20">
       <div class="form-group">
         <label for="" class="control-label required">Savoir</label>
-        <input type="text" name="savoir" id="savoir" class="form-control tagsinput" chm-validate="required" value="{{ $skill->savoir }}">
+        <input type="text" name="savoir" id="savoir" class="form-control tagsinput" chm-validate="required" value="{{ $skill->getDataAsStr('savoir') }}" placeholder="Ajouter ...">
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 mb-20">
       <div class="form-group">
         <label for="" class="control-label required">Savoir-faire</label>
-        <input type="text" name="savoir_faire" id="savoir_faire" class="form-control tagsinput" chm-validate="required" value="{{ $skill->savoir_faire }}">
+        <input type="text" name="savoir_faire" id="savoir_faire" class="form-control tagsinput" chm-validate="required" value="{{ $skill->getDataAsStr('savoir_faire') }}" placeholder="Ajouter ...">
       </div>
     </div>
-  </div>
-  <div class="row">
     <div class="col-md-12">
       <div class="form-group">
         <label for="" class="control-label required">Savoir-être</label>
-        <input type="text" name="savoir_etre" id="savoir_etre" class="form-control tagsinput" chm-validate="required" value="{{ $skill->savoir_etre }}">
+        <input type="text" name="savoir_etre" id="savoir_etre" class="form-control tagsinput" chm-validate="required" value="{{ $skill->getDataAsStr('savoir_etre') }}" placeholder="Ajouter ...">
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
+      <h3 class="styled-title">Mobilité professionnelle</h3>
+    </div>
+    <div class="col-md-12">
       <div class="form-group">
         <label for="" class="control-label required">Mobilité professionnelle</label>
-        <input type="text" name="mobilite_pro" id="mobilite_pro" class="form-control tagsinput" chm-validate="required" value="{{ $skill->mobilite_pro }}">
+        <input type="text" name="mobilite_pro" id="mobilite_pro" class="form-control tagsinput" chm-validate="required" value="{{ $skill->mobilite_pro }}" placeholder="Ajouter ...">
       </div>
     </div>
   </div>
