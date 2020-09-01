@@ -108,22 +108,22 @@ Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMo
 Route::get('entretiens/form', 'EntretienController@form');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
-Route::get('entretiens/{e_id}/u/{uid}', 'EntretienController@synthese');
+Route::get('entretiens/{e_id}/u/{uid}/synthese', 'EntretienController@synthese')->name('anglets.synthese');
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
 Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu')->name('entretien.apercu');
 Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
-Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf');
+Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf')->name('entretien.download-pdf');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 
-Route::get('entretiens/{e_id}/u/{uid}/evaluation-annuelle', 'EvaluationController@index');
+Route::get('entretiens/{e_id}/u/{uid}/evaluation-annuelle', 'EvaluationController@index')->name('anglets.evaluation-annuelle');
 
 
-Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index');
+Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index')->name('anglets.competences');
 Route::post('skills/updateUserSkills', 'SkillController@updateUserSkills');
 
-Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index');
+Route::get('entretiens/{e_id}/u/{uid}/objectifs', 'ObjectifController@index')->name('anglets.objectifs');
 Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::post('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs')->name('updateNoteObjectifs');
@@ -142,24 +142,24 @@ Route::get('entretienObjectif/{oid}/groupes/{gid}/edit', 'ObjectifController@edi
 Route::delete('entretienObjectif/{oid}/groupes/{gid}/delete', 'ObjectifController@destroy');
 
 
-Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index');
+Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index')->name('anglets.formations');
 Route::any('entretiens/{e_id}/formations/create', 'FormationController@create');
 Route::post('entretiens/{e_id}/formations/store', 'FormationController@store');
 Route::any('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit');
 Route::put('entretiens/formations/{id}/mentorUpdate', 'FormationController@update'); //update status & realise
 
-Route::get('entretiens/{eid}/u/{uid}/salaires', 'SalarieController@index');
+Route::get('entretiens/{eid}/u/{uid}/primes', 'SalarieController@index')->name('anglets.primes');
 Route::any('entretiens/{eid}/u/{uid}/salaires/create', 'SalarieController@create');
 Route::post('entretiens/{eid}/u/{uid}/salaires/store', 'SalarieController@store');
 Route::any('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edit');
 
-Route::get('entretiens/{eid}/u/{uid}/commentaires', 'CommentController@index');
+Route::get('entretiens/{eid}/u/{uid}/commentaires', 'CommentController@index')->name('anglets.commentaires');
 Route::any('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create');
 Route::post('entretiens/{eid}/u/{uid}/commentaires/store', 'CommentController@store');
 Route::any('entretiens/{eid}/u/{uid}/commentaires/{id}/edit', 'CommentController@edit');
 Route::put('entretiens/{eid}/u/{uid}/commentaires/{cid}/mentorUpdate', 'CommentController@mentorUpdate');
 
-Route::get('entretiens/{eid}/u/{uid}/carrieres', 'CarreerController@index');
+Route::get('entretiens/{eid}/u/{uid}/carrieres', 'CarreerController@index')->name('anglets.carrieres');
 Route::get('entretiens/{eid}/u/{uid}/carrieres/create', 'CarreerController@create');
 Route::post('entretiens/{eid}/u/{uid}/carrieres/store', 'CarreerController@store');
 Route::get('entretiens/{eid}/u/{uid}/carrieres/{id}/edit', 'CarreerController@edit');

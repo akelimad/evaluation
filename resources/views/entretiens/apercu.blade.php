@@ -1,25 +1,29 @@
 
 <div class="apercu">
+  <div class="useful-actions mb-20">
+    <a href="{{ route('entretien.download-pdf', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Télécharger en PDF</a>
+    <a href="javascript:void(0)" id="openAll" class="pull-right ml-20">Tout dérouler</a>
+    <a href="javascript:void(0)" id="closeAll" class="pull-right">Tout enrouler</a>
+    <div class="clearfix"></div>
+  </div>
   @if($user->parent)
     <p class="help-block">Aperçu sur les informations partagées entre
-      {{ $user->name." ".$user->last_name }} et
+      {{ $user->fullname() }} et
       {{ $user->parent ? $user->parent->name : $user->name }} {{ $user->parent ? $user->parent->last_name : $user->last_name }}
-      sur l'entretien : {{ $e->titre }}
+      lors de l'entretien : <b>{{ $e->titre }}</b>
     </p>
     <div class="panel-group" id="accordion">
-      @if(in_array('Entretien annuel', $entreEvalsTitle))
+      @if(in_array('Evaluation annuelle', $entreEvalsTitle))
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="heading-evaluations">
             <h4 class="panel-title">
-              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-evaluations"
-                 aria-controls="collapse-evaluations" style="padding: 10px 15px;">
-                <i class="more-less fa fa-angle-right"></i>
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-evaluations" aria-controls="collapse-evaluations" style="padding: 10px 15px;">
+                <i class="more-less fa fa-chevron-right"></i>
                 Entretien annuel
               </a>
             </h4>
           </div>
-          <div id="collapse-evaluations" class="panel-collapse collapse in" role="tabpanel"
-               aria-labelledby="heading-evaluations">
+          <div id="collapse-evaluations" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-evaluations">
             <div class="panel-body">
               @php($surveyId = App\Evaluation::surveyId($e->id, 1))
               @php($survey = App\Survey::findOrFail($surveyId))
@@ -34,7 +38,7 @@
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-carrieres"
                  aria-controls="collapse-carrieres">
-                <i class="more-less fa fa-angle-right"></i>
+                <i class="more-less fa fa-chevron-right"></i>
                 Carrières
               </a>
             </h4>
@@ -48,7 +52,7 @@
                 <div class="row">
                   @if(count($survey->groupes)>0)
                     <div class="col-md-6">
-                      <h4 class="alert alert-info"> {{ $user->name." ".$user->last_name }} </h4>
+                      <h4 class="alert alert-info"> {{ $user->fullname() }} </h4>
 
                       <div class="panel-group">
                         @foreach($survey->groupes as $g)
@@ -57,35 +61,38 @@
                               <div class="panel-heading">{{ $g->name }}</div>
                               <div class="panel-body">
                                 @forelse($g->questions as $q)
-                                  <div class="form-group">
-                                    @if($q->parent == null)
-                                      <label for="" class="questionTitle help-block text-blue"><i
-                                            class="fa fa-caret-right"></i> {{$q->titre}}</label>
-                                    @endif
-                                    @if($q->type == 'text')
-                                      <div class="text-background">
-                                        {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        @if($q->parent == null)
+                                          <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                                        @endif
+                                        @if($q->type == 'text')
+                                          <div class="text-background">
+                                            {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}
+                                          </div>
+                                        @elseif($q->type == 'textarea')
+                                          <div class="text-background">
+                                            {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer :''}}
+                                          </div>
+                                        @elseif($q->type == "checkbox")
+                                          @foreach($q->children as $child)
+                                            <div class="survey-checkbox">
+                                              <input type="{{$q->type}}" value="{{$child->id}}"
+                                                     {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }} disabled>
+                                              <label>{{ $child->titre }}</label>
+                                            </div>
+                                          @endforeach
+                                          <div class="clearfix"></div>
+                                        @elseif($q->type == "radio")
+                                          @foreach($q->children as $child)
+                                            <input type="{{$q->type}}" value="{{$child->id}}"
+                                                   {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer ? 'checked' : '' }} disabled>
+                                            <label>{{ $child->titre }}</label>
+                                          @endforeach
+                                        @endif
                                       </div>
-                                    @elseif($q->type == 'textarea')
-                                      <div class="text-background">
-                                        {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer :''}}
-                                      </div>
-                                    @elseif($q->type == "checkbox")
-                                      @foreach($q->children as $child)
-                                        <div class="survey-checkbox">
-                                          <input type="{{$q->type}}" value="{{$child->id}}"
-                                                 {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }} disabled>
-                                          <label>{{ $child->titre }}</label>
-                                        </div>
-                                      @endforeach
-                                      <div class="clearfix"></div>
-                                    @elseif($q->type == "radio")
-                                      @foreach($q->children as $child)
-                                        <input type="{{$q->type}}" value="{{$child->id}}"
-                                               {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer ? 'checked' : '' }} disabled>
-                                        <label>{{ $child->titre }}</label>
-                                      @endforeach
-                                    @endif
+                                    </div>
                                   </div>
                                 @empty
                                   <p class="help-block"> Aucune question </p>
@@ -107,40 +114,42 @@
                               </div>
                               <div class="panel-body">
                                 @forelse($g->questions as $q)
-                                  <div class="form-group">
-                                    @if($q->parent == null)
-                                      <label for="" class="questionTitle help-block text-blue"><i
-                                            class="fa fa-caret-right"></i> {{$q->titre}}</label>
-                                    @endif
-                                    @if($q->type == 'text')
-                                      <div class="text-background">
-                                        {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        @if($q->parent == null)
+                                          <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                                        @endif
+                                        @if($q->type == 'text')
+                                          <div class="text-background">
+                                            {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}
+                                          </div>
+                                        @elseif($q->type == 'textarea')
+                                          <div class="text-background">
+                                            {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}
+                                          </div>
+                                        @elseif($q->type == "checkbox")
+                                          <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez
+                                            cocher au moins un élement</p>
+                                          @foreach($q->children as $child)
+                                            <div class="survey-checkbox">
+                                              <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}"
+                                                     value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer)) ? 'checked' : '' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                              <label for="{{$child->titre}}">{{ $child->titre }}</label>
+                                            </div>
+                                          @endforeach
+                                          <div class="clearfix"></div>
+                                        @elseif($q->type == "radio")
+                                          @foreach($q->children as $child)
+                                            <input type="{{$q->type}}" name="answers[{{$q->id}}]" id="{{$child->id}}"
+                                                   value="{{$child->id}}"
+                                                   required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                            <label for="{{$child->id}}">{{ $child->titre }}</label>
+                                          @endforeach
+                                        @endif
                                       </div>
-                                    @elseif($q->type == 'textarea')
-                                      <div class="text-background">
-                                        {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}
-                                      </div>
-                                    @elseif($q->type == "checkbox")
-                                      <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez
-                                        cocher au moins un élement</p>
-                                      @foreach($q->children as $child)
-                                        <div class="survey-checkbox">
-                                          <input type="{{$q->type}}" name="answers[{{$q->id}}][]" id="{{$child->titre}}"
-                                                 value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer)) ? 'checked' : '' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
-                                          <label for="{{$child->titre}}">{{ $child->titre }}</label>
-                                        </div>
-                                      @endforeach
-                                      <div class="clearfix"></div>
-                                    @elseif($q->type == "radio")
-                                      @foreach($q->children as $child)
-                                        <input type="{{$q->type}}" name="answers[{{$q->id}}]" id="{{$child->id}}"
-                                               value="{{$child->id}}"
-                                               required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
-                                        <label for="{{$child->id}}">{{ $child->titre }}</label>
-                                      @endforeach
-                                    @endif
+                                    </div>
                                   </div>
-
                                 @empty
                                   <p class="help-block"> Aucune question </p>
                                 @endforelse
@@ -165,7 +174,7 @@
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-objectifs"
                  aria-controls="collapse-objectifs">
-                <i class="more-less fa fa-angle-right"></i>
+                <i class="more-less fa fa-chevron-right"></i>
                 Objectifs
               </a>
             </h4>
@@ -180,7 +189,7 @@
                 <div class="tab-content pt-30">
                   <div id="personnel" class="tab-pane fade in active">
                     @forelse($objectifsPersonnal as $key => $objectif)
-                      <h3 class="bg-gray p-5 mt-0">{{ $objectif->title }}</h3>
+                      <h3 class="styled-title mt-0">{{ $objectif->title }}</h3>
                       <canvas class="chart" id="personnelChart{{$key+1}}" style="max-height: 600px;"></canvas>
                     @empty
                       <p>Aucun résultat trouvé !</p>
@@ -189,7 +198,7 @@
                   <div id="team" class="tab-pane">
                     <div id="personnel" class="tab-pane fade in active">
                       @forelse($objectifsTeam as $key => $objectif)
-                        <h3 class="bg-gray p-5 mt-0">{{ $objectif->title }}</h3>
+                        <h3 class="styled-title mt-0">{{ $objectif->title }}</h3>
                         <canvas class="chart" id="teamChart{{$key+1}}" style="max-height: 600px;"></canvas>
                       @empty
                         <p>Aucun résultat trouvé !</p>
@@ -208,7 +217,7 @@
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-formations"
                  aria-controls="collapse-formations">
-                <i class="more-less fa fa-angle-right"></i>
+                <i class="more-less fa fa-chevron-right"></i>
                 Formations
               </a>
             </h4>
@@ -253,66 +262,42 @@
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-skills"
                  aria-controls="collapse-skills">
-                <i class="more-less fa fa-angle-right"></i>
+                <i class="more-less fa fa-chevron-right"></i>
                 Compétences
               </a>
             </h4>
           </div>
           <div id="collapse-skills" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-skills">
             <div class="panel-body">
-              <table class="table table-hover">
-                <tr>
-                  <th>Axe</th>
-                  <th>Famille</th>
-                  <th>Catégorie</th>
-                  <th>Compétence</th>
-                  <th>Objectif</th>
-                  <th>N+1</th>
-                  <th>Ecart</th>
-                </tr>
-                @php($totalObjectif = 0)
-                @php($totalNplus1 = 0)
-                @php($totalEcart = 0)
-                @foreach($skills as $skill)
-                  <tr>
-                    <td> {{ $skill->axe ? $skill->axe : '---' }}</td>
-                    <td> {{ $skill->famille ? $skill->famille : '---' }} </td>
-                    <td> {{ $skill->categorie ? $skill->categorie : '---' }} </td>
-                    <td> {{ $skill->competence ? $skill->competence : '---' }} </td>
-                    <td class="text-center">
-                      {{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->objectif : '---' }}
-                      @php($totalObjectif += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->objectif : 0)
-                    </td>
-                    <td class="text-center">
-                      {{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->nplus1 : '---' }}
-                      @php($totalNplus1 += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->nplus1 : 0)
-                    </td>
-                    <td class="text-center">
-                      {{ App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->ecart : '---' }}
-                      @php($totalEcart += App\Skill::getSkill($skill->id, $user->id, $e->id) ? App\Skill::getSkill($skill->id, $user->id, $e->id)->ecart : 0)
-                    </td>
-                  </tr>
-                @endforeach
-                <tr>
-                  <td colspan="4">
-                    Totaux des compétences :
-                  </td>
-                  <td class="text-center"><span class="badge">{{$totalObjectif}}</span></td>
-                  <td class="text-center"><span class="badge">{{$totalNplus1}}</span></td>
-                  <td class="text-center"><span class="badge">{{$totalEcart}}</span></td>
-                </tr>
-              </table>
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="styled-title">Savoir</h3>
+                  <canvas class="chart" id="savoir_chart" style="max-height: 600px;"></canvas>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="styled-title">Savoir-faire</h3>
+                  <canvas class="chart" id="savoir_faire_chart" style="max-height: 600px;"></canvas>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="styled-title">Savoir-être</h3>
+                  <canvas class="chart" id="savoir_etre_chart" style="max-height: 600px;"></canvas>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       @endif
-      @if(in_array('Salaires', $entreEvalsTitle))
+      @if(in_array('Primes', $entreEvalsTitle))
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="heading-salary">
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-salary"
                  aria-controls="collapse-salary">
-                <i class="more-less fa fa-angle-right"></i>
+                <i class="more-less fa fa-chevron-right"></i>
                 Salaires
               </a>
             </h4>
@@ -355,7 +340,7 @@
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-comments"
                  aria-controls="collapse-comments">
-                <i class="more-less fa fa-angle-right"></i>
+                <i class="more-less fa fa-chevron-right"></i>
                 Commentaires
               </a>
             </h4>
@@ -409,25 +394,42 @@
   @endif
 </div>
 
+
 <script>
   $(document).ready(function () {
-    function toggleIcon(e) {
-      $(e.target).prev('.panel-heading').find(".more-less").toggleClass('fa-angle-right fa-angle-down');
-    }
-    $('.panel-group').on('hidden.bs.collapse', toggleIcon);
-    $('.panel-group').on('shown.bs.collapse', toggleIcon);
+    $('#openAll').on('click', function () {
+      $('.collapse').addClass('in');
+    })
+    $('#closeAll').on('click', function () {
+      $('.collapse').removeClass('in');
+    })
+
     $('.slider').bootstrapSlider()
 
+    var pluginsOptions = [{
+      beforeInit: function(chart) {
+        chart.data.labels.forEach(function(e, i, a) {
+          if (/brk/.test(e)) {
+            a[i] = e.split(/brk/);
+          }
+        });
+      }
+    }]
+
     var radarOptions = {
-      legend: {
-        display: false,
-        position: 'top',
+      tooltips: {
+        enabled: true,
+        mode: 'label'
       },
       scale: {
         ticks: {
           beginAtZero: true
         }
-      }
+      },
+      legend: {
+        display: true,
+        position: 'top',
+      },
     }
 
     @foreach($objectifsPersonnal as $key => $objectif)
@@ -446,7 +448,7 @@
           ],
           datasets: [
             {
-              label: "",
+              label: "Collaborateur",
               borderColor: 'green',
               data: [
                   @if(!empty($collValues))
@@ -455,7 +457,7 @@
               ]
             },
             {
-              label: "",
+              label: "Manager",
               borderColor: 'red',
               data: [
                 @if(!empty($mentorValues))
@@ -484,7 +486,7 @@
           datasets: [
             {
               label: "",
-              borderColor: 'green',
+              borderColor: 'orange',
               data: [@foreach($teamValues as $value) {{ $value }}, @endforeach]
             }
           ]
@@ -494,6 +496,37 @@
     }
     @endforeach
 
+    @foreach(['savoir', 'savoir_faire', 'savoir_etre'] as $key => $field)
+      if (document.getElementById('{{ $field }}_chart')) {
+        let savoirChart = new Chart(document.getElementById('{{ $field }}_chart'), {
+          type: 'radar',
+          data: {
+            labels: [@foreach($skill->getDataAsArray($field) as $value) "{!! $value !!} " ,@endforeach],
+            datasets: [
+              {
+                label: "Collaborateur",
+                borderColor: 'green',
+                data: [
+                  @foreach(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'user') as $note)
+                  {{ $note }},
+                  @endforeach
+                ]
+              },
+              {
+                label: "Manager",
+                borderColor: 'red',
+                data: [
+                  @foreach(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'mentor') as $note)
+                  {{ $note }},
+                  @endforeach
+                ]
+              },
+            ]
+          },
+          options: radarOptions,
+        });
+      }
+    @endforeach
 
   })
 </script>

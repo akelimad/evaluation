@@ -144,7 +144,8 @@
 @endsection
 
 @section('javascript')
-	<script src="{{asset('js/chart.min.js')}}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
 	<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>

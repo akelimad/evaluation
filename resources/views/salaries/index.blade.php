@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="box box-primary card">
-          <h3 class="mb40"> Liste des salaires pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }}</h2>
+          <h3 class="mb40"> Liste des primes pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }}</h2>
             <div class="nav-tabs-custom">
               @include('partials.tabs')
               <div class="tab-content">
@@ -54,7 +54,7 @@
                   <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
                   @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
                     <a onclick="return chmSalary.create({eid: {{$e->id}} , uid: {{$user->id}} })" data-id="{{$e->id}}"
-                       class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un salaire</a>
+                       class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une prime</a>
                   @endif
                 </div>
               </div>
@@ -65,7 +65,7 @@
             <div class="callout callout-info">
               <p class="">
                 <i class="fa fa-info-circle fa-2x"></i>
-                <span class="content-callout">Cette page affiche Liste des salaires de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+                <span class="content-callout">Cette page affiche Liste des primes de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
               </p>
             </div>
         </div>

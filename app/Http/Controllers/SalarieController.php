@@ -55,7 +55,7 @@ class SalarieController extends Controller
     $user = User::findOrFail($uid);
     echo view('salaries.form', compact('e', 'user'));
     $content = ob_get_clean();
-    return ['title' => 'Ajouter une rémunération', 'content' => $content];
+    return ['title' => 'Ajouter une prime', 'content' => $content];
   }
 
   /**
@@ -113,7 +113,7 @@ class SalarieController extends Controller
     $s = Salary::findOrFail($sid);
     echo view('salaries.form', compact('e', 'user', 's'));
     $content = ob_get_clean();
-    return ['title' => 'Modifier une rémunération', 'content' => $content];
+    return ['title' => 'Modifier une prime', 'content' => $content];
   }
 
   /**

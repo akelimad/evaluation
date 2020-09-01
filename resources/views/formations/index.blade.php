@@ -5,11 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="box box-primary card">
-          @if(Session::has('update_formation'))
-            @include('partials.alerts.success', ['messages' => Session::get('update_formation') ])
-          @endif
           <h3 class="mb40"> Liste des formations <span class="badge">{{ $formations->total() }}</span> : {{ $e->titre }} - {{ $user->name." ".$user->last_name }} </h3>
-
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
@@ -25,7 +21,7 @@
                           <th>Exercice</th>
                           <th>Formation demandée</th>
                           <th>Description</th>
-                          <th>Etat</th>
+                          <th>Statut</th>
                           <th>Réalisé</th>
                           <th class="text-center">Actions</th>
                         </tr>
@@ -64,7 +60,7 @@
                                   <a href="javascript:void(0)" onclick="return chmFormation.edit({e_id: {{$e->id}} , id: {{$f->id}} })" class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
                                 @endif
                                 @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                                  <button type="submit" class="btn-success icon-fill" data-toggle="tooltip" title="Mettre à jour"><i class="fa fa-refresh"></i></button>
+                                  <button type="submit" class="btn btn-primary"><i class="fa fa-refresh"></i> Mettre à jour</button>
                                 @endif
                               </td>
                             </tr>

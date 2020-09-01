@@ -132,11 +132,7 @@ export default class chmEntretien {
     }, {
       message: '<i class="fa fa-send"></i>&nbsp;Soumission en cours...',
       onSuccess: function (response) {
-        if (response.status !== 'success') {
-          window.chmModal.showAlertMessage(response.status, response.message)
-        } else {
-          window.location.href = response.redirectUrl
-        }
+        window.location.href = response.redirectUrl
       }
     })
   }
@@ -153,7 +149,9 @@ export default class chmEntretien {
         if (response.status !== 'success') {
           window.chmModal.showAlertMessage(response.status, response.message)
         } else {
-          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415})
+          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {
+            width: 415
+          })
         }
       }
     })

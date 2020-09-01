@@ -147,7 +147,7 @@
         <div class="col-md-8 col-md-offset-2" v-if="groups.length > 0">
           <div class="card">
             <div class="card-body">
-              <button class="btn btn-primary pull-right" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
+              <button class="btn btn-primary pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
             </div>
           </div>
         </div>
@@ -161,7 +161,9 @@
   <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-  <script>
+  <script src="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/index.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />  <script>
+    loadProgressBar()
     Vue.use(VeeValidate);
     new Vue({
       el: '#content',
@@ -339,7 +341,7 @@
         handleSubmit: function () {
           this.$validator.validateAll().then((result) => {
             if (result) {
-              this.submitted = true
+            $('.submit-btn').prop('disabled', true)
               axios.post("{{ route('survey.store') }}", {
                 id: this.id,
                 title: this.title,
@@ -348,13 +350,18 @@
                 section: this.section,
                 groups: this.groups,
               }).then(function (response) {
+                this.submitted = false
                 var success = response.data.status == 'success'
                 swal({
                   title: response.data.status == 'success' ? "Enregistré" : "Erreur",
                   text: response.data.message,
                   type: response.data.status
                 }).then(function () {
-                  if (success) window.location.href = "{{ route('surveys-list') }}"
+                  if (success) {
+                    window.location.href = "{{ route('surveys-list') }}"
+                  } else {
+                    $('.submit-btn').prop('disabled', false)
+                  }
                 });
               }).catch(function (error) {
                 console.log(error)

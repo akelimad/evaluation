@@ -29,8 +29,7 @@
                 <li class="list-group-item"><b>Département : </b>
                   <a class="">{{ (!empty($mentor->service)) ? App\Department::findOrFail($mentor->service)->title : '---' }}</a>
                 </li>
-                <li class="list-group-item"><b>Téléphone mobile: </b> <a
-                      class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
+                <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
               @endif
               <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
             </ul>

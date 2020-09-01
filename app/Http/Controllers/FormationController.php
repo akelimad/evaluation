@@ -130,7 +130,7 @@ class FormationController extends Controller
         $formation->status = $request->status;
         $formation->done = $request->done == "on" ? 1 : 0 ;
         $formation->save();
-        return redirect()->back()->with("update_formation", "La formation a bien été mise à jour !");
+        return redirect()->back()->with("success", "La formation a bien été mise à jour !");
     }
 
     /**

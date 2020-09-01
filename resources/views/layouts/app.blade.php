@@ -65,7 +65,7 @@
   <!-- <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i> -->
   <div class="looding">
     <div class="reloadDouble"></div>
-    <p class="help-block"> Chargement ... </p>
+    <p class="help-block">Chargement ... </p>
   </div>
 </div>
 <div class="wrapper">
@@ -252,6 +252,28 @@
         @yield('breadcrumb')
       </ol>
     </section>
+    <div class="flush-alerts-section">
+      <div class="container-fluid">
+        <div class="row flash-message mb-10">
+          <div class="col-md-12 pl-30 pr-30">
+            @foreach (['danger', 'warning', 'success', 'info'] as $msgType)
+              @if($msgType == 'success') @php($icon = "fa-check-circle")
+              @elseif($msgType == 'danger') @php($icon = "fa-times")
+              @elseif($msgType == 'warning') @php($icon = "fa-warning")
+              @else @php($icon = "fa-info-circle")
+              @endif
+              @if(Session::has($msgType))
+                <div class="chm-alerts alert alert-{{ $msgType }} alert-white rounded mt-30">
+                  <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
+                  <div class="icon"><i class="fa {{ $icon }}"></i></div>
+                  <span>{{ Session::get($msgType) }}</span>
+                </div>
+              @endif
+            @endforeach
+          </div>
+        </div>
+      </div>
+    </div>
     @yield('content')
   </div>
   <!-- /.content-wrapper -->

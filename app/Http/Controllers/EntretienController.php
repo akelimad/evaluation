@@ -502,13 +502,13 @@ class EntretienController extends Controller
 
     $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->where('status', 2)->get();
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->paginate(10);
-    $skills = Skill::where('entretien_id', $eid)->get();
+    $skill = Skill::where('function_id', $user->function)->first();
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $entreEvalsTitle = [];
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifsPersonnal', 'objectifsTeam', 'formations', 'skills', 'comment', 'evaluations'));
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifsPersonnal', 'objectifsTeam', 'formations', 'skill', 'comment', 'evaluations'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }
@@ -528,27 +528,14 @@ class EntretienController extends Controller
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $evaluations = Entretien::findEvaluations($e);
     $obj_id = 0;
+    $entreEvalsTitle = [];
     foreach ($evaluations as $key => $evaluation) {
+      $entreEvalsTitle[] = $evaluation->title;
       if ($evaluation->title != "Objectifs") continue;
       $obj_id = $evaluation->survey_id;
     }
     $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $obj_id)->get();
-
-    //$carreers = Carreer::where('entretien_id', $eid)->where('user_id', $uid)->get();
-    //$formations = Formation::where('user_id', $user->id)->where('status', 2)->get();
-    //$salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->paginate(10);
-    //$skills = Skill::all();
-    //$objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $e->objectif_id)->paginate(10);
-    //$total = 0;
-    //foreach ($objectifs as $obj) {
-    //  $total += $obj->sousTotal;
-    //}
-    //$entreEvalsTitle = [];
-    //foreach ($evaluations as $eval) {
-    //  $entreEvalsTitle[] = $eval->title;
-    //}
-
-    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'objectifs', 'comment'));
+    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'objectifs', 'comment', 'entreEvalsTitle'));
     return $pdf->download('synthese-entretien-evaluation.pdf');
   }
 
@@ -611,9 +598,10 @@ class EntretienController extends Controller
     $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
     MailerController::send(Auth::user(), $entretien, $submit_email);
 
+    \Session::flash('success', "Les informations ont bien été soumises, Un email a bien été envoyé aux responsables RH");
+
     return [
       'status' => "success",
-      'message' => "Les informations ont bien été été soumis, Un email a bien été envoyé aux responsables RH",
       'redirectUrl' => route('home')
     ];
   }
