@@ -24,7 +24,18 @@ class EntretienObjectif extends Model
   }
 
   public function getIndicators() {
-    return json_decode($this->indicators, true) ?: ['' => ''];
+    $indicators = json_decode($this->indicators, true) ?: ['' => ''];
+    return $indicators;
+  }
+
+  public function getIndicatorsTitle() {
+    $indicatorsTitle = [];
+    if (!empty($this->getIndicators())) {
+      foreach ($this->getIndicators() as $key => $indicator) {
+        $indicatorsTitle[] = $indicator['title'];
+      }
+    }
+    return $indicatorsTitle;
   }
 
   public function setIndicators($indicators = []) {

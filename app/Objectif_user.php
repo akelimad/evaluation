@@ -29,7 +29,6 @@ class Objectif_user extends Model
   public static function getValues($eid, $user_id, $oid) {
     $objectif_user = Objectif_user::where('objectif_id', $oid)->where('user_id', $user_id)->where('entretien_id', $eid)->first();
 
-
     if (!$objectif_user) return [];
     $collValues = $mentorValues = $teamValues = [];
     $indicators = json_decode($objectif_user->indicators_data, true) ?: [];

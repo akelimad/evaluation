@@ -35,7 +35,7 @@
     <div class="col-md-12 mb-20">
       <div class="form-group">
         <label for="" class="control-label required">Savoir</label>
-        <input type="text" name="savoir" id="savoir" class="form-control tagsinput" chm-validate="required" value="{{ $skill->getDataAsStr('savoir') }}" placeholder="Ajouter ...">
+        <input type="text" name="savoir" id="savoir" class="form-control tagsinput" data-role="tagsinput" chm-validate="required" value="{{ $skill->getDataAsStr('savoir') }}" placeholder="Ajouter ...">
       </div>
     </div>
     <div class="col-md-12 mb-20">

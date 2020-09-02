@@ -500,8 +500,8 @@ class EntretienController extends Controller
     $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
     $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
 
-    $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->where('status', 2)->get();
-    $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->paginate(10);
+    $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
+    $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->get();
     $skill = Skill::where('function_id', $user->function)->first();
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $entreEvalsTitle = [];
@@ -527,16 +527,84 @@ class EntretienController extends Controller
     $survey = Survey::find($surveyId);
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $evaluations = Entretien::findEvaluations($e);
-    $obj_id = 0;
     $entreEvalsTitle = [];
     foreach ($evaluations as $key => $evaluation) {
       $entreEvalsTitle[] = $evaluation->title;
-      if ($evaluation->title != "Objectifs") continue;
-      $obj_id = $evaluation->survey_id;
     }
-    $objectifs = Objectif::where('parent_id', 0)->where('entretienobjectif_id', $obj_id)->get();
-    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'objectifs', 'comment', 'entreEvalsTitle'));
+    $itemsId = Entretien_evaluation::getItemsId($eid, 9); // Objectifs = 9
+    $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
+    $primes = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->get();
+    $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
+    $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
+    $skill = Skill::where('function_id', $user->function)->first();
+
+    // skills charts
+    $chartData = [];
+    foreach(['savoir', 'savoir_faire', 'savoir_etre'] as $key => $field) {
+      $data = [
+        'type' => 'radar',
+        'data' => [
+          'labels' => array_values($skill->getDataAsArray($field)),
+          'datasets' => [
+            [
+              'label' => 'Collaborateur',
+              'data' => array_values(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'user'))
+            ],
+            [
+              'label' => 'Manager',
+              'data' => array_values(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'mentor'))
+            ],
+          ]
+        ]
+      ];
+      $chartData[$field] = urlencode(json_encode($data));
+    }
+
+    // objectifs personnal charts
+    foreach($objectifsPersonnal as $objectif) {
+      $collValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['collValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['collValues'] : [];
+      $mentorValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['mentorValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['mentorValues'] : [];
+      $data = [
+        'type' => 'radar',
+        'data' => [
+          'labels' => $objectif->getIndicatorsTitle(),
+          'datasets' => [
+            [
+              'label' => 'Collaborateur',
+              'data' => array_values($collValues)
+            ],
+            [
+              'label' => 'Manager',
+              'data' => array_values($mentorValues)
+            ],
+          ]
+        ]
+      ];
+      $chartData[$objectif->id] = urlencode(json_encode($data));
+    }
+
+    // objectifs team chart
+    foreach($objectifsTeam as $objectif) {
+      $teamValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['teamValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['teamValues'] : [];
+      $data = [
+        'type' => 'radar',
+        'data' => [
+          'labels' => $objectif->getIndicatorsTitle(),
+          'datasets' => [
+            [
+              'label' => 'Manager',
+              'data' => array_values($teamValues)
+            ],
+          ]
+        ]
+      ];
+      $chartData[$objectif->id] = urlencode(json_encode($data));
+    }
+
+    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'comment', 'skill', 'entreEvalsTitle', 'formations', 'primes', 'chartData', 'objectifsPersonnal', 'objectifsTeam'));
+
     return $pdf->download('synthese-entretien-evaluation.pdf');
+
   }
 
 

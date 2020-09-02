@@ -293,10 +293,10 @@ class UserController extends Controller
         $user->roles()->sync($this->getRoleByName($roles));
         $count++;
       } else {
-        return redirect('users')->with('exist_already', 'Une erreur est survenu lors l\'importation. il se peut que un des champs obligatoire(Prénom, nom, email, role, Mentor email) est vide!');
+        return redirect('users')->with('warning', 'Une erreur est survenu lors l\'importation. il se peut que un des champs obligatoire(Prénom, nom, email, role, Mentor email) est vide!');
       }
     }
-    return redirect('users')->with('import_success', 'Les utilisateurs ont été importés avec succès avec ' . $added . ' ajout et ' . $updated . ' mis à jour !');
+    return redirect('users')->with('success', 'Les utilisateurs ont été importés avec succès avec ' . $added . ' ajout et ' . $updated . ' mis à jour !');
 
   }
 

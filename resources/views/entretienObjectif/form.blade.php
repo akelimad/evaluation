@@ -12,7 +12,7 @@
           <div class="card mb-20" v-for="(objectif, oIndex) in objectifs">
             <div class="card-header">
               <span class="badge">@{{ oIndex + 1 }}</span>
-              <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeObjectif(oIndex)"><i class="fa fa-trash"></i></button>
+              <button v-if="mode == 'add'" type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeObjectif(oIndex)"><i class="fa fa-trash"></i></button>
             </div>
             <div class="card-body">
               {{ csrf_field() }}
@@ -106,7 +106,7 @@
           </div>
           <div v-if="objectifs.length > 0" class="card" >
             <div class="card-body">
-              <button class="btn btn-primary pull-right" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
+              <button class="btn btn-primary pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
             </div>
           </div>
         </div>
@@ -211,24 +211,27 @@
                   return false;
                 }
               })
-
               if (!ponderationIsValid) {
-                swal({title: "Attention", text: "La somme de pondérations des indicateurs doit être égale à 100 pour chaque objectif !", type: "warning"})
+                swal({title: "Erreur", text: "La somme de pondérations des indicateurs doit être égale à 100 pour chaque objectif !", type: "error"})
                 return
               }
               this.submitted = true;
               axios.post("{{ route('config.objectifs.store') }}", {
                 objectifs: this.objectifs
               }).then(function (response) {
-                if (response.status == 200) {
-                  swal({
-                    title: "Succès",
-                    text: "Les informations ont bien été enregistrées",
-                    type: "success"
-                  }).then(function () {
+                this.submitted = false
+                var success = response.data.status == 'success'
+                swal({
+                  title: response.data.status == 'success' ? "Enregistré" : "Erreur",
+                  text: response.data.message,
+                  type: response.data.status
+                }).then(function () {
+                  if (success) {
                     window.location.href = "{{ route('config.objectifs') }}"
-                  });
-                }
+                  } else {
+                    $('.submit-btn').prop('disabled', false)
+                  }
+                });
               }).catch(function (error) {
                 swal({title: "Erreur", text: error, type: "danger"})
                 this.submitted = false

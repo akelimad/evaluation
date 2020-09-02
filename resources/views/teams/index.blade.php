@@ -36,11 +36,11 @@
                 </tr>
                 @foreach($teams as $key => $team)
                   <tr>
-                    <td> {{ $team->id }}</td>
-                    <td> {{ $team->name }}</td>
-                    <td> {{ $team->description ? str_limit($team->description, 100) : '---' }} </td>
-                    <td> {{ $team->users->count() }} </td>
-                    <td> {{ date('d/m/Y H:i', strtotime($team->created_at)) }} </td>
+                    <td>{{ $team->id }}</td>
+                    <td>{{ $team->name }}</td>
+                    <td>{{ $team->description ? str_limit($team->description, 100) : '---' }}</td>
+                    <td>{{ $team->users->count() }}</td>
+                    <td>{{ date('d/m/Y H:i', strtotime($team->created_at)) }}</td>
                     <td class="text-center">
                       <div class="btn-group">
                         <button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>

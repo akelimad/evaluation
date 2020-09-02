@@ -7,19 +7,6 @@
   <section class="content users">
     <div class="row">
       <div class="col-md-12">
-        @if (Session::has('attach_users_entretien'))
-          <div class="chm-alerts alert alert-success alert-white rounded">
-            <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
-            <div class="icon"><i class="fa fa-info-circle"></i></div>
-            <span> {!! Session::get('attach_users_entretien') !!} </span>
-          </div>
-        @endif
-        @if(Session::has('import_success'))
-          @include('partials.alerts.success', ['messages' => Session::get('import_success') ])
-        @endif
-        @if(Session::has('exist_already'))
-          @include('partials.alerts.warning', ['messages' => Session::get('exist_already') ])
-        @endif
         <div class="box box-primary">
           <div class="filter-box mb40">
             <h4 class="help-block showFormBtn"><i class="fa fa-filter text-info"></i> Choisissez les critères de

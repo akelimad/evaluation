@@ -498,7 +498,7 @@
 
     @foreach(['savoir', 'savoir_faire', 'savoir_etre'] as $key => $field)
       if (document.getElementById('{{ $field }}_chart')) {
-        let savoirChart = new Chart(document.getElementById('{{ $field }}_chart'), {
+        let chart = new Chart(document.getElementById('{{ $field }}_chart'), {
           type: 'radar',
           data: {
             labels: [@foreach($skill->getDataAsArray($field) as $value) "{!! $value !!} " ,@endforeach],

@@ -85,6 +85,24 @@
   .array-qst-note {
     background: #e6d3b0 !important;
   }
+  .bordered {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  .text-blue {
+    color: #0b8ccd;
+    font-weight: 700;
+  }
+  .underline {
+    text-decoration: underline;
+  }
+  .w-100 {
+    width: 100%;
+    display: block;
+  }
+  .mb-0 {
+    margin-bottom: 0;
+  }
 </style>
 {{-- ****************** Header ********************** --}}
 <h2 class="text-center">Formulaire d'Evaluation Annuelle des Performances	</h2>
@@ -132,33 +150,202 @@
 </div>
 
 @if(in_array('Evaluation annuelle', $entreEvalsTitle))
+  @php($surveyId = App\Evaluation::surveyId($e->id, 1))
+  @php($survey = App\Survey::findOrFail($surveyId))
   <div class="mt-20"><p class="section-title">Evaluation annuelle</p></div>
-  <h3>En construction ...</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th width="50%">Auto-évaluation de {{ $user->fullname() }}</th>
+        <th width="50%">{{ $user->parent->fullname() }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($survey->groupes as $groupe)
+        <tr>
+          <td>
+            <div class="panel-group">
+              <div class="panel panel-info mb-20">
+                <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
+                <div class="panel-body">
+                  @foreach($groupe->questions as $q)
+                  <div class="question-box">
+                    <p>{{ $q->titre }} :</p>
+                    <p class="bordered">{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</p>
+                  </div>
+                  @endforeach
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="panel-group">
+              <div class="panel panel-info mb-20">
+                <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
+                <div class="panel-body">
+                  @foreach($groupe->questions as $q)
+                    <div class="question-box">
+                      <p>{{ $q->titre }} :</p>
+                      <p class="bordered">{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</p>
+                    </div>
+                  @endforeach
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      @endforeach
+    </tbody>
+  </table>
 @endif
 
 @if(in_array('Carrières', $entreEvalsTitle))
+  @php($surveyId = App\Evaluation::surveyId($e->id, 2))
+  @php($survey = App\Survey::findOrFail($surveyId))
   <div class="mt-20"><p class="section-title">Carrières</p></div>
-  <h3>En construction ...</h3>
+  <table class="table">
+    <thead>
+    <tr>
+      <th width="50%">Auto-évaluation de {{ $user->fullname() }}</th>
+      <th width="50%">{{ $user->parent->fullname() }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($survey->groupes as $groupe)
+      <tr>
+        <td>
+          <div class="panel-group">
+            <div class="panel panel-info mb-20">
+              <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
+              <div class="panel-body">
+                @foreach($groupe->questions as $q)
+                  <div class="question-box">
+                    <p>{{ $q->titre }} :</p>
+                    <p class="bordered">{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</p>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="panel-group">
+            <div class="panel panel-info mb-20">
+              <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
+              <div class="panel-body">
+                @foreach($groupe->questions as $q)
+                  <div class="question-box">
+                    <p>{{ $q->titre }} :</p>
+                    <p class="bordered">{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</p>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    @endforeach
+    </tbody>
+  </table>
 @endif
 
 @if(in_array('Objectifs', $entreEvalsTitle))
   <div class="mt-20"><p class="section-title">Objectifs</p></div>
-  <h3>En construction ...</h3>
+  <div class="personnalObjectif">
+    <p class="" style="background: #f1f0f0;">Personnels</p>
+    @forelse($objectifsPersonnal as $key => $objectif)
+      <p class="text-blue underline">{{ $objectif->title }}</p>
+      <img src="https://quickchart.io/chart?c={{ $chartData[$objectif->id] }}" style="max-width: 100%"/>
+    @empty
+      <p>Aucune donnée trouvée ... !!</p>
+    @endforelse
+  </div>
+
+  <div class="personnalObjectif">
+    <p class="" style="background: #f1f0f0;">Equipes</p>
+    @forelse($objectifsTeam as $key => $objectif)
+      <p class="text-blue underline">{{ $objectif->title }}</p>
+      <img src="https://quickchart.io/chart?c={{ $chartData[$objectif->id] }}" style="max-width: 100%"/>
+    @empty
+      <p>Aucune donnée trouvée ... !!</p>
+    @endforelse
+  </div>
 @endif
 
 @if(in_array('Formations', $entreEvalsTitle))
   <div class="mt-20"><p class="section-title">Formations</p></div>
-  <h3>En construction ...</h3>
+  @if(count($formations) > 0)
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Exercice</th>
+        <th>Formation</th>
+        <th>Date d'acceptation</th>
+        <th>Statut</th>
+      </tr>
+      </thead>
+      <tbody>
+      @foreach($formations as $f)
+        <tr>
+          <td>{{ Carbon\Carbon::parse($f->date)->format('d/m/Y')}}</td>
+          <td>{{ $f->exercice }}</td>
+          <td>{{ $f->title }}</td>
+          <td>{{ Carbon\Carbon::parse($f->updated_at)->format('d/m/Y') }}</td>
+          <td>
+            @if($f->status == 0)En attente
+            @elseif($f->status == 1)Refusé
+            @elseif($f->status == 2)Accepté
+            @endif
+          </td>
+        </tr>
+      @endforeach
+      </tbody>
+    </table>
+  @else
+    <p>Aucune donnée trouvée ... !!</p>
+  @endif
 @endif
 
 @if(in_array('Compétences', $entreEvalsTitle))
   <div class="mt-20"><p class="section-title">Compétences</p></div>
-  <h3>En construction ...</h3>
+  <p>Fiche métier : {{ $skill->title }}</p>
+  @foreach(['savoir', 'savoir_faire', 'savoir_etre'] as $key => $field)
+  <div class="item-box">
+    <h3>{{ str_replace('_', ' ', $field) }}</h3>
+    <img src="https://quickchart.io/chart?c={{ $chartData[$field] }}" style="max-width: 100%"/>
+  </div>
+  @endforeach
 @endif
 
 @if(in_array('Primes', $entreEvalsTitle))
   <div class="mt-20"><p class="section-title">Primes</p></div>
-  <h3>En construction ...</h3>
+  @if(count($primes) > 0)
+    <div class="box-body table-responsive no-padding mb40">
+      <table class="table table-hover table-striped text-center">
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Brut</th>
+          <th>Prime</th>
+          <th>Commentaire</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($primes as $s)
+          <tr>
+            <td> {{ Carbon\Carbon::parse($s->created_at)->format('d/m/Y') }} </td>
+            <td> {{ $s->brut or '---' }} </td>
+            <td> {{ $s->prime or '---' }} </td>
+            <td> {{ $s->comment ? $s->comment : '---' }} </td>
+          </tr>
+        @endforeach
+        </tbody>
+      </table>
+    </div>
+  @else
+    <p>Aucune donnée trouvée ... !!</p>
+  @endif
 @endif
 
 @if(in_array('Commentaires', $entreEvalsTitle))

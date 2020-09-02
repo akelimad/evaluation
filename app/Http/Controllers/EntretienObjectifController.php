@@ -54,6 +54,12 @@ class EntretienObjectifController extends Controller
     $objectifs = $request->objectifs;
     $user_id = User::getOwner()->id;
 
+    foreach ($objectifs as $objectif) {
+      if (isset($objectif['indicators']) && count($objectif['indicators']) <= 2) {
+        return response()->json(['status' => 'error', 'message' => 'Veuillez ajouter au moins 3 indicateurs pour chaque objectif']);
+      }
+    }
+
     if (!empty($objectifs)) {
       foreach ($objectifs as $objectif) {
         $id = $objectif['id'];
