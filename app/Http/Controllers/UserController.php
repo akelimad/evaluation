@@ -282,7 +282,7 @@ class UserController extends Controller
         $user->status = 1;
         $user->function = $this->getFunctionIdByName($fonction);
         $user->service = $this->getDepartmentIdByName($department);
-        $mentor = User::where('email', '=', $email)->first();
+        $mentor = User::where('email', '=', $mentorEmail)->first();
         if ($mentor != null) {
           $user->user_id = $mentor->id;
         } else {
@@ -293,7 +293,7 @@ class UserController extends Controller
         $user->roles()->sync($this->getRoleByName($roles));
         $count++;
       } else {
-        return redirect('users')->with('warning', 'Une erreur est survenu lors l\'importation. il se peut que un des champs obligatoire(Prénom, nom, email, role, Mentor email) est vide!');
+        return redirect('users')->with("warning', 'Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(Prénom, nom, email, role, Mentor email) est vide!");
       }
     }
     return redirect('users')->with('success', 'Les utilisateurs ont été importés avec succès avec ' . $added . ' ajout et ' . $updated . ' mis à jour !');
@@ -417,6 +417,7 @@ class UserController extends Controller
 
   public function getFunctionIdByName($function) {
     $user_id = Auth::user()->id;
+    if (empty(trim($function))) return null;
     $func = Fonction::where('title', $function)->where('user_id', $user_id)->first();
     if (isset($func->id)) {
       return $func->id;
@@ -431,6 +432,7 @@ class UserController extends Controller
 
   public function getDepartmentIdByName($department) {
     $user_id = Auth::user()->id;
+    if (empty(trim($department))) return null;
     $dept = Department::where('title', $department)->where('user_id', $user_id)->first();
     if (isset($dept->id)) {
       return $dept->id;

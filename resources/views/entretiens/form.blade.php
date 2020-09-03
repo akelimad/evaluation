@@ -147,7 +147,7 @@
               <select name="model" id="model" class="form-control" chm-validate="required">
                 <option value=""></option>
                 <option value="Entretien annuel" {{ $entretien->model == 'Entretien annuel' ? 'selected':'' }}>Entretien annuel</option>
-                <option value="Feedback 360" {{ $entretien->model == 'Feedback 360' ? 'selected':'' }}>Feedback 360</option>
+                <option value="Feedback 360" {{ $entretien->model == 'Feedback 360' ? 'selected':'' }} disabled>Feedback 360</option>
               </select>
               <div class="feedback-360-options mt-15">
                 <div class="form-check mb-15">

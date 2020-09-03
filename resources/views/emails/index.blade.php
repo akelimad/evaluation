@@ -19,7 +19,6 @@
             <div class="box-body table-responsive no-padding mb40">
               <table class="table table-hover table-striped table-inversed-blue table-slim">
                 <tr>
-                  <th>Réf</th>
                   <th>Emetteur</th>
                   <th>Nom</th>
                   <th>Object</th>
@@ -27,10 +26,9 @@
                 </tr>
                 @foreach($emails as $key => $email)
                   <tr>
-                    <td> {{ $email->ref }} </td>
-                    <td> {{ $email->sender }} </td>
-                    <td> {{ $email->name }} </td>
-                    <td> {{ str_limit($email->subject, 80) }} </td>
+                    <td>{{ $email->sender }}</td>
+                    <td>{{ $email->name }}</td>
+                    <td>{{ str_limit($email->subject, 80) }}</td>
                     <td class="text-center">
                       {{ csrf_field() }}
                       <div class="btn-group dropdown">
