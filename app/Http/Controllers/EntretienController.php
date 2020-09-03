@@ -639,6 +639,7 @@ class EntretienController extends Controller
   public function submission(Request $request)
   {
     $entretien = Entretien::findOrFail($request->eid);
+    $alertmsg = "";
     if (Auth::user()->id == $request->user) { // this a collaborator
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)
@@ -660,13 +661,14 @@ class EntretienController extends Controller
       if($rhs->count() > 0) {
         foreach ($rhs as $rh) {
           MailerController::send($rh, $entretien, $rh_validate);
+          $alertmsg = ", Un email a bien été envoyé aux responsables RH";
         }
       }
     }
     $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
     MailerController::send(Auth::user(), $entretien, $submit_email);
 
-    \Session::flash('success', "Les informations ont bien été soumises, Un email a bien été envoyé aux responsables RH");
+    \Session::flash('success', "Les informations ont bien été soumises" . $alertmsg);
 
     return [
       'status' => "success",

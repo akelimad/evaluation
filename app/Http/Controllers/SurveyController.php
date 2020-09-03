@@ -97,7 +97,7 @@ class SurveyController extends Controller
                 $questionChild = new Question();
                 $questionChild->titre = $choice['title'];
                 $questionChild->parent_id = $questionModel->id;
-                $questionChild->groupe_id = $groupModel->id;
+                $questionChild->groupe_id = $questionModel->id;
                 $questionChild->save();
               }
             }

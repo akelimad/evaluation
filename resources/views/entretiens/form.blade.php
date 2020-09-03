@@ -293,7 +293,7 @@
           </div>
           <div class="actions">
             <button type="submit" class="btn btn-primary btn-block submit">{{ $entretien->id > 0 ? 'Mettre à jour' : 'Lancer la campagne' }}</button>
-            <p class="mt-10">NB: Un email sera immédiatement envoyé aux collaborateurs sélectionnés</p>
+            <p class="mt-10">NB: Un email sera immédiatement envoyé aux collaborateurs sélectionnés, et leurs managers</p>
             <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
           </div>
         </div>
@@ -314,7 +314,7 @@
   function getdata () {
     var titre = $('#titre').val()
     var model = $('#model :selected').text()
-    var countParticipants = $('#users_id :selected').length
+    var countParticipants = $('#users_id_to_evaluate :selected').length
     var interview_sartdate = $('#interview-startdate').val()
     var interview_enddate = $('#interview-enddate').val()
 

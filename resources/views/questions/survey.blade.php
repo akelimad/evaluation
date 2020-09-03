@@ -61,8 +61,10 @@
                             <div class="clearfix"></div>
                           @elseif($q->type == "radio")
                             @foreach($q->children as $child)
-                              <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}>
-                              <label for="{{$child->id}}">{{ $child->titre }}</label>
+                              <div class="choice-item">
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}>
+                                <label for="{{$child->id}}" class="d-inline">{{ $child->titre }}</label>
+                              </div>
                             @endforeach
                           @elseif($q->type == "slider")
                             <div class="" style="margin-top: 30px;">
@@ -91,7 +93,16 @@
                               </div>
                             @endforeach
                           @elseif($q->type == "select")
-                            select
+                            <div class="row">
+                              <div class="col-md-3">
+                                <select name="answers[{{$q->id}}][ansr]" id="" class="form-control">
+                                  <option value=""></option>
+                                  @foreach($q->children as $child)
+                                    <option value="{{ $child->id }}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'selected' : '' }}>{{ $child->titre }}</option>
+                                  @endforeach
+                                </select>
+                              </div>
+                            </div>
                           @elseif($q->type == "array")
                             @php($answersColumns = json_decode($q->options, true))
                             @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])

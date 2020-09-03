@@ -27,7 +27,6 @@
             <div class="box-body table-responsive no-padding mb40">
               <table class="table table-hover table-strped table-inversed-blue">
                 <tr>
-                  <th>ID</th>
                   <th>Nom</th>
                   <th>Description</th>
                   <th>Nombre de collaborateurs</th>
@@ -36,7 +35,6 @@
                 </tr>
                 @foreach($teams as $key => $team)
                   <tr>
-                    <td>{{ $team->id }}</td>
                     <td>{{ $team->name }}</td>
                     <td>{{ $team->description ? str_limit($team->description, 100) : '---' }}</td>
                     <td>{{ $team->users->count() }}</td>

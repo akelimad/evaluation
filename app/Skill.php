@@ -74,7 +74,7 @@ class Skill extends Model
     public static function getNote($entretien_id, $user_id, $mentor_id, $field, $skill_item_id, $profile) {
         $skill_user = Skill_user::where('entretien_id', $entretien_id)->where('user_id', $user_id)->where('mentor_id', $mentor_id)->first();
         $profile = $profile.'_notes';
-        $notes = $skill_user->$profile;
+        $notes = $skill_user ? $skill_user->$profile : "";
         $notes = json_decode($notes, true) ?: [];
 
         return isset($notes[$field][$skill_item_id]) ? $notes[$field][$skill_item_id] : 0;
@@ -83,7 +83,7 @@ class Skill extends Model
     public static function getFieldNotes($entretien_id, $user_id, $mentor_id, $field, $profile) {
         $skill_user = Skill_user::where('entretien_id', $entretien_id)->where('user_id', $user_id)->where('mentor_id', $mentor_id)->first();
         $profile = $profile.'_notes';
-        $notes = $skill_user->$profile;
+        $notes = $skill_user ? $skill_user->$profile : "";
         $notes = json_decode($notes, true) ?: [];
 
         return isset($notes[$field]) && !empty($notes[$field]) ? $notes[$field] : [];

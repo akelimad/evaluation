@@ -18,7 +18,6 @@
             <div class="box-body table-responsive no-padding mb40">
               <table class="table table-hover table-striped table-inversed-blue">
                 <tr>
-                  <th>Id</th>
                   <th>Type</th>
                   <th>Equipe</th>
                   <th>Titre</th>
@@ -28,7 +27,6 @@
                 </tr>
                 @foreach($objectifs as $key => $objectif)
                   <tr>
-                    <td>{{ $objectif->id }}</td>
                     <td>{{ $objectif->type }}</td>
                     <td>{{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</td>
                     <td title="{{ $objectif->title }}">{{ $objectif->title ? str_limit($objectif->title, 30) : '' }}</td>

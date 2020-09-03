@@ -61,28 +61,31 @@
                         <th>Date limite</th>
                         <th class="text-center">Collaborateur</th>
                         <th class="text-center">Manager</th>
+                        <th class="text-center">Actions</th>
                       </tr>
                       </thead>
                       <tbody>
                       @foreach($entretiens as $e)
+                        @php($userAnswered = App\Entretien::answered($e->id, Auth::user()->id))
                         <tr>
                           <td>
-                            <a href="{{ url('entretiens/'.$e->id.'/u/'.Auth::user()->id) }}">{{$e->titre}}</a>
+                            <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{$e->titre}}</a>
                           </td>
                           <td>
                             {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
                           </td>
                           <td class="text-center">
-                            <span
-                                class="label label-{{App\Entretien::answered($e->id, Auth::user()->id) ? 'success':'danger'}} empty"
-                                data-toggle="tooltip"
-                                title="{{App\Entretien::answered($e->id, Auth::user()->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
+                            <span class="label label-{{$userAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$userAnswered ? 'Remplie le '.Carbon\Carbon::parse($userAnswered->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
                           </td>
                           <td class="text-center">
-                            <span
-                                class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty"
-                                data-toggle="tooltip"
-                                title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par manager le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y à H:i') :'Pas encore validée par votre mentor'}}"> </span>
+                            <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par manager le '.Carbon\Carbon::parse($userAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Pas encore validée par votre mentor'}}"> </span>
+                          </td>
+                          <td class="text-center">
+                            @if($userAnswered)
+                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                            @else
+                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                            @endif
                           </td>
                         </tr>
                       @endforeach
@@ -119,34 +122,35 @@
                           <th class="text-center">Date d'expiration</th>
                           <th class="text-center">Collaborateur</th>
                           <th class="text-center">Manager</th>
+                          <th class="text-center">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($collaborateurs as $coll)
-                          @foreach($coll->entretiens as $en)
+                        @foreach($collaborateurs as $user)
+                          @foreach($user->entretiens as $e)
+                            @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $user->id, Auth::user()->id))
                             <tr>
                               <td>
-                                <a href="{{url('user/'.$coll->id)}}">{{$coll->name." ".$coll->last_name}}</a>
+                                <a href="{{url('user/'.$user->id)}}">{{ $user->fullname() }}</a>
                               </td>
                               <td>
-                                <a href="{{url('entretiens/'.$en->id.'/u/'.$coll->id)}}">{{ $en->titre }}</a>
+                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">{{ $e->titre }}</a>
                               </td>
                               <td class="text-center">
-                                {{ date('d/m/Y', strtotime($en->date_limit)) }}
+                                {{ date('d/m/Y', strtotime($e->date_limit)) }}
                               </td>
                               <td class="text-center">
-                                <span
-                                    class="label label-{{App\Entretien::answered($en->id, $coll->id) ? 'success':'danger'}} empty"
-                                    data-toggle="tooltip"
-                                    title="{{App\Entretien::answered($en->id, $coll->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($en->id, $coll->id)->user_updated_at)->format('d/m/Y à H:i') :'Pas encore rempli par '.$coll->name }}"> </span>
-
+                                <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, $user->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $user->id)->user_updated_at)->format('d/m/Y à H:i') :'Pas encore rempli par '.$user->name }}"> </span>
                               </td>
                               <td class="text-center">
-                                <span
-                                    class="label label-{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'success':'danger'}} empty"
-                                    data-toggle="tooltip"
-                                    title="{{App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id) ? 'Validée par manager le '.Carbon\Carbon::parse(App\Entretien::answeredMentor($en->id, $coll->id, Auth::user()->id)->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$coll->name}}"> </span>
-
+                                <span class="label label-{{$mentorAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$mentorAnswered ? 'Validée par manager le '.Carbon\Carbon::parse($mentorAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$user->name}}"> </span>
+                              </td>
+                              <td class="text-center">
+                                @if($mentorAnswered)
+                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                                @else
+                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                                @endif
                               </td>
                             </tr>
                           @endforeach
@@ -180,7 +184,6 @@
           type: "success"
         }, {
           @php(session()->forget('popup'))
-
         });
       }, 2000)
       @endif

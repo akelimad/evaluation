@@ -8,9 +8,7 @@
           @include('partials.alerts.success', ['messages' => session()->get('message') ])
         @endif
         <div class="card box box-primary">
-          <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}}
-            - {{ $user->name." ".$user->last_name }} </h3>
-
+          <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} - {{ $user->fullname() }} </h3>
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
@@ -87,7 +85,8 @@
 
                 <div class="row">
                   <div class="col-md-12">
-                    <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
+                    <a href="{{ route('home') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
+                    <a href="{{ route('anglets.evaluation-annuelle', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary pull-right">Suivant <i class="fa fa-long-arrow-right"></i></a>
                   </div>
                 </div>
               </div>

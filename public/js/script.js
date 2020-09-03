@@ -90,7 +90,7 @@ $(function(){
             checkboxLength = $(this).find('input[type="checkbox"]').length
             radiosLength = $(this).find('input[type="radio"]').length
             if(checkboxLength > 0) {
-                var checkedCount = $(this).find('input[type="checkbox"]:checked').length
+                var checkedCount = $(this).find('input:checkbox:checked').length
                 if(checkedCount == 0){
                     check = false;
                 }
@@ -103,7 +103,7 @@ $(function(){
             }
         });
         if(!check){
-            alert('Veuillez selectionner au moins une option.');
+            alert('Veuillez sélectionner au moins une option.');
             return false;
         }
 

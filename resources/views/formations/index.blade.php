@@ -9,11 +9,13 @@
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
-              <div class="panel panel-info">
-                <div class="panel-heading text-center"> Souhaits</div>
-                <div class="panel-body">
+              <div class="row">
+                <div class="col-md-12 mb-0">
+                  <h3 class="styled-title">Formations demandées</h3>
+                </div>
+                <div class="col-md-12">
                   @if(count($formations)>0)
-                    <div class="box-body table-responsive no-padding mb40">
+                    <div class="table-responsive">
                       <table class="table table-hover table-striped text-center">
                         <thead>
                         <tr>
@@ -72,49 +74,12 @@
                   @else
                     @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
                   @endif
-                  @if(!App\Entretien::answered($e->id, $user->id) && $user->id == Auth::user()->id)
-                    <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn mt-20"><i class="fa fa-plus"></i> Demander une formation</a>
-                  @endif
                 </div>
               </div>
-              @if($user->id != Auth::user()->id && count($historiques)>0)
-                <div class="panel panel-info">
-                  <div class="panel-heading text-center lead"> Historique</div>
-                  <div class="panel-body">
-                    <div class="box-body table-responsive no-padding mb40">
-                      <table class="table table-hover table-striped text-center">
-                        <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th>Exercice</th>
-                          <th>Formation demandée</th>
-                          <th>Entretien</th>
-                          <th>Etat</th>
-                          <th>Réalisé</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($historiques as $f)
-                          <tr>
-                            <td> {{ Carbon\Carbon::parse($f->date)->format('d/m/Y')}} </td>
-                            <td> {{$f->exercice}} </td>
-                            <td> {{$f->title}} </td>
-                            <td> {{$f->entretien->titre}} </td>
-                            <td>
-                              <select name="status" id="status" class="" disabled="">
-                                <option value="0" {{$f->status == 0 ? 'selected':''}} >En attente</option>
-                                <option value="1" {{$f->status == 1 ? 'selected':''}} >Refusé</option>
-                                <option value="2" {{$f->status == 2 ? 'selected':''}} >Accepté</option>
-                              </select>
-                            </td>
-                            <td>
-                              <input type="checkbox" name="done" {{$f->done == 1 ? 'checked':''}} disabled>
-                            </td>
-                          </tr>
-                        @endforeach
-                        </tbody>
-                      </table>
-                    </div>
+              @if(!App\Entretien::answered($e->id, $user->id) && $user->id == Auth::user()->id)
+                <div class="row">
+                  <div class="col-md-12">
+                    <a onclick="return chmFormation.create()" data-id="{{$e->id}}" class="btn btn-success addBtn mt-20"><i class="fa fa-plus"></i> Demander une formation</a>
                   </div>
                 </div>
               @endif

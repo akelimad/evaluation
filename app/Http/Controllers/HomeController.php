@@ -54,14 +54,14 @@ class HomeController extends Controller
     {
         $society = User::getOwner();
         $taux = 0;
-        $inProgress_query = \DB::table('entretiens as e')
+        $entretien_user_query = \DB::table('entretiens as e')
             ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
             ->select('e.*', 'e.id as entretienId')
             ->where('e.user_id', $society->id);
-        $inProgress = count($inProgress_query->get());
+        $inProgress = $entretien_user_query->groupBy('id')->where('mentor_submitted', '<>', 2)->where('user_submitted',  '<>', 2)->count();
 
-        $inProgress_query->where('mentor_submitted', 2)->where('user_submitted', 2);
-        $finished = count($inProgress_query->get());
+        $entretien_user_query->where('mentor_submitted', 2)->where('user_submitted', 2);
+        $finished = count($entretien_user_query->get());
 
         $nbMentors = User::whereHas('roles', function($query) use ($society) {
             $query->where('name', 'MENTOR');

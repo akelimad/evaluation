@@ -11,7 +11,7 @@
   .table tr td,
   .table tr th {
     padding: 8px;
-    vertical-align: middle;
+    vertical-align: top;
     border: 1px solid #ddd;
   }
   .row {
@@ -169,10 +169,25 @@
                 <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
                 <div class="panel-body">
                   @foreach($groupe->questions as $q)
-                  <div class="question-box">
-                    <p>{{ $q->titre }} :</p>
-                    <p class="bordered">{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</p>
-                  </div>
+                    @php($collAnswer = App\Answer::getCollAnswers($q->id, $user->id, $e->id))
+                    <div class="question-box">
+                      <p><b>{{ $q->titre }} :</b></p>
+                      @if (in_array($q->type, ['text', 'textarea']))
+                        <p class="bordered">{{$collAnswer ? $collAnswer->answer : '' }}</p>
+                      @elseif (in_array($q->type, ['select', 'radio']))
+                        @if (!empty($q->children))
+                          @foreach($q->children as $child)
+                            <p class="{{ $collAnswer && $collAnswer->answer == $child->id ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                          @endforeach
+                        @endif
+                      @elseif($q->type == 'checkbox')
+                        @if (!empty($q->children))
+                          @foreach($q->children as $child)
+                            <p class="{{ $collAnswer && in_array($child->id, json_decode($collAnswer->answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                          @endforeach
+                        @endif
+                      @endif
+                    </div>
                   @endforeach
                 </div>
               </div>
@@ -184,9 +199,24 @@
                 <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
                 <div class="panel-body">
                   @foreach($groupe->questions as $q)
+                    @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $e->id))
                     <div class="question-box">
-                      <p>{{ $q->titre }} :</p>
-                      <p class="bordered">{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</p>
+                      <p><b>{{ $q->titre }} :</b></p>
+                      @if (in_array($q->type, ['text', 'textarea']))
+                        <p class="bordered">{{$mentorAnswer ? $mentorAnswer->mentor_answer : '' }}</p>
+                      @elseif (in_array($q->type, ['select', 'radio']))
+                        @if (!empty($q->children))
+                          @foreach($q->children as $child)
+                            <p class="{{ $mentorAnswer && $mentorAnswer->mentor_answer == $child->id ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                          @endforeach
+                        @endif
+                      @elseif($q->type == 'checkbox')
+                        @if (!empty($q->children))
+                          @foreach($q->children as $child)
+                            <p class="{{ $mentorAnswer &&  in_array($child->id, json_decode($mentorAnswer->mentor_answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                          @endforeach
+                        @endif
+                      @endif
                     </div>
                   @endforeach
                 </div>
@@ -219,9 +249,24 @@
               <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
               <div class="panel-body">
                 @foreach($groupe->questions as $q)
+                  @php($collAnswer = App\Answer::getCollAnswers($q->id, $user->id, $e->id))
                   <div class="question-box">
-                    <p>{{ $q->titre }} :</p>
-                    <p class="bordered">{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}</p>
+                    <p><b>{{ $q->titre }} :</b></p>
+                    @if (in_array($q->type, ['text', 'textarea']))
+                      <p class="bordered">{{$collAnswer ? $collAnswer->answer : '' }}</p>
+                    @elseif (in_array($q->type, ['select', 'radio']))
+                      @if (!empty($q->children))
+                        @foreach($q->children as $child)
+                          <p class="{{ $collAnswer && $collAnswer->answer == $child->id ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                        @endforeach
+                      @endif
+                    @elseif($q->type == 'checkbox')
+                      @if (!empty($q->children))
+                        @foreach($q->children as $child)
+                          <p class="{{ $collAnswer &&  in_array($child->id, json_decode($collAnswer->answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                        @endforeach
+                      @endif
+                    @endif
                   </div>
                 @endforeach
               </div>
@@ -234,9 +279,24 @@
               <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
               <div class="panel-body">
                 @foreach($groupe->questions as $q)
+                  @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $e->id))
                   <div class="question-box">
-                    <p>{{ $q->titre }} :</p>
-                    <p class="bordered">{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</p>
+                    <p><b>{{ $q->titre }} :</b></p>
+                    @if (in_array($q->type, ['text', 'textarea']))
+                      <p class="bordered">{{$mentorAnswer ? $mentorAnswer->mentor_answer : '' }}</p>
+                    @elseif (in_array($q->type, ['select', 'radio']))
+                      @if (!empty($q->children))
+                        @foreach($q->children as $child)
+                          <p class="{{ $mentorAnswer && $mentorAnswer->mentor_answer == $child->id ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                        @endforeach
+                      @endif
+                    @elseif($q->type == 'checkbox')
+                      @if (!empty($q->children))
+                        @foreach($q->children as $child)
+                          <p class="{{ $mentorAnswer &&  in_array($child->id, json_decode($mentorAnswer->mentor_answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                        @endforeach
+                      @endif
+                    @endif
                   </div>
                 @endforeach
               </div>

@@ -18,3 +18,9 @@
     }
   }
 }
+.modal {
+  z-index: 999999 !important;
+}
+.select2-dropdown {
+  z-index: 9999999;
+}
