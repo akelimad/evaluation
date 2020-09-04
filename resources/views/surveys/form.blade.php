@@ -100,8 +100,19 @@
                     </div>
                   </div>
                   <p v-else class="m-0">
-                    <label @click="question.edit = true;" class="pull-left control-label mb-0">Question @{{ qIndex + 1 }} : @{{ question.title }} <span class="label label-default ml-20">@{{ getQuestionType(question.type) }}</span></label>
-                    <span class="d-inline-block">
+                    <label @click="question.edit = true;" class="pull-left control-label mb-0 mr-5">Question @{{ qIndex + 1 }} : @{{ question.title }}</label>
+                    <div v-if="!question.edit" class="dropdown" style="display: inline-block;">
+                      <button class="btn btn-default btn-xs dropdown-toggle" type="button" :id="'aa' + grpIndex + qIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">@{{ getQuestionType(question.type) }} <span class="caret"></span></button>
+                      <ul class="dropdown-menu" :aria-labelledby="'aa' + grpIndex + qIndex">
+                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'text')">Text (court)</a></li>
+                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'textarea')">Text (long)</a></li>
+                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'radio')">Un seul choix</a></li>
+                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">Choix multiple</a></li>
+                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'select')">Liste déroulante</a></li>
+                      </ul>
+                    </div>
+
+                    <span v-if="!question.edit" class="d-inline-block">
                       <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
                       <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
                     </span>
@@ -337,6 +348,9 @@
           } else {
             alert("Cette question doit avoir au moins 2 options, vous ne pouvez pas supprimer !")
           }
+        },
+        changeQuestionType: function (grpIndex, qIndex, newType) {
+          this.groups[grpIndex].questions[qIndex].type = newType
         },
         handleSubmit: function () {
           this.$validator.validateAll().then((result) => {
