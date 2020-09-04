@@ -33,14 +33,12 @@
             <div class="box-body table-responsive no-padding mb40">
               <table class="table table-hover table-striped table-inversed-blue">
                 <tr>
-                  <th>Id</th>
                   <th>Titre</th>
                   <th class="text-right">Actions</th>
                 </tr>
                 @foreach($results as $key => $d)
                   <tr>
-                    <td> {{ $d->id }}</td>
-                    <td> {{ $d->title }}</td>
+                    <td>{{ $d->title }}</td>
                     <td class="text-right">
                       {{ csrf_field() }}
                       <div class="btn-group dropdown">

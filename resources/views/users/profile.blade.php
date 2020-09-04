@@ -110,7 +110,7 @@
               <div class="tab-pane" id="entretiens">
                 <div class="p-30">
                   <div class="table-responsive">
-                    <table class="table table-hover font-18">
+                    <table class="table table-hover">
                       <tbody>
                       @forelse($user->entretiens as $entretien)
                         <tr>
@@ -133,7 +133,7 @@
               </div>
               <div class="tab-pane" id="feedback">
                 <div class="p-30">
-                  feedback content
+                  En construction
                 </div>
               </div>
               <div class="tab-pane" id="preferences">

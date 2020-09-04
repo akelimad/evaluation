@@ -13,6 +13,7 @@ class Entretien_evaluation extends Model
     $entretien_evaluation = Entretien_evaluation::where('entretien_id', $entretien_id)->where('evaluation_id', $evaluation_id)->first();
     if (!$entretien_evaluation) return [];
     $surveyids = json_decode($entretien_evaluation->survey_id, true) ?: [];
+    if (!is_array($surveyids)) $surveyids = [$surveyids];
     if (!empty($surveyids)) {
       return $surveyids;
     }

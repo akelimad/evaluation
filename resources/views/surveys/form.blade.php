@@ -128,11 +128,11 @@
                 <div class="dropdown pull-right">
                   <button class="btn btn-info dropdown-toggle" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-plus"></i> Ajouter une question <span class="caret"></span></button>
                   <ul class="dropdown-menu" aria-labelledby="questionTypes">
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'text')">Court text</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'textarea')">Long text</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'radio')">Un seul choix (radio)</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'checkbox')">Choix multiple (checkbox)</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'select')">Liste déroulante (select)</a></li>
+                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'text')">Text (court)</a></li>
+                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'textarea')">Text (long)</a></li>
+                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'radio')">Un seul choix</a></li>
+                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'checkbox')">Choix multiple</a></li>
+                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'select')">Liste déroulante</a></li>
                   </ul>
                 </div>
               </div>
@@ -178,7 +178,7 @@
           @foreach($survey->groupes as $group)
           {
             id: "{{ $group->id }}",
-            title: "{{ $group->name }}",
+            title: "{!! $group->name !!}",
             questions: [
               @foreach($group->questions as $question)
                 @if ($question->parent_id == 0)
@@ -222,10 +222,10 @@
         getQuestionType: function (type) {
           switch (type) {
             case 'text':
-              return "Court text"
+              return "Text (court)"
               break;
             case 'textarea':
-              return "Long text"
+              return "Text (long)"
               break;
             case 'radio':
               return "Un seul choix"

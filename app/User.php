@@ -252,5 +252,16 @@ class User extends Authenticatable
     return $teamsUsers[0] ? $teamsUsers[0] : [];
   }
 
+  public static function getManagers() {
+    $users = self::getUsers()->get();
+    $managers = [];
+    foreach ($users as $user) {
+      if ($user->children->count() <= 0) continue;
+      $managers[] = $user;
+    }
+
+    return $managers;
+  }
+
 
 }

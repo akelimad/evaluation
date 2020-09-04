@@ -70,8 +70,8 @@
             <div class="panel-body objectifs">
               <div class="box-body no-padding mb40">
                 <ul class="nav nav-tabs">
-                  <li class="active"><a data-toggle="tab" href="#personnel">Personnel</a></li>
-                  <li><a data-toggle="tab" href="#team">Equipe</a></li>
+                  <li class="active"><a data-toggle="tab" href="#personnel">Individuel</a></li>
+                  <li><a data-toggle="tab" href="#team">Collectif</a></li>
                 </ul>
                 <div class="tab-content pt-30">
                   <div id="personnel" class="tab-pane fade in active">

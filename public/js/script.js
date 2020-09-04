@@ -190,7 +190,7 @@ $(function(){
     //hide show criteria search users
     $(".showFormBtn").click(function(){
         $(".showFormBtn i").toggleClass("fa-chevron-down fa-chevron-up")
-        $(".criteresForm").fadeToggle()
+        $(".filter-box").slideToggle()
     })
 
     // fix table action overflow

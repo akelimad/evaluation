@@ -312,7 +312,7 @@
 @if(in_array('Objectifs', $entreEvalsTitle))
   <div class="mt-20"><p class="section-title">Objectifs</p></div>
   <div class="personnalObjectif">
-    <p class="" style="background: #f1f0f0;">Personnels</p>
+    <p class="" style="background: #f1f0f0;">Individuels</p>
     @forelse($objectifsPersonnal as $key => $objectif)
       <p class="text-blue underline">{{ $objectif->title }}</p>
       <img src="https://quickchart.io/chart?c={{ $chartData[$objectif->id] }}" style="max-width: 100%"/>
@@ -322,7 +322,7 @@
   </div>
 
   <div class="personnalObjectif">
-    <p class="" style="background: #f1f0f0;">Equipes</p>
+    <p class="" style="background: #f1f0f0;">Collectifs</p>
     @forelse($objectifsTeam as $key => $objectif)
       <p class="text-blue underline">{{ $objectif->title }}</p>
       <img src="https://quickchart.io/chart?c={{ $chartData[$objectif->id] }}" style="max-width: 100%"/>

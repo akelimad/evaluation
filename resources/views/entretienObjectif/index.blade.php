@@ -27,7 +27,7 @@
                 </tr>
                 @foreach($objectifs as $key => $objectif)
                   <tr>
-                    <td>{{ $objectif->type }}</td>
+                    <td>{{ $objectif->getType() }}</td>
                     <td>{{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</td>
                     <td title="{{ $objectif->title }}">{{ $objectif->title ? str_limit($objectif->title, 30) : '' }}</td>
                     <td title="{{ $objectif->description }}">{{ $objectif->description ? str_limit($objectif->description, 50) : '---' }}</td>

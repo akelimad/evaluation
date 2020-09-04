@@ -147,7 +147,7 @@
               <select name="model" id="model" class="form-control" chm-validate="required">
                 <option value=""></option>
                 <option value="Entretien annuel" {{ $entretien->model == 'Entretien annuel' ? 'selected':'' }}>Entretien annuel</option>
-                <option value="Feedback 360" {{ $entretien->model == 'Feedback 360' ? 'selected':'' }} disabled>Feedback 360</option>
+                <option value="Feedback 360" {{ $entretien->model == 'Feedback 360' ? 'selected':'' }}>Feedback 360</option>
               </select>
               <div class="feedback-360-options mt-15">
                 <div class="form-check mb-15">
@@ -227,23 +227,49 @@
           <div class="row">
             <div class="col-md-12 mb-15">
               <label for="users_id" class="control-label required">Personne(s) à évaluer</label>
-              <div class="separator mb-10">
-                <label for="">Sélectionnez les équipes : <input type="checkbox" id="selectAllTeams"> <label
-                      for="selectAllTeams" class="d-inline">Tout sélectionner</label></label>
-                <select name="teamsIdToEvaluate[]" id="teams_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
-                  @foreach(\App\Team::getAll()->get() as $team)
-                    <option data-id="{{ $team->id }}" id="team-{{ $team->id }}" value="{{ $team->id }}">{{ $team->name . " (". count($team->users) .")" }}</option>
-                  @endforeach
-                </select>
+              <div class="entretien-annuel-users">
+                <div class="separator mb-10">
+                  <label for="">Sélectionnez les équipes : <input type="checkbox" id="selectAllTeams"> <label for="selectAllTeams" class="d-inline">Tout sélectionner</label></label>
+                  <select name="teamsIdToEvaluate[]" id="teams_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
+                    @foreach(\App\Team::getAll()->get() as $team)
+                      <option data-id="{{ $team->id }}" id="team-{{ $team->id }}" value="{{ $team->id }}">{{ $team->name . " (". count($team->users) .")" }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="separator">
+                  <label for="">Et / ou sélectionner des utilisateurs : <input type="checkbox" id="selectAllUsers"> <label for="selectAllUsers" class="d-inline">Tout sélectionner</label></label>
+                  <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
+                    @foreach($users as $user)
+                      <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
+                    @endforeach
+                  </select>
+                </div>
               </div>
-              <div class="separator">
-                <label for="">Et / ou sélectionner des utilisateurs : <input type="checkbox" id="selectAllUsers"> <label
-                      for="selectAllUsers" class="d-inline">Tout sélectionner</label></label>
-                <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
-                  @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->name." ".$user->last_name }}</option>
-                  @endforeach
-                </select>
+              <div class="feedback-users">
+                <div class="separator mt-10 mb-20">
+                  <select name="usersIdToEvaluates[]" id="manager_id_to_evaluate" class="form-control select2" data-placeholder="select" style="width: 100%;" chm-validate="required">
+                    @foreach($managers as $user)
+                      <option value=""></option>
+                      <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="separator">
+                  <label for="">Sélectionner les évaluateurs</label>
+                  <select name="usersIdToEvaluates[]" id="manager_id_to_evaluate" class="form-control select2" data-placeholder="select" style="width: 100%;" multiple chm-validate="required">
+                    <optgroup label="Equipes">
+                      @foreach(\App\Team::getAll()->get() as $team)
+                        <option data-id="{{ $team->id }}" id="team-{{ $team->id }}" value="{{ $team->id }}">{{ $team->name . " (". count($team->users) .")" }}</option>
+                      @endforeach
+                    </optgroup>
+                    <optgroup label="Utilisateurs">
+                      @foreach($managers as $user)
+                        <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
+                      @endforeach
+                    </optgroup>
+                  </select>
+                  <p class="text-muted font-12">Si vous choisissez des équipes, tous les collaborateurs qui y font partie seront notifiés pour évaluer la personne à évaluer au-dessus</p>
+                </div>
               </div>
             </div>
           </div>
@@ -484,6 +510,8 @@
       $('select#entretien option').not(':first').hide()
       var val = $(this).val()
       if (val == "Feedback 360") {
+        $('.entretien-annuel-users').hide()
+        $('.feedback').show()
         $('#eval-1-label').html('Feedback 360')
         $('.feedback-360-options').show()
 
@@ -494,6 +522,8 @@
         $('.carreers-wrapper').hide()
         $('.objectifs-wrapper').hide()
       } else {
+        $('.entretien-annuel-users').show()
+        $('.feedback').hide()
         $('#eval-1-label').html('Evaluation annuelle')
         $('.feedback-360-options').hide()
         $('.feedback-360-options').find(':checkbox').prop('checked', false)

@@ -134,7 +134,7 @@
                                 <a href="{{url('user/'.$user->id)}}">{{ $user->fullname() }}</a>
                               </td>
                               <td>
-                                <a href="{{url('entretiens/'.$e->id.'/u/'.$user->id)}}">{{ $e->titre }}</a>
+                                <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{ $e->titre }}</a>
                               </td>
                               <td class="text-center">
                                 {{ date('d/m/Y', strtotime($e->date_limit)) }}

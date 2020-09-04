@@ -178,9 +178,10 @@ class EntretienController extends Controller
       $e_users[] = $user->id;
     }
     $users = User::getUsers()->where('user_id', '<>', 0)->get();
+    $managers = User::getUsers()->get();
     $entretienEvalIds = $entretien->evaluations()->pluck('evaluation_id')->toArray();
     $objectifs = EntretienObjectif::getAll()->get();
-    echo view('entretiens.form', compact('users', 'e_users', 'entretien', 'evaluations', 'entretienEvalIds', 'objectifs'));
+    echo view('entretiens.form', compact('users', 'e_users', 'entretien', 'evaluations', 'entretienEvalIds', 'objectifs', 'managers'));
     $content = ob_get_clean();
     return ['title' => $title, 'content' => $content];
   }

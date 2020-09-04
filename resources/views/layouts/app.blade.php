@@ -278,7 +278,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <strong>Copyright &copy; {{ date('Y') }} </strong> Lycom Tous droits reservés.
+    <strong>Copyright &copy; {{ date('Y') }} </strong> Lycom Tous droits réservés.
   </footer>
 
   <!-- Control Sidebar -->

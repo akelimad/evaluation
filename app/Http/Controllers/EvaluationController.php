@@ -28,12 +28,11 @@ class EvaluationController extends Controller
     {
         $entretien = Entretien::findOrFail($eid);
         $evaluations = Entretien::findEvaluations($entretien);
-
         $sid = Entretien_evaluation::getItemsId($eid, 1);
         $sid = isset($sid[0]) ? $sid[0] : 0;
-        $survey = Survey::findOrFail($sid);
+        $survey = Survey::find($sid);
         $groupes = $survey->groupes;
-        $user = User::findOrFail($uid);
+        $user = User::find($uid);
         return view('evaluations.index', [
             'evaluations' => $evaluations, 
             'survey' => $survey, 

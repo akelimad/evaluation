@@ -22,8 +22,8 @@
                     <label for="description" class="control-label required">Choisissez le type d'objectif</label>
                     <select name="type" id="" class="form-control" v-model="objectif.type" v-validate="'required'">
                       <option value=""></option>
-                      <option value="Personnel">Personnel</option>
-                      <option value="Equipe">Equipe</option>
+                      <option value="Personnel">Individuel</option>
+                      <option value="Equipe">Collectif</option>
                     </select>
                     <span v-show="errors.has('type')" class="help-block">@{{ errors.first('type') }}</span>
                   </div>
@@ -183,7 +183,7 @@
             sumPonderation += parseInt(obj.ponderation)
           })
           if (sumPonderation >= 100) {
-            alert("Vous ne pouvez pas ajouter un autre indicateur, la somme de pondérations des indicateurs ne doit pas dépasser 100 !")
+            alert("Vous ne pouvez pas ajouter un autre indicateur, la somme de la pondération des indicateurs ne doit pas dépasser 100 !")
             return
           }
           this.objectifs[oIndex].indicators.push({
@@ -212,7 +212,7 @@
                 }
               })
               if (!ponderationIsValid) {
-                swal({title: "Erreur", text: "La somme de pondérations des indicateurs doit être égale à 100 pour chaque objectif !", type: "error"})
+                swal({title: "Erreur", text: "La somme de la pondération des indicateurs doit être égale à 100 pour chaque objectif !", type: "error"})
                 return
               }
               this.submitted = true;

@@ -32,7 +32,7 @@
 					<div class="box-body">
 						<div class="row mb-0">
 							<div class="col-md-6 mb-20"><b>Campagne :</b> {{ $e->titre }}</div>
-							<div class="col-md-6 mb-20"><b>Participants :</b> {{ $countInterviewUsers }}</div>
+							<div class="col-md-6 mb-20"><b>Participants :</b> {{ $countInterviewUsers }} <span class="pull-right"><b>Créée le</b> {{ date('d/m/Y à H:i', strtotime($e->created_at)) }}</span></div>
 							<div class="col-md-6 mb-sm-20"><b>Date limite pour l'auto-évaluation :</b> {{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</div>
 							<div class="col-md-6 "><b>Date limite pour l'évaluation manager :</b> {{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</div>
 						</div>

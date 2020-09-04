@@ -12,6 +12,13 @@ class EntretienObjectif extends Model
     return $this->belongsTo('App\User');
   }
 
+  public function getType() {
+    if ($this->type == 'Personnel') {
+      return "Individuel";
+    }
+    return "Collectif";
+  }
+
   public static function getAll()
   {
     $user = \Auth::user();

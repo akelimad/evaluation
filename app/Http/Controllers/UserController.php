@@ -54,29 +54,24 @@ class UserController extends Controller
     $entretiens = Entretien::select('id', 'titre')->get();
     $query = User::getUsers();
     $params = false;
-    if (!empty($name)){
-      $query->where('name', 'like', '%' . $name . '%');
-      $params = true;
+    if ($q = $request->get('q', false)) {
+      $query->where('name', "LIKE", "%$q%")->orWhere('last_name', "LIKE", "%$q%")->orWhere('email', "LIKE", "%$q%");
     }
     if (!empty($department)){
       $query->where('service', '=', $department);
-      $params = true;
     }
     if (!empty($function)){
       $query->where('function', '=', $function);
-      $params = true;
     }
     if (!empty($role)){
       $query->whereHas('roles', function ($query) use ($role) {
         $query->where('id', '=', $role);
       });
-      $params = true;
     }
     if (!empty($team)){
       $query->whereHas('teams', function ($query) use ($team) {
         $query->where('team_id', '=', $team);
       });
-      $params = true;
     }
     $users = $query->paginate($per_page);
     $fonctions = Fonction::getAll()->get();
@@ -93,7 +88,6 @@ class UserController extends Controller
       'department' => $department,
       'function' => $function,
       'role' => $role,
-      'params' => $params,
       'teams' => Team::getAll()->get(),
     ]);
   }
@@ -306,8 +300,11 @@ class UserController extends Controller
     return view('users/roles.index', ['roles' => $roles]);
   }
 
-  public function createRole()
+  public function createRole(Request $request)
   {
+    if($request->method() == 'POST') {
+      return $this->storeRole($request);
+    }
     ob_start();
     $permissions = Permission::all();
     echo view('users.roles.form', ['permissions' => $permissions]);
@@ -352,8 +349,11 @@ class UserController extends Controller
 
   }
 
-  public function editRole($id)
+  public function editRole($id, Request $request)
   {
+    if($request->method() == 'POST') {
+      return $this->storeRole($request);
+    }
     ob_start();
     $role = Role::findOrFail($id);
     $role_perms = [];
