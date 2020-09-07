@@ -123,131 +123,135 @@
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-bootstrap-datetimepicker@5"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-<script>
-  $(document).ready(function () {
-    Vue.use(VeeValidate);
-    Vue.component('date-picker', VueBootstrapDatetimePicker);
-    new Vue({
-      el: '#content',
-      data: {
-        mode: "{{ $objectif->id > 0 ? 'edit' : 'add' }}",
-        objectifs: [
-          {
-            id: "{{ $objectif->id > 0 ? $objectif->id : 0 }}",
-            type: "{{ $objectif->type }}",
-            team: "{{ $objectif->team }}",
-            title: "{!! $objectif->title !!}",
-            description: "{{ $objectif->description }}",
-            deadline: "{{ date('d-m-Y', strtotime($objectif->deadline)) }}",
-            indicators: [
-              @foreach($objectif->getIndicators() as $indicator)
-              {
-                id: "{{ isset($indicator['id']) ? $indicator['id'] : 0 }}",
-                title: "{!! isset($indicator['title']) ? $indicator['title'] : '' !!}",
-                fixed: "{{ isset($indicator['fixed']) ? $indicator['fixed'] : '' }}",
-                realized: "{{ isset($indicator['realized']) ? $indicator['realized'] : '' }}",
-                ponderation: "{{ isset($indicator['ponderation']) ? $indicator['ponderation'] : '' }}",
-              },
-              @endforeach
-            ]
-          },
-        ],
-        submitted: false,
-      },
-      methods: {
-        addObjectf: function () {
-          this.objectifs.push({
-            id: 0,
-            type: '',
-            team: '',
-            title: '',
-            description: '',
-            deadline: '',
-            indicators: [
-              {
-                id: 0,
-                title: '',
-                fixed: '',
-                realized: '',
-                ponderation: '',
-              }
-            ]
-          })
+  <script src="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/index.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
+
+  <script>
+    $(document).ready(function () {
+      loadProgressBar()
+      Vue.use(VeeValidate);
+      Vue.component('date-picker', VueBootstrapDatetimePicker);
+      new Vue({
+        el: '#content',
+        data: {
+          mode: "{{ $objectif->id > 0 ? 'edit' : 'add' }}",
+          objectifs: [
+            {
+              id: "{{ $objectif->id > 0 ? $objectif->id : 0 }}",
+              type: "{{ $objectif->type }}",
+              team: "{{ $objectif->team }}",
+              title: "{!! $objectif->title !!}",
+              description: "{{ $objectif->description }}",
+              deadline: "{{ date('d-m-Y', strtotime($objectif->deadline)) }}",
+              indicators: [
+                @foreach($objectif->getIndicators() as $indicator)
+                {
+                  id: "{{ isset($indicator['id']) ? $indicator['id'] : 0 }}",
+                  title: "{!! isset($indicator['title']) ? $indicator['title'] : '' !!}",
+                  fixed: "{{ isset($indicator['fixed']) ? $indicator['fixed'] : '' }}",
+                  realized: "{{ isset($indicator['realized']) ? $indicator['realized'] : '' }}",
+                  ponderation: "{{ isset($indicator['ponderation']) ? $indicator['ponderation'] : '' }}",
+                },
+                @endforeach
+              ]
+            },
+          ],
+          submitted: false,
         },
-        removeObjectif: function (oIndex) {
-          this.objectifs.splice(oIndex, 1);
-        },
-        addIndicator: function (oIndex) {
-          var sumPonderation = 0
-          this.objectifs[oIndex].indicators.forEach(function(obj) {
-            sumPonderation += parseInt(obj.ponderation)
-          })
-          if (sumPonderation >= 100) {
-            alert("Vous ne pouvez pas ajouter un autre indicateur, la somme de la pondération des indicateurs ne doit pas dépasser 100 !")
-            return
-          }
-          this.objectifs[oIndex].indicators.push({
-            id: 0,
-            title: '',
-            fixed: '',
-            realized: '',
-            ponderation: '',
-          })
-        },
-        removeIndicator: function (oIndex, indexIndicator) {
-          this.objectifs[oIndex].indicators.splice(indexIndicator, 1);
-        },
-        handleSubmit: function () {
-          this.$validator.validateAll().then((result) => {
-            if (result) {
-              var ponderationIsValid = true
-              this.objectifs.forEach(function(obj, index) {
-                var sumPonderation = 0
-                obj.indicators.forEach(function(indicator) {
-                  sumPonderation += parseInt(indicator.ponderation)
-                })
-                if (sumPonderation != 100) {
-                  ponderationIsValid = false;
-                  return false;
+        methods: {
+          addObjectf: function () {
+            this.objectifs.push({
+              id: 0,
+              type: '',
+              team: '',
+              title: '',
+              description: '',
+              deadline: '',
+              indicators: [
+                {
+                  id: 0,
+                  title: '',
+                  fixed: '',
+                  realized: '',
+                  ponderation: '',
                 }
-              })
-              if (!ponderationIsValid) {
-                swal({title: "Erreur", text: "La somme de la pondération des indicateurs doit être égale à 100 pour chaque objectif !", type: "error"})
-                return
-              }
-              this.submitted = true;
-              axios.post("{{ route('config.objectifs.store') }}", {
-                objectifs: this.objectifs
-              }).then(function (response) {
-                this.submitted = false
-                var success = response.data.status == 'success'
-                swal({
-                  title: response.data.status == 'success' ? "Enregistré" : "Erreur",
-                  text: response.data.message,
-                  type: response.data.status
-                }).then(function () {
-                  if (success) {
-                    window.location.href = "{{ route('config.objectifs') }}"
-                  } else {
-                    $('.submit-btn').prop('disabled', false)
-                  }
-                });
-              }).catch(function (error) {
-                swal({title: "Erreur", text: error, type: "danger"})
-                this.submitted = false
-              });
+              ]
+            })
+          },
+          removeObjectif: function (oIndex) {
+            this.objectifs.splice(oIndex, 1);
+          },
+          addIndicator: function (oIndex) {
+            var sumPonderation = 0
+            this.objectifs[oIndex].indicators.forEach(function(obj) {
+              sumPonderation += parseInt(obj.ponderation)
+            })
+            if (sumPonderation >= 100) {
+              alert("Vous ne pouvez pas ajouter un autre indicateur, la somme de la pondération des indicateurs ne doit pas dépasser 100 !")
+              return
             }
-          })
-        }
-      },
-      directives: {
-        focus: {
-          inserted (el) {
-            el.focus()
+            this.objectifs[oIndex].indicators.push({
+              id: 0,
+              title: '',
+              fixed: '',
+              realized: '',
+              ponderation: '',
+            })
+          },
+          removeIndicator: function (oIndex, indexIndicator) {
+            this.objectifs[oIndex].indicators.splice(indexIndicator, 1);
+          },
+          handleSubmit: function () {
+            this.$validator.validateAll().then((result) => {
+              if (result) {
+                var ponderationIsValid = true
+                this.objectifs.forEach(function(obj, index) {
+                  var sumPonderation = 0
+                  obj.indicators.forEach(function(indicator) {
+                    sumPonderation += parseInt(indicator.ponderation)
+                  })
+                  if (sumPonderation != 100) {
+                    ponderationIsValid = false;
+                    return false;
+                  }
+                })
+                if (!ponderationIsValid) {
+                  swal({title: "Erreur", text: "La somme de la pondération des indicateurs doit être égale à 100 pour chaque objectif !", type: "error"})
+                  return
+                }
+                this.submitted = true;
+                axios.post("{{ route('config.objectifs.store') }}", {
+                  objectifs: this.objectifs
+                }).then(function (response) {
+                  this.submitted = false
+                  var success = response.data.status == 'success'
+                  swal({
+                    title: response.data.status == 'success' ? "Enregistré" : "Erreur",
+                    text: response.data.message,
+                    type: response.data.status
+                  }).then(function () {
+                    if (success) {
+                      window.location.href = "{{ route('config.objectifs') }}"
+                    } else {
+                      $('.submit-btn').prop('disabled', false)
+                    }
+                  });
+                }).catch(function (error) {
+                  swal({title: "Erreur", text: error, type: "danger"})
+                  this.submitted = false
+                });
+              }
+            })
+          }
+        },
+        directives: {
+          focus: {
+            inserted (el) {
+              el.focus()
+            }
           }
         }
-      }
+      })
     })
-  })
-</script>
+  </script>
 @endsection

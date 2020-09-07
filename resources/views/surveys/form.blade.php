@@ -173,33 +173,36 @@
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
   <script src="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/index.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />  <script>
-    loadProgressBar()
-    Vue.use(VeeValidate);
-    new Vue({
-      el: '#content',
-      data: {
-        number: 1,
-        id: "{{ $survey->id }}",
-        title: "{!! $survey->title !!}",
-        description: "{!! $survey->description !!}",
-        model: "{!! $survey->model !!}",
-        section: "{{ $survey->evaluation_id }}",
-        groups: [
-          @foreach($survey->groupes as $group)
-          {
-            id: "{{ $group->id }}",
-            title: "{!! $group->name !!}",
-            questions: [
-              @foreach($group->questions as $question)
-                @if ($question->parent_id == 0)
-                {
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
+
+  <script>
+    $(document).ready(function () {
+      loadProgressBar()
+      Vue.use(VeeValidate);
+      new Vue({
+        el: '#content',
+        data: {
+          number: 1,
+          id: "{{ $survey->id }}",
+          title: "{!! $survey->title !!}",
+          description: "{!! $survey->description !!}",
+          model: "{!! $survey->model !!}",
+          section: "{{ $survey->evaluation_id }}",
+          groups: [
+              @foreach($survey->groupes as $group)
+              {
+              id: "{{ $group->id }}",
+              title: "{!! $group->name !!}",
+              questions: [
+                  @foreach($group->questions as $question)
+                    @if ($question->parent_id == 0)
+                    {
                   id: "{{ $question->id }}",
                   title: {!! json_encode($question->titre) !!},
                   type: "{{ $question->type }}",
                   choices: [
-                    @foreach($question->children as $child)
-                    {
+                      @foreach($question->children as $child)
+                      {
                       title: "{!! $child->titre !!}",
                       edit: false
                     },
@@ -211,16 +214,54 @@
                 @endif
               @endforeach
             ],
-            edit: false,
-            active: false
+              edit: false,
+              active: false
+            },
+            @endforeach
+          ],
+          submitted: false,
+        },
+        methods: {
+          addGroups: function () {
+            for (let i = 0; i < this.number; i++) {
+              this.groups.push({
+                id: null,
+                title: "",
+                edit: true,
+                active: false,
+                questions: []
+              })
+            }
           },
-          @endforeach
-        ],
-        submitted: false,
-      },
-      methods: {
-        addGroups: function () {
-          for (let i = 0; i < this.number; i++) {
+          getQuestionType: function (type) {
+            switch (type) {
+              case 'text':
+                return "Text (court)"
+                break;
+              case 'textarea':
+                return "Text (long)"
+                break;
+              case 'radio':
+                return "Un seul choix"
+                break;
+              case 'checkbox':
+                return "Choix multiple"
+                break;
+              case 'select':
+                return "Liste déroulante"
+                break;
+              default: return 'Text'
+            }
+          },
+          editGroup: function (group) {
+            group.edit = true
+          },
+          updateGroup: function (group) {
+            if (group.title.trim() != '') {
+              group.edit = false
+            }
+          },
+          addNewGroup: function () {
             this.groups.push({
               id: null,
               title: "",
@@ -228,134 +269,96 @@
               active: false,
               questions: []
             })
-          }
-        },
-        getQuestionType: function (type) {
-          switch (type) {
-            case 'text':
-              return "Text (court)"
-              break;
-            case 'textarea':
-              return "Text (long)"
-              break;
-            case 'radio':
-              return "Un seul choix"
-              break;
-            case 'checkbox':
-              return "Choix multiple"
-              break;
-            case 'select':
-              return "Liste déroulante"
-              break;
-            default: return 'Text'
-          }
-        },
-        editGroup: function (group) {
-          group.edit = true
-        },
-        updateGroup: function (group) {
-          if (group.title.trim() != '') {
-            group.edit = false
-          }
-        },
-        addNewGroup: function () {
-          this.groups.push({
-            id: null,
-            title: "",
-            edit: true,
-            active: false,
-            questions: []
-          })
-        },
-        removeGroup: function (index, group) {
-          this.groups[index].active = true
-          if (this.groups.length > 1) {
-            var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
-            if (confirmation) {
-              if (this.id > 0) {
-                axios.delete('surveys/'+this.id+'/groupes/'+group.id+'/delete', {
-                }).then(function (response) {
-                })
+          },
+          removeGroup: function (index, group) {
+            this.groups[index].active = true
+            if (this.groups.length > 1) {
+              var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+              if (confirmation) {
+                if (this.id > 0) {
+                  axios.delete('surveys/'+this.id+'/groupes/'+group.id+'/delete', {
+                  }).then(function (response) {
+                  })
+                }
+                setTimeout(() => this.groups.splice(index, 1), 300)
+              } else {
+                this.groups[index].active = false
               }
-              setTimeout(() => this.groups.splice(index, 1), 300)
             } else {
               this.groups[index].active = false
+              alert("Le questionnaire doit avoir au moins un block, vous ne pouvez pas supprimer ce dernier block !")
             }
-          } else {
-            this.groups[index].active = false
-            alert("Le questionnaire doit avoir au moins un block, vous ne pouvez pas supprimer ce dernier block !")
-          }
-        },
-        editQuestion: function (question) {
-          question.edit = true
-        },
-        updateQuestion: function (question) {
-          if (question.title.trim() != '') {
-            question.edit = false
-          }
-        },
-        addNewQuestion: function (groupIndex, qType) {
-          this.groups[groupIndex].questions.push(
-              {
-                id: null,
-                title: "",
-                type: qType,
-                edit: true,
-                active: false,
-                choices: []
+          },
+          editQuestion: function (question) {
+            question.edit = true
+          },
+          updateQuestion: function (question) {
+            if (question.title.trim() != '') {
+              question.edit = false
+            }
+          },
+          addNewQuestion: function (groupIndex, qType) {
+            this.groups[groupIndex].questions.push(
+                {
+                  id: null,
+                  title: "",
+                  type: qType,
+                  edit: true,
+                  active: false,
+                  choices: []
+                }
+            )
+          },
+          removeQuestion: function (grpIndex, qIndex, group, question) {
+            this.groups[grpIndex].questions[qIndex].active = true
+            if (this.groups[grpIndex].questions.length > 1) {
+              var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+              if (confirmation) {
+                if (this.id > 0) {
+                  axios.delete('surveys/'+this.id+'/groupes/'+group.id+'/questions/'+question.id+'/delete', {
+                  }).then(function (response) {
+                  })
+                }
+                setTimeout(() => this.groups[grpIndex].questions.splice(qIndex, 1), 300);
+              } else {
+                this.groups[grpIndex].questions[qIndex].active = false
               }
-          )
-        },
-        removeQuestion: function (grpIndex, qIndex, group, question) {
-          this.groups[grpIndex].questions[qIndex].active = true
-          if (this.groups[grpIndex].questions.length > 1) {
-            var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
-            if (confirmation) {
-              if (this.id > 0) {
-                axios.delete('surveys/'+this.id+'/groupes/'+group.id+'/questions/'+question.id+'/delete', {
-                }).then(function (response) {
-                })
-              }
-              setTimeout(() => this.groups[grpIndex].questions.splice(qIndex, 1), 300);
             } else {
               this.groups[grpIndex].questions[qIndex].active = false
+              alert("Le block doit avoir au moins une question !")
             }
-          } else {
-            this.groups[grpIndex].questions[qIndex].active = false
-            alert("Le block doit avoir au moins une question !")
-          }
-        },
-        addNewChoice: function(grpIndex, qIndex, choice) {
-          this.groups[grpIndex].questions[qIndex].choices.push({title: "", edit: true})
-        },
-        editChoice: function (choice) {
-          choice.edit = true
-        },
-        updateChoice: function (grpIndex, qIndex, cIndex, choice) {
-          if (choice.title.trim() != '') {
-            choice.edit = false
-          } else {
-            this.groups[grpIndex].questions[qIndex].choices.splice(cIndex, 1)
-          }
-          this.submit = false
-        },
-        removeChoice: function (grpIndex, qIndex, cIndex) {
-          if (this.groups[grpIndex].questions[qIndex].choices.length > 2) {
-            var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
-            if (confirmation) {
+          },
+          addNewChoice: function(grpIndex, qIndex, choice) {
+            this.groups[grpIndex].questions[qIndex].choices.push({title: "", edit: true})
+          },
+          editChoice: function (choice) {
+            choice.edit = true
+          },
+          updateChoice: function (grpIndex, qIndex, cIndex, choice) {
+            if (choice.title.trim() != '') {
+              choice.edit = false
+            } else {
               this.groups[grpIndex].questions[qIndex].choices.splice(cIndex, 1)
             }
-          } else {
-            alert("Cette question doit avoir au moins 2 options, vous ne pouvez pas supprimer !")
-          }
-        },
-        changeQuestionType: function (grpIndex, qIndex, newType) {
-          this.groups[grpIndex].questions[qIndex].type = newType
-        },
-        handleSubmit: function () {
-          this.$validator.validateAll().then((result) => {
-            if (result) {
-            $('.submit-btn').prop('disabled', true)
+            this.submit = false
+          },
+          removeChoice: function (grpIndex, qIndex, cIndex) {
+            if (this.groups[grpIndex].questions[qIndex].choices.length > 2) {
+              var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+              if (confirmation) {
+                this.groups[grpIndex].questions[qIndex].choices.splice(cIndex, 1)
+              }
+            } else {
+              alert("Cette question doit avoir au moins 2 options, vous ne pouvez pas supprimer !")
+            }
+          },
+          changeQuestionType: function (grpIndex, qIndex, newType) {
+            this.groups[grpIndex].questions[qIndex].type = newType
+          },
+          handleSubmit: function () {
+            this.$validator.validateAll().then((result) => {
+              if (result) {
+              $('.submit-btn').prop('disabled', true)
               axios.post("{{ route('survey.store') }}", {
                 id: this.id,
                 title: this.title,
@@ -382,15 +385,17 @@
               });
             }
           })
-        }
-      },
-      directives: {
-        focus: {
-          inserted (el) {
-            el.focus()
+          }
+        },
+        directives: {
+          focus: {
+            inserted (el) {
+              el.focus()
+            }
           }
         }
-      }
+      })
     })
+
   </script>
 @endsection

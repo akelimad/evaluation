@@ -80,9 +80,9 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::delete('function/delete', 'FonctionController@delete');
 
 	Route::get('config/roles', 'UserController@indexRoles')->name('config.roles');
-	Route::get('role/create', 'UserController@createRole');
+	Route::any('role/create', 'UserController@createRole')->name('role.add');
 	Route::post('role/store', 'UserController@storeRole');
-	Route::get('role/{id}/edit', 'UserController@editRole');
+	Route::any('role/{id}/edit', 'UserController@editRole')->name('role.edit');;
 
 	Route::get('permissions', 'UserController@indexPermisions');
 	Route::get('permission/create', 'UserController@createPermission');
@@ -178,3 +178,6 @@ Route::delete('configs/teams/{id}/delete', 'TeamController@delete')->name('team.
 
 Route::post('entretien/{id}/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
 Route::delete('entretien/{id}/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
+
+
+Route::get('/roles/table', 'RoleController@getTable')->name('roles.table');

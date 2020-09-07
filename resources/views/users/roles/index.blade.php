@@ -9,40 +9,35 @@
       <div class="col-md-12">
         <div class="box box-primary">
           <div class="box-header">
-            <h3 class="box-title">Liste des rôles</h3>
+            <h3 class="box-title"><i class="fa fa-user-secret"></i> Liste des rôles</h3>
+            <div class="box-tools mb40">
+              <a
+                  href="javascript:void(0)"
+                  chm-modal="{{ route('role.add') }}"
+                  chm-modal-options='{"form":{"attributes":{"id":"roleForm","target-table":"[chm-table]"}}}'
+                  class="btn bg-maroon"
+              ><i class="fa fa-user-secret"></i>&nbsp;{{ "Ajouter" }}</a>
 
-            <div class="box-tools">
-              <a class="btn bg-maroon" onclick="return chmRole.create()" data-toggle="tooltip" title="Ajouter un rôle">
-                <i class="fa fa-plus"></i> Ajouter </a>
             </div>
           </div>
-          @if(count($roles)>0)
-            <div class="box-body table-responsive no-padding">
-              <table class="table table-hover table-striped table-inversed-blue">
-                <tr>
-                  <th>Nom</th>
-                  <th>Le nom d'affichage</th>
-                  <th>Description</th>
-                  <th class="text-center">Actions</th>
-                </tr>
-                @foreach($roles as $key => $role)
-                  <tr>
-                    <td>{{ $role->name }}</td>
-                    <td>{{ $role->display_name }}</td>
-                    <td>{{ $role->description }}</td>
-                    <td class="text-center">
-                      <a href="javascript:void(0)" onclick="return chmRole.edit({id:{{$role->id}}})" class="btn-warning icon-fill" data-toggle="tooltip" title="Modifier"> <i class="glyphicon glyphicon-pencil"></i> </a>
-                    </td>
-                  </tr>
-                @endforeach
-              </table>
-            </div>
-          @else
-            @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
-          @endif
+          <div class="box-body">
+            <div chm-table="{{ route('roles.table') }}"
+                 chm-table-options='{"with_ajax": true}'
+                 chm-table-params='{{ json_encode(request()->query->all()) }}'
+                 id="RolesTableContainer"
+            ></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 @endsection
-  
+
+@section('javascript')
+  @parent
+  <script>
+    $(document).ready(function () {
+      window.chmTable.refresh('#RolesTableContainer')
+    })
+  </script>
+@endsection

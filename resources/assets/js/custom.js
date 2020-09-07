@@ -52,7 +52,7 @@ $(document).ready(function () {
   })
 
   $('body').on('chmFormSuccess', function (event, response) {
-    if (response.status == 'success') {
+    if (response.status == 'reload') {
       window.location.reload()
     }
   })

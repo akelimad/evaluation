@@ -112,11 +112,12 @@ export default class chmForm {
         if (response.status === 'reload') {
           window.location.reload()
         }
-
         if (response.status === 'success') {
           window.chmModal.destroy()
           if ($(target).attr('target-table') !== undefined) {
             window.chmTable.refresh($(target).attr('target-table'))
+          } else {
+            window.chmTable.refresh('#' + $('[chm-table]').attr('id'))
           }
         }
       } catch (e) {
