@@ -92,82 +92,15 @@
           </div>
           @if(count($results)>0)
             <div class="box-body table-responsive no-padding mb20">
-              <table class="table table-hover table-striped table-inversed-blue">
-                <tr>
-                  <th>
-                    <input type="checkbox" id="checkAll">
-                  </th>
-                  <th>Prénom</th>
-                  <th>Nom</th>
-                  <th>Email</th>
-                  <th>Rôle</th>
-                  <th>Fonction</th>
-                  <th>Manager</th>
-                  <th>Créé le</th>
-                  <th class="text-center">Statut</th>
-                  <th class="text-center">Actions</th>
-                </tr>
-                @foreach($results as $key => $user)
-                  <tr>
-                    <td>
-                      <div class="wrap-checkItem">
-                        <input type="checkbox" class="usersId checkItem" autocomplete="off" value="{{$user->id}}">
-                      </div>
-                    </td>
-                    <td><a href="{{url('user/'.$user->id)}}">{{ $user->name }}</a></td>
-                    <td><a href="{{url('user/'.$user->id)}}">{{ $user->last_name }}</a></td>
-                    <td> {{ $user->email }} </td>
-                    <td>
-                      @if(count($user->roles)>0)
-                        @foreach($user->roles as $role)
-                          {{$role->name}}
-                        @endforeach
-                      @else
-                        ---
-                      @endif
-                    </td>
-                    <td>
-                      {{ App\Fonction::find($user->function) ? App\Fonction::find($user->function)->title : '---' }}
-                    </td>
-                    <td>
-                      @if($user->parent)
-                        <a href="{{url('user/'.$user->parent->id)}}">{{ $user->parent->fullname() }}</a>
-                      @else
-                        ---
-                      @endif
-                    </td>
-                    <td>{{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}}</td>
-                    <td class="text-center">
-                      @php($isOnline = $user->isOnline())
-                      @php($date = $user->last_activity_at != null ? date('d/m/Y H:i', strtotime($user->last_activity_at)) : '---')
-                      <span><i class="fa fa-circle text-{{ $isOnline ? 'success':'danger' }} font-12" title="{{ $isOnline ? 'En ligne':"Déconnecté, dernière visite : ". $date  }}"></i></span>
-                    </td>
-                    <td class="text-center">
-                      {{ csrf_field() }}
-                      <div class="btn-group dropdown">
-                        <button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                          <li>
-                            <a href="{{ url('user/'.$user->id) }}" class=""> <i class="fa fa-eye"></i> Voir le profil</a>
-                          </li>
-                          <li>
-                            <a href="javascript:void(0)" onclick="return chmUser.form({{{$user->id}}})"
-                               class=""> <i class="fa fa-edit"></i> Modifier</a>
-                          </li>
-                          <li>
-                            <a href="javascript:void(0)" class="delete-user" data-id="{{ $user->id }}"> <i class="fa fa-trash"></i> Supprimer</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
-                @endforeach
-              </table>
+              <div chm-table="{{ route('users.table') }}"
+                   chm-table-options='{"with_ajax": true}'
+                   chm-table-params='{{ json_encode(request()->query->all()) }}'
+                   id="UsersTableContainer"
+              ></div>
             </div>
 
             <div class="sendInvitationBtn mb40">
-              <a onclick="return chmEntretien.entretiens()" class="btn btn-success"> <i class="fa fa-send"></i> Envoyer
-                une invitation</a>
+              <a onclick="return chmEntretien.entretiens()" class="btn btn-success"> <i class="fa fa-send"></i> Envoyer une invitation</a>
             </div>
 
             @include('partials.pagination')

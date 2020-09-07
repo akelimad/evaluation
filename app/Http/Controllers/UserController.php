@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use App\Fonction;
+use App\Http\Service\Table;
 use App\Team;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,38 @@ class UserController extends Controller
   public function __construct()
   {
     $this->middleware('auth');
+  }
+
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $query = User::getUsers();
+
+    $table->setPrimaryKey('id');
+    $table->setDateFormat('d/m/Y H:i');
+    $table->addColumn('name', 'Prénom');
+    $table->addColumn('last_name', 'Nom');
+    $table->addColumn('email', 'Email');
+    $table->addColumn('roles', 'Rôles', function ($entity) {
+      return $entity->roles[0]->name;
+    });
+    $table->addColumn('function', 'Fonction', function ($entity) {
+      $fonction = Fonction::find($entity->function);
+      return $fonction ? $fonction->title : '---';
+    });
+    $table->addColumn('manager', 'Manager', function ($entity) {
+      return $entity->parent ? $entity->parent->fullname() : '---';
+    });
+    $table->addColumn('created_at', 'Créé le');
+
+    // define table actions
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'callback' => 'chmRole.edit({id: [id]})',
+    ]);
+
+    // render the table
+    return $table->render($query);
   }
 
   public function profile()
