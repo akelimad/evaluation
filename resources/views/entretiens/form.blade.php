@@ -485,6 +485,14 @@
           isValid = false;
         }
       }
+      if (stepNbr == 5) {
+        var start_date = $("#interview-startdate").datepicker('getDate');
+        var end_date = $("#interview-enddate").datepicker('getDate');
+        if (end_date <= start_date) {
+          chmForm.showErrorBlock($("#interview-enddate"), "La date limite de l'évaluateur doit être une date supérieure à la date limite de l'évalué")
+          isValid = false;
+        }
+      }
       if (!isValid) {
         return false
       }

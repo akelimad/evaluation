@@ -241,7 +241,7 @@ class EntretienController extends Controller
     $messages = [
       'date.required' => "La date limite de l'évalué est obligatoire",
       'date_limit.required' => "La date de limite de l'évaluateur est obligatoire",
-      'date_limit.after' => "La date limite de l'évaluateur doit être une date supérieure à la date limite de l'évaluateur",
+      'date_limit.after' => "La date limite de l'évaluateur doit être une date supérieure à la date limite de l'évalué",
       'titre.required' => "Le titre de la campagne est obligatoire",
       'titre.min' => "Le titre de la campagne ne peut pas contenir moins de :min caractères",
       'titre.max' => "Le titre de la campagne ne peut pas contenir plus de :max caractères",
