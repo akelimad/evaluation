@@ -1,16 +1,9 @@
-.chmTable {
-  text-align: center; 
-  border-top: 3px solid #e32b2b !important; 
-  border-bottom: 3px solid #e32b2b !important;
-  thead th {
-    vertical-align: sub !important;
-  }
-  tfoot th {
-    border-top: 2px solid #ddd;
+.table {
+  thead th, tbody td {
+    vertical-align: middle !important;
   }
   td, td {
     text-align: left;
-    padding: 8px 8px 3px !important;
   }
   .btn-xs {
     margin-bottom: 5px;

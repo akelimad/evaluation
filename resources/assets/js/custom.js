@@ -1,6 +1,66 @@
 import $ from 'jquery'
 
 $(document).ready(function () {
+  // Trigger bulk actions
+  $('body').on('click', '#bulk-wrap [type="submit"]', function (event) {
+    var $tableContainer = $(this).closest('[chm-table]')
+    var selectedBulk = $($tableContainer).find('#bulk-wrap select').val()
+    var bulkCallable = $($tableContainer).find('#bulk-wrap select option:selected').data('callback')
+    var callbackParams = $($tableContainer).find('#bulk-wrap select option:selected').data('params') || null
+    var countChecked = $($tableContainer).find('.hunter_cb:checked').length
+    if (countChecked === 0) {
+      window.chmAlert.error('Vous devez choisir au moins une ligne.')
+      event.preventDefault()
+      return
+    } else if (selectedBulk === '') {
+      event.preventDefault()
+      window.chmAlert.error('Merci de choisir une action.')
+      return
+    } else if (bulkCallable !== undefined) {
+      event.preventDefault()
+      var checked = []
+      $($tableContainer).find('.hunter_cb:checked').each(function (k, v) {
+        checked[k] = $(this).val()
+      })
+      var parts = bulkCallable.split('.')
+      if (parts.length === 2) {
+        if (callbackParams !== null) {
+          window[parts[0]][parts[1]](event, checked, callbackParams)
+        } else {
+          window[parts[0]][parts[1]](event, checked)
+        }
+      } else {
+        if (callbackParams !== null) {
+          window[parts[0]](event, checked, callbackParams)
+        } else {
+          window[parts[0]](event, checked)
+        }
+      }
+    }
+  })
+
+  $('body').on('change', '.hunter_cb', function () {
+    let $table = $(this).closest('table')
+    let checked = $($table).find('.hunter_cb').length === $($table).find('.hunter_cb:checked').length
+    $($table).find('.hunter_checkAll').prop('checked', checked)
+  })
+
+  // Check all
+  $('body').on('change', '.hunter_checkAll', function () {
+    let $table = $(this).closest('table')
+    let checked = $(this).is(':checked')
+    $($table).find('.hunter_checkAll').not($(this)).prop('checked', checked)
+    $($table).find(".hunter_cb:not(:disabled)").prop("checked", checked)
+  })
+
+  // Delete table chechAll & row checkbox if there's no bulk action
+  $('body').on('chmTableSuccess', function () {
+    if ($('#bulk-wrap select').length == 0) {
+      $('.checkAll').remove()
+      $('.hunter_cb_td').remove()
+    }
+  })
+
   // Modal close event
   $('body').on('hidden.bs.modal', '.chm-modal', function () {
     if ($(this).attr('chm-modal-action') === 'reload') {
@@ -56,4 +116,6 @@ $(document).ready(function () {
       window.location.reload()
     }
   })
+
 })
+

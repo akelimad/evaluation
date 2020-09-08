@@ -35,7 +35,8 @@ export default class chmTable {
     if ($(target).find('table').length === 0) {
       self.fill(target, '<i class="' + params.lodingIcon + '"></i>&nbsp;' + trans("Chargement de la table ..."), params.scrollTo)
     } else {
-      $(target).css('opacity', '0.3')
+      $(target).find('#table-overlay').show()
+      // $(target).css('opacity', '0.3')
     }
 
     // Fire Ajax action
@@ -104,7 +105,9 @@ export default class chmTable {
   }
 
   static fill (target, content, scrollTo = false) {
-    $(target).empty().html(content).css('opacity', '1')
+    // $(target).empty().html(content).css('opacity', '1')
+    $(target).empty().html(content)
+    $(target).find('#table-overlay').hide()
     if (scrollTo) {
       $('html, body').animate({
         scrollTop: $(target).offset().top
@@ -263,12 +266,8 @@ function tableResponsive() {
   }
   var hasHorizScrollBar = $('.table-responsive').hasScrollBar('horizontal');
   if (hasHorizScrollBar) {
-    $('.table-responsive').on('hide.bs.dropdown', function () {
-      $('.table-responsive').css("overflow", "auto")
-    })
+    $('.table-responsive').css("overflow", "auto")
   } else {
-    $('.table-responsive').on('show.bs.dropdown', function () {
-      $('.table-responsive').css("overflow", "inherit")
-    })
+    $('.table-responsive').css("overflow", "inherit")
   }
 }

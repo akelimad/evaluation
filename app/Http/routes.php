@@ -25,7 +25,7 @@ Route::post('users/store', 'UserController@storeUser');
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
 	Route::get('users/table', 'UserController@getTable')->name('users.table');
 	Route::get('users', 'UserController@indexUsers')->name('users');
-	Route::delete('user/{id}/delete', 'UserController@deleteUser');
+	Route::delete('user/delete', 'UserController@deleteUser');
 	Route::get('users/import', 'UserController@importUsers');
 	Route::post('users/import_parse', 'UserController@parseImport');
 	Route::post('users/import_process', 'UserController@processImport');

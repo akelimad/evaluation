@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import trans from './../script/functions'
 
 export default class chmFilter {
 
@@ -15,7 +16,7 @@ export default class chmFilter {
     if ($(target).hasClass('refresh')) {
       target = $(target).closest('[chm-filter]')
     }
-    $(target).empty().html('<i class="fa fa-circle-o-notch fa-spin fast-spin"></i>&nbsp;Chargement en cours...')
+    $(target).empty().html('<i class="fa fa-circle-o-notch fa-spin fast-spin"></i>&nbsp;' + trans("Chargement en cours..."))
     var classInstance = this
     $.ajax({
       type: 'GET',
@@ -42,7 +43,7 @@ export default class chmFilter {
   static collapse (target) {
     var value = ($(target).hasClass('collapsed')) ? 1 : 0
     window.chmCookie.create('chm_filter', value)
-    $(target).find('i').toggleClass('fa-eye fa-eye-slash')
+    $(target).find('i').toggleClass('fa-chevron-down fa-chevron-up')
     var filter = $('[chm-filter]:first')
     if (value === 1 && $(filter).is(':empty')) {
       this.render(filter, filter.attr('chm-filter'), filter.attr('chm-filter-route'))
@@ -50,9 +51,9 @@ export default class chmFilter {
   }
 
   static errorMessage (target, fileName, route, message = null) {
-    if (message === null) message = 'Une erreur est survenue lors de chargement de filter.'
+    if (message === null) message = trans("Une erreur est survenue lors de chargement de filter.")
     $(target).find('i').removeClass('fa-spin')
-    $(target).empty().html('<div class="chm-alerts alert alert-warning alert-white rounded"><div class="icon"><i class="fa fa-warning"></i></div><ul><li>' + message + '</li></ul><a href="#" onclick="return chmFilter.render(this, &apos;' + fileName + '&apos;, &apos;' + route + '&apos;);" class="refresh"><i class="fa fa-refresh"></i></a></div>')
+    $(target).empty().html('<div class="chm-alerts alert alert-warning alert-white rounded"><div class="icon"><i class="fa fa-warning"></i></div><ul><li>' + message + '</li></ul><a href="javascript:void(0)" onclick="return chmFilter.render(this, &apos;' + fileName + '&apos;, &apos;' + route + '&apos;);" class="refresh"><i class="fa fa-refresh"></i></a></div>')
   }
 
 }

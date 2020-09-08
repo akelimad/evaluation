@@ -1,29 +1,50 @@
 export default class chmUrl {
 
   /**
-   * Get url parameter
+   * Get all parameters
    *
-   * @param string name
    * @return string params
    */
-  static getParam (name) {
-    var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href)
+  static getAll () {
+    var search = window.location.search.substring(1)
+    if (search !== '') {
+      return JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
+    }
+    return {}
+  }
+
+	/**
+	 * Get url parameter
+	 *
+	 * @param string name
+	 * @return string params
+	 */
+  static getParam (name, _default = null, url = null) {
+    if (url === null) {
+      url = window.location.href
+    }
+    var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(url)
     if (results == null) {
-      return null
+      return _default
     } else {
       return results[1] || 0
     }
   }
 
-  /**
-   * Change url parameter
-   *
-   * @param param string
+	/**
+	 * Change url parameter
+	 *
+	 * @param param string
    * @param value string
-   * @return void
-   */
-  static setParam (param, value) {
-    var url = window.location.href
+   * @param url string
+	 * @param pushState bool
+   *
+	 * @return void
+	 */
+  static setParam (param, value, url = null, pushState = true) {
+    if (url === null) {
+      url = window.location.href
+    }
     var reExp = new RegExp('[?|&]' + param + '=[0-9a-zA-Z_+-|.,;]*')
     if (reExp.test(url)) { // update
       reExp = new RegExp('[?&]' + param + '=([^&#]*)')
@@ -43,11 +64,22 @@ export default class chmUrl {
         url += '&' + newParam
       }
     }
-    window.history.pushState(null, document.title, url)
+    if (pushState) {
+      window.history.pushState(null, document.title, url)
+    }
+    return url
   }
 
-  static eraseParam (param) {
-    var url = window.location.href
+  /**
+	 * Delete parameter from url
+	 *
+	 * @param param string
+	 * @return void
+	 */
+  static eraseParam (param, url = null, pushState = true) {
+    if (url === null) {
+      url = window.location.href
+    }
     // prefer to use l.search if you have a location/link object
     var urlparts = url.split('?')
     if (urlparts.length >= 2) {
@@ -62,6 +94,14 @@ export default class chmUrl {
       }
       url = urlparts[0] + '?' + pars.join('&')
     }
+    if (pushState) {
+      window.history.pushState(null, document.title, url)
+    }
+    return url
+  }
+
+  static eraseAllParams () {
+    var url = window.location.href.split('?')[0]
     window.history.pushState(null, document.title, url)
   }
 

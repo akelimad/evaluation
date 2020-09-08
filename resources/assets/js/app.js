@@ -8,12 +8,13 @@
 
 // Main modules
 import chmSite from './class/site'
-import chmUrl from './class/url'
 import chmCookie from './class/cookie'
 import chmModal from './class/modal'
 import chmFilter from './class/filter'
 import chmAlert from './class/alert'
 import chmTable from './class/chmTable'
+import chmUrl from './class/chmUrl'
+import chmSearch from './class/chmSearch'
 
 import chmUser from './class/user'
 import chmRole from './class/role'
@@ -44,12 +45,13 @@ import './custom'
 
 // Store modules in window
 window.chmSite = chmSite
-window.chmUrl = chmUrl
 window.chmCookie = chmCookie
 window.chmModal = chmModal
 window.chmFilter = chmFilter
 window.chmAlert = chmAlert
 window.chmTable = chmTable
+window.chmUrl = chmUrl
+window.chmSearch = chmSearch
 
 window.chmUser = chmUser
 window.chmRole = chmRole

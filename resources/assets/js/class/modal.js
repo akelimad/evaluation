@@ -186,6 +186,7 @@ export default class chmModal {
   static confirm (target = '', title = '', message = '', callable = '', args = {}, params = {}) {
     // prepare action
     var action = ''
+    params.width = 355
     if (callable !== '') {
       args = $.extend(args, window.chmForm.getTargetParams(target, 'target-params'))
       action = callable + '(' + this.htmlEntities(JSON.stringify(args)) + ')'

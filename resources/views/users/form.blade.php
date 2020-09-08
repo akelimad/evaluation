@@ -3,21 +3,21 @@
   {{ csrf_field() }}
   <div class="row">
     <div class="col-md-6">
-      <label for="name" class="control-label">Prénom <span class="asterisk">*</span></label>
-      <input type="text" name="name" class="form-control" id="name" placeholder="Prénom" required="" value="{{ isset($user) ? $user->name : '' }}">
+      <label for="name" class="control-label required">Prénom</label>
+      <input type="text" name="name" class="form-control" id="name" placeholder="Prénom" chm-validate="required|valid_name" value="{{ isset($user) ? $user->name : '' }}">
     </div>
     <div class="col-md-6">
-      <label for="last_name" class="control-label">Nom <span class="asterisk">*</span></label>
-      <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Nom" required="" value="{{ isset($user) ? $user->last_name : ''  }}">
+      <label for="last_name" class="control-label required">Nom</label>
+      <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Nom" chm-validate="required|valid_name" value="{{ isset($user) ? $user->last_name : ''  }}">
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
-      <label for="email" class="control-label">Email <span class="asterisk">*</span></label>
-      <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com" required="" value="{{ isset($user) ? $user->email : ''  }}">
+      <label for="email" class="control-label required">Email</label>
+      <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com" chm-validate="required|valid_email" value="{{ isset($user) ? $user->email : ''  }}">
     </div>
     <div class="col-md-6">
-      <label for="photo" class="control-label">Photo </label>
+      <label for="photo" class="control-label">Photo</label>
       <div class="input-group">
         <label class="input-group-btn">
           <span class="btn btn-primary">
@@ -93,8 +93,8 @@
   @if(Auth::user()->hasRole('ADMIN') && Auth::user()->id != $user->id)
     <div class="row">
       <div class="col-md-6">
-        <label for="role" class="control-label">Rôle<span class="asterisk">*</span></label>
-        <select name="roles[]" id="role" class="form-control select2" multiple required @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
+        <label for="role" class="control-label required">Rôle</label>
+        <select name="roles[]" id="role" class="form-control select2" chm-validate="required"  multiple required @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
           @foreach($roles as $role)
             <option value="{{$role->id}}" {{isset($roles_ids) && in_array($role->id, $roles_ids) ? 'selected':''}}> {{$role->name}} </option>
           @endforeach

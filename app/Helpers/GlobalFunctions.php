@@ -20,9 +20,8 @@ function chm_table_exec($closure, $entity) {
   return $closure;
 }
 
-function chm_table_action_url() {
+function chm_table_action_url($action, $entity) {
   $url = 'javascript:void(0)';
-
   if (!isset($action['route']) || $action['route'] == '#') return $url;
 
   if (is_callable($action['route'])) {
@@ -32,7 +31,7 @@ function chm_table_action_url() {
     if (isset($action['route']['args'])) {
       $route_args = replaceVars($action['route']['args'], $entity);
     }
-    $url = $this->generator->generate(replaceVars($action['route']['name'], $entity), $route_args);
+    $url = route(replaceVars($action['route']['name'], $entity), $route_args);
   } else if (is_string($action['route'])) {
     $url = replaceVars($action['route'], $entity);
   }

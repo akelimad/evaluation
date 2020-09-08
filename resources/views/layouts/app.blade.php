@@ -329,8 +329,7 @@
 <script src="{{asset('vendor/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('js/admin.min.js')}}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('js/pages/dashboard.js')}}"></script>
+
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('js/demo.js')}}"></script>
 <script src="{{asset('js/sweetalert2.min.js')}}"></script>

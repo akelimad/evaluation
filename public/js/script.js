@@ -1,5 +1,5 @@
 $(window).on('load', function() {
-    $('.spinner-wp').fadeOut();
+    jQuery('.spinner-wp').remove()
 });
 
 function tableResponsive () {
@@ -142,62 +142,5 @@ $(function(){
         }else{
             $("#ecart-"+id).css('color', 'green')
         }
-    })
-
-    //delete user
-    $(".table").on('click', '.delete-user',function () {
-        var id= $(this).data('id');
-        var token = $('input[name="_token"]').val();
-        var url = baseUrl+'/user/'+id+'/delete';
-        var $tr = $(this).closest('tr');
-        swal({
-            title: 'Etes-vous sûr ?',
-            text: "Vous ne serez pas en mesure de rétablir ceci! En supprimant un utilisateur, ses collaborateurs seront aussi supprimés",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Oui, supprimer !',
-            cancelButtonText: 'Annuler',
-            showLoaderOnConfirm: true,
-            preConfirm: function() {
-            return new Promise(function(resolve) {
-                $.ajax({
-                    type: 'POST',
-                    url:  url,
-                    data: {
-                        "id": id,
-                        "_method": 'DELETE',
-                        "_token": token,
-                    },
-                }).done(function(response){
-                    swal({ 
-                        title: "Supprimé!", 
-                        text: "L'utilisateur a été supprimé avec succès.", 
-                        type: "success" 
-                    }).then(function(){
-                        location.reload(); 
-                    });
-                }).fail(function(){
-                    swal('Oops...', "Il ya quelque chose qui ne va pas ! Il se peut que cet utilisateur fait la coordiantion des cours il faut supprimer tout d'abord ses cours!", 'error');
-                });
-            });
-            },
-            allowOutsideClick: false     
-        }); 
-    });
-
-    //hide show criteria search users
-    $(".showFormBtn").click(function(){
-        $(".showFormBtn i").toggleClass("fa-chevron-down fa-chevron-up")
-        $(".filter-box").slideToggle()
-    })
-
-    // fix table action overflow
-    var actionsHeight = $('.dropdown-menu').innerHeight()
-    $('.table-responsive').css('min-height', actionsHeight)
-    tableResponsive()
-    $(window).on('resize', function () {
-        if ($('.table-responsive').length > 0) tableResponsive()
     })
 })

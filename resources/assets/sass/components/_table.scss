@@ -1,0 +1,57 @@
+/*== >Tables ====*/
+.table {
+  margin-bottom: 0;
+  > {
+    tbody > tr > {
+      td, th {
+        padding: 10px;
+      }
+    }
+    tfoot > tr > {
+      td, th {
+        padding: 10px;
+      }
+    }
+    thead > tr > {
+      td, th {
+        padding: 10px;
+      }
+    }
+  }
+  &.borderless > tbody > tr > {
+    td, th {
+      border: none;
+    }
+  }
+}
+
+.table-sm {
+  th,
+  td {
+    padding: .3rem !important;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .table-nowrap>tbody>tr>td,
+  .table-nowrap>tbody>tr>th,
+  .table-nowrap>tfoot>tr>td,
+  .table-nowrap>tfoot>tr>th,
+  .table-nowrap>thead>tr>td,
+  .table-nowrap>thead>tr>th {
+    white-space: nowrap;
+  }
+  .table-responsive {
+    max-width: 97%;
+  }
+}
+
+
+/*data table*/
+
+.dataTable .sorting_asc .checkbox {
+  margin-right: 0;
+}
+#table-bulk-action-select {
+  max-width: 150px;
+}

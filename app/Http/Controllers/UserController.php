@@ -26,30 +26,72 @@ class UserController extends Controller
 
   public function getTable(Request $request) {
     $table = new Table($request);
-    $query = User::getUsers();
+    $query = User::getUsers()->orderBy('id', 'DESC');
+    if ($q = $request->get('q', false)) {
+      $query->where('name', "LIKE", "%$q%")->orWhere('last_name', "LIKE", "%$q%")->orWhere('email', "LIKE", "%$q%");
+    }
+    if ($department = $request->get('department', false)){
+      $query->where('service', '=', $department);
+    }
+    if ($function = $request->get('function', false)){
+      $query->where('function', '=', $function);
+    }
+    if ($role = $request->get('role')){
+      $query->whereHas('roles', function ($query) use ($role) {
+        $query->where('id', '=', $role);
+      });
+    }
+    if (!empty($team)){
+      $query->whereHas('teams', function ($query) use ($team) {
+        $query->where('team_id', '=', $team);
+      });
+    }
 
     $table->setPrimaryKey('id');
     $table->setDateFormat('d/m/Y H:i');
-    $table->addColumn('name', 'Prénom');
-    $table->addColumn('last_name', 'Nom');
+    $table->setBulkActions(true);
+
+    $table->addColumn('name', 'Prénom', function ($entity) {
+      return '<a href="'. route('user.profile', ['id' => $entity->id]) .'">'. $entity->name .'</a>';
+    });
+    $table->addColumn('last_name', 'Nom', function ($entity) {
+      return '<a href="'. route('user.profile', ['id' => $entity->id]) .'">'. $entity->last_name .'</a>';
+    });
     $table->addColumn('email', 'Email');
     $table->addColumn('roles', 'Rôles', function ($entity) {
-      return $entity->roles[0]->name;
+      return isset($entity->roles[0]) ? $entity->roles[0]->name : '---';
     });
     $table->addColumn('function', 'Fonction', function ($entity) {
       $fonction = Fonction::find($entity->function);
       return $fonction ? $fonction->title : '---';
     });
     $table->addColumn('manager', 'Manager', function ($entity) {
-      return $entity->parent ? $entity->parent->fullname() : '---';
+      if ($entity->parent) {
+        return '<a href="'. route('user.profile', ['id' => $entity->parent->id]) .'">'. $entity->parent->fullname() .'</a>';
+      }
+      return '---';
     });
     $table->addColumn('created_at', 'Créé le');
 
     // define table actions
+    $table->addAction('show', [
+      'icon' => 'fa fa-eye',
+      'label' => 'Voir le profil',
+      'route' => ['name' => 'user.profile', 'args' => ['id' => '[id]']],
+      'bulk_action' => false,
+    ]);
     $table->addAction('edit', [
       'icon' => 'fa fa-pencil',
       'label' => 'Modifier',
-      'callback' => 'chmRole.edit({id: [id]})',
+      'callback' => 'chmUser.form([id])',
+      'bulk_action' => false,
+    ]);
+    // define table actions
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'chmUser.delete',
+      'bulk_action' => true,
     ]);
 
     // render the table
@@ -229,11 +271,22 @@ class UserController extends Controller
 
   }
 
-  public function deleteUser(Request $request, $id)
+  public function deleteUser(Request $request)
   {
-    $user = User::findOrFail($id);
-    $user->delete();
-    return redirect('users');
+    if (empty($request->ids)) return;
+    foreach($request->ids as $uid) {
+      $user = User::find($uid);
+      try {
+        $user->delete();
+      } catch (\Exception $e) {
+        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+      }
+    }
+
+    return response()->json([
+      'status' => 'alert',
+      'title' => 'La suppression a été effectuée avec succès',
+    ]);
   }
 
   public function importUsers(Request $request)
