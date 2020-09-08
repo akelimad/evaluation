@@ -13,7 +13,7 @@
             <div class="box-tools mb40">
               <a
                   href="javascript:void(0)"
-                  chm-modal="{{ route('role.add') }}"
+                  chm-modal="{{ route('role.form') }}"
                   chm-modal-options='{"form":{"attributes":{"id":"roleForm","target-table":"[chm-table]"}}}'
                   class="btn bg-maroon"
               ><i class="fa fa-user-secret"></i>&nbsp;{{ "Ajouter" }}</a>

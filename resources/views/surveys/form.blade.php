@@ -18,7 +18,7 @@
                   <span v-show="errors.has('title')" class="help-block">@{{ errors.first('title') }}</span>
                 </div>
               </div>
-              <div class="row mb-30">
+              <div class="row">
                 <div class="col-md-12">
                   <label for="" class="control-label">Description</label>
                   <textarea name="" id="" class="form-control" v-model="description"></textarea>
@@ -51,13 +51,13 @@
         </div>
       </div>
       <div v-if="groups.length <= 0" class="row mb-30">
-        <div class="col-md-4 col-md-offset-4">
+        <div class="col-md-12 col-md-offset-4">
           <label for="">Entrer le nombre des blocks pour ce questionnaire</label>
           <div class="input-group" :class="{'has-error': errors.has('number')}">
             <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes">
             <span class="input-group-btn">
               <button class="btn btn-success" @click="addGroups()" type="button">Valider</button>
-            </span>
+            </span
             <div class="clearfix"></div>
           </div>
           <span v-show="errors.has('number')" class="help-block text-red">@{{ errors.first('number') }}</span>

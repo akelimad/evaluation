@@ -1,12 +1,14 @@
 import $ from 'jquery'
+import trans from './../script/functions'
+
 
 export default class chmRole {
 
-  static create () {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('role/create')}, {
+  static form (id = null) {
+    window.chmModal.show({type: 'GET', url: window.chmSite.url('role/form'), data: {id: id}}, {
       form: {
-        class: 'allInputsFormValidation',
-        id: 'roleForm',
+        class: 'allInputsFormValidation form-horizontal',
+        id: "roleForm"
       },
       footer: {
         label: 'Sauvegarder'
@@ -14,14 +16,22 @@ export default class chmRole {
     })
   }
 
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('role/' + params.id + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation',
-        id: 'roleForm',
-      },
-      footer: {
-        label: 'Mettre à jour'
+  static delete(event, ids) {
+    ids = (typeof event[0] !== 'undefined') ? event : ids
+    window.chmModal.show({
+      type: 'DELETE',
+      url: '/role/delete',
+      data: {
+        "ids": ids,
+        "_method": 'DELETE',
+        "_token": $('input[name="_token"]').val(),
+      }
+    }, {
+      message: '<i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;' + trans("Suppression en cours..."),
+      onSuccess: (response) => {
+        if ('status' in response && response.status === 'alert') {
+          window.chmTable.refresh('#RolesTableContainer')
+        }
       }
     })
   }

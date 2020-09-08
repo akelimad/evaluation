@@ -80,10 +80,11 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::post('function/store', 'FonctionController@store');
 	Route::delete('function/delete', 'FonctionController@delete');
 
-	Route::get('config/roles', 'UserController@indexRoles')->name('config.roles');
-	Route::any('role/create', 'UserController@createRole')->name('role.add');
-	Route::post('role/store', 'UserController@storeRole');
-	Route::any('role/{id}/edit', 'UserController@editRole')->name('role.edit');;
+	Route::get('roles/table', 'RoleController@getTable')->name('roles.table');
+	Route::get('config/roles', 'RoleController@index')->name('config.roles');
+	Route::any('role/form', 'RoleController@form')->name('role.form');
+	Route::post('role/store', 'RoleController@store')->name('role.store');
+	Route::delete('role/delete', 'RoleController@delete')->name('role.delete');
 
 	Route::get('permissions', 'UserController@indexPermisions');
 	Route::get('permission/create', 'UserController@createPermission');
@@ -179,6 +180,3 @@ Route::delete('configs/teams/{id}/delete', 'TeamController@delete')->name('team.
 
 Route::post('entretien/{id}/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
 Route::delete('entretien/{id}/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
-
-
-Route::get('/roles/table', 'RoleController@getTable')->name('roles.table');
