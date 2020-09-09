@@ -9,6 +9,16 @@ use Auth;
 
 class DepartmentController extends Controller
 {
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
   public function getTable(Request $request) {
     $table = new Table($request);
     $query = Department::getAll()->orderBy('title', 'asc');

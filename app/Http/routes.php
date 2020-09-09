@@ -58,11 +58,11 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::delete('surveys/{sid}/groupes/{gid}/questions/{qid}/delete', 'QuestionController@destroy');
 	Route::get('surveys/{sid}/groupes/{gid}/questions', 'QuestionController@index');
 
-	Route::get('config/skills', 'SkillController@indexAdmin')->name('config.skills');
-	Route::any('skills/create', 'SkillController@create');
+	Route::get('skills/table', 'SkillController@getTable')->name('skills.table');
+	Route::get('config/skills', 'SkillController@indexAdmin')->name('skills');
+	Route::any('skills/form', 'SkillController@form')->name('skill.form');
 	Route::post('skills/store', 'SkillController@store');
-	Route::any('skills/{id}/edit', 'SkillController@edit');
-	Route::delete('skills/{eid}/delete', 'SkillController@destroy');
+	Route::delete('skills/delete', 'SkillController@delete');
 
 	Route::get('config/emails', 'EmailController@index')->name('config.emails');;
 	Route::any('emails/form', 'EmailController@form');
@@ -133,19 +133,12 @@ Route::get('entretiens/{e_id}/objectifs/{id}/edit', 'ObjectifController@edit');
 Route::get('objectifs', 'ObjectifController@indexAdmin');
 Route::post('objectifs/updateNoteObjectifs', 'ObjectifController@updateNoteObjectifs')->name('updateNoteObjectifs');
 
-Route::get('config/entretienObjectif', 'EntretienObjectifController@index')->name('config.objectifs');
-Route::get('entretienObjectif/form', 'EntretienObjectifController@form')->name('config.objectifs.form');
-Route::post('entretienObjectif/store', 'EntretienObjectifController@store')->name('config.objectifs.store');
-Route::get('entretienObjectif/{id}', 'EntretienObjectifController@show');
-Route::delete('entretienObjectif/{id}/delete', 'EntretienObjectifController@destroy');
-
-Route::get('entretienObjectif/{oid}/groupes', 'ObjectifController@indexAdmin');
-Route::get('entretienObjectif/{oid}/groupes/create', 'ObjectifController@create');
-Route::get('entretienObjectif/{oid}/groupes/{gid}/subobjectifs/{subObjId}/form', 'ObjectifController@subObjectifForm');
-Route::post('entretienObjectif/{oid}/groupes/store', 'ObjectifController@store');
-Route::get('entretienObjectif/{oid}/groupes/{gid}/edit', 'ObjectifController@edit');
-Route::delete('entretienObjectif/{oid}/groupes/{gid}/delete', 'ObjectifController@destroy');
-
+Route::get('config/objectifs', 'EntretienObjectifController@index')->name('objectifs');
+Route::get('objectifs/table', 'EntretienObjectifController@getTable')->name('objectifs.table');
+Route::get('objectif/form', 'EntretienObjectifController@form')->name('objectif.form');
+Route::post('objectif/store', 'EntretienObjectifController@store')->name('objectif.store');
+Route::get('objectif/{id}', 'EntretienObjectifController@show')->name('objectif.show');
+Route::delete('objectif/delete', 'EntretienObjectifController@delete')->name('objectif.delete');
 
 Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index')->name('anglets.formations');
 Route::any('entretiens/{e_id}/formations/create', 'FormationController@create');

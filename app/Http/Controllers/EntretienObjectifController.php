@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\Table;
 use App\Team;
 use App\User;
 use Carbon\Carbon;
@@ -14,6 +15,55 @@ use Auth;
 
 class EntretienObjectifController extends Controller
 {
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $query = EntretienObjectif::getAll();
+
+    $table->setPrimaryKey('id');
+    $table->setBulkActions(true);
+    $table->addColumn('title', 'Titre', function ($entity) {
+      return $entity->title ? str_limit($entity->title, 30) : '';
+    });
+    $table->addColumn('type', 'Type', function ($entity) {
+      return $entity->getType();
+    });
+    $table->addColumn('team', 'Equipe', function ($entity) {
+      $team = Team::find($entity->team);
+      return $team ? $team->name : '---';
+    });
+    $table->addColumn('deadline', 'Echénace', function ($entity) {
+      return $entity->deadline != null ? date('d/m/Y', strtotime($entity->deadline)) : '---';
+    });
+    $table->addColumn('created_at', 'Créé le');
+
+    // define table actions
+    $table->addAction('show', [
+      'icon' => 'fa fa-eye',
+      'label' => 'Visualiser',
+      'route' => ['name' => 'objectif.show', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{}',
+      ],
+      'bulk_action' => false,
+    ]);
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'route' => ['name' => 'objectif.form', 'args' => ['id' => '[id]']],
+      'bulk_action' => false,
+    ]);
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'Objectif.delete',
+      'bulk_action' => true,
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -21,8 +71,7 @@ class EntretienObjectifController extends Controller
    */
   public function index()
   {
-    $objectifs = Auth::user()->entretiensObjectifs()->paginate(10);
-    return view('entretienObjectif.index', compact('objectifs'));
+    return view('objectifs.index');
   }
 
   /**
@@ -33,14 +82,14 @@ class EntretienObjectifController extends Controller
   public function form(Request $request)
   {
     $id = $request->id;
-    if (isset($id) && is_numeric($id)) {
+    if ($id > 0) {
       $objectif = EntretienObjectif::findOrFail($id);
     } else {
       $objectif = new EntretienObjectif();
     }
     $teams = Team::getAll()->get();
 
-    return view('entretienObjectif.form', compact('objectif', 'teams'));
+    return view('objectifs.form', compact('objectif', 'teams'));
   }
 
   /**
@@ -92,22 +141,11 @@ class EntretienObjectifController extends Controller
   {
     ob_start();
     $objectif = EntretienObjectif::find($id);
-    echo view('entretienObjectif.show', compact('objectif'));
+    echo view('objectifs.show', compact('objectif'));
     $content = ob_get_clean();
     return ['title' => "Détails de l'objectif", 'content' => $content];
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request $request
-   * @param  int $id
-   * @return \Illuminate\Http\Response
-   */
-  public function update(Request $request, $id)
-  {
-    //
-  }
 
   /**
    * Remove the specified resource from storage.
@@ -115,12 +153,24 @@ class EntretienObjectifController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function delete(Request $request)
   {
-    $objectif = EntretienObjectif::findOrFail($id)->delete();
-    $sub = Objectif::where('entretienobjectif_id', $id)->delete();
+    if (empty($request->ids)) return;
 
-    return ['status' => 'success', 'message' => "La suppression a bien été effectuée"];
+    foreach($request->ids as $id) {
+      $objectif = EntretienObjectif::find($id);
+      try {
+        $objectif->delete();
+      } catch (\Exception $e) {
+        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+      }
+    }
+
+    return response()->json([
+      'status' => 'alert',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+    ]);
   }
 
   public function validateIndicators($indicators) {

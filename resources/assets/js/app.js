@@ -29,11 +29,10 @@ import chmComment from './class/comment'
 import chmCarreer from './class/carreer'
 import chmSkill from './class/skill'
 import chmFormation from './class/formation'
-import chmObjectif from './class/objectif'
 import chmGroupe from './class/groupe'
 import chmQuestion from './class/question'
 import chmSurvey from './class/survey'
-import chmEntretienObjectif from './class/entretienObjectif'
+import Objectif from './class/Objectif'
 import chmEmail from './class/email'
 import chmEmailAction from './class/emailAction'
 import Setting from './class/setting'
@@ -70,11 +69,10 @@ window.chmComment = chmComment
 window.chmCarreer = chmCarreer
 window.chmSkill = chmSkill
 window.chmFormation = chmFormation
-window.chmObjectif = chmObjectif
 window.chmGroupe = chmGroupe
 window.chmQuestion = chmQuestion
 window.chmSurvey = chmSurvey
-window.chmEntretienObjectif = chmEntretienObjectif
+window.Objectif = Objectif
 window.chmEmail = chmEmail
 window.chmEmailAction = chmEmailAction
 window.Setting = Setting

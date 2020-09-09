@@ -1,96 +1,26 @@
 import $ from 'jquery'
+import trans from './../script/functions'
 
-export default class chmObjectif {
+export default class Objectif {
 
-  static create (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/create')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmObjectif.store'
-      },
-      footer: {
-        label: 'Sauvegarder'
-      },
-      width: 700
-    })
-  }
-
-  static edit (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/' + params.gid + '/edit')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmObjectif.store'
-      },
-      footer: {
-        label: 'Mettre à jour'
-      },
-      width: 700
-    })
-  }
-
-  static subObjectifForm (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/' + params.gid + '/subobjectifs/' + params.subObjId + '/form')}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        callback: 'chmObjectif.store'
-      },
-      footer: {
-        label: 'Enregistrer'
-      },
-      width: 700
-    })
-  }
-
-  static show (params) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('user/' + params.id)})
-  }
-
-  static store (event) {
-    event.preventDefault()
-    var form = $(event.target)[0]
-    var data = new window.FormData(form)
-    var btn = $(event.target).find('[type="submit"]')
-    var btnHtml = btn.html()
-    btn.html('<i class="fa fa-circle-o-notch"></i>&nbsp;Traitement en cours...')
-    btn.prop('disabled', true)
-    var oid = $('[name="oid"]').val()
-    var gid = $('[name="gid"]').val()
-    var ajaxParams = {
-      gid: gid,
-      type: 'POST',
-      url: window.chmSite.url('entretienObjectif/' + oid + '/groupes/store'),
-      data: data,
-      processData: false,
-      contentType: false,
-      cache: false,
-      timeout: 600000
-    }
-    if ($(event.target).find('[type="file"]')) ajaxParams.enctype = 'multipart/form-data'
-    $.ajax(ajaxParams).done(function (response, textStatus, jqXHR) {
-      if (response.status !== 'success') {
-        window.chmModal.showAlertMessage(response.status, response.message)
-      } else {
-        window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'location.reload()'})
+  static delete(event, ids) {
+    ids = (typeof event[0] !== 'undefined') ? event : ids
+    window.chmModal.show({
+      type: 'DELETE',
+      url: '/objectif/delete',
+      data: {
+        "ids": ids,
+        "_method": 'DELETE',
+        "_token": $('input[name="_token"]').val(),
       }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      var message = jqXHR.status + ' - ' + jqXHR.statusText
-      window.chmModal.showAlertMessage('danger', message)
-    }).always(function () {
-      btn.html(btnHtml)
-      btn.prop('disabled', false)
-    })
-  }
-
-  static delete (params) {
-    var token = $('input[name="_token"]').val()
-    var object = window.chmModal.show({
-      type: 'POST',
-      url: window.chmSite.url('entretienObjectif/' + params.oid + '/groupes/' + params.gid + '/delete'),
-      data: {'_token': token, '_method': 'DELETE'}
     }, {
-      message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...'
+      message: '<i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;' + trans("Suppression en cours..."),
+      onSuccess: (response) => {
+      if ('status' in response && response.status === 'alert') {
+          window.chmTable.refresh('#ObjectifsTableContainer')
+        }
+      }
     })
-    object.modal.attr('chm-modal-action', 'reload')
   }
 
 }

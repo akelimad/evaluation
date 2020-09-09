@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Fonction;
+use App\Http\Service\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
@@ -37,6 +39,46 @@ class SkillController extends Controller
     return view('skills.index', compact('e', 'evaluations', 'skill', 'user'));
   }
 
+  public function getTable(Request $request) {
+    $query = Skill::getAll()->orderBy('id', 'DESC');
+
+    $table = new Table($request);
+    $table->setPrimaryKey('id');
+    $table->setBulkActions(true);
+    $table->setDateFormat('d/m/Y H:i');
+
+    $table->addColumn('title', 'Titre');
+    $table->addColumn('function', 'Fonction', function ($entity) {
+      $function = Fonction::find($entity->function_id);
+      return $function ? $function->title : '---';
+    });
+    $table->addColumn('description', 'Description', function ($entity) {
+      return str_limit($entity->description, 30);
+    });
+    $table->addColumn('created_at', 'Créée le');
+
+    // define table actions
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'route' => ['name' => 'skill.form', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"form":{"attributes":{"id":"skillForm", "target-table":"[chm-table]"}}}',
+      ],
+      'bulk_action' => false,
+    ]);
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'chmSkill.delete',
+      'bulk_action' => true,
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -44,9 +86,7 @@ class SkillController extends Controller
    */
   public function indexAdmin()
   {
-    $count = 1;
-    $skills = Skill::getAll()->paginate(10);
-    return view('skills.indexAdmin', compact('skills', 'count'));
+    return view('skills.index');
   }
 
   /**
@@ -54,16 +94,23 @@ class SkillController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function create(Request $request)
+  public function form(Request $request)
   {
     if ($request->method() == 'POST') {
       return $this->store($request);
     }
-    $skill = new Skill();
+    $id = $request->id;
+    if ($id > 0) {
+      $skill = Skill::find($id);
+      $title = "Modifier la fiche métier";
+    } else {
+      $skill = new Skill();
+      $title = "Ajouter une fiche métier";
+    }
     ob_start();
     echo view('skills.form', compact('skill'));
     $content = ob_get_clean();
-    return ['title' => 'Ajouter une fiche métier', 'content' => $content];
+    return ['title' => $title, 'content' => $content];
   }
 
   /**
@@ -115,34 +162,6 @@ class SkillController extends Controller
     }
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int $id
-   * @return \Illuminate\Http\Response
-   */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int $id
-   * @return \Illuminate\Http\Response
-   */
-  public function edit($id, Request $request)
-  {
-    if ($request->method() == 'POST') {
-      return $this->store($request);
-    }
-    ob_start();
-    $skill = Skill::findOrFail($id);
-    echo view('skills.form', compact('skill'));
-    $content = ob_get_clean();
-    return ['title' => 'Modifier la fiche métier', 'content' => $content];
-  }
 
   /**
    * Update the specified resource in storage.
@@ -176,11 +195,24 @@ class SkillController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy(Request $request)
+  public function delete(Request $request)
   {
-    $skill = Skill::findOrFail($request['params']['id']);
-    $skill->delete();
-    return ["status" => "success", "message" => "La fiche métier a été supprimée avec succès !"];
+    if (empty($request->ids)) return;
+
+    foreach($request->ids as $id) {
+      $skill = Skill::find($id);
+      try {
+        $skill->delete();
+      } catch (\Exception $e) {
+        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+      }
+    }
+
+    return response()->json([
+      'status' => 'alert',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+    ]);
   }
 
   public function convertStringToArray($str, $delimeter = ',') {

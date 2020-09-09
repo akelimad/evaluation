@@ -180,7 +180,7 @@
         @endrole
 
         @role(["ADMIN"])
-        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'surveys-list', 'config.objectifs']))
+        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'surveys-list', 'objectifs']))
         <li class="treeview {{ $isConfig ? 'active menu-open' : '' }}">
           <a href="#">
             <i class="fa fa-gears"></i> <span>Paramétrage</span>
@@ -196,8 +196,8 @@
             <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
               <a href="{{ url('config/surveys') }}"><i class="fa fa-pencil"></i> <span>Questionnaires</span></a>
             </li>
-            <li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">
-              <a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>
+            <li class="{{ Request::is('config/objectifs') ? 'active' : '' }}">
+              <a href="{{ url('config/objectifs') }}"><i class="fa fa-signal"></i> Objectifs </a>
             </li>
             <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
               <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Fiches métiers</a>
