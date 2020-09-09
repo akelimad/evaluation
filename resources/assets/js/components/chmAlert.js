@@ -8,7 +8,7 @@ export default class chmAlert {
 
     $(alert).appendTo('body')
 
-    $(alert).delay(timeout).fadeOut(1000, function () {
+    $(alert).delay(timeout).fadeOut(3000, function () {
       $(this).alert('close')
     })
   }
@@ -36,16 +36,22 @@ export default class chmAlert {
   static getAlertBlock (type, messages, dismissible = true) {
     if (type === 'error') type = 'danger'
     if (typeof messages !== 'object') messages = {messages}
-    var alert = '<div class="chm-alerts alert alert-' + type + ' alert-white rounded mb-10">'
+    var alert = '<div class="chm-alerts alert alert-' + type + ' alert-white mb-20">'
     if (dismissible === true) {
       alert += '<button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>'
     }
-    alert += '<div class="icon"><i class="' + this.getIcon(type) + '"></i></div>'
-    alert += '<ul>'
-    $.each(messages, function (k, m) {
-      alert += '<li>' + m + '</li>'
-    })
-    alert += '</ul>'
+    alert += '<span class="alert-icon"><i class="' + this.getIcon(type) + '"></i></span>'
+    alert += '<span class="alert-message">'
+    if (messages.length == 1) {
+      alert += '<p class="mb-10">' + messages[0] + '</p>'
+    } else {
+      alert += '<ul class="pl-20">'
+      $.each(messages, function (k, m) {
+        alert += '<li style="list-style-type: initial;" class="mb-10">' + m + '</li>'
+      })
+      alert += '</ul>'
+    }
+    alert += '</span>'
     alert += '</div>'
     return alert
   }

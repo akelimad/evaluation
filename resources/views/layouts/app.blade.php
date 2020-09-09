@@ -174,24 +174,6 @@
         </li>
         @endrole
 
-        {{--@role(["ADMIN", "RH"])--}}
-        {{--<li class="{{ Request::is('users') ? 'active' : '' }}">--}}
-          {{--<a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a>--}}
-        {{--</li>--}}
-        {{--@endrole--}}
-        {{----}}
-        {{--@role(["ADMIN"])--}}
-        {{--<li class="{{ Request::is('config/surveys') ? 'active' : '' }}">--}}
-          {{--<a href="{{ url('config/surveys') }}"><i class="fa fa-pencil"></i> <span>Questionnaires</span></a>--}}
-        {{--</li>--}}
-        {{--@endrole--}}
-        {{----}}
-        {{--@role(["ADMIN", "RH", "MENTOR"])--}}
-        {{--<li class="{{ Request::is('config/entretienObjectif') ? 'active' : '' }}">--}}
-          {{--<a href="{{ url('config/entretienObjectif') }}"><i class="fa fa-signal"></i> Objectifs </a>--}}
-        {{--</li>--}}
-        {{--@endrole--}}
-
         @role(["ADMIN", "RH"])
         <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>Campagnes</span></a></li>
         <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>Calendrier des campagnes</span></a></li>
@@ -201,12 +183,12 @@
         @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'surveys-list', 'config.objectifs']))
         <li class="treeview {{ $isConfig ? 'active menu-open' : '' }}">
           <a href="#">
-            <i class="fa fa-gears"></i> <span>Configuration</span>
+            <i class="fa fa-gears"></i> <span>Paramétrage</span>
             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
           <ul class="treeview-menu" style="{{ $isConfig ? 'display: block;' : '' }}">
             <li class="{{ Request::is('config/settings/general') ? 'active' : '' }}">
-              <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> Paramètres</a>
+              <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> Champs éditables</a>
             </li>
             <li class="{{ Request::is('users') ? 'active' : '' }}">
               <a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a>
@@ -321,8 +303,6 @@
 <script src="{{asset('js/fullcalendar.min.js')}}"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
-<!-- Slimscroll -->
-<script src="{{asset('js/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
 <script src="{{asset('js/fastclick.js')}}"></script>
 <script src="{{asset('js/select2.full.min.js')}}"></script>
@@ -331,7 +311,6 @@
 <script src="{{asset('js/admin.min.js')}}"></script>
 
 <!-- AdminLTE for demo purposes -->
-<script src="{{asset('js/demo.js')}}"></script>
 <script src="{{asset('js/sweetalert2.min.js')}}"></script>
 <script src="{{asset('js/script.js')}}?v={{ time() }}"></script>
 <script src="{{ App\Asset::path('app.js') }}"></script>

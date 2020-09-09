@@ -4,18 +4,6 @@ import trans from './../script/functions'
 
 export default class chmRole {
 
-  static form (id = null) {
-    window.chmModal.show({type: 'GET', url: window.chmSite.url('role/form'), data: {id: id}}, {
-      form: {
-        class: 'allInputsFormValidation form-horizontal',
-        id: "roleForm"
-      },
-      footer: {
-        label: 'Sauvegarder'
-      }
-    })
-  }
-
   static delete(event, ids) {
     ids = (typeof event[0] !== 'undefined') ? event : ids
     window.chmModal.show({

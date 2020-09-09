@@ -32,11 +32,6 @@ $(function(){
 
     var max_note = parseInt($('#max_note').text())
 
-    $('#datepicker, #datepicker1, #datepicker2').datepicker({
-        autoclose: true,
-        format: 'dd-mm-yyyy'
-    })
-
     // to show the choosen filename in input like: avatar.png
     $(document).on('change', ':file', function() {
     var input = $(this),

@@ -71,8 +71,8 @@ export default class chmModal {
         let hasContent = 'content' in response && response.content.length > 0
         if (hasContent) {
           modalTemplate.find('.modal-body')
-              .html('<div class="chm-modal-content">' + response.content + '</div>')
-              .show()
+            .html('<div class="chm-modal-content">' + response.content + '</div>')
+            .show()
         } else {
           modalTemplate.find('.modal-body').hide()
         }
@@ -122,7 +122,7 @@ export default class chmModal {
             attrs += ' ' + k + '="' + v + '"'
           })
 
-          var footer = '<div class="modal-footer"><button type="button" class="btn btn-danger button-xs" data-dismiss="modal" aria-hidden="true">' + trans("Fermer") + '</button><button type="submit" id="' + attributes.id + 'Submit" class="btn btn-primary pull-right button-xs">' + trans(options.footer.label) + '</button></div>'
+          var footer = '<div class="modal-footer"><button type="button" class="btn btn-default button-xs" data-dismiss="modal" aria-hidden="true">' + trans("Fermer") + '</button><button type="submit" id="' + attributes.id + 'Submit" class="btn btn-primary pull-right button-xs">' + trans(options.footer.label) + '</button></div>'
 
           if (modalTemplate.find('.modal-footer').length === 0) {
             modalTemplate.find('.modal-content').append(footer)
@@ -186,7 +186,6 @@ export default class chmModal {
   static confirm (target = '', title = '', message = '', callable = '', args = {}, params = {}) {
     // prepare action
     var action = ''
-    params.width = 355
     if (callable !== '') {
       args = $.extend(args, window.chmForm.getTargetParams(target, 'target-params'))
       action = callable + '(' + this.htmlEntities(JSON.stringify(args)) + ')'
@@ -207,7 +206,7 @@ export default class chmModal {
     var dismiss = ''
     if (params.closeAfterConfirm === true) dismiss = ' data-dismiss="modal" aria-hidden="true" '
 
-    var footer = '<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" aria-hidden="true">' + trans("Fermer") + '</button><button onclick="return ' + action + '" ' + dismiss + ' class="btn btn-primary btn-sm pull-right">' + trans("Appliquer") + '</button>'
+    var footer = '<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" aria-hidden="true">' + trans("Fermer") + '</button><button onclick="return ' + action + '" ' + dismiss + ' class="btn btn-primary bg-info btn-sm pull-right">' + trans("Appliquer") + '</button>'
 
     if (modal.find('.modal-footer').length === 0) {
       modal.find('.modal-content').append('<div class="modal-footer">' + footer + '</div>')
@@ -258,7 +257,7 @@ export default class chmModal {
 
     var close = ''
     if (params.close) {
-      close = '<button type="button" class="btn btn-danger bg-danger btn-sm" ' + alertCallback + '>' + trans("Fermer") + '</button>'
+      close = '<button type="button" class="btn btn-primary bg-danger btn-sm" ' + alertCallback + '>' + trans("Fermer") + '</button>'
     }
     var footer = close + '<button type="button" class="btn btn-primary btn-sm pull-right" ' + alertCallback + '>' + trans("OK") + '</button></div>'
 
@@ -357,9 +356,9 @@ export default class chmModal {
 
   static htmlEntities (str) {
     return String(str).replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
   }
 
   static getModal (target, type = 'params') {
@@ -396,7 +395,7 @@ export default class chmModal {
         method: 'POST',
         action: null,
         attributes: {
-          class: 'allInputsFormValidation form-vertical',
+          class: 'allInputsFormValidation',
           id: null,
           callback: 'chmForm.submit',
           novalidate: '',

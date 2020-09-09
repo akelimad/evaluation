@@ -7,14 +7,18 @@
  require('./../../../node_modules/bootstrap-sass/assets/javascripts/bootstrap/popover')
 
 // Main modules
-import chmSite from './class/site'
-import chmCookie from './class/cookie'
-import chmModal from './class/modal'
-import chmFilter from './class/filter'
-import chmAlert from './class/alert'
-import chmTable from './class/chmTable'
-import chmUrl from './class/chmUrl'
-import chmSearch from './class/chmSearch'
+import chmAlert from './components/chmAlert'
+import chmChart from './components/chmChart'
+import chmCookie from './components/chmCookie'
+import chmDate from './components/chmDate'
+import chmFilter from './components/chmFilter'
+import chmForm from './components/chmForm'
+import chmModal from './components/chmModal'
+import chmPrint from './components/chmPrint'
+import chmSearch from './components/chmSearch'
+import chmSite from './components/chmSite'
+import chmTable from './components/chmTable'
+import chmUrl from './components/chmUrl'
 
 import chmUser from './class/user'
 import chmRole from './class/role'
@@ -33,26 +37,30 @@ import chmEntretienObjectif from './class/entretienObjectif'
 import chmEmail from './class/email'
 import chmEmailAction from './class/emailAction'
 import Setting from './class/setting'
-import Attachment from './class/Attachment'
+import Attachment from './class/attachment'
 import Crm from './class/crm'
-import Fonction from './class/Fonction'
-import Department from './class/Department'
-import chmForm from './class/chmForm'
-import Team from './class/Team'
+import Fonction from './class/fonction'
+import Department from './class/department'
+import Team from './class/team'
 
 // Standart jQuery script
 import './custom'
 
 // Store modules in window
-window.chmSite = chmSite
-window.chmCookie = chmCookie
-window.chmModal = chmModal
-window.chmFilter = chmFilter
 window.chmAlert = chmAlert
+window.chmChart = chmChart
+window.chmCookie = chmCookie
+window.chmDate = chmDate
+window.chmFilter = chmFilter
+window.chmForm = chmForm
+window.chmModal = chmModal
+window.chmPrint = chmPrint
+window.chmSearch = chmSearch
+window.chmSite = chmSite
 window.chmTable = chmTable
 window.chmUrl = chmUrl
-window.chmSearch = chmSearch
 
+// store my class in window
 window.chmUser = chmUser
 window.chmRole = chmRole
 window.chmPermission = chmPermission
@@ -74,5 +82,4 @@ window.Attachment = Attachment
 window.Crm = Crm
 window.Fonction = Fonction
 window.Department = Department
-window.chmForm = chmForm
 window.Team = Team

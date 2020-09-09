@@ -35,8 +35,8 @@ export default class chmTable {
     if ($(target).find('table').length === 0) {
       self.fill(target, '<i class="' + params.lodingIcon + '"></i>&nbsp;' + trans("Chargement de la table ..."), params.scrollTo)
     } else {
-      $(target).find('#table-overlay').show()
       // $(target).css('opacity', '0.3')
+      $(target).find('#table-overlay').show()
     }
 
     // Fire Ajax action
@@ -177,6 +177,12 @@ export default class chmTable {
 
 
 $(document).ready(function () {
+  // update total rows count
+  // print table results count
+  $('body').on('chmTableSuccess', function () {
+    $('.badge-count').text($('table').data('count'))
+  })
+
   // Get current page
   const page = window.chmUrl.getParam('page', 1)
 

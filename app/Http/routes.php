@@ -19,14 +19,14 @@ Route::get('/dashboard', 'HomeController@dashboard');
 Route::get('profile', 'UserController@profile');
 
 Route::get('user/{id}', 'UserController@show')->name('user.profile');
-Route::any('users/form', 'UserController@formUser');
-Route::post('users/store', 'UserController@storeUser');
+Route::any('users/form', 'UserController@form')->name('user.form');
+Route::post('users/store', 'UserController@store')->name('user.store');
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
 	Route::get('users/table', 'UserController@getTable')->name('users.table');
-	Route::get('users', 'UserController@indexUsers')->name('users');
-	Route::delete('user/delete', 'UserController@deleteUser');
-	Route::get('users/import', 'UserController@importUsers');
+	Route::get('users', 'UserController@index')->name('users');
+	Route::delete('user/delete', 'UserController@delete');
+	Route::get('users/import', 'UserController@import');
 	Route::post('users/import_parse', 'UserController@parseImport');
 	Route::post('users/import_process', 'UserController@processImport');
 	Route::get('entretiens/index', 'EntretienController@indexEntretien')->name('entretiens');
@@ -37,10 +37,11 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
 });
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
+	Route::get('surveys/table', 'SurveyController@getTable')->name('surveys.table');
 	Route::get('config/surveys', 'SurveyController@index')->name('surveys-list');
 	Route::get('config/surveys/form', 'SurveyController@form')->name('survey.form');
 	Route::post('surveys/store', 'SurveyController@store')->name('survey.store');
-	Route::delete('surveys/{id}/delete', 'SurveyController@destroy');
+	Route::delete('survey/delete', 'SurveyController@delete')->name('survey.delete');
 	Route::get('surveys/{id}', 'SurveyController@show');
 
 	Route::get('surveys/{sid}/groupes', 'GroupeController@index');
@@ -70,15 +71,17 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 
 	Route::get('config/settings/general', 'SettingController@general')->name('general.settings');
 
+	Route::get('departments/table', 'DepartmentController@getTable')->name('departments.table');
 	Route::get('config/setting/departments', 'DepartmentController@index');
-	Route::any('department/form', 'DepartmentController@form');
+	Route::any('department/form', 'DepartmentController@form')->name('department.form');
 	Route::post('department/store', 'DepartmentController@store');
 	Route::delete('department/delete', 'DepartmentController@delete');
 
-	Route::get('config/setting/functions', 'FonctionController@index');
-	Route::any('function/form', 'FonctionController@form');
-	Route::post('function/store', 'FonctionController@store');
-	Route::delete('function/delete', 'FonctionController@delete');
+	Route::get('functions/table', 'FonctionController@getTable')->name('functions.table');
+	Route::get('config/setting/functions', 'FonctionController@index')->name('functions');
+	Route::any('function/form', 'FonctionController@form')->name('function.form');
+	Route::post('function/store', 'FonctionController@store')->name('function.store');
+	Route::delete('function/delete', 'FonctionController@delete')->name('function.delete');
 
 	Route::get('roles/table', 'RoleController@getTable')->name('roles.table');
 	Route::get('config/roles', 'RoleController@index')->name('config.roles');
@@ -172,11 +175,12 @@ Route::post('answers/store', 'AnswerController@store');
 
 Route::post('config/settings/store', 'SettingController@store');
 
+Route::get('teams/table', 'TeamController@getTable')->name('teams.table');
 Route::get('config/teams', 'TeamController@index')->name('teams');
 Route::get('config/teams/{id}/get-users', 'TeamController@get')->name('get-users');
 Route::any('configs/teams/form', 'TeamController@form')->name('team.form');
 Route::post('configs/teams/store', 'TeamController@store')->name('team.store');
-Route::delete('configs/teams/{id}/delete', 'TeamController@delete')->name('team.delete');
+Route::delete('team/delete', 'TeamController@delete')->name('team.delete');
 
 Route::post('entretien/{id}/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
 Route::delete('entretien/{id}/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');

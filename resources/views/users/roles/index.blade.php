@@ -9,7 +9,7 @@
       <div class="col-md-12">
         <div class="box box-primary">
           <div class="box-header">
-            <h3 class="box-title"><i class="fa fa-user-secret"></i> Liste des rôles</h3>
+            <h3 class="box-title"><i class="fa fa-user-secret"></i> Liste des rôles <span class="badge badge-count">0</span></h3>
             <div class="box-tools mb40">
               <a
                   href="javascript:void(0)"

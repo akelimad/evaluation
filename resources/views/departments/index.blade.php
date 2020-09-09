@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Départements')
 @section('breadcrumb')
-  <li>Paramètres</li>
+  <li>Paramétrage</li>
   <li>Départements</li>
 @endsection
 @section('content')
@@ -22,45 +22,23 @@
       <div class="col-md-9">
         <div class="box box-primary">
           <div class="box-header">
-            <h3 class="box-title">Liste des départements <span class="badge">{{$results->total()}}</span></h3>
-
+            <h3 class="box-title">Liste des départements <span class="badge badge-count"></span></h3>
             <div class="box-tools mb40">
-              <a href="javascript:void(0)" onclick="return Department.form({})" class="btn bg-maroon"
-                 data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
+              <a
+                  href="javascript:void(0)"
+                  chm-modal="{{ route('department.form') }}"
+                  chm-modal-options='{"form":{"attributes":{"id":"departmentForm","target-table":"[chm-table]"}}}'
+                  class="btn bg-maroon"
+              ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter" }}</a>
             </div>
           </div>
-          @if(count($results)>0)
-            <div class="box-body table-responsive no-padding mb40">
-              <table class="table table-hover table-striped table-inversed-blue">
-                <tr>
-                  <th>Titre</th>
-                  <th class="text-right">Actions</th>
-                </tr>
-                @foreach($results as $key => $d)
-                  <tr>
-                    <td>{{ $d->title }}</td>
-                    <td class="text-right">
-                      {{ csrf_field() }}
-                      <div class="btn-group dropdown">
-                        <button aria-expanded="false" aria-haspopup="true" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                          <li>
-                            <a href="javascript:void(0)" onclick="return Department.form({{{$d->id}}})" class=""> <i class="fa fa-edit"></i> Modifier</a>
-                          </li>
-                          <li>
-                            <a href="javascript:void(0)" class="" onclick="return chmModal.confirm('', 'Supprimer le département', 'Etes-vous sur de vouloir supprimer ?','Department.delete', {id: {{$d->id}} }, {width: 450})"> <i class="fa fa-trash"></i> Supprimer</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
-                @endforeach
-              </table>
-              {{ $results->links() }}
-            </div>
-          @else
-            @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
-          @endif
+          <div class="box-body">
+            <div chm-table="{{ route('departments.table') }}"
+                 chm-table-options='{"with_ajax": true}'
+                 chm-table-params='{{ json_encode(request()->query->all()) }}'
+                 id="DepartmentsTableContainer"
+            ></div>
+          </div>
         </div>
       </div>
     </div>

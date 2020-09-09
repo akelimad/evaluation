@@ -83,7 +83,11 @@ class UserController extends Controller
     $table->addAction('edit', [
       'icon' => 'fa fa-pencil',
       'label' => 'Modifier',
-      'callback' => 'chmUser.form([id])',
+      'route' => ['name' => 'user.form', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"form":{"attributes":{"id":"userForm", "target-table":"[chm-table]"}}}',
+      ],
       'bulk_action' => false,
     ]);
     // define table actions
@@ -110,67 +114,24 @@ class UserController extends Controller
     return view('users.profile', compact('user'));
   }
 
-  public function indexUsers(Request $request)
+  public function index(Request $request)
   {
-    $name = $request->name;
-    $department = $request->service;
-    $function = $request->function;
-    $role = $request->role;
-    $team = $request->team;
-
-    $per_page = $selected = 10;
-    if (isset($request->per_page) && $request->per_page != "all") {
-      $per_page = $request->per_page;
-      $selected = $per_page;
-    } else if (isset($request->per_page) && $request->per_page == "all") {
-      $per_page = 500;
-      $selected = "all";
-    }
-    $entretiens = Entretien::select('id', 'titre')->get();
-    $query = User::getUsers();
-    $params = false;
-    if ($q = $request->get('q', false)) {
-      $query->where('name', "LIKE", "%$q%")->orWhere('last_name', "LIKE", "%$q%")->orWhere('email', "LIKE", "%$q%");
-    }
-    if (!empty($department)){
-      $query->where('service', '=', $department);
-    }
-    if (!empty($function)){
-      $query->where('function', '=', $function);
-    }
-    if (!empty($role)){
-      $query->whereHas('roles', function ($query) use ($role) {
-        $query->where('id', '=', $role);
-      });
-    }
-    if (!empty($team)){
-      $query->whereHas('teams', function ($query) use ($team) {
-        $query->where('team_id', '=', $team);
-      });
-    }
-    $users = $query->paginate($per_page);
-    $fonctions = Fonction::getAll()->get();
-    $departments = Department::getAll()->get();
     $roles = Role::select('id', 'name')->where('name', '<>', ['ROOT'])->where('name', '<>', ['ADMIN'])->get();
+    $departments = Department::getAll()->get();
+    $fonctions = Fonction::getAll()->get();
+    $teams = Team::getAll()->get();
     return view('users.index', [
-      'results' => $users,
-      'selected' => $selected,
       'roles' => $roles,
-      'entretiens' => $entretiens,
       'departments' => $departments,
       'fonctions' => $fonctions,
-      'name' => $name,
-      'department' => $department,
-      'function' => $function,
-      'role' => $role,
-      'teams' => Team::getAll()->get(),
+      'teams' => $teams,
     ]);
   }
 
-  public function formUser(Request $request)
+  public function form(Request $request)
   {
     if ($request->method() == "POST") {
-      return $this->storeUser($request);
+      return $this->store($request);
     }
     $id = $request->id;
     $roles_ids = [];
@@ -199,7 +160,7 @@ class UserController extends Controller
     return ['title' => $title, 'content' => $content];
   }
 
-  public function storeUser(Request $request)
+  public function store(Request $request)
   {
     $id = $request->input('id', false);
     $rules = [
@@ -271,7 +232,7 @@ class UserController extends Controller
 
   }
 
-  public function deleteUser(Request $request)
+  public function delete(Request $request)
   {
     if (empty($request->ids)) return;
     foreach($request->ids as $uid) {
@@ -285,11 +246,12 @@ class UserController extends Controller
 
     return response()->json([
       'status' => 'alert',
-      'title' => 'La suppression a été effectuée avec succès',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
     ]);
   }
 
-  public function importUsers(Request $request)
+  public function import(Request $request)
   {
     return view('users.data.import');
   }

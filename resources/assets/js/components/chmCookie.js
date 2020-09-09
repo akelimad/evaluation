@@ -1,8 +1,11 @@
+import chmSite from './chmSite'
+
 export default class chmCookie {
 
   static create (name, value, days = 365, cPath = '') {
     if (cPath === '') {
-      cPath = this.url().replace(window.location.origin, '')
+      //cPath = chmSite.url().replace(window.location.origin, '')
+      cPath = "/"
     }
     var cExpires = ''
     if (days) {
@@ -13,21 +16,17 @@ export default class chmCookie {
     document.cookie = name + '=' + value + cExpires + '; path=' + cPath
   }
 
-  static read (name) {
-    var match = document.cookie.match(new RegExp(name + '=([^;]+)'))
-    return (match[1] !== undefined) ? match[1] : null
+  static read (name, _default = null) {
+    var cookies = document.cookie
+    var patern = new RegExp(name + '=([^;]+)')
+    if (patern.test(cookies)) {
+      return cookies.match(patern)[1]
+    }
+    return _default
   }
 
   static erase (name) {
     this.create(name, '', -1)
-  }
-
-  static url (path = '') {
-    var url = document.querySelector('link[rel="website"]').getAttribute('href')
-    if (url.substr(-1) !== '/') {
-      url = url + '/'
-    }
-    return url + path
   }
 
 }

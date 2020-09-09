@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Groupe;
+use App\Http\Service\Table;
 use App\Question;
 use App\User;
 use Illuminate\Http\Request;
@@ -14,16 +15,60 @@ use App\Http\Requests;
 class SurveyController extends Controller
 {
 
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $query = Survey::getAll()->orderBy('id', 'DESC');
+
+    $table->setPrimaryKey('id');
+    $table->setDateFormat('d/m/Y H:i');
+    $table->setBulkActions(true);
+
+    $table->addColumn('title', 'Titre', function ($entity) {
+      return $entity->title;
+    });
+    $table->addColumn('type', 'Type', function ($entity) {
+      return !empty($entity->model) ? $entity->model : '---';
+    });
+    $table->addColumn('section', 'Section', function ($entity) {
+      $model = Evaluation::find($entity->evaluation_id);
+      return $model ? $model->title : '---';
+    });
+    $table->addColumn('created_at', 'Créé le');
+
+    // define table actions
+    $table->addAction('show', [
+      'icon' => 'fa fa-eye',
+      'label' => 'Visualiser',
+      'callback' => 'chmSurvey.show({id: [id]})',
+      'bulk_action' => false,
+    ]);
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'route' => ['name' => 'survey.form', 'args' => ['id' => '[id]']],
+      'bulk_action' => false,
+    ]);
+    // define table actions
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'chmSurvey.delete',
+      'bulk_action' => true,
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
   public function index()
   {
-    $surveys = Survey::getAll()->paginate(10);
-    return view('surveys.index', compact('surveys'));
+    return view('surveys.index');
   }
 
   public function form(Request $request)
   {
     $id = $request->id;
-    if (isset($id) && is_numeric($id)) {
+    if ($id > 0) {
       $survey = Survey::findOrFail($id);
       $pageTitle = "Modifier le questionnaire";
     } else {
@@ -117,23 +162,38 @@ class SurveyController extends Controller
   {
     ob_start();
     $survey = Survey::findOrFail($sid);
-    $groupes = $survey->groupes;
-    $incompleteSurvey = Survey::icompleteSurvey($sid);
-    echo view('surveys.preview', compact('groupes', 'sid', 'incompleteSurvey'));
+    echo view('surveys.preview', compact('survey'));
     $content = ob_get_clean();
     return ['title' => 'Visualiser le questionnaire', 'content' => $content];
   }
 
-  public function destroy($sid)
+  public function delete(Request $request)
   {
-    $survey = Survey::findOrFail($sid);
-    if ($survey->groupes()->count() > 0) {
-      foreach ($survey->groupes()->get() as $group) {
-        $group->delete();
-        $group->questions()->delete();
+    if (empty($request->ids)) return;
+
+    foreach($request->ids as $id) {
+      try {
+        $survey = Survey::find($id);
+        if ($survey->groupes()->count() > 0) {
+          foreach ($survey->groupes()->get() as $group) {
+            $group->delete();
+            $group->questions()->delete();
+          }
+        }
+        $survey->delete();
+      } catch (\Exception $e) {
+        return response()->json([
+          'status' => 'alert',
+          'title' => 'Erreur survenue',
+          'content' => '<i class="fa fa-exclamation text-danger"></i> '. $e->getMessage(),
+        ]);
       }
     }
-    $survey->delete();
-    return ["status" => "success", "message" => "Le questionnaire a été supprimé avec succès !"];
+
+    return response()->json([
+      'status' => 'alert',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+    ]);
   }
 }

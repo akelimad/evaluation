@@ -26,7 +26,11 @@ class RoleController extends Controller
     $table->addAction('edit', [
       'icon' => 'fa fa-pencil',
       'label' => 'Modifier',
-      'callback' => 'chmRole.form([id])',
+      'route' => ['name' => 'role.form', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"form":{"attributes":{"id":"roleForm", "target-table":"[chm-table]"}}}',
+      ]
     ]);
     $table->addAction('delete', [
       'icon' => 'fa fa-trash',
@@ -40,8 +44,7 @@ class RoleController extends Controller
 
   public function index()
   {
-    $roles = Role::where('name', '<>', 'ROOT')->where('name', '<>', 'ADMIN')->get();
-    return view('users/roles.index', ['roles' => $roles]);
+    return view('users/roles.index');
   }
 
   public function form(Request $request)
@@ -113,7 +116,8 @@ class RoleController extends Controller
 
     return response()->json([
       'status' => 'alert',
-      'title' => 'La suppression a été effectuée avec succès',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
     ]);
   }
 
