@@ -33,7 +33,7 @@ import chmGroupe from './class/groupe'
 import chmQuestion from './class/question'
 import chmSurvey from './class/survey'
 import Objectif from './class/Objectif'
-import chmEmail from './class/email'
+import Email from './class/email'
 import chmEmailAction from './class/emailAction'
 import Setting from './class/setting'
 import Attachment from './class/attachment'
@@ -73,7 +73,7 @@ window.chmGroupe = chmGroupe
 window.chmQuestion = chmQuestion
 window.chmSurvey = chmSurvey
 window.Objectif = Objectif
-window.chmEmail = chmEmail
+window.Email = Email
 window.chmEmailAction = chmEmailAction
 window.Setting = Setting
 window.Attachment = Attachment

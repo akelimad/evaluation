@@ -64,10 +64,11 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::post('skills/store', 'SkillController@store');
 	Route::delete('skills/delete', 'SkillController@delete');
 
-	Route::get('config/emails', 'EmailController@index')->name('config.emails');;
-	Route::any('emails/form', 'EmailController@form');
-	Route::post('emails/store', 'EmailController@store');
-	Route::delete('emails/{id}/delete', 'EmailController@delete');
+	Route::get('emails/table', 'EmailController@getTable')->name('emails.table');
+	Route::get('config/emails', 'EmailController@index')->name('config.emails');
+	Route::any('emails/form', 'EmailController@form')->name('email.form');
+	Route::post('emails/store', 'EmailController@store')->name('email.store');
+	Route::delete('emails/delete', 'EmailController@delete')->name('email.delete');
 
 	Route::get('config/settings/general', 'SettingController@general')->name('general.settings');
 

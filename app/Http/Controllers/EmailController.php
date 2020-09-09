@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\Table;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Email;
@@ -15,10 +16,41 @@ class EmailController extends Controller
     $this->middleware('auth');
   }
 
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $query = Email::getAll()->orderBy('id', 'DESC');
+
+    $table->setPrimaryKey('id');
+    $table->setBulkActions(true);
+    $table->addColumn('sender', 'Emetteur');
+    $table->addColumn('name', 'Nom');
+    $table->addColumn('subject', 'Objet', function ($entity) {
+      return str_limit($entity->subject, 80);
+    });
+
+    // define table actions
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'route' => ['name' => 'email.form', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"form":{"attributes":{"id":"emailForm", "target-table":"[chm-table]"}}}',
+      ]
+    ]);
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'Email.delete',
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
   public function index()
   {
-    $emails = Email::getAll()->paginate(10);
-    return view('emails.index', compact('emails'));
+    return view('emails.index');
   }
 
   public function form(Request $request)
@@ -84,9 +116,22 @@ class EmailController extends Controller
 
   public function delete(Request $request)
   {
-    $email = Email::find($request->id);
-    $email->delete();
-    return ["status" => "success", "message" => "L'email a été supprimé avec succès !"];
+    if (empty($request->ids)) return;
+
+    foreach($request->ids as $id) {
+      $email = Email::find($id);
+      try {
+        $email->delete();
+      } catch (\Exception $e) {
+        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+      }
+    }
+
+    return response()->json([
+      'status' => 'alert',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+    ]);
   }
 
 }
