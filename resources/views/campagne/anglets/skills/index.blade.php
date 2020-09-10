@@ -49,7 +49,7 @@
                                        data-slider-max="10"
                                        data-slider-step="0.5"
                                        data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir', $key, 'user') }}"
-                                       data-slider-enabled="true"
+                                       data-slider-enabled="{{ Auth::user()->id == $user->id }}"
                                        data-slider-tooltip="always"
                                 >
                               </div>
@@ -71,7 +71,7 @@
                                        data-slider-max="10"
                                        data-slider-step="0.5"
                                        data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_faire', $key, 'user') }}"
-                                       data-slider-enabled="true"
+                                       data-slider-enabled="{{ Auth::user()->id == $user->id }}"
                                        data-slider-tooltip="always"
                                 >
                               </div>
@@ -92,8 +92,8 @@
                                        data-slider-min="0"
                                        data-slider-max="10"
                                        data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_faire', $key, 'user') }}"
-                                       data-slider-enabled="true"
+                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_etre', $key, 'user') }}"
+                                       data-slider-enabled="{{ Auth::user()->id == $user->id }}"
                                        data-slider-tooltip="always"
                                 >
                               </div>
@@ -167,7 +167,7 @@
                                        data-slider-min="0"
                                        data-slider-max="10"
                                        data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_faire', $key, 'mentor') }}"
+                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_etre', $key, 'mentor') }}"
                                        data-slider-enabled="true"
                                        data-slider-tooltip="always"
                                 >

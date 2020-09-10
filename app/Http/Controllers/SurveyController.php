@@ -26,8 +26,8 @@ class SurveyController extends Controller
     $table->addColumn('title', 'Titre', function ($entity) {
       return $entity->title;
     });
-    $table->addColumn('type', 'Type', function ($entity) {
-      return !empty($entity->model) ? $entity->model : '---';
+    $table->addColumn('type', 'Catégorie', function ($entity) {
+      return $entity->getModele() ? $entity->getModele()->title : '---';
     });
     $table->addColumn('section', 'Section', function ($entity) {
       $model = Evaluation::find($entity->evaluation_id);
@@ -109,7 +109,7 @@ class SurveyController extends Controller
     // save survey
     $survey->title = $request->title;
     $survey->description = $request->description;
-    $survey->model = $request->model;
+    $survey->model_id = $request->model;
     $survey->evaluation_id = $request->section;
     $survey->user_id = User::getOwner()->id;
     $survey->save();

@@ -194,17 +194,7 @@ class EntretienController extends Controller
     $model = $request->model;
     $id = $request->id;
     $selectedUsers = [];
-    if (!empty($request->teamsIdToEvaluate)) {
-      foreach ($request->teamsIdToEvaluate as $team_id) {
-        $team = Team::find($team_id);
-        if (!empty($team->users)) {
-          $teamUsersId = $team->users->pluck('id')->toArray();
-          foreach ($teamUsersId as $user_id) {
-            $selectedUsers[] = $user_id;
-          }
-        }
-      }
-    }
+
     if (!empty($request->usersIdToEvaluates)) {
       foreach ($request->usersIdToEvaluates as $user_id) {
         $selectedUsers[] = $user_id;
@@ -212,7 +202,6 @@ class EntretienController extends Controller
     }
 
     $selectedUsers = array_unique($selectedUsers);
-
 
     $entretienUsers = $removedUsers = [];
     $evaluationsId = $request->items;
@@ -282,7 +271,7 @@ class EntretienController extends Controller
     $entretien->date = $date;
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
-    $entretien->model = $request->model;
+    $entretien->model_id = $request->model;
     $entretien->options = json_encode($request->options);
     $entretien->user_id = User::getOwner()->id;
 

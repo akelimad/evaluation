@@ -41,6 +41,7 @@ import Crm from './class/crm'
 import Fonction from './class/fonction'
 import Department from './class/department'
 import Team from './class/team'
+import Modele from './class/modele'
 
 // Standart jQuery script
 import './custom'
@@ -81,3 +82,4 @@ window.Crm = Crm
 window.Fonction = Fonction
 window.Department = Department
 window.Team = Team
+window.Modele = Modele

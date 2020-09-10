@@ -71,4 +71,8 @@ class Survey extends Model
     return $c;
   }
 
+  public function getModele() {
+    return Modele::find($this->model_id);
+  }
+
 }

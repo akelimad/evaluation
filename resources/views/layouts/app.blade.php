@@ -205,11 +205,14 @@
             <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
               <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Courriers automatiques</a>
             </li>
+            <li class="{{ Request::is('config/teams') ? 'active' : '' }}">
+              <a href="{{ route('teams') }}"><i class="fa fa-users"></i> Equipes</a>
+            </li>
             <li class="{{ Request::is('config/roles') ? 'active' : '' }}">
               <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> Rôles</a>
             </li>
-            <li class="{{ Request::is('config/teams') ? 'active' : '' }}">
-              <a href="{{ route('teams') }}"><i class="fa fa-users"></i> Equipes</a>
+            <li class="{{ Request::is('config/permissions') ? 'active' : '' }}">
+              <a href="{{ url('config/permissions') }}"><i class="fa fa-lock"></i> Permissions</a>
             </li>
           </ul>
         </li>

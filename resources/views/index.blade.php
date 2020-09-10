@@ -82,9 +82,9 @@
                           </td>
                           <td class="text-center">
                             @if($userAnswered)
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block"><i class="fa fa-eye"></i> Voir</a>
                             @else
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block"><i class="fa fa-pencil"></i> Remplir</a>
                             @endif
                           </td>
                         </tr>
@@ -112,16 +112,16 @@
             <div class="portlet-body">
               <div class="tab-content">
                 <div class="tab-pane active" id="aa">
-                  @if(count($collaborateurs)>0)
+                  @if(count($collaborateurs) > 0)
                     <div class="box-body table-responsive no-padding">
                       <table class="table table-hover table-striped">
                         <thead>
                         <tr>
                           <th>Nom et prénom</th>
                           <th>Campagne</th>
-                          <th class="text-center">Date d'expiration</th>
-                          <th class="text-center">Collaborateur</th>
-                          <th class="text-center">Manager</th>
+                          <th>Date d'expiration</th>
+                          <th>Collaborateur</th>
+                          <th>Manager</th>
                           <th class="text-center">Actions</th>
                         </tr>
                         </thead>
@@ -147,9 +147,9 @@
                               </td>
                               <td class="text-center">
                                 @if($mentorAnswered)
-                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block"><i class="fa fa-eye"></i> Voir</a>
                                 @else
-                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block"><i class="fa fa-pencil"></i> Remplir</a>
                                 @endif
                               </td>
                             </tr>
@@ -157,6 +157,10 @@
                         @endforeach
                         </tbody>
                       </table>
+                    </div>
+
+                    <div class="box-pagination">
+                      {{--{{ $collaborateurs->links() }}--}}
                     </div>
                   @else
                     @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])

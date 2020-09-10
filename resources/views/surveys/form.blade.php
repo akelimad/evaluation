@@ -21,20 +21,21 @@
               <div class="row mb-30">
                 <div class="col-md-12">
                   <label for="" class="control-label">Description</label>
-                  <textarea name="" id="" class="form-control" v-model="description"></textarea>
+                  <textarea name="description" id="description" class="form-control" v-model="description"></textarea>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6" :class="{'has-error': errors.has('model')}">
-                  <label for="" class="control-label required">Type</label>
-                  <select name="model" id="" class="form-control" v-model="model" v-validate="'required'">
+                  <label for="" class="control-label required">Type @{{ model.id }}</label>
+                  <select name="model" id="model" class="form-control" v-model="model" v-validate="'required'" @change="showHideEvalSelect($event)">
                     <option value=""></option>
-                    <option value="Entretien annuel">Entretien annuel</option>
-                    <option value="Feedback 360">Feedback 360</option>
+                    @foreach(\App\Modele::all() as $modele)
+                      <option value="{{ $modele->id }}" data-ref="{{ $modele->ref }}">{{ $modele->title }}</option>
+                    @endforeach
                   </select>
                   <span v-show="errors.has('model')" class="help-block">@{{ errors.first('model') }}</span>
                 </div>
-                <div class="col-md-6" v-if="model == 'Entretien annuel'">
+                <div class="col-md-6" v-if="selectedModelRef == 'ENT'">
                   <label for="" class="control-label">Evaluations</label>
                   <select name="section" id="" class="form-control" v-model="section">
                     <option value=""></option>
@@ -51,7 +52,7 @@
                 <div class="col-md-12">
                   <label for="" class="control-label">Entrer le nombre des blocks pour ce questionnaire</label>
                   <div class="input-group" :class="{'has-error': errors.has('number')}">
-                    <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes">
+                    <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes" maxlength="3">
                     <span class="input-group-btn">
                       <button class="btn btn-success" @click="addGroups()" :disabled="validateGrpNbr" type="button">Valider</button>
                     </span>
@@ -186,7 +187,8 @@
         id: "{{ $survey->id }}",
         title: "{!! $survey->title !!}",
         description: "{!! $survey->description !!}",
-        model: "{!! $survey->model !!}",
+        model: "{!! $survey->model_id !!}",
+        selectedModelRef: "{{ $survey->getModele() ? $survey->getModele()->ref : '' }}",
         section: "{{ $survey->evaluation_id }}",
         groups: [
           @foreach($survey->groupes as $group)
@@ -222,6 +224,12 @@
         submitted: false,
       },
       methods: {
+        showHideEvalSelect: function (e) {
+          if (e.target.options.selectedIndex > -1) {
+            const theTarget = e.target.options[e.target.options.selectedIndex].dataset;
+            this.selectedModelRef = theTarget.ref
+          }
+        },
         addGroups: function () {
           for (let i = 0; i < this.number; i++) {
             this.groups.push({
@@ -394,6 +402,9 @@
         validateGrpNbr: function () {
           return this.number < 1 || this.number > 100
         },
+      },
+      mounted: function() {
+
       },
       directives: {
         focus: {

@@ -146,22 +146,27 @@
               <label for="titre" class="control-label required">Type</label>
               <select name="model" id="model" class="form-control" chm-validate="required">
                 <option value=""></option>
-                <option value="Entretien annuel" {{ $entretien->model == 'Entretien annuel' ? 'selected':'' }}>Entretien annuel</option>
-                <option value="Feedback 360" disabled {{ $entretien->model == 'Feedback 360' ? 'selected':'' }}>Feedback 360</option>
+                @foreach(\App\Modele::all() as $model)
+                  <option value="{{ $model->id }}" data-ref="{{ $model->ref }}" {{ $entretien->model_id == $model->id ? 'selected':'' }} {{ $model->ref == 'FB360' ? 'disabled':'' }}>{{ $model->title }}</option>
+                @endforeach
               </select>
               <div class="feedback-360-options mt-15">
+
                 <div class="form-check mb-15">
                   <input type="checkbox" class="feedback360-options-cb" id="auto-eval" name="options[]" value="auto_eval" chm-validate="required" {{ in_array('auto_eval', $entretien->getOptions()) ? 'checked':'' }}> <label for="auto-eval" class="font-14 mb-0"><b>Auto-évaluation</b></label>
                   <span class="text-muted font-12 d-block">Si cette option est activée, l'évalué va pouvoir faire l'auto-évaluation</span>
                 </div>
+
                 <div class="form-check mb-15">
                   <input type="checkbox" class="feedback360-options-cb" id="anonym" name="options[]" value="anonym" chm-validate="required" {{ in_array('anonym', $entretien->getOptions()) ? 'checked':'' }}> <label for="anonym" class="font-14 mb-0"><b>Réponses anonymes</b></label>
                   <span class="text-muted font-12 d-block">Si cette option est activée, le nom des collègues n'est pas affiché sur l'écran des résultats</span>
                 </div>
+
                 <div class="form-check">
                   <input type="checkbox" class="feedback360-options-cb" id="block" name="options[]" value="hide_results" chm-validate="required" {{ in_array('hide_results', $entretien->getOptions()) ? 'checked':'' }}> <label for="block" class="font-14 mb-0"><b>Bloquer le partage</b></label>
                   <span class="text-muted font-12 d-block">Si cette option est activée, il ne sera pas possible aux évalués de voir les résultats. seuls le responsable de l'évaluation et les admins auront accès aux résultats</span>
                 </div>
+
               </div>
             </div>
           </div>
@@ -181,26 +186,29 @@
                     <input type="checkbox" name="items[{{$evaluation->id}}][]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" id="eval-{{$evaluation->id}}-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
                   </div>
+
                   @if ($evaluation->title == "Evaluation annuelle")
                     <div class="evals-wrapper mb-10">
                       <select name="items[{{$evaluation->id}}][object_id][]" id="entretien" class="form-control">
                         <option value="">Veuillez sélectionner</option>
-                        @foreach(App\Survey::getAll()->where('evaluation_id', 1)->get() as $s)
-                          <option value="{{ $s->id }}" data-model="{{ $s->model }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
+                        @foreach(App\Survey::getAll()->where('evaluation_id', 1)->orWhere('evaluation_id', 0)->get() as $s)
+                          <option value="{{ $s->id }}" data-model-ref="{{ $s->getModele() ? $s->getModele()->ref : '---' }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
                     </div>
                   @endif
+
                   @if ($evaluation->title == "Carrières")
                     <div class="carreers-wrapper mb-10">
                       <select name="items[{{$evaluation->id}}][object_id][]" id="carreer" class="form-control">
                         <option value="">Veuillez sélectionner</option>
-                        @foreach(App\Survey::getAll()->where('evaluation_id', 2)->get() as $s)
-                          <option value="{{ $s->id }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
+                        @foreach(App\Survey::getAll()->where('evaluation_id', 2)->orWhere('evaluation_id', 0)->get() as $s)
+                          <option value="{{ $s->id }}" data-model-ref="{{ $s->getModele() ? $s->getModele()->ref : '---' }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
                     </div>
                   @endif
+
                   @if ($evaluation->title == "Objectifs")
                     <div class="objectifs-wrapper mb-10 w-100">
                       <div class="row">
@@ -229,7 +237,7 @@
               <label for="users_id" class="control-label required">Personne(s) à évaluer</label>
               <div class="entretien-annuel-users">
                 <div class="separator mb-10">
-                  <label for="" class="mb-0">Sélectionnez les équipes : <input type="checkbox" id="selectAllTeams"> <label for="selectAllTeams" class="d-inline-block">Tout sélectionner</label></label>
+                  <label for="" class="">Sélectionnez les équipes :</label>
                   <select name="teamsIdToEvaluate[]" id="teams_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
                     @foreach(\App\Team::getAll()->get() as $team)
                       <option data-id="{{ $team->id }}" id="team-{{ $team->id }}" data-usersid="{{ json_encode($team->users->pluck('id')) }}" value="{{ $team->id }}">{{ $team->name . " (". count($team->users) .")" }}</option>
@@ -240,7 +248,7 @@
                   <label for="" class="mb-0">Et / ou sélectionner des utilisateurs : <input type="checkbox" id="selectAllUsers"> <label for="selectAllUsers" class="d-inline-block">Tout sélectionner</label></label>
                   <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
                     @foreach($users as $user)
-                      <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
+                      <option title="{{ $user->email }}" data-teamsid="{{ json_encode($user->teams->pluck('id')) }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -354,14 +362,6 @@
     })
     $('.select2').select2()
 
-    $("#selectAllTeams").on('change', function(){
-      if($(this).is(':checked')){
-        $('#teams_id_to_evaluate').select2('destroy').find('option').prop('selected', 'selected').end().select2();
-      }else{
-        $('#teams_id_to_evaluate').select2('destroy').find('option').prop('selected', false).end().select2();
-      }
-    });
-
     $("#selectAllUsers").on('change', function(){
       if($(this).is(':checked')){
         $('#users_id_to_evaluate').select2('destroy').find('option').prop('selected', 'selected').end().select2();
@@ -421,7 +421,7 @@
         $('.form-check-input').each(function (index, element) {
           var itemLabel = $(element).closest('.form-check').find('label').text()
           var labelText = ""
-          if ($('select#model').val() == 'Feedback 360') {
+          if ($('select#model').find(':selected').data('ref') == "FB360") {
             labelText = "Date limite pour les collègues"
             if (itemLabel != 'Feedback 360') {
               $(element).closest('.form-check').hide()
@@ -489,16 +489,17 @@
     })
 
     $('select#model').on('change', function () {
-      $('select#entretien option').not(':first').hide()
+      $('select#entretien option, select#carreer option').not(':first').hide()
       var val = $(this).val()
-      if (val == "Feedback 360") {
+      var ref = $(this).find(':selected').data('ref')
+      if (ref == "FB360") {
         $('.entretien-annuel-users').hide()
         $('.feedback').show()
         $('#eval-1-label').html('Feedback 360')
         $('.feedback-360-options').show()
 
-        $('select#entretien option').filter(function () {
-          return $(this).data('model') == "Feedback 360"
+        $('select#entretien option, select#carreer option').filter(function () {
+          return $(this).data('model-ref') == "FB360"
         }).show()
         $('.evals-wrapper').hide()
         $('.carreers-wrapper').hide()
@@ -510,15 +511,14 @@
         $('.feedback-360-options').hide()
         $('.feedback-360-options').find(':checkbox').prop('checked', false)
 
-        $('select#entretien option').filter(function () {
-          return $(this).data('model') == "Entretien annuel"
+        $('select#entretien option, select#carreer option').filter(function () {
+          return $(this).data('model-ref') == "ENT"
         }).show()
       }
     })
     $('select#model').trigger('change')
 
     $('#teams_id_to_evaluate').on('change', function (e) {
-      console.log(e)
       var unselectedIds = $(this).data('users-id');
       var selectedIds = $('select#participants_id').val()
       var id = $(this).data('id')
@@ -545,12 +545,26 @@
         })
       }
     })
-    $('select#participants_id').on('select2:unselecting', function(event) {
-      var id = event.params.args.data.id
-      $("select#participants_id option[value='"+id+"']").remove();
-    })
     $('select#teams_id_to_evaluate').on('select2:selecting', function (event) {
-      var id = event.params.args.data.id
+      var selectedTeamId = event.params.args.data.id
+      var teamUsersId = $('select#teams_id_to_evaluate option[value="'+ selectedTeamId +'"]').data('usersid')
+      $.each(teamUsersId, function (key, value) {
+        usersId.push(value)
+      })
+      $('select#users_id_to_evaluate').val(usersId).trigger('change')
+    })
+
+    $('select#teams_id_to_evaluate').on('select2:unselecting', function(event) {
+      var teamIdToRemove = event.params.args.data.id
+      var allUsersId = usersId
+      var usersIdToRemove = $('select#teams_id_to_evaluate option[value="'+ teamIdToRemove +'"]').data('usersid')
+      /*$.each(usersIdToRemove, function (key, idToRemove) {
+        if ($.inArray(idToRemove, allUsersId) !== -1) {
+          usersId.splice(idToRemove, 1)
+        }
+      })*/
+
+      $('select#users_id_to_evaluate').val(usersId).trigger('change')
     })
   })
 </script>

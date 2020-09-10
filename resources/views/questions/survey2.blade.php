@@ -52,7 +52,7 @@
                           @foreach($q->children as $child)
                             <div class="choice-item">
                               <input type="{{$q->type}}" id="{{$child->id}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer ? 'checked' : '' }} disabled>
-                              <label for="{{$child->id}}" class="d-inline">{{ $child->titre }}</label>
+                              <label for="{{$child->id}}" class="d-inline-block">{{ $child->titre }}</label>
                             </div>
                           @endforeach
                         @elseif($q->type == "slider")
@@ -244,7 +244,7 @@
                             @foreach($q->children as $child)
                               <div class="choice-item">
                                 <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
-                                <label for="{{$child->id}}" class="d-inline">{{ $child->titre }}</label>
+                                <label for="{{$child->id}}" class="d-inline-block">{{ $child->titre }}</label>
                               </div>
                             @endforeach
                           @elseif($q->type == "slider")

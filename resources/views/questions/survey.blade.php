@@ -63,7 +63,7 @@
                             @foreach($q->children as $child)
                               <div class="choice-item">
                                 <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'checked' : '' }}>
-                                <label for="{{$child->id}}" class="d-inline">{{ $child->titre }}</label>
+                                <label for="{{$child->id}}" class="d-inline-block">{{ $child->titre }}</label>
                               </div>
                             @endforeach
                           @elseif($q->type == "slider")

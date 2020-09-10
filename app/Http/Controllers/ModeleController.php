@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Fonction;
 use App\Http\Service\Table;
+use App\Modele;
 use Illuminate\Http\Request;
-use Auth;
 
-class FonctionController extends Controller
+class ModeleController extends Controller
 {
   /**
    * Create a new controller instance.
@@ -21,7 +20,7 @@ class FonctionController extends Controller
 
   public function getTable(Request $request) {
     $table = new Table($request);
-    $query = Fonction::getAll()->orderBy('title', 'asc');
+    $query = Modele::orderBy('title', 'asc');
 
     $table->setPrimaryKey('id');
     $table->addColumn('title', 'Titre');
@@ -31,17 +30,17 @@ class FonctionController extends Controller
     $table->addAction('edit', [
       'icon' => 'fa fa-pencil',
       'label' => 'Modifier',
-      'route' => ['name' => 'function.form', 'args' => ['id' => '[id]']],
+      'route' => ['name' => 'model.form', 'args' => ['id' => '[id]']],
       'attrs' => [
         'chm-modal'=> '',
-        'chm-modal-options'=> '{"form":{"attributes":{"id":"functionForm", "target-table":"[chm-table]"}}}',
+        'chm-modal-options'=> '{"form":{"attributes":{"id":"modelForm", "target-table":"[chm-table]"}}}',
       ],
       'bulk_action' => false,
     ]);
     $table->addAction('delete', [
       'icon' => 'fa fa-trash',
       'label' => 'Supprimer',
-      'callback' => 'Fonction.delete',
+      'callback' => 'Modele.delete',
       'bulk_action' => true,
     ]);
 
@@ -57,8 +56,8 @@ class FonctionController extends Controller
    */
   public function index()
   {
-    return view('functions.index', [
-      'active' => 'func',
+    return view('models.index', [
+      'active' => 'model',
     ]);
   }
 
@@ -74,14 +73,14 @@ class FonctionController extends Controller
     }
     $id = $request->id;
     ob_start();
-    if (isset($id) && is_numeric($id)) {
-      $fonction = Fonction::findOrFail($id);
-      $title = "Modifier la fonction";
+    if ($id > 0) {
+      $model = Modele::findOrFail($id);
+      $title = "Modifier la modèle";
     } else {
-      $fonction = new Fonction();
-      $title = "Ajouter une fonction";
+      $model = new Modele();
+      $title = "Ajouter un modèle";
     }
-    echo view('functions.form', compact('fonction'));
+    echo view('models.form', compact('model'));
     $content = ob_get_clean();
     return ['title' => $title, 'content' => $content];
   }
@@ -94,23 +93,19 @@ class FonctionController extends Controller
    */
   public function store(Request $request)
   {
-    $id = $request->id;
-    if ($id) {
-      $fonction = Fonction::findOrFail($id);
-      $fonction->title = $request->titles[0];
-      $fonction->save();
-    } else {
-      foreach ($request->titles as $f) {
-        $fonction = new Fonction();
-        $fonction->title = $f;
-        $fonction->user_id = Auth::user()->id;
-        $fonction->save();
+    try {
+      $id = $request->id;
+      if ($id) {
+        $model = Modele::find($id);
+      } else {
+        $model = new Modele();
       }
-    }
-    if ($fonction->save()) {
+      $model->ref = $request->ref;
+      $model->title = $request->title;
+      $model->save();
       return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-    } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+    } catch (\Exception $e) {
+      return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard"];
     }
   }
 
@@ -125,9 +120,9 @@ class FonctionController extends Controller
     if (empty($request->ids)) return;
 
     foreach($request->ids as $id) {
-      $func = Fonction::find($id);
+      $model = Modele::find($id);
       try {
-        $func->delete();
+        $model->delete();
       } catch (\Exception $e) {
         return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
       }

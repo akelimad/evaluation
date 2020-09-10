@@ -36,7 +36,7 @@ class SkillController extends Controller
     $evaluations = Entretien::findEvaluations($e);
     $user = $e->users()->where('entretien_user.user_id', $uid)->first();
     $skill = Skill::where('function_id', $user->function)->first();
-    return view('skills.index', compact('e', 'evaluations', 'skill', 'user'));
+    return view('campagne.anglets.skills.index', compact('e', 'evaluations', 'skill', 'user'));
   }
 
   public function getTable(Request $request) {

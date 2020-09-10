@@ -84,13 +84,19 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::post('function/store', 'FonctionController@store')->name('function.store');
 	Route::delete('function/delete', 'FonctionController@delete')->name('function.delete');
 
+	Route::get('models/table', 'ModeleController@getTable')->name('models.table');
+	Route::get('config/setting/models', 'ModeleController@index')->name('models');
+	Route::any('model/form', 'ModeleController@form')->name('model.form');
+	Route::post('model/store', 'ModeleController@store')->name('model.store');
+	Route::delete('model/delete', 'ModeleController@delete')->name('model.delete');
+
 	Route::get('roles/table', 'RoleController@getTable')->name('roles.table');
 	Route::get('config/roles', 'RoleController@index')->name('config.roles');
 	Route::any('role/form', 'RoleController@form')->name('role.form');
 	Route::post('role/store', 'RoleController@store')->name('role.store');
 	Route::delete('role/delete', 'RoleController@delete')->name('role.delete');
 
-	Route::get('permissions', 'UserController@indexPermisions');
+	Route::get('config/permissions', 'UserController@indexPermisions');
 	Route::get('permission/create', 'UserController@createPermission');
 	Route::post('permission/store', 'UserController@storePermission');
 	Route::get('permission/{id}/edit', 'UserController@editPermission');
