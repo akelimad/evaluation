@@ -28,12 +28,12 @@ export default class chmTable {
     params = $.extend({}, {
       page: 1,
       scrollTo: false,
-      lodingIcon: 'fa fa-circle-o-notch fa-spin fast-spin'
+      lodingIcon: 'fa fa-refresh fa-spin fast-spin'
     }, params)
 
     // Decrease Table opacity while loading
     if ($(target).find('table').length === 0) {
-      self.fill(target, '<i class="' + params.lodingIcon + '"></i>&nbsp;' + trans("Chargement de la table ..."), params.scrollTo)
+      self.fill(target, '<div class="pt-10"><i class="' + params.lodingIcon + '"></i>&nbsp;' + trans("Chargement de la table ...") + '</div>', params.scrollTo)
     } else {
       // $(target).css('opacity', '0.3')
       $(target).find('#table-overlay').show()
