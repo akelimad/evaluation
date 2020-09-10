@@ -550,7 +550,7 @@
       $("select#participants_id option[value='"+id+"']").remove();
     })
     $('select#teams_id_to_evaluate').on('select2:selecting', function (event) {
-      var optionId = var id = event.params.args.data.id
+      var id = event.params.args.data.id
     })
   })
 </script>

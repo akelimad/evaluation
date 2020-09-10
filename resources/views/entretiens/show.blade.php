@@ -66,7 +66,7 @@
 			<div class="col-md-12">
 				<div class="box box-default">
 					<div class="box-body">
-						<div class="table-responsive">
+						<div class="table-responsive" sty>
 							<table class="table table-striped table-bordered" id="usersEntretiensTable">
 								<thead>
 								<tr>
@@ -82,6 +82,8 @@
 								</thead>
 								<tbody>
 								@foreach($entrentiensList as $user)
+									@php($userParentId = $user->parent ? $user->parent->id : 0)
+									@php($userParentFullname = $user->parent ? $user->parent->fullname() : 'introuvable')
 									@if ($e->isFeedback360() && $e->users[0]->id == $user->id) @continue @endif
 									<tr>
 										<td class="text-center">
@@ -89,12 +91,12 @@
 										</td>
 										<td>{{ $e->isFeedback360() ? $e->users[0]->fullname() : $user->fullname() }}</td>
 										<td>
-											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'user') )
+											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId, $e->id, 'user') )
 											<span class="badge {{ $statusInfo['labelClass'] }}">{{ $statusInfo['name'] }}</span>
 										</td>
-										<td>{{ $e->isFeedback360() ? $user->fullname() : $user->parent->fullname() }}</td>
+										<td>{{ $e->isFeedback360() ? $user->fullname() : $userParentFullname }}</td>
 										<td>
-											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $user->parent->id, $e->id, 'mentor'))
+											@php($statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId , $e->id, 'mentor'))
 											<span class="badge {{ $statusInfo['labelClass'] }}">{{ $statusInfo['name'] }}</span>
 										</td>
 										<td class="text-center">
@@ -111,7 +113,7 @@
 														<a href="javascript:void(0)" onclick="return chmEntretien.reminder({eid: {{$e->id}}, usersId: [{{$user->id}}], role: 'mentor'})"><i class="fa fa-bell-o"></i> Rappeler à l'évaluateur de remplir son entretien</a>
 													</li>
 													<li>
-														<a href="javascript:void(0)" onclick="return chmEntretien.reOpen({eid: {{$e->id}}, uid: {{$user->id}}, parent_id: {{$user->parent->id}}})"><i class="fa fa-refresh"></i> Réouvrir</a>
+														<a href="javascript:void(0)" onclick="return chmEntretien.reOpen({eid: {{$e->id}}, uid: {{$user->id}}, parent_id: {{ $userParentId }}})"><i class="fa fa-refresh"></i> Réouvrir</a>
 													</li>
 													<li>
 														<a href="javascript:void(0)" class="delete" onclick="chmModal.confirm(this, '', 'Etes-vous sûr de vouloir supprimer ?', 'chmEntretien.deleteUsers', {eid: {{$e->id}}, usersId: [{{$user->id}}]}, {width: 450}); return false;"><i class="fa fa-trash"></i> Supprimer</a>

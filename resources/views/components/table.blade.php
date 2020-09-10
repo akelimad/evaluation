@@ -121,7 +121,7 @@
         @php($to = $perpage * $curpage)
         @php($to = ($to < $total) ? $to : $total)
 
-        {{ "Affichage du $from à $to de $total entrées" }}
+        {{ "Affichage de l'élément $from à $to sur $total éléments" }}
       </div>
       <div class="col-md-5">
         <div class="navigation float-right">

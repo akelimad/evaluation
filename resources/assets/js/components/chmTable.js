@@ -253,6 +253,8 @@ $(document).ready(function () {
     }
   })
 
+  tableResponsive()
+
   $(window).on('resize',function () {
     if ($('[chm-table]').length > 0) tableResponsive()
   })

@@ -151,6 +151,10 @@ i {
 .box {
   padding: 1em;
 }
+.box-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
 .login-page {
   padding-top: 5%;
