@@ -86,16 +86,26 @@ class SurveyController extends Controller
     $survey_id = $request->id;
 
     if (!empty($groups)) {
+      $sumpGrpsPonderations = 0;
       foreach ($groups as $group) {
+        $sumpGrpsPonderations += intval($group['ponderation']);
         if (empty($group['questions'])) {
           return ["status" => "error", "message" => 'Veuillez ajouter des questions au block : ' . $group['title']];
         } else {
+          $sumpQstsPonderations = 0;
           foreach ($group['questions'] as $question) {
+            $sumpQstsPonderations += intval($question['ponderation']);
             if (in_array($question['type'], ['radio', 'checkbox', 'select']) && empty($question['choices'])) {
               return ["status" => "error", "message" => 'Veuillez ajouter des choix de réponse pour la question : '. $question['title']];
             }
           }
+          if ($sumpQstsPonderations != 100) {
+            return ["status" => "error", "message" => "La somme : $sumpQstsPonderations de la pondération des questions doit être égale à 100 pour le block : ". $group['title']];
+          }
         }
+      }
+      if ($sumpGrpsPonderations != 100) {
+        return ["status" => "error", "message" => "La somme : $sumpGrpsPonderations de la pondération des blocks doit être égale à 100"];
       }
     } else {
       return ["status" => "error", "message" => 'Veuillez ajouter des blocks au questionnaire'];
@@ -121,6 +131,7 @@ class SurveyController extends Controller
         if (!$groupModel) $groupModel = new Groupe();
         $groupModel->name = $group['title'];
         $groupModel->survey_id = $survey->id;
+        $groupModel->ponderation = $group['ponderation'];
         $groupModel->save();
 
         // save questions
@@ -129,6 +140,7 @@ class SurveyController extends Controller
             $questionModel = Question::find($question['id']);
             if (!$questionModel) $questionModel = new Question();
             $questionModel->titre = $question['title'];
+            $questionModel->ponderation = $question['ponderation'];
             $questionModel->type = $question['type'];
             $questionModel->parent_id =  0;
             $questionModel->groupe_id = $groupModel->id;

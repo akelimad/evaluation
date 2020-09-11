@@ -14,7 +14,7 @@ class AddModelSurveyTable extends Migration
     {
         Schema::table('surveys', function (Blueprint $table) {
             $table->dropColumn('model');
-            $table->integer('model_id')->after('title')->index();
+            $table->integer('model_id')->after('title');
         });
     }
 

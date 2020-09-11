@@ -28,6 +28,9 @@ function tableResponsive () {
 }
 
 $(function(){
+
+    $('[data-toggle="tooltip"]').tooltip()
+
     var baseUrl =  $("base").attr("href")
 
     var max_note = parseInt($('#max_note').text())

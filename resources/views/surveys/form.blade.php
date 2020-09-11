@@ -4,6 +4,7 @@
   <li><a href="{{ route('surveys-list') }}" class="text-blue">Questionnaires</a></li>
   <li>{{ $survey->id > 0 ? $survey->title : 'Ajouter' }}</li>
 @endsection
+
 @section('content')
   <div class="content" id="content">
     <form @submit.prevent="handleSubmit()" action="" method="post" novalidate>
@@ -69,13 +70,16 @@
 
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">
-          <div class="card mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
-            <div class="card-header">
+          <div class="panel panel-default mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
+            <div class="panel-heading">
               <div class="form-group" v-if="group.edit" :class="{'has-error': errors.has('group')}">
-                <div class="row">
-                  <div class="col-md-11">
-                    <input name="group" v-model="group.title" class="form-control" @blur="updateGroup(group)" @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du block" v-validate="'required'" @keypress.enter.prevent v-focus>
+                <div class="row mb-0">
+                  <div class="col-md-10">
+                    <input type="text" name="group" v-model="group.title" class="form-control"  @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du block" v-validate="'required'" @keypress.enter.prevent v-focus>
                     <span v-show="errors.has('group')" class="help-block">@{{ errors.first('group') }}</span>
+                  </div>
+                  <div class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
+                    <input type="text" name="ponderation" v-model="group.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateGroup(group)">
                   </div>
                   <div class="col-md-1">
                     <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
@@ -87,53 +91,69 @@
                 <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
+
+                <span class="badge pull-right mr-10" title="Pondération" data-toggle="tooltip">@{{ group.ponderation }}</span>
               </h3>
             </div>
-            <div class="box-body">
-              <div class="panel panel-default" v-for="(question, qIndex) in group.questions" :class="{highlight:question.active}">
-                <div class="panel-heading pt-5 pb-5">
-                  <div class="form-group mb-0" v-if="question.edit" :class="{'has-error': errors.has('question')}">
+            <div class="panel-body">
+              <div class="card card-default p-10" v-for="(question, qIndex) in group.questions" :class="{highlight:question.active}">
+                <div class="card-heading pt-5 pb-5">
+                  <div v-if="question.edit" class="form-group mb-0" :class="{'has-error': errors.has('question')}">
                     <div class="row">
-                      <div class="col-md-11">
-                        <input name="question" v-model="question.title" class="form-control" @blur="updateQuestion(question)" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
+                      <div class="col-md-10">
+                        <input name="question" v-model="question.title" class="form-control" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
                         <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
+                      </div>
+                      <div class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
+                        <input type="text" name="ponderation" v-model="question.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateQuestion(question)">
                       </div>
                       <div class="col-md-1">
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
                       </div>
                     </div>
                   </div>
-                  <p v-else class="m-0">
-                    <label @click="question.edit = true;" class="pull-left control-label mb-0 mr-5">Question @{{ qIndex + 1 }} : @{{ question.title }}</label>
-                    <div v-if="!question.edit" class="dropdown" style="display: inline-block;">
-                      <button class="btn btn-default btn-xs dropdown-toggle" type="button" :id="'aa' + grpIndex + qIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">@{{ getQuestionType(question.type) }} <span class="caret"></span></button>
-                      <ul class="dropdown-menu" :aria-labelledby="'aa' + grpIndex + qIndex">
-                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'text')">Text (court)</a></li>
-                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'textarea')">Text (long)</a></li>
-                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'radio')">Un seul choix</a></li>
-                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">Choix multiple</a></li>
-                        <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'select')">Liste déroulante</a></li>
-                      </ul>
-                    </div>
+                  <div v-else class="m-0">
+                    <div class="row mb-0">
+                      <div class="col-md-8">
+                        <label @click="question.edit = true;" class="pull-left control-label mb-0 mr-5">Question @{{ qIndex + 1 }} : @{{ question.title }}</label>
+                      </div>
+                      <div v-if="!question.edit" class="col-md-2">
+                        <div class="dropdown" style="display: inline-block;">
+                          <button class="btn btn-default btn-xs dropdown-toggle" type="button" :id="'aa' + grpIndex + qIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">@{{ getQuestionType(question.type) }} <span class="caret"></span></button>
+                          <ul class="dropdown-menu" :aria-labelledby="'aa' + grpIndex + qIndex">
+                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'text')">Text (court)</a></li>
+                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'textarea')">Text (long)</a></li>
+                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'radio')">Un seul choix</a></li>
+                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">Choix multiple</a></li>
+                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'select')">Liste déroulante</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div v-if="!question.edit" class="">
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
 
-                    <span v-if="!question.edit" class="">
-                      <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
-                      <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
-                    </span>
-                  </p>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
+
+                          <span class="badge pull-right mr-10 text-muted" title="Pondération" data-toggle="tooltip">@{{ question.ponderation }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div class="clearfix"></div>
                 </div>
-                <div class="panel-body">
+                <div v-if="group.questions[qIndex].choices.length > 0" class="card-body">
                   <ul class="list-unstyled">
                     <li v-for="(choice, cIndex) in group.questions[qIndex].choices" class="mb-10">
                       <div v-if="choice.edit" class="form-group">
                         <input name="choice" v-model="choice.title" class="form-control" @blur="updateChoice(grpIndex, qIndex, cIndex, choice)" @keyup.enter="updateChoice(grpIndex, qIndex, cIndex, choice)" v-focus placeholder="Entrez l'option de réponse" v-validate="'required'" @keypress.enter.prevent>
                       </div>
-                      <p v-else class="m-0 text-muted">
-                        <label @click="choice.edit = true;" class="mb-0 d-inline">@{{ cIndex + 1 }} | @{{ choice.title }}</label>
+                      <div v-else class="m-0 text-muted">
+                        <label @click="choice.edit = true;" class="mb-0 d-inline-block">@{{ cIndex + 1 }} | @{{ choice.title }}</label>
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeChoice(grpIndex, qIndex, cIndex)"><i class="fa fa-trash"></i></button>
                         <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editChoice(choice)"><i class="fa fa-pencil"></i></button>
-                      </p>
+                        <div class="clearfix"></div>
+                      </div>
                     </li>
                     <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
                   </ul>
@@ -195,12 +215,14 @@
           {
             id: "{{ $group->id }}",
             title: "{!! $group->name !!}",
+            ponderation: "{{ $group->ponderation > 0 ? $group->ponderation : 0 }}",
             questions: [
               @foreach($group->questions as $question)
                 @if ($question->parent_id == 0)
                 {
                   id: "{{ $question->id }}",
                   title: {!! json_encode($question->titre) !!},
+                  ponderation: "{{ $question->ponderation > 0 ? $question->ponderation : 0 }}",
                   type: "{{ $question->type }}",
                   choices: [
                     @foreach($question->children as $child)
