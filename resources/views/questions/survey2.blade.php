@@ -185,18 +185,18 @@
                   {{ $g->name }}
                   @if ($g->notation_type == 'section')
                     @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id))
-                      @if(!is_null(App\Evaluation::find($g->survey->evaluation_id)) && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluations')
+                      @if(!is_null(App\Evaluation::find($g->survey->evaluation_id)) && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle')
                         <input type="text" data-group-source="{{$g->id}}" class="notation inputNote" min="1"
                                max="{{App\Setting::get('max_note')}}" placeholder="Note"
                                value="{{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}"
-                               @if($g->notation_type == 'section' && App\Evaluation::find($g->survey->evaluation_id) && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;"
+                               @if($g->notation_type == 'section' && App\Evaluation::find($g->survey->evaluation_id) && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle') style="display: block;"
                                required @else style="display: none;" @endif>
                       @endif
                       @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
                         @php($gNote += App\Answer::getGrpNote($g->id, $user->id, $e->id))
                       @endif
                     @else
-                      {{--<span class="pull-right">Note : {{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id) : 0}} / {{App\Survey::countGroups($survey->id)}}</span>--}}
+                      <span class="pull-right">Note : {{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id) : 0}} / {{App\Survey::countGroups($survey->id)}}</span>
                       @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
                         @php($gNote += App\Answer::getGrpNote($g->id, $user->id, $e->id))
                       @endif
@@ -213,7 +213,7 @@
                                    placeholder="Note" class="notation inputNote" size="3" min="1"
                                    max="{{App\Setting::get('max_note')}}"
                                    value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"
-                                   @if($g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluations') style="display: block;"
+                                   @if($g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle') style="display: block;"
                                    required @endif>
                           @endif
                           @if($q->parent == null)
@@ -231,7 +231,7 @@
                             <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
                                    class="notation" min="1" max="{{App\Setting::get('max_note')}}"
                                    value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"
-                                   style="display: {{$g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluations' ? 'block':'none'}}">
+                                   style="display: {{$g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle' ? 'block':'none'}}">
                             <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                             @foreach($q->children as $child)
                               <div class="survey-checkbox">

@@ -12,7 +12,7 @@ class AddPonderationFieldsSurveysTable extends Migration
      */
     public function up()
     {
-        Schema::table('groups', function (Blueprint $table) {
+        Schema::table('groupes', function (Blueprint $table) {
             $table->double('ponderation')->nullable();
         });
         Schema::table('questions', function (Blueprint $table) {
@@ -27,10 +27,10 @@ class AddPonderationFieldsSurveysTable extends Migration
      */
     public function down()
     {
-        Schema::table('groups', function (Blueprint $table) {
+        Schema::table('groupes', function (Blueprint $table) {
             $table->dropColumn('ponderation');
         });
-        Schema::table('surveys', function (Blueprint $table) {
+        Schema::table('questions', function (Blueprint $table) {
             $table->dropColumn('ponderation');
         });
     }
