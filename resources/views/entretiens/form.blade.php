@@ -248,7 +248,7 @@
                   <label for="" class="mb-0">Et / ou sélectionner des utilisateurs : <input type="checkbox" id="selectAllUsers"> <label for="selectAllUsers" class="d-inline-block">Tout sélectionner</label></label>
                   <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
                     @foreach($users as $user)
-                      <option title="{{ $user->email }}" data-teamsid="{{ json_encode($user->teams->pluck('id')) }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
+                      <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -452,6 +452,11 @@
         if (countChecked == 0) {
           isValid = false;
         }
+        // check if selected surveyid in evaluation != carreer
+        if ($('#entretien').val() == $('#carreer').val()) {
+          chmForm.showErrorBlock('#carreer', "Vous ne pouvez séléctionner le même questionnaire pour 2 sections")
+          isValid = false;
+        }
       }
       if (stepNbr == 4) {
         if ($('#teams_id_to_evaluate').val().length == 0 && $('#users_id_to_evaluate').val().length == 0) {
@@ -558,13 +563,13 @@
       var teamIdToRemove = event.params.args.data.id
       var allUsersId = usersId
       var usersIdToRemove = $('select#teams_id_to_evaluate option[value="'+ teamIdToRemove +'"]').data('usersid')
-      /*$.each(usersIdToRemove, function (key, idToRemove) {
-        if ($.inArray(idToRemove, allUsersId) !== -1) {
-          usersId.splice(idToRemove, 1)
+      $.each(usersIdToRemove, function (key, idToRemove) {
+        const index = allUsersId.indexOf(idToRemove);
+        if (index > -1) {
+          allUsersId.splice(index, 1);
         }
-      })*/
-
-      $('select#users_id_to_evaluate').val(usersId).trigger('change')
+      })
+      $('select#users_id_to_evaluate').val(allUsersId).trigger('change')
     })
   })
 </script>
