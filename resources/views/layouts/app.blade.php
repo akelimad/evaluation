@@ -183,7 +183,7 @@
         @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'surveys-list', 'objectifs']))
         <li class="treeview {{ $isConfig ? 'active menu-open' : '' }}">
           <a href="#">
-            <i class="fa fa-gears"></i> <span>Paramétrage</span>
+            <i class="fa fa-gears"></i> <span>Paramétrages</span>
             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
           <ul class="treeview-menu" style="{{ $isConfig ? 'display: block;' : '' }}">
