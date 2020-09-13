@@ -15,7 +15,7 @@ class RoleController extends Controller
 {
   public function getTable(Request $request) {
     $table = new Table($request);
-    $query = Role::where('name', '<>', 'ROOT')->where('name', '<>', 'ADMIN');
+    $query = Role::where('name', '<>', 'ROOT');
 
     $table->setPrimaryKey('id');
     $table->addColumn('name', 'Nom');
@@ -44,7 +44,7 @@ class RoleController extends Controller
 
   public function index()
   {
-    return view('users/roles.index');
+    return view('roles.index');
   }
 
   public function form(Request $request)
@@ -53,15 +53,16 @@ class RoleController extends Controller
       return $this->store($request);
     }
     ob_start();
-    $permissions = Permission::all();
     if ($request->id > 0) {
       $role = Role::find($request->id);
+      $title = "Modifier le rôle";
     } else {
       $role = new Role();
+      $title = "Ajouter un rôle";
     }
-    echo view('users.roles.form', compact('role', 'permissions'));
+    echo view('roles.form', compact('role'));
     $content = ob_get_clean();
-    return ['title' => 'Ajouter un rôle', 'content' => $content];
+    return ['title' => $title, 'content' => $content];
   }
 
   public function store(Request $request)

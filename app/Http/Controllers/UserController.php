@@ -16,6 +16,7 @@ use App\Role;
 use App\Entretien;
 use App\Permission;
 use Session;
+use Zizaco\Entrust\Entrust;
 
 class UserController extends Controller
 {
@@ -36,7 +37,7 @@ class UserController extends Controller
     if ($function = $request->get('function', false)){
       $query->where('function', '=', $function);
     }
-    if ($role = $request->get('role')){
+    if ($role = $request->get('role')) {
       $query->whereHas('roles', function ($query) use ($role) {
         $query->where('id', '=', $role);
       });
@@ -116,6 +117,8 @@ class UserController extends Controller
 
   public function index(Request $request)
   {
+    $this->middleware('permission:users_index');
+    
     $roles = Role::select('id', 'name')->where('name', '<>', ['ROOT'])->where('name', '<>', ['ADMIN'])->get();
     $departments = Department::getAll()->get();
     $fonctions = Fonction::getAll()->get();
@@ -342,48 +345,6 @@ class UserController extends Controller
 
   }
 
-
-  public function indexPermisions()
-  {
-    $permissions = Permission::paginate(10);
-    return view('users/permissions.index', ['permissions' => $permissions]);
-  }
-
-  public function createPermission()
-  {
-    ob_start();
-    return view('users/permissions.create');
-    $content = ob_get_clean();
-    return ['title' => 'Créer une permission', 'content' => $content];
-  }
-
-  public function storePermission(Request $request)
-  {
-    $id = $request->input('id', false);
-    if ($id) {
-      $permission = Permission::findOrFail($id);
-    } else {
-      $permission = new Permission();
-    }
-    $permission->name = $request->name;
-    $permission->display_name = $request->display_name;
-    $permission->description = $request->description;
-    $permission->save();
-    if ($permission->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-    } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
-    }
-  }
-
-  public function editPermission($id)
-  {
-    ob_start();
-    $p = Permission::findOrFail($id);
-    echo view('users/permissions.edit', ['p' => $p]);
-    $content = ob_get_clean();
-    return ['title' => 'Modifier une permission', 'content' => $content];
-  }
 
   public function getFunctionIdByName($function) {
     $user_id = Auth::user()->id;

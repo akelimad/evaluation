@@ -22,9 +22,9 @@ Route::get('user/{id}', 'UserController@show')->name('user.profile');
 Route::any('users/form', 'UserController@form')->name('user.form');
 Route::post('users/store', 'UserController@store')->name('user.store');
 
+Route::get('users', 'UserController@index')->name('users');
+Route::get('users/table', 'UserController@getTable')->name('users.table');
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
-	Route::get('users/table', 'UserController@getTable')->name('users.table');
-	Route::get('users', 'UserController@index')->name('users');
 	Route::delete('user/delete', 'UserController@delete');
 	Route::get('users/import', 'UserController@import');
 	Route::post('users/import_parse', 'UserController@parseImport');
@@ -96,10 +96,11 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::post('role/store', 'RoleController@store')->name('role.store');
 	Route::delete('role/delete', 'RoleController@delete')->name('role.delete');
 
-	Route::get('config/permissions', 'UserController@indexPermisions');
-	Route::get('permission/create', 'UserController@createPermission');
-	Route::post('permission/store', 'UserController@storePermission');
-	Route::get('permission/{id}/edit', 'UserController@editPermission');
+	Route::get('permissions/table', 'PermissionController@getTable')->name('permissions.table');
+	Route::get('config/permissions', 'PermissionController@index')->name('permissions');
+	Route::any('permission/form', 'PermissionController@form')->name('permission.form');
+	Route::post('permission/store', 'PermissionController@store')->name('permission.store');
+	Route::get('permission/delete', 'PermissionController@delete')->name('permission.delete');
 
 });
 
