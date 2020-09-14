@@ -84,27 +84,28 @@ class SurveyController extends Controller
   {
     $groups = $request->groups;
     $survey_id = $request->id;
+    $selectedModelRef = $request->selectedModelRef;
 
     if (!empty($groups)) {
       $sumpGrpsPonderations = 0;
       foreach ($groups as $group) {
-        $sumpGrpsPonderations += intval($group['ponderation']);
+        $sumpGrpsPonderations += floatval($group['ponderation']);
         if (empty($group['questions'])) {
           return ["status" => "error", "message" => 'Veuillez ajouter des questions au block : ' . $group['title']];
         } else {
           $sumpQstsPonderations = 0;
           foreach ($group['questions'] as $question) {
-            $sumpQstsPonderations += intval($question['ponderation']);
+            $sumpQstsPonderations += floatval($question['ponderation']);
             if (in_array($question['type'], ['radio', 'checkbox', 'select']) && empty($question['choices'])) {
               return ["status" => "error", "message" => 'Veuillez ajouter des choix de réponse pour la question : '. $question['title']];
             }
           }
-          if ($sumpQstsPonderations != 100) {
+          if ($sumpQstsPonderations != 100 && $selectedModelRef == 'ENT') {
             return ["status" => "error", "message" => "La somme : $sumpQstsPonderations de la pondération des questions doit être égale à 100 pour le block : ". $group['title']];
           }
         }
       }
-      if ($sumpGrpsPonderations != 100) {
+      if ($sumpGrpsPonderations != 100 && $selectedModelRef == 'ENT') {
         return ["status" => "error", "message" => "La somme : $sumpGrpsPonderations de la pondération des blocks doit être égale à 100"];
       }
     } else {
@@ -131,7 +132,7 @@ class SurveyController extends Controller
         if (!$groupModel) $groupModel = new Groupe();
         $groupModel->name = $group['title'];
         $groupModel->survey_id = $survey->id;
-        $groupModel->ponderation = $group['ponderation'];
+        $groupModel->ponderation = $selectedModelRef == 'ENT' ? $group['ponderation'] : null;
         $groupModel->save();
 
         // save questions
@@ -140,7 +141,7 @@ class SurveyController extends Controller
             $questionModel = Question::find($question['id']);
             if (!$questionModel) $questionModel = new Question();
             $questionModel->titre = $question['title'];
-            $questionModel->ponderation = $question['ponderation'];
+            $questionModel->ponderation = $selectedModelRef == 'ENT' ? $question['ponderation'] : null;
             $questionModel->type = $question['type'];
             $questionModel->parent_id =  0;
             $questionModel->groupe_id = $groupModel->id;

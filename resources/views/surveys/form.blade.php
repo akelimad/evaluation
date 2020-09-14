@@ -71,15 +71,15 @@
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">
           <div class="panel panel-default mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
-            <div class="panel-heading">
-              <div class="form-group" v-if="group.edit" :class="{'has-error': errors.has('group')}">
+            <div class="panel-heading bg-aqua">
+              <div v-if="group.edit" class="form-group" :class="{'has-error': errors.has('group')}">
                 <div class="row mb-0">
-                  <div class="col-md-10">
-                    <input type="text" name="group" v-model="group.title" class="form-control"  @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du block" v-validate="'required'" @keypress.enter.prevent v-focus>
+                  <div :class="selectedModelRef == 'ENT' ? 'col-md-10':'col-md-11'">
+                    <input type="text" name="title" v-model="group.title" class="form-control"  @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du block" v-validate="'required'" @keypress.enter.prevent v-focus>
                     <span v-show="errors.has('group')" class="help-block">@{{ errors.first('group') }}</span>
                   </div>
-                  <div class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
-                    <input type="text" name="ponderation" v-model="group.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateGroup(group)">
+                  <div v-if="selectedModelRef == 'ENT'" class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
+                    <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="group.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateGroup(group)">
                   </div>
                   <div class="col-md-1">
                     <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
@@ -92,7 +92,7 @@
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
 
-                <span class="badge pull-right mr-10" title="Pondération" data-toggle="tooltip">@{{ group.ponderation }}</span>
+                <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10" title="Pondération" data-toggle="tooltip">@{{ group.ponderation }}</span>
               </h3>
             </div>
             <div class="panel-body">
@@ -100,12 +100,12 @@
                 <div class="card-heading pt-5 pb-5">
                   <div v-if="question.edit" class="form-group mb-0" :class="{'has-error': errors.has('question')}">
                     <div class="row">
-                      <div class="col-md-10">
+                      <div :class="selectedModelRef == 'ENT' ? 'col-md-10':'col-md-11'">
                         <input name="question" v-model="question.title" class="form-control" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
                         <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
                       </div>
-                      <div class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
-                        <input type="text" name="ponderation" v-model="question.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateQuestion(question)">
+                      <div v-if="selectedModelRef == 'ENT'" class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
+                        <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="question.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateQuestion(question)">
                       </div>
                       <div class="col-md-1">
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
@@ -135,7 +135,7 @@
 
                           <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
 
-                          <span class="badge pull-right mr-10 text-muted" title="Pondération" data-toggle="tooltip">@{{ question.ponderation }}</span>
+                          <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération" data-toggle="tooltip">@{{ question.ponderation }}</span>
                         </div>
                       </div>
                     </div>
@@ -173,8 +173,8 @@
               </div>
             </div>
           </div>
-          <div class="add-new-section-btn">
-            <button v-if="groups.length > 0" type="button" class="btn btn-success pull-right" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
+          <div class="add-new-section-btn text-center">
+            <button v-if="groups.length > 0" type="button" class="btn btn-success" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
           </div>
         </div>
       </div>
@@ -197,7 +197,9 @@
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
   <script src="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/index.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />  <script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
+
+  <script>
     loadProgressBar()
     Vue.use(VeeValidate);
     new Vue({
@@ -397,6 +399,7 @@
                 title: this.title,
                 description: this.description,
                 model: this.model,
+                selectedModelRef: this.selectedModelRef,
                 section: this.section,
                 groups: this.groups,
               }).then(function (response) {
@@ -436,5 +439,6 @@
         }
       }
     })
+
   </script>
 @endsection

@@ -46,10 +46,10 @@ class Setting extends Model
    *
    * @return string
    **/
-  public static function get($name = null) {
+  public static function get($name = null, $default = 10) {
     $user = User::getOwner();
     $settings = json_decode($user->settings);
-    return isset($settings->$name) ? $settings->$name : '';
+    return isset($settings->$name) ? $settings->$name : $default;
   }
 
 
