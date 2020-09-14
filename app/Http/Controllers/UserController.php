@@ -23,6 +23,7 @@ class UserController extends Controller
   public function __construct()
   {
     $this->middleware('auth');
+    $this->middleware('permission:users')->only('index');
   }
 
   public function getTable(Request $request) {
@@ -103,22 +104,8 @@ class UserController extends Controller
     return $table->render($query);
   }
 
-  public function profile()
-  {
-    $user = Auth::user();
-    return view('users.profile', compact('user'));
-  }
-
-  public function show($id)
-  {
-    $user = User::findOrFail($id);
-    return view('users.profile', compact('user'));
-  }
-
   public function index(Request $request)
   {
-    $this->middleware('permission:users_index');
-    
     $roles = Role::select('id', 'name')->where('name', '<>', ['ROOT'])->where('name', '<>', ['ADMIN'])->get();
     $departments = Department::getAll()->get();
     $fonctions = Fonction::getAll()->get();
@@ -129,6 +116,18 @@ class UserController extends Controller
       'fonctions' => $fonctions,
       'teams' => $teams,
     ]);
+  }
+
+  public function profile()
+  {
+    $user = Auth::user();
+    return view('users.profile', compact('user'));
+  }
+
+  public function show($id)
+  {
+    $user = User::findOrFail($id);
+    return view('users.profile', compact('user'));
   }
 
   public function form(Request $request)

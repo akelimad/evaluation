@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Service\Table;
 use App\Permission;
+use App\Role;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -39,44 +40,29 @@ class PermissionController extends Controller
     return $table->render($query);
   }
 
-  public function index()
+  public function index(Request $request)
   {
+    if ($request->method() == "POST") {
+      $roles = $request->get('roles', false);
+      foreach (Role::all() as $role) {
+        $roleOldPerms = $role->perms()->pluck('id')->toArray();
+        $role->perms()->detach($roleOldPerms);
+      }
+      $allPermissionsId = Permission::all()->pluck('id')->toArray();
+      $roleAdmin = Role::where('name', 'ADMIN')->first();
+      // this is just to give admin all permissions
+      if ($roleAdmin) $roleAdmin->perms()->sync($allPermissionsId);
+      if (!empty($roles)) {
+        foreach ($roles as $role_id => $permissions) {
+          $role = Role::find($role_id);
+          if (!$role) continue;
+          $role->perms()->sync($permissions);
+        }
+      }
+      return redirect()->route('permissions')->with('success', "Les permissions ont bien été mises à jour");
+    }
     return view('permissions.index');
   }
 
-  public function form(Request $request)
-  {
-    if($request->method() == 'POST') {
-      return $this->store($request);
-    }
-    ob_start();
-    if ($request->id > 0) {
-      $permission = Permission()::find($request->id);
-    } else {
-      $permission = new Permission();
-    }
-    echo view('permissions.form', compact('permission'));
-    $content = ob_get_clean();
-    return ['title' => 'Créer une permission', 'content' => $content];
-  }
-
-  public function store(Request $request)
-  {
-    $id = $request->input('id', false);
-    if ($id) {
-      $permission = Permission::find($id);
-    } else {
-      $permission = new Permission();
-    }
-    $permission->name = $request->name;
-    $permission->display_name = $request->display_name;
-    $permission->description = $request->description;
-    $permission->save();
-    if ($permission->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-    } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
-    }
-  }
 
 }

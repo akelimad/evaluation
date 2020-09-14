@@ -12,38 +12,45 @@
             <h3 class="box-title"><i class="fa fa-lock"></i> Liste des permissions <span class="badge badge-count">0</span></h3>
 
             <div class="box-tools mb40">
-              <a
-                  href="javascript:void(0)"
-                  chm-modal="{{ route('permission.form') }}"
-                  chm-modal-options='{"form":{"attributes":{"id":"permissionForm","target-table":"[chm-table]"}}}'
-                  class="btn bg-maroon"
-              ><i class="fa fa-user-secret"></i>&nbsp;{{ "Ajouter" }}</a>
 
             </div>
           </div>
           <div class="box-body">
-            <table class="table table-hover table-striped">
-              <thead>
+            <form action="" method="post">
+              {{ csrf_field() }}
+              <table class="table table-hover table-striped">
+                <thead>
                 <tr>
                   <th>Permissions</th>
-                  @foreach(\App\Role::where('name', '<>', 'root')->get() as $role)
-                  <th>{{ $role->name }}</th>
+                  @php($roles = \App\Role::where('name', '<>', 'root')->get())
+                  @foreach($roles as $role)
+                    <th>{{ $role->name }}</th>
                   @endforeach
                 </tr>
-              </thead>
-              <tbody>
-                @foreach(\App\Permission::all() as $p)
-                <tr>
-                  <td>{{ $p->name }}</td>
-                  @foreach(\App\Role::where('name', '<>', 'root')->get() as $role)
-                    <td>
-                      <input type="checkbox" {{ $role->name == 'ADMIN' ? 'checked disabled':'' }}>
-                    </td>
+                </thead>
+                <tbody>
+                @foreach(\App\Permission::groupBy('section')->get() as $permissionSection)
+                  <tr class="bg-aqua-gradient">
+                    <td colspan="{{ $roles->count() + 1 }}">{{ $permissionSection->section }}</td>
+                  </tr>
+                  @foreach(\App\Permission::where('section', $permissionSection->section)->get() as $p)
+                  <tr>
+                    <td>{{ $p->name }}</td>
+                    @foreach(\App\Role::where('name', '<>', 'root')->get() as $role)
+                      <td>
+                        <input type="checkbox" name="roles[{{ $role->id }}][]" value="{{ $p->id }}" {{ $role->name == 'ADMIN' ? 'disabled':'' }} {{ $role->hasPermission($p->name) ? 'checked':''  }}>
+                      </td>
+                    @endforeach
+                  </tr>
                   @endforeach
-                </tr>
                 @endforeach
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+
+              <div class="actions">
+                <button class="btn btn-success pull-right">Mettre à jour</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
