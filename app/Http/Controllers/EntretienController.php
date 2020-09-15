@@ -606,7 +606,6 @@ class EntretienController extends Controller
     if($user->hasRole('ADMIN') OR $user->hasRole('RH')) {
       $entretien = Entretien::findOrFail($eid);
       $entretien->users()->detach();
-      $entretien->skills()->delete();
       $entretien->evaluations()->detach();
       \DB::table('skill_user')->where('entretien_id', $eid)->delete();
       \DB::table('answers')->where('entretien_id', $eid)->delete();

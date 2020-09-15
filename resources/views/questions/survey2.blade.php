@@ -14,6 +14,39 @@
     margin: 0;
     height: 100%;
   }
+
+  .rating > input { display: none; }
+  .rating > label:before {
+    margin: 5px;
+    font-size: 1.25em;
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f005";
+  }
+
+  .rating > .half:before {
+    content: "\f089";
+    position: absolute;
+  }
+
+  .rating > label {
+    color: #ddd;
+    float: right;
+  }
+
+  /***** CSS Magic to Highlight Stars on Hover *****/
+
+  .rating > input:checked ~ label, /* show gold star when clicked */
+  .rating:not(:checked) > label:hover, /* hover current star */
+  .rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+  .rating > input:checked + label:hover, /* hover current star when changing rating */
+  .rating > input:checked ~ label:hover,
+  .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+  .rating > input:checked ~ label:hover ~ label { color: #FFED85;  }
+
+
+
 </style>
 <div class="row evaluation-survey">
   @if(!empty($groupes))
@@ -31,7 +64,7 @@
               <div class="panel-body">
                 <div class="row">
                   @forelse($g->questions as $q)
-                    <div class="col-md-12 mb-20">
+                    <div class="col-md-12 mb-30">
                       <div class="form-group">
                         @if($q->parent == null)
                           <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
@@ -165,7 +198,6 @@
     <div class="col-md-6 mentor-item">
       <span id="max_note" class="hidden">{{ App\Setting::get('max_note') }}</span>
       <h4 class="alert alert-info"> {{ App\User::getMentor($user->id)->name." ".App\User::getMentor($user->id)->last_name }} </h4>
-
       <form action="{{url('answers/store')}}" method="post" id="surveyForm">
         <input type="hidden" name="entretien_id" value="{{$e->id}}">
         <input type="hidden" name="mentor_id"
@@ -180,47 +212,37 @@
           @foreach($groupes as $g)
             @php($c += 1)
             @if(count($g->questions)>0)
+              @php($evalModel = App\Evaluation::find($g->survey->evaluation_id))
               <div class="panel panel-info mb-20">
                 <div class="panel-heading">
                   {{ $g->name }}
-                  @if ($g->notation_type == 'section')
-                    @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id))
-                      @if(!is_null(App\Evaluation::find($g->survey->evaluation_id)) && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle')
-                        <input type="text" data-group-source="{{$g->id}}" class="notation inputNote" min="1"
-                               max="{{App\Setting::get('max_note')}}" placeholder="Note"
-                               value="{{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id):''}}"
-                               @if($g->notation_type == 'section' && App\Evaluation::find($g->survey->evaluation_id) && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle') style="display: block;"
-                               required @else style="display: none;" @endif>
-                      @endif
-                      @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
-                        @php($gNote += App\Answer::getGrpNote($g->id, $user->id, $e->id))
-                      @endif
-                    @else
-                      <span class="pull-right">Note : {{App\Answer::getGrpNote($g->id, $user->id, $e->id) ? App\Answer::getGrpNote($g->id, $user->id, $e->id) : 0}} / {{App\Survey::countGroups($survey->id)}}</span>
-                      @if(App\Answer::getGrpNote($g->id, $user->id, $e->id))
-                        @php($gNote += App\Answer::getGrpNote($g->id, $user->id, $e->id))
-                      @endif
-                    @endif
+                  @if ($g->ponderation > 0)
+                    <span class="pull-right">Note : {{ \App\Answer::getGrpNote($g->id, $user->id, $e->id) }}</span>
                   @endif
                 </div>
                 <div class="panel-body">
                   <div class="row">
                     @forelse($g->questions as $q)
-                      <div class="col-md-12 mb-20">
+                      <div class="col-md-12 mb-30">
                         <div class="form-group">
-                          @if(in_array($q->type, ['text', 'textarea', 'radio']))
-                            <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
-                                   placeholder="Note" class="notation inputNote" size="3" min="1"
-                                   max="{{App\Setting::get('max_note')}}"
-                                   value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"
-                                   @if($g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle') style="display: block;"
-                                   required @endif>
-                          @endif
                           @if($q->parent == null)
-                            <label for="" class="questionTitle"><i class="fa fa-caret-right"></i>
-                              {{$q->titre}}
-                            </label>
+                            <div class="row mb-0">
+                              <div class="col-md-8">
+                                <label for="" class="questionTitle"><i class="fa fa-caret-right"></i>
+                                  {{$q->titre}}
+                                </label>
+                              </div>
+                              <div class="col-md-4">
+                                <span class="ml-5 pull-right">/ {{App\Setting::get('max_note')}}</span>
+                                <input type="number" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
+                                       placeholder="Note" class="ml-5 notation inputNote pull-right" size="3" min="0"
+                                       max="{{App\Setting::get('max_note')}}"
+                                       value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}" required>
+                                <label class="pull-right">Note :</label>
+                              </div>
+                            </div>
                           @endif
+
                           @if($q->type == 'text')
                             <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" class="form-control" required
                                    value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
@@ -326,7 +348,7 @@
                                   @php($showNote = isset($options['show_global_note']) ? 1 : 0)
                                   @if ($showNote == 1)
                                     <tr class="array-qst-note">
-                                      <td colspan="2">Note globale obtenue par le mentor</td>
+                                      <td colspan="2">Note globale :</td>
                                       <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{  $countItems > 0 ? round($sum/$countItems) : 0 }} / {{ $positivesAnswers }}</span></td>
                                     </tr>
                                   @endif
@@ -355,19 +377,26 @@
           <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Enregistrer
           </button>
         @endif
-        @if(App\Entretien::note($e->id, $user->id) > 0)
-          <div class="callout callout-success" style="margin-top:15px">
-            <p class="">
-              <i class="fa fa-info-circle fa-2x"></i>
-              <span class="content-callout h4"><b style="margin-right: 1em;">Note globale : {{App\Entretien::note($e->id, $user->id)}}</b>
-                @foreach(App\Answer::NOTE_DEGREE as $key => $value)
-                  <span class="fa fa-star {{$key <= App\Entretien::note($e->id, $user->id) ? 'checked':''}}" title="{{$value['title'].' ('.$value['ref'].')'}}" data-toggle="tooltip"></span>
-                @endforeach
-              </span>
-            </p>
-          </div>
-        @endif
       </form>
+    </div>
+
+    <div class="col-md-12 mt-30">
+      <div class="alert alert-info">
+        @php($totalNote = \App\Answer::getTotalNote($survey->id, $user->id, $e->id))
+        @php($rateNote = ($totalNote * 10) / 100)
+        @php($note = App\Helpers\Base::cutNum($rateNote, 1))
+        <div class="row mb-0">
+          <div class="col-md-4 mt-5">
+            <span class=""><b style="margin-right: 1em;">Note globale : {{ $note }}</b></span>
+          </div>
+          <div class="col-md-8">
+            <div class="rating pull-left">
+              @foreach([10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5] as $value)
+                <input type="radio" {{ $note >= $value && $note < $value + 0.5 ? 'checked':'' }} id="star{{ $value }}" name="rating" value="{{ $value }}" /><label class= "{{ is_int($value) ? 'full' : 'half' }} mb-0" for="star{{ $value }}" title="{{ $value }}"></label>
+              @endforeach
+            </div>
+          </div>
+      </div>
     </div>
   @else
     <p class="alert alert-default">Aucune donnée disponible !</p>
@@ -377,15 +406,9 @@
 @section('javascript')
   <script>
     $(document).ready(function () {
-      $('[data-group-source]').on('keyup', function () {
-        $('[data-group-target="' + $(this).attr('data-group-source') + '"]').val($(this).val())
-      })
-
-      $('[data-group-source]').on('change', function () {
-        $('[data-group-target="' + $(this).attr('data-group-source') + '"]').val($(this).val())
-      })
-      $('[data-group-source]').on('click', function () {
-        $('[data-group-target="' + $(this).attr('data-group-source') + '"]').val($(this).val())
+      $('#surveyForm').on('chmFormSuccess', function (event, response) {
+        console.log('succ')
+        window.location.reload()
       })
     })
   </script>

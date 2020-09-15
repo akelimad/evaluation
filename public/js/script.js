@@ -81,43 +81,6 @@ $(function(){
         }
     });
 
-    $('#submitAnswers').click(function() {
-        $('.form-group').find('input[type="checkbox"]')
-        var check = true;
-        $(".form-group").each(function(){
-            checkboxLength = $(this).find('input[type="checkbox"]').length
-            radiosLength = $(this).find('input[type="radio"]').length
-            if(checkboxLength > 0) {
-                var checkedCount = $(this).find('input:checkbox:checked').length
-                if(checkedCount == 0){
-                    check = false;
-                }
-            }
-            if(radiosLength > 0) {
-                var checkedRadioCount = $(this).find('input[type="radio"]:checked').length
-                if(checkedRadioCount == 0){
-                    check = false;
-                }
-            }
-        });
-        if(!check){
-            alert('Veuillez sélectionner au moins une option.');
-            return false;
-        }
-
-        check = true
-        $(".mentor-item .inputNote[required]").each(function() {
-            var val = $(this).val()
-            if(/^(\d+(?:[\.\,]\d{1})?)$/.test(val) == false || parseFloat(val) < 1 || parseFloat(val) > max_note) {
-                check = false; 
-            }
-        })
-        if(!check) {
-           alert("Veuillez entrer une note valide entre 1 et " + max_note + " !")
-            return false; 
-        }
-    });
-
     $(".realise").on('keyup click', function(){
         var id = $(this).data('id')
         var nMoins1 = $(".nMoins1-"+id).text()

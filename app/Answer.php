@@ -55,20 +55,38 @@ class Answer extends Model
 
     public static function getGrpNote($gid, $uid, $eid)
     {
-        $group = Groupe::findOrFail($gid);
-        $user = User::findOrFail($uid);
-        if($group->notation_type == 'section') {
-            $question = $group->questions()->first();
-            $answer = Answer::where('question_id', $question->id)
-                ->where('user_id', $user->id)
-                ->where('mentor_id', $user->parent->id)
-                ->where('entretien_id', $eid)
-                ->first();
-            if ($answer) {
-                return $answer->note;
+        $group = Groupe::find($gid);
+        $user = User::find($uid);
+        $sum = 0;
+        if($group->ponderation > 0) {
+            $grpQstsId = $group->questions->pluck('id')->toArray();
+            $answers = Answer::whereIn('question_id', $grpQstsId)
+              ->where('user_id', $user->id)
+              ->where('mentor_id', $user->parent->id)
+              ->where('entretien_id', $eid)
+              ->get();
+            if (empty($answers)) return 0;
+            $sum = 0;
+            foreach($answers as $answer) {
+                $question = Question::find($answer->question_id);
+                $sum += $answer->note * ($question->ponderation / 100);
             }
         }
-        return 0;
+        return $sum . ' %';
+    }
+
+    public static function getTotalNote($sid, $uid, $eid)
+    {
+        $survey = Survey::find($sid);
+        if (!$survey || $survey->groupes->count() == 0) return 0;
+        $groups = $survey->groupes;
+        $sum = 0;
+        foreach ($groups as $group) {
+            $grpNote = floatval(self::getGrpNote($group->id, $uid, $eid));
+            $sum += $grpNote * ($group->ponderation / 100);
+        }
+
+        return $sum;
     }
 
     public static function formated($number)

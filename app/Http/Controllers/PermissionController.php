@@ -59,7 +59,7 @@ class PermissionController extends Controller
           $role->perms()->sync($permissions);
         }
       }
-      return redirect()->route('permissions')->with('success', "Les permissions ont bien été mises à jour");
+      return redirect()->route('permissions')->with('success', "Les droits d'accès ont bien été mis à jour");
     }
     return view('permissions.index');
   }

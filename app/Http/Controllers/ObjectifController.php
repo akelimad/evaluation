@@ -48,7 +48,7 @@ class ObjectifController extends Controller
 
 
     $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();
-    return view('objectifs.index', [
+    return view('objectifs-user.index', [
       'evaluations' => $evaluations,
       'objectifsPersonnal' => $objectifsPersonnal,
       'objectifsTeam' => $objectifsTeam,

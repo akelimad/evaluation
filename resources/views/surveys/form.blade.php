@@ -70,8 +70,8 @@
 
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">
-          <div class="panel panel-default mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
-            <div class="panel-heading bg-aqua">
+          <div class="panel panel-primary mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
+            <div class="panel-heading" style="border-radius: 0;">
               <div v-if="group.edit" class="form-group" :class="{'has-error': errors.has('group')}">
                 <div class="row mb-0">
                   <div :class="selectedModelRef == 'ENT' ? 'col-md-10':'col-md-11'">
@@ -92,11 +92,11 @@
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
 
-                <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10" title="Pondération" data-toggle="tooltip">@{{ group.ponderation }}</span>
+                <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10" title="Pondération" data-toggle="tooltip">@{{ group.ponderation + ' %' }}</span>
               </h3>
             </div>
             <div class="panel-body">
-              <div class="card card-default p-10" v-for="(question, qIndex) in group.questions" :class="{highlight:question.active}">
+              <div class="card card-default p-10 mb-30" v-for="(question, qIndex) in group.questions" :class="{highlight:question.active}">
                 <div class="card-heading pt-5 pb-5">
                   <div v-if="question.edit" class="form-group mb-0" :class="{'has-error': errors.has('question')}">
                     <div class="row">
@@ -135,14 +135,14 @@
 
                           <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
 
-                          <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération" data-toggle="tooltip">@{{ question.ponderation }}</span>
+                          <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération" data-toggle="tooltip">@{{ question.ponderation + ' %' }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="clearfix"></div>
                 </div>
-                <div v-if="group.questions[qIndex].choices.length > 0" class="card-body">
+                <div v-if="question.type != 'text' && question.type !='textarea'" class="card-body">
                   <ul class="list-unstyled">
                     <li v-for="(choice, cIndex) in group.questions[qIndex].choices" class="mb-10">
                       <div v-if="choice.edit" class="form-group">
@@ -174,7 +174,7 @@
             </div>
           </div>
           <div class="add-new-section-btn text-center">
-            <button v-if="groups.length > 0" type="button" class="btn btn-success" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
+            <button v-if="groups.length > 0" type="button" class="btn btn-primary" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@
         <div class="col-md-8 col-md-offset-2" v-if="groups.length > 0">
           <div class="card">
             <div class="card-body">
-              <button class="btn btn-primary pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
+              <button class="btn btn-success pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
             </div>
           </div>
         </div>

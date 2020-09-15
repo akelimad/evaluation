@@ -15,7 +15,7 @@ export default class chmPermission {
     }, {
       message: '<i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;' + trans("Suppression en cours..."),
       onSuccess: (response) => {
-        f ('status' in response && response.status === 'alert') {
+        if ('status' in response && response.status === 'alert') {
           window.chmTable.refresh('#PermissionsTableContainer')
         }
       }

@@ -24,7 +24,7 @@
 <div class="row">
   <div class="col-md-12 survey">
     @if(count($groupes)>0)
-      <form action="{{url('answers/store')}}" method="post" class="surveyForm">
+      <form action="{{url('answers/store')}}" method="post" class="surveyForm" chm-form>
         <input type="hidden" name="entretien_id" value="{{$e->id}}">
         <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
         <input type="hidden" name="mentor_id" value="{{ Auth::user()->parent->id }}">

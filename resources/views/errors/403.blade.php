@@ -4,6 +4,7 @@
         <title>Accès interdit | E-EVALUATION</title>
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+        <link href="{{ App\Asset::path('app.css') }}" rel="stylesheet">
 
         <style>
             html, body {
@@ -40,7 +41,9 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Vous n'êtes pas autorisés</div>
+                <div class="title">Vous n'avez pas les permissions</div>
+
+                <a href="{{ route('home') }}" class="btn btn-primary">Revenir à la page d'accueil</a>
             </div>
         </div>
     </body>

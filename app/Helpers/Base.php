@@ -222,4 +222,8 @@ class Base {
     return $interval;
   }
 
+  public static function  cutNum($num, $precision = 1){
+    return floor($num).substr($num-floor($num),1,$precision+1);
+  }
+
 } // END Class

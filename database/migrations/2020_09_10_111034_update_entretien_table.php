@@ -14,7 +14,7 @@ class UpdateEntretienTable extends Migration
     {
         Schema::table('entretiens', function (Blueprint $table) {
             $table->dropColumn('model');
-            $table->integer('model_id')->after('titre')->index();
+            $table->integer('model_id')->after('titre');
         });
     }
 

@@ -10,7 +10,7 @@
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
-              <div class="box-body mb40">
+              <div class="box-body">
                 @if(count(Auth::user()->children)>0 && $user->id != Auth::user()->id)
                   @include('questions/survey2')
                 @endif

@@ -35,7 +35,7 @@
                   </tr>
                   @foreach(\App\Permission::where('section', $permissionSection->section)->get() as $p)
                   <tr>
-                    <td>{{ $p->name }}</td>
+                    <td>{{ $p->display_name }}</td>
                     @foreach(\App\Role::where('name', '<>', 'root')->get() as $role)
                       <td>
                         <input type="checkbox" name="roles[{{ $role->id }}][]" value="{{ $p->id }}" {{ $role->name == 'ADMIN' ? 'disabled':'' }} {{ $role->hasPermission($p->name) ? 'checked':''  }}>
@@ -48,7 +48,7 @@
               </table>
 
               <div class="actions">
-                <button class="btn btn-success pull-right">Mettre à jour</button>
+                <button class="btn btn-success pull-right">Enregistrer les droits d'accès</button>
               </div>
             </form>
           </div>

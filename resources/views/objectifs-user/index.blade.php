@@ -36,8 +36,8 @@
                     <div class="col-md-{{ !$isMentor ? '12':'6'  }} objectifs-type">
                       <h4 class="alert alert-info p-5">{{ $user->fullname() }}</h4>
                       <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#user-personnel">Personnel</a></li>
-                        <li><a data-toggle="tab" href="#user-team">Equipe</a></li>
+                        <li class="active"><a data-toggle="tab" href="#user-personnel">Individuel</a></li>
+                        <li><a data-toggle="tab" href="#user-team">Collectif</a></li>
                       </ul>
                       <div class="tab-content pt-30">
                         <div id="user-personnel" class="tab-pane fade in active">
@@ -106,7 +106,7 @@
                               </p>
                             </div>
                             <div class="item">
-                              <p><b>Equipe :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
+                              <p><b>Collectif :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
                             </div>
                             <div class="item">
                               <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
@@ -162,8 +162,8 @@
                       <div class="col-md-6 objectifs-type">
                       <h4 class="alert alert-info p-5">{{ $user->parent->fullname() }}</h4>
                       <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#mentor-personnel">Personnel</a></li>
-                        <li><a data-toggle="tab" href="#mentor-team">Equipe</a></li>
+                        <li class="active"><a data-toggle="tab" href="#mentor-personnel">Individuel</a></li>
+                        <li><a data-toggle="tab" href="#mentor-team">Collectif</a></li>
                       </ul>
                       <div class="tab-content pt-30">
                         <div id="mentor-personnel" class="tab-pane fade in active">
@@ -225,7 +225,7 @@
                               </p>
                             </div>
                             <div class="item">
-                              <p><b>Equipe :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
+                              <p><b>Collectif :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
                             </div>
                             <div class="item">
                               <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>

@@ -46,7 +46,7 @@
           <div class="nav-tabs-custom portlet-title">
             <div class="caption caption-red">Mes entretiens</div>
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#entretiens" data-toggle="tab"> Entretiens </a></li>
+              <li class="active"><a href="#entretiens" data-toggle="tab">Entretiens</a></li>
             </ul>
           </div>
           <div class="portlet-body">
