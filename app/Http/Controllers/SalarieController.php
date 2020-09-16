@@ -30,6 +30,9 @@ class SalarieController extends Controller
   public function index($eid, $uid)
   {
     $e = Entretien::findOrFail($eid);
+    if (!$e->canBeFilledByUser($uid)) {
+      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+    }
     $evaluations = Entretien::findEvaluations($e);
     $user = User::findOrFail($uid);
     if ($user->id == Auth::user()->id) {

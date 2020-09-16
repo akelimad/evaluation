@@ -25,6 +25,9 @@ class FormationController extends Controller
     public function index($e_id, $uid)
     {
         $e = Entretien::findOrFail($e_id);
+        if (!$e->canBeFilledByUser($uid)) {
+            return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+        }
         $user = User::findOrFail($uid);
         $formations = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->orderBy('id', 'desc')->paginate(10);
         $historiques = Formation::where('entretien_id', $e_id)->where('user_id', $uid)->where('status', 2)->paginate(10);

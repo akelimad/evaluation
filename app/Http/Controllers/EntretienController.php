@@ -147,6 +147,9 @@ class EntretienController extends Controller
   public function synthese($e_id, $uid)
   {
     $entretien = Entretien::findOrFail($e_id);
+    if (!$entretien->canBeFilledByUser($uid)) {
+      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+    }
     $evaluations = Entretien::findEvaluations($entretien);
     // $evaluation = Evaluation::where('title', $type)->first();
     $user = $entretien->users()->where('entretien_user.user_id', $uid)->first();

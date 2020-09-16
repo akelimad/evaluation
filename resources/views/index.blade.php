@@ -44,10 +44,7 @@
       <div class="col-md-9">
         <div class="card portlet box box-primary">
           <div class="nav-tabs-custom portlet-title">
-            <div class="caption caption-red">Mes entretiens</div>
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#entretiens" data-toggle="tab">Entretiens</a></li>
-            </ul>
+            <div class="caption caption-red mb-10">Mes entretiens</div>
           </div>
           <div class="portlet-body">
             <div class="tab-content">
@@ -93,7 +90,7 @@
                     </table>
                   </div>
                 @else
-                  @include('partials.alerts.info', ['messages' => "Aucun entretien trouvé ... !!" ])
+                  @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
                 @endif
               </div>
             </div>
@@ -102,12 +99,7 @@
         @if(count($collaborateurs)>0)
           <div class="card portlet box box-primary">
             <div class="nav-tabs-custom portlet-title">
-              <div class="caption caption-red">Mes collaborateurs</div>
-              <ul class="nav nav-tabs">
-                <li class="active"><a href="#aa" data-toggle="tab"> Entretiens </a></li>
-                <!-- <li><a href="#bb" data-toggle="tab"> Objectifs  </a></li> -->
-                {{--<li><a href="#cc" data-toggle="tab"> Formations </a></li>                            --}}
-              </ul>
+              <div class="caption caption-red mb-10">Mes collaborateurs</div>
             </div>
             <div class="portlet-body">
               <div class="tab-content">
@@ -119,9 +111,9 @@
                         <tr>
                           <th>Nom et prénom</th>
                           <th>Campagne</th>
-                          <th>Date d'expiration</th>
-                          <th>Collaborateur</th>
-                          <th>Manager</th>
+                          <th class="text-center">Date d'expiration</th>
+                          <th class="text-center">Collaborateur</th>
+                          <th class="text-center">Manager</th>
                           <th class="text-center">Actions</th>
                         </tr>
                         </thead>
@@ -181,15 +173,15 @@
     // this to show popup message for ADMIN only after authentication
     $(window).on('load', function () {
       @if(\Auth::user()->hasRole('ADMIN') && session('popup'))
-        setTimeout(function () {
-          swal({
-            title: "Bienvenue",
-            text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration",
-            type: "success"
-          }, {
-            @php(session()->forget('popup'))
-          });
-        }, 1000)
+          setTimeout(function () {
+        swal({
+          title: "Bienvenue",
+          text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration",
+          type: "success"
+        }, {
+          @php(session()->forget('popup'))
+        });
+      }, 2000)
       @endif
 
     });

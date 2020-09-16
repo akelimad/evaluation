@@ -67,6 +67,7 @@ class AnswerController extends Controller
           $ansr = json_encode($value['ansr']);
         }
         $a->question_id = $key;
+        $a->user_id = isset($uid) ? $uid : '';
         if (!empty($request->mentor_id) && isset($request->is_mentor)) {
           $a->mentor_answer = $ansr;
         } else {

@@ -74,12 +74,12 @@
             <div class="panel-heading" style="border-radius: 0;">
               <div v-if="group.edit" class="form-group" :class="{'has-error': errors.has('group')}">
                 <div class="row mb-0">
-                  <div :class="selectedModelRef == 'ENT' ? 'col-md-10':'col-md-11'">
+                  <div :class="selectedModelRef == 'ENT' ? 'col-md-9':'col-md-11'">
                     <input type="text" name="title" v-model="group.title" class="form-control"  @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du block" v-validate="'required'" @keypress.enter.prevent v-focus>
                     <span v-show="errors.has('group')" class="help-block">@{{ errors.first('group') }}</span>
                   </div>
-                  <div v-if="selectedModelRef == 'ENT'" class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
-                    <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="group.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateGroup(group)">
+                  <div v-if="selectedModelRef == 'ENT'" class="col-md-2 pl-0 pr-0" title="Pondération (%)" >
+                    <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="group.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateGroup(group)" placeholder="Pondération">
                   </div>
                   <div class="col-md-1">
                     <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
@@ -92,7 +92,8 @@
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
 
-                <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10" title="Pondération" data-toggle="tooltip">@{{ group.ponderation + ' %' }}</span>
+                <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10" title="Pondération (%)" >@{{ group.ponderation + ' %' }}</span>
+                <div class="clearfix"></div>
               </h3>
             </div>
             <div class="panel-body">
@@ -100,12 +101,12 @@
                 <div class="card-heading pt-5 pb-5">
                   <div v-if="question.edit" class="form-group mb-0" :class="{'has-error': errors.has('question')}">
                     <div class="row">
-                      <div :class="selectedModelRef == 'ENT' ? 'col-md-10':'col-md-11'">
+                      <div :class="selectedModelRef == 'ENT' ? 'col-md-9':'col-md-11'">
                         <input name="question" v-model="question.title" class="form-control" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
                         <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
                       </div>
-                      <div v-if="selectedModelRef == 'ENT'" class="col-md-1 pl-0 pr-0" title="Pondération" data-toggle="tooltip">
-                        <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="question.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateQuestion(question)">
+                      <div v-if="selectedModelRef == 'ENT'" class="col-md-2 pl-0 pr-0" title="Pondération (%)" >
+                        <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="question.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateQuestion(question)" placeholder="Pondération">
                       </div>
                       <div class="col-md-1">
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
@@ -135,7 +136,7 @@
 
                           <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
 
-                          <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération" data-toggle="tooltip">@{{ question.ponderation + ' %' }}</span>
+                          <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération (%)" >@{{ question.ponderation + ' %' }}</span>
                         </div>
                       </div>
                     </div>
@@ -291,6 +292,7 @@
         updateGroup: function (group) {
           if (group.title.trim() != '') {
             group.edit = false
+            group.ponderation = group.ponderation > 0 ? group.ponderation : 0
           }
         },
         addNewGroup: function () {
@@ -327,6 +329,7 @@
         updateQuestion: function (question) {
           if (question.title.trim() != '') {
             question.edit = false
+            question.ponderation = question.ponderation > 0 ? question.ponderation : 0
           }
         },
         addNewQuestion: function (groupIndex, qType) {

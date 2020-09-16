@@ -4,13 +4,45 @@
   <li><a href="{{ route('objectifs') }}" class="text-blue">Objectifs</a></li>
   <li>{{ $objectif->id > 0 ? $objectif->title : 'Ajouter' }}</li>
 @endsection
+<style>
+  .indicators-container label {
+    position:relative;
+  }
+
+  .indicators-container span {
+    padding: 8px;
+    pointer-events: none;
+    position:absolute;
+    left:0;
+    top:0;
+    transition: 0.2s;
+    transition-timing-function: ease;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    opacity:0.5;
+  }
+
+  .indicators-container input {
+    padding:10px;
+  }
+
+  .indicators-container input:focus + span, .indicators-container input:not(:placeholder-shown) + span {
+    opacity:1;
+    transform: scale(0.75) translateY(-100%) translateX(-30px);
+  }
+
+  /* For IE Browsers*/
+  .indicators-container input:focus + span, .indicators-container input:not(:-ms-input-placeholder) + span {
+    opacity:1;
+    transform: scale(0.75) translateY(-100%) translateX(-30px);
+  }
+</style>
 @section('content')
   <div class="content" id="content">
     <form @submit.prevent="handleSubmit()" action="" method="post" novalidate>
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">
           <div class="card mb-20" v-for="(objectif, oIndex) in objectifs">
-            <div class="card-header">
+            <div v-if="mode == 'add'" class="card-header">
               <span class="badge">@{{ oIndex + 1 }}</span>
               <button v-if="mode == 'add'" type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeObjectif(oIndex)"><i class="fa fa-trash"></i></button>
             </div>
@@ -67,27 +99,33 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12 mb-10">
+                <div class="col-md-12 mb-20">
                   <label class="control-label font-16"><i class="fa fa-list"></i> Indicateurs</label>
                 </div>
                 <div class="col-md-12">
                   <div class="indicators-container">
                     <div class="indicator-item" v-for="(indicator, indexIndicator) in objectif.indicators">
                       <div class="row">
-                        <div class="col-sm-1">
-                          <span class="form-control">@{{ indexIndicator+1 }}</span>
-                        </div>
-                        <div class="col-md-4 pl-0">
-                          <input type="text" class="form-control" placeholder="Titre" v-model="indicator.title">
-                        </div>
-                        <div class="col-md-2 pl-0">
-                          <input type="number" min="1" max="100" class="form-control" placeholder="Objectif fixé" v-model="indicator.fixed">
+                        <div class="col-md-5">
+                          <label>
+                            <input type="text" class="form-control" placeholder=" " v-model="indicator.title">
+                            <span>Titre de l'indicateur</span>
+                          </label>
                         </div>
                         <div class="col-md-2 pl-0">
-                          <input type="number" min="1" max="200" class="form-control" placeholder="Réalisé" title="Sera rémpli par collaborateur" disabled v-model="indicator.realized">
+                          <label>
+                            <input type="number" min="1" max="100" class="form-control" placeholder=" " v-model="indicator.fixed">
+                            <span>Objectif fixé</span>
+                          </label>
                         </div>
                         <div class="col-md-2 pl-0">
-                          <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder="Pondération" v-model="indicator.ponderation">
+                          <input type="number" min="1" max="200" class="form-control" placeholder="Réalisé" title="Sera rempli par l'évalué(e)" disabled v-model="indicator.realized">
+                        </div>
+                        <div class="col-md-2 pl-0">
+                          <label>
+                            <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder=" " v-model="indicator.ponderation">
+                            <span>Pondération (%)</span>
+                          </label>
                         </div>
                         <div class="col-md-1 pl-0">
                           <button v-if="indexIndicator + 1 == objectif.indicators.length" type="button" class="btn btn-success pull-right text-success" @click="addIndicator(oIndex)"><i class="fa fa-plus"></i></button>
@@ -179,7 +217,10 @@
             })
           },
           removeObjectif: function (oIndex) {
-            this.objectifs.splice(oIndex, 1);
+            var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+            if (confirmation) {
+              this.objectifs.splice(oIndex, 1);
+            }
           },
           addIndicator: function (oIndex) {
             var sumPonderation = 0

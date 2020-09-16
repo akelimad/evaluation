@@ -28,12 +28,11 @@ class Answer extends Model
 
     public static function getCollAnswers($qid, $uid, $eid)
     {
-        
         $answer = Answer::where('question_id', $qid)
             ->where('user_id', $uid)
             ->where('entretien_id', $eid)
             ->first();
-        if($answer && $answer->answer != ""){
+        if($answer && ($answer->answer != "" || $answer->mentor_answer != "")){
             return $answer;
         }
         return false;

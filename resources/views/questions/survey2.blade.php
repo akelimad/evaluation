@@ -209,6 +209,7 @@
         <div class="panel-group">
           @php($gNote = 0)
           @php($c = 0)
+          @php($maxNote = App\Setting::get('max_note'))
           @foreach($groupes as $g)
             @php($c += 1)
             @if(count($g->questions)>0)
@@ -221,25 +222,33 @@
                   @endif
                 </div>
                 <div class="panel-body">
-                  <div class="row">
+                  <div class="row mb-0">
                     @forelse($g->questions as $q)
                       <div class="col-md-12 mb-30">
                         <div class="form-group">
                           @if($q->parent == null)
                             <div class="row mb-0">
-                              <div class="col-md-8">
+                              <div class="col-md-{{ $q->ponderation > 0 ? '8' : '12' }}">
                                 <label for="" class="questionTitle"><i class="fa fa-caret-right"></i>
                                   {{$q->titre}}
                                 </label>
                               </div>
-                              <div class="col-md-4">
-                                <span class="ml-5 pull-right">/ {{App\Setting::get('max_note')}}</span>
-                                <input type="number" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
-                                       placeholder="Note" class="ml-5 notation inputNote pull-right" size="3" min="0"
-                                       max="{{App\Setting::get('max_note')}}"
-                                       value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}" required>
-                                <label class="pull-right">Note :</label>
-                              </div>
+                              @if($q->ponderation > 0)
+                                @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $e->id))
+                                <div class="col-md-4">
+                                  @if(Route::currentRouteName() == 'entretien.apercu')
+                                    <span>Note : {{ $mentorAnswer ? $mentorAnswer->note : ''}}/{{ App\Setting::get('max_note') }}</span>
+                                  @else
+                                    <span class="ml-5 pull-right">/ {{ $maxNote }}</span>
+                                    <input type="number" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
+                                           placeholder="Note" class="ml-5 notation inputNote pull-right" size="5" min="0"
+                                           max="{{ $maxNote }}"
+                                           step="0.5"
+                                           value="{{ $mentorAnswer ? $mentorAnswer->note : ''}}" required>
+                                    <label class="pull-right">Note :</label>
+                                  @endif
+                                </div>
+                              @endif
                             </div>
                           @endif
 
@@ -251,7 +260,7 @@
                                       required {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</textarea>
                           @elseif($q->type == "checkbox")
                             <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
-                                   class="notation" min="1" max="{{App\Setting::get('max_note')}}"
+                                   class="notation" min="1" max="{{ $maxNote }}"
                                    value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"
                                    style="display: {{$g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle' ? 'block':'none'}}">
                             <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
@@ -387,7 +396,7 @@
         @php($note = App\Helpers\Base::cutNum($rateNote, 1))
         <div class="row mb-0">
           <div class="col-md-4 mt-5">
-            <span class=""><b style="margin-right: 1em;">Note globale : {{ $note }}</b></span>
+            <span class=""><b style="margin-right: 1em;">Note globale : {{ $note * 10 }}/100</b></span>
           </div>
           <div class="col-md-8">
             <div class="rating pull-left">
@@ -405,11 +414,6 @@
 
 @section('javascript')
   <script>
-    $(document).ready(function () {
-      $('#surveyForm').on('chmFormSuccess', function (event, response) {
-        console.log('succ')
-        window.location.reload()
-      })
-    })
+
   </script>
 @endsection

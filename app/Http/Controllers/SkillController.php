@@ -33,6 +33,9 @@ class SkillController extends Controller
   public function index($e_id, $uid)
   {
     $e = Entretien::findOrFail($e_id);
+    if (!$e->canBeFilledByUser($uid)) {
+      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+    }
     $evaluations = Entretien::findEvaluations($e);
     $user = $e->users()->where('entretien_user.user_id', $uid)->first();
     $skill = Skill::where('function_id', $user->function)->first();

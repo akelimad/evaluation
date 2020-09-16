@@ -199,5 +199,15 @@ class Entretien extends Model
     return $this->model == "Feedback 360";
   }
 
+  public function canBeFilledByUser($user_id) {
+    $user = User::find($user_id);
+    if (Auth::user() == $user) {
+      return date('Y-m-d', strtotime($this->date)) >= date('Y-m-d');
+    } else if (Auth::user() != $user) {
+      return date('Y-m-d', strtotime($this->date_limit)) >= date('Y-m-d');
+    }
+    return false;
+  }
+
 
 }

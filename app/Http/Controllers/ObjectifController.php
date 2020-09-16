@@ -40,6 +40,9 @@ class ObjectifController extends Controller
   public function index($eid, $uid)
   {
     $entretien = Entretien::findOrFail($eid);
+    if (!$entretien->canBeFilledByUser($uid)) {
+      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+    }
     $evaluations = Entretien::findEvaluations($entretien);
 
     $itemsId = Entretien_evaluation::getItemsId($eid, 9);

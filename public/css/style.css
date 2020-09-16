@@ -913,7 +913,7 @@ p.help-block {
 }
 
 .form-group .notation {
-  padding: 0 8px
+  padding: 0;
 }
 
 .fa.checked {

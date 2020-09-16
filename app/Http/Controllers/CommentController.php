@@ -31,6 +31,9 @@ class CommentController extends Controller
     public function index($eid, $uid)
     {
         $e = Entretien::findOrFail($eid);
+        if (!$e->canBeFilledByUser($uid)) {
+            return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+        }
         $user = User::findOrFail($uid);
         $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
         $evaluations = Entretien::findEvaluations($e);
