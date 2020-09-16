@@ -59,8 +59,7 @@
   @yield('style')
 
 </head>
-<body
-    class="hold-transition skin-blue sidebar-mini {{App\Setting::get('toggle_sidebar') == 1 ? 'sidebar-collapse':''}}">
+<body class="hold-transition skin-blue sidebar-mini {{App\Setting::get('toggle_sidebar') == 1 ? 'sidebar-collapse':''}}">
 <div class="spinner-wp">
   <!-- <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i> -->
   <div class="looding">

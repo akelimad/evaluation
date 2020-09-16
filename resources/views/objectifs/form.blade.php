@@ -4,44 +4,13 @@
   <li><a href="{{ route('objectifs') }}" class="text-blue">Objectifs</a></li>
   <li>{{ $objectif->id > 0 ? $objectif->title : 'Ajouter' }}</li>
 @endsection
-<style>
-  .indicators-container label {
-    position:relative;
-  }
 
-  .indicators-container span {
-    padding: 8px;
-    pointer-events: none;
-    position:absolute;
-    left:0;
-    top:0;
-    transition: 0.2s;
-    transition-timing-function: ease;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-    opacity:0.5;
-  }
-
-  .indicators-container input {
-    padding:10px;
-  }
-
-  .indicators-container input:focus + span, .indicators-container input:not(:placeholder-shown) + span {
-    opacity:1;
-    transform: scale(0.75) translateY(-100%) translateX(-30px);
-  }
-
-  /* For IE Browsers*/
-  .indicators-container input:focus + span, .indicators-container input:not(:-ms-input-placeholder) + span {
-    opacity:1;
-    transform: scale(0.75) translateY(-100%) translateX(-30px);
-  }
-</style>
 @section('content')
   <div class="content" id="content">
     <form @submit.prevent="handleSubmit()" action="" method="post" novalidate>
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">
-          <div class="card mb-20" v-for="(objectif, oIndex) in objectifs">
+          <div class="card border-info mb-20" v-for="(objectif, oIndex) in objectifs">
             <div v-if="mode == 'add'" class="card-header">
               <span class="badge">@{{ oIndex + 1 }}</span>
               <button v-if="mode == 'add'" type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeObjectif(oIndex)"><i class="fa fa-trash"></i></button>

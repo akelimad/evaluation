@@ -128,10 +128,6 @@ class SkillController extends Controller
     $rules = [
       'function_id' => 'required',
       'title' => 'required',
-      'savoir' => 'required',
-      'savoir_faire' => 'required',
-      'savoir_etre' => 'required',
-      'mobilite_pro' => 'required',
     ];
     $validator = \Validator::make($skillData, $rules);
     $functionAlreayHasSkills = Skill::where('function_id', $skillData['function_id']);//->get()->count() > 0;
@@ -142,19 +138,28 @@ class SkillController extends Controller
     if ($functionAlreayHasSkills) {
       $validator->getMessageBag()->add('funct_exists', "Cett fonction a déjà une fiche métier");
     }
+    // validate ponderation
+    foreach ($skillData['types'] as $tKey => $type) {
+      if (empty($type['skills'])) continue;
+      $sum = 0;
+      foreach ($type['skills'] as $key => $skill) {
+        $sum += $skill['ponderation'];
+      }
+      if ($sum != 100) {
+        $validator->getMessageBag()->add('type-'.$tKey, "La somme de la pondération doit être égale à 100 pour le type de compétences : ". $type['title']);
+      }
+    }
     $messages = $validator->errors();
     if (count($messages) > 0) {
       return ["status" => "danger", "message" => $messages];
     }
-
+    $skillData['skills_json'] = json_encode($skillData['types']);
     $skillData['user_id'] = User::getOwner()->id;
-    $skillData['savoir'] = json_encode($this->convertStringToArray($skillData['savoir']));
-    $skillData['savoir_faire'] = json_encode($this->convertStringToArray($skillData['savoir_faire']));
-    $skillData['savoir_etre'] = json_encode($this->convertStringToArray($skillData['savoir_etre']));
     if ($skillData['id'] > 0) {
       $skill = Skill::find($skillData['id']);
       $skill->update($skillData);
     } else {
+      dd($skillData);
       $skill = Skill::create($skillData);
     }
 
@@ -216,18 +221,6 @@ class SkillController extends Controller
       'title' => 'Confirmation',
       'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
     ]);
-  }
-
-  public function convertStringToArray($str, $delimeter = ',') {
-    $values = explode($delimeter, $str);
-    $newarray = [];
-    if (!empty($values)) {
-      foreach ($values as $key => $value) {
-        $newarray[$key+1] = $value;
-      }
-    }
-
-    return $newarray;
   }
 
 }

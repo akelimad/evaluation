@@ -7,7 +7,7 @@ use Auth;
 class Skill extends Model
 {
     protected $fillable = [
-      'function_id', 'title', 'description', 'savoir', 'savoir_faire', 'savoir_etre', 'mobilite_pro', 'user_id'
+      'function_id', 'title', 'description', 'skills_json', 'mobilite_pro', 'user_id'
     ];
 
     public function user()
@@ -87,6 +87,10 @@ class Skill extends Model
         $notes = json_decode($notes, true) ?: [];
 
         return isset($notes[$field]) && !empty($notes[$field]) ? $notes[$field] : [];
+    }
+
+    public function getSkillsTypes() {
+        return json_decode($this->skills_json, true) ?: [];
     }
 
 }

@@ -4,7 +4,7 @@
   <li>Fiches métiers</li>
 @endsection
 @section('content')
-  <section class="content users">
+  <section class="content users" id="content">
     <div class="row">
       <div class="col-md-12">
         <div class="box box-primary">
@@ -14,7 +14,7 @@
               <a
                   href="javascript:void(0)"
                   chm-modal="{{ route('skill.form') }}"
-                  chm-modal-options='{"form":{"attributes":{"id":"skillForm","target-table":"[chm-table]"}}}'
+                  chm-modal-options='{"form":{"attributes":{"id":"skillForm","target-table":"[chm-table]"}}, "width": 700}'
                   class="btn bg-maroon"
               ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter" }}</a>
             </div>
