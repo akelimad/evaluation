@@ -30,12 +30,12 @@ class UserController extends Controller
     $table = new Table($request);
     $query = User::getUsers()->orderBy('id', 'DESC');
     if ($q = $request->get('q', false)) {
-      $query->where('name', "LIKE", "%$q%")->orWhere('last_name', "LIKE", "%$q%")->orWhere('email', "LIKE", "%$q%");
+      $query->whereRaw('(name LIKE ? OR last_name LIKE ? OR email LIKE ?)', ["%".$q."%", "%".$q."%", "%".$q."%"]);
     }
-    if ($department = $request->get('department', false)){
+    if ($department = $request->get('department', false)) {
       $query->where('service', '=', $department);
     }
-    if ($function = $request->get('function', false)){
+    if ($function = $request->get('function', false)) {
       $query->where('function', '=', $function);
     }
     if ($role = $request->get('role')) {

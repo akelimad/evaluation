@@ -181,15 +181,15 @@
     // this to show popup message for ADMIN only after authentication
     $(window).on('load', function () {
       @if(\Auth::user()->hasRole('ADMIN') && session('popup'))
-          setTimeout(function () {
-        swal({
-          title: "Bienvenue",
-          text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration",
-          type: "success"
-        }, {
-          @php(session()->forget('popup'))
-        });
-      }, 2000)
+        setTimeout(function () {
+          swal({
+            title: "Bienvenue",
+            text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration",
+            type: "success"
+          }, {
+            @php(session()->forget('popup'))
+          });
+        }, 1000)
       @endif
 
     });
