@@ -34,71 +34,36 @@
                           <h4 class="alert alert-info p-5">{{ $user->fullname() }}</h4>
                         </div>
                         <div class="col-md-12">
-                          <h3 class="border-bottom">Savoir</h3>
-                          @foreach($skill->getDataAsArray('savoir') as $key => $item)
-                            <div class="row">
-                              <div class="col-md-6">
-                                <p>{{ $item }}</p>
-                              </div>
-                              <div class="col-md-6">
-                                <input type="text"
-                                       class="slider"
-                                       name="user_notes[savoir][{{ $key }}]"
-                                       data-provide="slider"
-                                       data-slider-min="0"
-                                       data-slider-max="10"
-                                       data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir', $key, 'user') }}"
-                                       data-slider-enabled="{{ Auth::user()->id == $user->id }}"
-                                       data-slider-tooltip="always"
-                                >
-                              </div>
-                            </div>
-                          @endforeach
-
-                          <h3 class="border-bottom">Savoir-faire</h3>
-                          @foreach($skill->getDataAsArray('savoir_faire') as $key => $item)
-                            <div class="row">
-                              <div class="col-md-6">
-                                <p>{{ $item }}</p>
-                              </div>
-                              <div class="col-md-6">
-                                <input type="text"
-                                       class="slider"
-                                       name="user_notes[savoir_faire][{{ $key }}]"
-                                       data-provide="slider"
-                                       data-slider-min="0"
-                                       data-slider-max="10"
-                                       data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_faire', $key, 'user') }}"
-                                       data-slider-enabled="{{ Auth::user()->id == $user->id }}"
-                                       data-slider-tooltip="always"
-                                >
+                          @forelse($skill->getSkillsTypes() as $type)
+                            <div class="panel panel-default mb-30">
+                              <div class="panel-heading">{{ $type['title'] }}</div>
+                              <div class="panel-body">
+                                @foreach($type['skills'] as $key => $skillItem)
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <span class="">{{ $key + 1 }})</span>
+                                    {{ $skillItem['title'] }}
+                                  </div>
+                                  <div class="col-md-6">
+                                    <input type="text"
+                                           class="slider"
+                                           name="user_notes[skill_type_{{ $type['id'] }}][{{ $key }}]"
+                                           data-provide="slider"
+                                           data-slider-min="0"
+                                           data-slider-max="10"
+                                           data-slider-step="0.5"
+                                           data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'skill_type_'.$type['id'], $key, 'user') }}"
+                                           data-slider-enabled="{{ Auth::user()->id == $user->id }}"
+                                           data-slider-tooltip="always"
+                                    >
+                                  </div>
+                                </div>
+                                @endforeach
                               </div>
                             </div>
-                          @endforeach
-
-                          <h3 class="border-bottom">Savoir-être</h3>
-                          @foreach($skill->getDataAsArray('savoir_etre') as $key => $item)
-                            <div class="row">
-                              <div class="col-md-6">
-                                <p>{{ $item }}</p>
-                              </div>
-                              <div class="col-md-6">
-                                <input type="text"
-                                       class="slider"
-                                       name="user_notes[savoir_etre][{{ $key }}]"
-                                       data-provide="slider"
-                                       data-slider-min="0"
-                                       data-slider-max="10"
-                                       data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_etre', $key, 'user') }}"
-                                       data-slider-enabled="{{ Auth::user()->id == $user->id }}"
-                                       data-slider-tooltip="always"
-                                >
-                              </div>
-                            </div>
-                          @endforeach
+                          @empty
+                            <p>Aucun type de compétence trouvé !</p>
+                          @endforelse
                         </div>
                       </div>
                     </div>
@@ -109,71 +74,35 @@
                           <h4 class="alert alert-info p-5">{{ $user->parent->fullname() }}</h4>
                         </div>
                         <div class="col-md-12">
-                          <h3 class="border-bottom">Savoir</h3>
-                          @foreach($skill->getDataAsArray('savoir') as $key => $item)
-                            <div class="row">
-                              <div class="col-md-6">
-                                <p>{{ $item }}</p>
-                              </div>
-                              <div class="col-md-6">
-                                <input type="text"
-                                       class="slider"
-                                       name="mentor_notes[savoir][{{ $key }}]"
-                                       data-provide="slider"
-                                       data-slider-min="0"
-                                       data-slider-max="10"
-                                       data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir', $key, 'mentor') }}"
-                                       data-slider-enabled="true"
-                                       data-slider-tooltip="always"
-                                >
-                              </div>
-                            </div>
-                          @endforeach
-
-                          <h3 class="border-bottom">Savoir-faire</h3>
-                          @foreach($skill->getDataAsArray('savoir_faire') as $key => $item)
-                            <div class="row">
-                              <div class="col-md-6">
-                                <p>{{ $item }}</p>
-                              </div>
-                              <div class="col-md-6">
-                                <input type="text"
-                                       class="slider"
-                                       name="mentor_notes[savoir_faire][{{ $key }}]"
-                                       data-provide="slider"
-                                       data-slider-min="0"
-                                       data-slider-max="10"
-                                       data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_faire', $key, 'mentor') }}"
-                                       data-slider-enabled="true"
-                                       data-slider-tooltip="always"
-                                >
+                          @forelse($skill->getSkillsTypes() as $type)
+                            <div class="panel panel-default mb-30">
+                              <div class="panel-heading">{{ $type['title'] }}</div>
+                              <div class="panel-body">
+                                @foreach($type['skills'] as $key => $skillItem)
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      {{ $skillItem['title'] }}
+                                    </div>
+                                    <div class="col-md-6">
+                                      <input type="text"
+                                             class="slider"
+                                             name="mentor_notes[skill_type_{{ $type['id'] }}][{{ $key }}]"
+                                             data-provide="slider"
+                                             data-slider-min="0"
+                                             data-slider-max="10"
+                                             data-slider-step="0.5"
+                                             data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'skill_type_'.$type['id'], $key, 'mentor') }}"
+                                             data-slider-enabled="true"
+                                             data-slider-tooltip="always"
+                                      >
+                                    </div>
+                                  </div>
+                                @endforeach
                               </div>
                             </div>
-                          @endforeach
-
-                          <h3 class="border-bottom">Savoir-être</h3>
-                          @foreach($skill->getDataAsArray('savoir_etre') as $key => $item)
-                            <div class="row">
-                              <div class="col-md-6">
-                                <p>{{ $item }}</p>
-                              </div>
-                              <div class="col-md-6">
-                                <input type="text"
-                                       class="slider"
-                                       name="mentor_notes[savoir_etre][{{ $key }}]"
-                                       data-provide="slider"
-                                       data-slider-min="0"
-                                       data-slider-max="10"
-                                       data-slider-step="0.5"
-                                       data-slider-value="{{ \App\Skill::getNote($e->id, $user->id, $user->parent->id, 'savoir_etre', $key, 'mentor') }}"
-                                       data-slider-enabled="true"
-                                       data-slider-tooltip="always"
-                                >
-                              </div>
-                            </div>
-                          @endforeach
+                          @empty
+                            <p>Aucun type de compétence trouvé !</p>
+                          @endforelse
                         </div>
                       </div>
                     </div>

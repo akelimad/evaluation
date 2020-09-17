@@ -38,11 +38,8 @@ class Skill extends Model
 
     public static function getSkill($sid, $uid, $eid){
         $skill = Skill_user::where('skill_id', $sid)->where('user_id', $uid)->where('entretien_id', $eid)->first();
-        if($skill){
-            return $skill;
-        }else{
-            return null;
-        }
+
+        return $skill ? $skill : null;
     }
 
     public static function filledSkills($eid, $uid, $mentor_id){
@@ -52,17 +49,18 @@ class Skill extends Model
         }else{
             $skill = Skill_user::where('user_id', $uid)->where('mentor_id', $mentor_id)->where('entretien_id', $eid)->where('objectif', '<>', 0)->first();
         }
-        if($skill){
-            return $skill;            
-        }else{
-            return null;
-        }
+        return $skill ? $skill : null;
     }
 
-    public function getDataAsArray($field) {
-        $array = json_decode($this->$field, true) ?: [$this->$field];
+    public function getDataAsArray($type) {
+        $skill = json_decode($this->skills_json, true) ?: [];
 
-        return $array;
+        if (!isset($skill[$type]['skills']) || empty($skill[$type]['skills'])) return [];
+        $labels = [];
+        foreach ($skill[$type]['skills'] as $item) {
+            $labels[] = $item['title'];
+        }
+        return $labels;
     }
 
     public function getDataAsStr($field) {
@@ -91,6 +89,19 @@ class Skill extends Model
 
     public function getSkillsTypes() {
         return json_decode($this->skills_json, true) ?: [];
+    }
+
+    public function getSkillTypeNote($eid, $uid, $mentor_id, $field, $type_id, $profile) {
+        $skills_json = json_decode($this->skills_json, true) ?: [];
+        $typeData = isset($skills_json[$type_id]) ? $skills_json[$type_id] : [];
+        if (empty($typeData) || !isset($typeData['skills']) || empty($typeData['skills'])) return 0;
+        $sum = 0;
+        foreach ($typeData['skills'] as $key => $item) {
+            $ponderation = isset($item['ponderation']) ? $item['ponderation'] : 0;
+            $note = self::getNote($eid, $uid, $mentor_id, $field, $key, $profile);
+            $sum += $note * ($ponderation / 100);
+        }
+        return $sum;
     }
 
 }

@@ -156,24 +156,16 @@
           </div>
           <div id="collapse-skills" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-skills">
             <div class="panel-body">
-              <div class="row">
-                <div class="col-md-12">
-                  <h3 class="styled-title">Savoir</h3>
-                  <canvas class="chart" id="savoir_chart" style="max-height: 600px;"></canvas>
+              @forelse($skill->getSkillsTypes() as $type)
+                <div class="row">
+                  <div class="col-md-12">
+                    <h3 class="styled-title">{{ $type['title'] }} <span class="pull-right">{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></h3>
+                    <canvas class="chart" id="type_{{ $type['id'] }}_chart" style="max-height: 600px;"></canvas>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <h3 class="styled-title">Savoir-faire</h3>
-                  <canvas class="chart" id="savoir_faire_chart" style="max-height: 600px;"></canvas>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <h3 class="styled-title">Savoir-être</h3>
-                  <canvas class="chart" id="savoir_etre_chart" style="max-height: 600px;"></canvas>
-                </div>
-              </div>
+              @empty
+                <p>Aucun type de compétence trouvé !</p>
+              @endforelse
             </div>
           </div>
         </div>
@@ -383,12 +375,13 @@
     }
     @endforeach
 
-    @foreach(['savoir', 'savoir_faire', 'savoir_etre'] as $key => $field)
-      if (document.getElementById('{{ $field }}_chart')) {
-        let chart = new Chart(document.getElementById('{{ $field }}_chart'), {
+    @foreach($skill->getSkillsTypes() as $key => $type)
+      @php($field = 'skill_type_'.$type['id'])
+      if (document.getElementById('type_{{ $type['id'] }}_chart')) {
+        let chart = new Chart(document.getElementById('type_{{ $type['id'] }}_chart'), {
           type: 'radar',
           data: {
-            labels: [@foreach($skill->getDataAsArray($field) as $value) "{!! $value !!} " ,@endforeach],
+            labels: [@foreach($skill->getDataAsArray($key) as $value) "{!! $value !!} " ,@endforeach],
             datasets: [
               {
                 label: "Collaborateur",

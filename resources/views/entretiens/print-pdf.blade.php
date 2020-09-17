@@ -370,12 +370,14 @@
 @if(in_array('Compétences', $entreEvalsTitle))
   <div class="mt-20"><p class="section-title">Compétences</p></div>
   <p>Fiche métier : {{ $skill->title }}</p>
-  @foreach(['savoir', 'savoir_faire', 'savoir_etre'] as $key => $field)
-  <div class="item-box">
-    <h3>{{ str_replace('_', ' ', $field) }}</h3>
-    <img src="https://quickchart.io/chart?c={{ $chartData[$field] }}" style="max-width: 100%"/>
-  </div>
-  @endforeach
+  @forelse($skill->getSkillsTypes() as $key => $type)
+    <div class="item-box">
+      <p style="background: #f1f0f0;">{!! $type['title'] or '---' !!} : <span>{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></p>
+      <img src="https://quickchart.io/chart?c={{ $chartData['skill_type_'. $key] }}" style="max-width: 100%"/>
+    </div>
+  @empty
+    <p>Aucun type de compétence trouvé !</p>
+  @endforelse
 @endif
 
 @if(in_array('Primes', $entreEvalsTitle))
@@ -394,10 +396,10 @@
         <tbody>
         @foreach($primes as $s)
           <tr>
-            <td> {{ Carbon\Carbon::parse($s->created_at)->format('d/m/Y') }} </td>
-            <td> {{ $s->brut or '---' }} </td>
-            <td> {{ $s->prime or '---' }} </td>
-            <td> {{ $s->comment ? $s->comment : '---' }} </td>
+            <td>{{ Carbon\Carbon::parse($s->created_at)->format('d/m/Y') }}</td>
+            <td>{{ $s->brut or '---' }}</td>
+            <td>{{ $s->prime or '---' }}</td>
+            <td>{{ $s->comment ? $s->comment : '---' }}</td>
           </tr>
         @endforeach
         </tbody>

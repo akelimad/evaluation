@@ -42,6 +42,7 @@
         <div class="panel-body pb-0">
           {{ csrf_field() }}
           <div class="row">
+            <input type="hidden" :name="'types['+tIndex+'][id]'" :id="'t-'+tIndex+'-id'" :value="type.id">
             <div class="col-md-12">
               <div class="form-group">
                 <label for="title" class="control-label required">Titre</label>
@@ -95,60 +96,63 @@
 
 <script>
   $(document).ready(function () {
-    new Vue({
-      el: '#contentaa',
-      data: {
-        mode: "add",
-        title: "{!! $skill->title !!}",
-        description: "{!! $skill->description !!}",
-        function_id: "{{ $skill->function_id }}",
-        types: [
-          @foreach($skill->getSkillsTypes() as $type)
-          {
-            title: "{!! $type['title'] !!}",
-            skills: [
-              @foreach($type['skills'] as $skill)
+    setTimeout(function () {
+      new Vue({
+        el: '#contentaa',
+        data: {
+          mode: "add",
+          title: "{!! $skill->title !!}",
+          description: "{!! $skill->description !!}",
+          function_id: "{{ $skill->function_id }}",
+          types: [
+              @foreach($skill->getSkillsTypes() as $key => $type)
               {
-                title: "{!! $skill['title'] !!}",
-                ponderation: "{{ $skill['ponderation'] }}"
-              },
-              @endforeach
-            ]
+              id: {{ $key }},
+              title: "{!! $type['title'] !!}",
+              skills: [
+                  @foreach($type['skills'] as $skill)
+                  {
+                    title: "{!! $skill['title'] !!}",
+                    ponderation: "{{ $skill['ponderation'] }}"
+                  },
+                @endforeach
+              ]
+            },
+            @endforeach
+          ],
+        },
+        methods: {
+          addType: function () {
+            this.types.push({
+              title: "",
+              skills: [
+                {
+                  title: "",
+                  ponderation: ""
+                }
+              ]
+            })
           },
-          @endforeach
-        ],
-      },
-      methods: {
-        addType: function () {
-          this.types.push({
-            title: "",
-            skills: [
-              {
-                title: "",
-                ponderation: ""
-              }
-            ]
-          })
-        },
-        removeType: function (tIndex) {
-          var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
-          if (confirmation) {
-            this.types.splice(tIndex, 1)
-          }
-        },
-        addSkill: function (tIndex) {
-          this.types[tIndex].skills.push({
-            title: "",
-            ponderation: "",
-          })
-        },
-        removeSkill: function (tIndex, sIndex) {
-          var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
-          if (confirmation) {
-            this.types[tIndex].skills.splice(sIndex, 1)
+          removeType: function (tIndex) {
+            var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+            if (confirmation) {
+              this.types.splice(tIndex, 1)
+            }
+          },
+          addSkill: function (tIndex) {
+            this.types[tIndex].skills.push({
+              title: "",
+              ponderation: "",
+            })
+          },
+          removeSkill: function (tIndex, sIndex) {
+            var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+            if (confirmation) {
+              this.types[tIndex].skills.splice(sIndex, 1)
+            }
           }
         }
-      }
-    })
+      })
+    }, 100)
   })
 </script>

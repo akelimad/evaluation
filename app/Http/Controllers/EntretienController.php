@@ -532,11 +532,12 @@ class EntretienController extends Controller
 
     // skills charts
     $chartData = [];
-    foreach(['savoir', 'savoir_faire', 'savoir_etre'] as $key => $field) {
+    foreach($skill->getSkillsTypes() as $key => $type) {
+      $field = 'skill_type_'.$type['id'];
       $data = [
         'type' => 'radar',
         'data' => [
-          'labels' => array_values($skill->getDataAsArray($field)),
+          'labels' => $skill->getDataAsArray($key),
           'datasets' => [
             [
               'label' => 'Collaborateur',
@@ -549,7 +550,7 @@ class EntretienController extends Controller
           ]
         ]
       ];
-      $chartData[$field] = urlencode(json_encode($data));
+      $chartData['skill_type_'.$key] = urlencode(json_encode($data));
     }
 
     // objectifs personnal charts

@@ -69,7 +69,7 @@
                             <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{$e->titre}}</a>
                           </td>
                           <td>
-                            {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
+                            {{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}}
                           </td>
                           <td class="text-center">
                             <span class="label label-{{$userAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$userAnswered ? 'Remplie le '.Carbon\Carbon::parse($userAnswered->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>

@@ -159,7 +159,6 @@ class SkillController extends Controller
       $skill = Skill::find($skillData['id']);
       $skill->update($skillData);
     } else {
-      dd($skillData);
       $skill = Skill::create($skillData);
     }
 
@@ -187,6 +186,7 @@ class SkillController extends Controller
     $model = $skill_user = Skill_user::where('skill_id', $data['skill_id'])
       ->where('entretien_id', $data['entretien_id'])
       ->where('user_id', $data['user_id']);
+
     $skill_user = $model->first();
     if (is_null($skill_user)) {
       $skill_user = Skill_user::create($data);

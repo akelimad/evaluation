@@ -237,7 +237,7 @@ $(document).ready(function () {
 
   $('[chm-table]').on('chmTableSuccess', function () {
     $('[data-toggle="tooltip"]').tooltip()
-    var actionsHeight = $('.dropdown-menu').innerHeight()
+    var actionsHeight = $('.dropdown-menu-right').height()
     $('.table-responsive').css('min-height', actionsHeight)
 
     tableResponsive()
