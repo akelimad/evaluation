@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SendMentorEmail::class,
+        Commands\CampaignEmailing::class,
     ];
 
     /**
@@ -26,5 +27,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('email:mentor')->hourly();
 
+        $schedule->command('campaign')->everyMinute();
     }
 }
