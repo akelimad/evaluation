@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 ini_set('max_execution_time', 300); //5 minutes
 
+use App\Campaign;
 use App\Fonction;
 use App\Team;
 use Illuminate\Http\Request;
@@ -208,11 +209,6 @@ class EntretienController extends Controller
 
     $entretienUsers = $removedUsers = [];
     $evaluationsId = $request->items;
-
-    $url=url('config/settings/general');
-    if(Evaluation::maxNote() == 0) {
-      return ["status" => "danger", "message" => "Veuillez définir tout d'abord la note maximale dans <a href='$url' target='_blank'>Paramétres</a> !"];
-    }
     
     if (isset($id) && is_numeric($id)) {
       $entretien = Entretien::findOrFail($id);
@@ -313,10 +309,20 @@ class EntretienController extends Controller
           $entretien->users()->attach([$uid => ['mentor_id' => $member->id]]);
         }
       } else {
+        $campaignData = [
+          'entretien_id' => $entretien->id,
+          'email_id' => $collEmail->id,
+          'receiver' => $user->email,
+          'sheduled_at' => date('Y-m-d H:i', strtotime($request->sheduled_at)),
+        ];
+        Campaign::create($campaignData);
         $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
-        MailerController::send($user, $entretien, $collEmail);
+        //MailerController::send($user, $entretien, $collEmail);
         if (!in_array($user->parent->id, $already_sent)) {
-          MailerController::send($user->parent, $entretien, $mentorEmail);
+          $campaignData['email_id'] = $mentorEmail->id;
+          $campaignData['receiver'] = $user->parent->email;
+          Campaign::create($campaignData);
+          //MailerController::send($user->parent, $entretien, $mentorEmail);
           $already_sent[] = $user->parent->id;
         }
       }

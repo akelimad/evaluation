@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\Base;
+use App\User;
 use Illuminate\Console\Command;
 
 class SendMentorEmail extends Command
@@ -41,8 +43,8 @@ class SendMentorEmail extends Command
             $query->where('name', '=', 'MENTOR');
         })->get();
 
-        foreach ($user_mentors as $mentor) {
-            $password = "admin123";
+        foreach ($mentors as $mentor) {
+            $password = Base::getRandomString();
             $mentor->password = bcrypt($password);
             $mentor->save();
             Mail::send('emails.mentor_invitation', [

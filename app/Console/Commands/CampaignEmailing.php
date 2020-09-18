@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -38,11 +39,18 @@ class CampaignEmailing extends Command
    */
   public function handle()
   {
-    Mail::send('emails.test', [], function ($m) {
-      $m->from('contact@lycom.ma', 'E-entretien');
-      $m->to('akel.dev@gmail.com', 'akel')->subject('test subject');
-    });
+    $now = date("Y-m-d H:i", strtotime(Carbon::now()->addHour()));
 
-    $this->info('An email was sent successfully !');
+    if ('2020-09-18 09:13' <= $now) {
+      Mail::send('emails.test', [], function ($m) {
+        $m->from('contact@lycom.ma', 'E-entretien');
+        $m->to('akel.dev@gmail.com', 'akel')->subject('test subject');
+      });
+
+      $this->info('An email was sent successfully !');
+    } else {
+      $this->info('Nothing happens !');
+    }
+
   }
 }

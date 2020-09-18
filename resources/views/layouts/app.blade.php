@@ -21,8 +21,6 @@
   <link rel="stylesheet" href="{{ asset('css/skins/_all-skins.min.css')}}">
   <link rel="stylesheet" href="{{ asset('css/fullcalendar.min.css')}}">
   <!-- Date Picker -->
-  <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css')}}">
-  <link rel="stylesheet" href="{{asset('vendor/iCheck/square/blue.css')}}">
 
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
@@ -31,7 +29,6 @@
   <link rel="stylesheet" href="{{asset('css/alerts.css')}}">
   <link rel="stylesheet" href="{{asset('css/sweetalert2.min.css')}}">
   <link rel="stylesheet" href="{{asset('css/style.css')}}?v={{ time() }}">
-  <link rel="stylesheet" href="{{asset('css/margin.css')}}?v={{ time() }}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

@@ -245,8 +245,8 @@
                   </select>
                 </div>
                 <div class="separator">
-                  <label for="" class="mb-0">Et / ou sélectionner des utilisateurs : <input type="checkbox" id="selectAllUsers"> <label for="selectAllUsers" class="d-inline-block">Tout sélectionner</label></label>
-                  <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
+                  <label for="" class="mb-0">Evalués : <input type="checkbox" id="selectAllUsers"> <label for="selectAllUsers" class="d-inline-block">Tout sélectionner</label></label>
+                  <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" chm-validate="required">
                     @foreach($users as $user)
                       <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
                     @endforeach
@@ -271,6 +271,21 @@
             <div class="col-md-12">
               <label for="date_limit" id="date_limit_label" class="control-label required">Date limite pour l'évaluation manager</label>
               <input type="text" name="date_limit" id="interview-enddate" class="form-control datepicker" placeholder="Choisir une date" value="{{isset($entretien->date_limit) ? Carbon\Carbon::parse($entretien->date_limit)->format('d-m-Y') : null }}" chm-validate="required" readonly="" required="">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="">Type d'envoi des emails :</label>
+              <select name="shedule_type" id="shedule_type" class="form-control">
+                <option value="now">Immédiat</option>
+                <option value="sheduled">Programmé</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Choisissez la date et l'heure</label>
+                <input type="datetime-local" name="sheduled_at" id="sheduled_at" class="form-control">
+              </div>
             </div>
           </div>
           <div class="actions">
@@ -309,6 +324,10 @@
     </div>
   </div>
 </form>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
 <script>
 
@@ -352,7 +371,7 @@
   }
 
   var usersId = []
-  $(function () {
+  $(document).ready(function () {
     $('.datepicker').datepicker({
       startDate: new Date(),
       autoclose: true,
@@ -458,12 +477,7 @@
           isValid = false;
         }
       }
-      if (stepNbr == 4) {
-        if ($('#teams_id_to_evaluate').val().length == 0 && $('#users_id_to_evaluate').val().length == 0) {
-          chmForm.showErrorBlock('#users_id_to_evaluate', "Veuillez choisir au moins une équipe ou un utilisateur")
-          isValid = false;
-        }
-      }
+
       if (stepNbr == 5) {
         var start_date = $("#interview-startdate").datepicker('getDate');
         var end_date = $("#interview-enddate").datepicker('getDate');

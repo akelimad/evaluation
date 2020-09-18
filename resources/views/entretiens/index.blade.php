@@ -53,6 +53,7 @@
 @endsection
 
 @section('javascript')
+  @parent
   <script>
     $(document).ready(function () {
       $('.table-responsive').on('show.bs.dropdown', function () {
