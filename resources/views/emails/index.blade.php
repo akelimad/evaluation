@@ -3,6 +3,10 @@
 @section('breadcrumb')
   <li>Courriels</li>
 @endsection
+@section('style')
+  @parent
+  <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
+@endsection
 @section('content')
   <section class="content users">
     <div class="row">
@@ -32,3 +36,7 @@
   </section>
 @endsection
 
+@section('javascript')
+  @parent
+  <script src="{{asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
+@endsection

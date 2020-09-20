@@ -9,26 +9,10 @@
   <base href="{{ url('/') }}">
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css')}}">
-  <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css')}}">
-  <!-- Theme style -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{{ asset('css/select2.min.css')}}">
-  <link rel="stylesheet" href="{{ asset('css/admin.min.css')}}">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="{{ asset('css/skins/_all-skins.min.css')}}">
-  <link rel="stylesheet" href="{{ asset('css/fullcalendar.min.css')}}">
-  <!-- Date Picker -->
-
-  <!-- bootstrap wysihtml5 - text editor -->
-  <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap-slider/bootstrap-slider.min.css')}}">
-
-  <link rel="stylesheet" href="{{asset('css/alerts.css')}}">
   <link rel="stylesheet" href="{{asset('css/sweetalert2.min.css')}}">
-  <link rel="stylesheet" href="{{asset('css/style.css')}}?v={{ time() }}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,11 +20,6 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-
-  <!-- Google Font -->
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i" rel="stylesheet">
 
   <link href="{{ App\Asset::path('app.css') }}" rel="stylesheet">
 
@@ -292,26 +271,11 @@
 <!-- ./wrapper -->
 <div class="chm-float-alert"></div>
 
-<!-- Bootstrap 3.3.7 -->
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('js/moment.min.js')}}"></script>
-<!-- datepicker -->
-<script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
-<script src="{{asset('js/bootstrap-datepicker.fr.min.js')}}"></script>
-<script src="{{asset('js/fullcalendar.min.js')}}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
-<!-- FastClick -->
-<script src="{{asset('js/fastclick.js')}}"></script>
 <script src="{{asset('js/select2.full.min.js')}}"></script>
 <script src="{{asset('vendor/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
-<!-- AdminLTE App -->
 <script src="{{asset('js/admin.min.js')}}"></script>
-
-<!-- AdminLTE for demo purposes -->
 <script src="{{asset('js/sweetalert2.min.js')}}"></script>
-<script src="{{asset('js/script.js')}}?v={{ time() }}"></script>
 <script src="{{ App\Asset::path('app.js') }}"></script>
 
 @yield('javascript')

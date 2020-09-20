@@ -84,6 +84,7 @@
                   <div class="col-md-1">
                     <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
                   </div>
+                  <div class="clearfix"></div>
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
@@ -111,6 +112,7 @@
                       <div class="col-md-1">
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
                       </div>
+                      <div class="clearfix"></div>
                     </div>
                   </div>
                   <div v-else class="m-0">
@@ -411,7 +413,8 @@
                 swal({
                   title: response.data.status == 'success' ? "Enregistré" : "Erreur survenue",
                   text: response.data.message,
-                  type: response.data.status
+                  type: response.data.status,
+                  allowOutsideClick: false
                 }).then(function () {
                   if (success) {
                     window.location.href = "{{ route('surveys-list') }}"

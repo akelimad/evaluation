@@ -10,9 +10,7 @@
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css')}}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{asset('css/admin.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/alerts.css')}}">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link href="{{ App\Asset::path('app.css') }}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -23,7 +21,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i" rel="stylesheet">
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" style="background: url('../img/bg-login.jpg') no-repeat center center;">
 	<div class="container">
 	  @yield('content')
 	</div>

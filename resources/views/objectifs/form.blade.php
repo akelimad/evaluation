@@ -226,7 +226,12 @@
                   }
                 })
                 if (!ponderationIsValid) {
-                  swal({title: "Erreur", text: "La somme de la pondération des indicateurs doit être égale à 100 pour chaque objectif !", type: "error"})
+                  swal({
+                    title: "Erreur",
+                    text: "La somme de la pondération des indicateurs doit être égale à 100 pour chaque objectif !",
+                    type: "error",
+                    allowOutsideClick: false
+                  })
                   return
                 }
                 this.submitted = true;
@@ -238,7 +243,8 @@
                   swal({
                     title: response.data.status == 'success' ? "Enregistré" : "Erreur",
                     text: response.data.message,
-                    type: response.data.status
+                    type: response.data.status,
+                    allowOutsideClick: false
                   }).then(function () {
                     if (success) {
                       window.location.href = "{{ route('objectifs') }}"

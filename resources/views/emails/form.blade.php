@@ -44,12 +44,14 @@
 <script>
   $(function () {
     //Add text editor
-    $("#compose-textarea").wysihtml5({
-      toolbar: {
-        "image": false,
-        "html": true,
-        "link": false
-      },
-    });
+    setTimeout(function () {
+      $("#compose-textarea").wysihtml5({
+        toolbar: {
+          "image": false,
+          "html": true,
+          "link": false
+        },
+      });
+    }, 100)
   });
 </script>

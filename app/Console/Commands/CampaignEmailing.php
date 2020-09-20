@@ -2,6 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Campaign;
+use App\Email;
+use App\Entretien;
+use App\Http\Mail\MailerController;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -40,17 +45,23 @@ class CampaignEmailing extends Command
   public function handle()
   {
     $now = date("Y-m-d H:i", strtotime(Carbon::now()->addHour()));
-
-    if ('2020-09-18 09:13' <= $now) {
-      Mail::send('emails.test', [], function ($m) {
-        $m->from('contact@lycom.ma', 'E-entretien');
-        $m->to('akel.dev@gmail.com', 'akel')->subject('test subject');
-      });
-
-      $this->info('An email was sent successfully !');
-    } else {
-      $this->info('Nothing happens !');
+    $campaignEmails = Campaign::where('sheduled_at', '<=', $now)->where('status', 'En attente')->limit(10)->get();
+    if ($campaignEmails->count() <= 0) {
+      $this->info('Nothing found to send !');
+      return;
     }
 
+    foreach ($campaignEmails as $campaignEmail) {
+      $user = User::where('email', $campaignEmail->receiver)->first();
+      $entretien = Entretien::find($campaignEmail->entretien_id);
+      $emailTemplate = Email::find($campaignEmail->email_id);
+      $send = MailerController::send($user, $entretien, $emailTemplate);
+      if($send) {
+        $campaignEmail->status = "Envoyé";
+        $campaignEmail->sent_at = date('Y-m-d H:i');
+        $campaignEmail->save();
+      }
+    }
+    $this->info('An email was sent successfully !');
   }
 }

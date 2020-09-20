@@ -39,7 +39,7 @@ class MailerController extends Controller
       'email'           => $user->email,
       'password'        => $password,
     ]);
-    Mail::send([], [], function ($m) use ($user, $template, $body) {
+    return Mail::send([], [], function ($m) use ($user, $template, $body) {
       $m->from($template->sender, $template->name);
       $m->to($user->email);
       $m->subject($template->subject);

@@ -2,30 +2,6 @@ $(window).on('load', function() {
     jQuery('.spinner-wp').remove()
 });
 
-function tableResponsive () {
-    $.fn.hasScrollBar = function (direction) {
-        if (this.get(0) !== undefined) {
-            if (direction === 'vertical') {
-                return this.get(0).scrollHeight > this.innerHeight()
-            } else if (direction === 'horizontal') {
-                return this.get(0).scrollWidth > this.innerWidth()
-            }
-        }
-        return false
-    }
-    var hasHorizScrollBar = $('.table-responsive').hasScrollBar('horizontal')
-    if (hasHorizScrollBar) {
-        $('.btn-group').on('hide.bs.dropdown', function () {
-            console.log('on hide')
-            $('.table-responsive').css('overflow', 'auto')
-        })
-    } else {
-        $('.btn-group').on('show.bs.dropdown', function () {
-            console.log('on show')
-            $('.table-responsive').css('overflow', 'inherit')
-        })
-    }
-}
 
 $(function(){
 
@@ -62,46 +38,6 @@ $(function(){
         //$('.accordion-heading i').toggleClass('fa-chevron-right fa-chevron-down');
     });
 
-    $(".show-motif").click(function(){
-        $(".motif-form-"+ $(this).data('id')).fadeToggle();
-    })
 
-    $("#checkAll").click(function () {
-        $('input:checkbox').not(this).prop('checked', this.checked);
-        $(".sendInvitationBtn").slideToggle();
-    });
 
-    $(".checkItem").click(function () {
-        var check = $('.wrap-checkItem').find('input[type=checkbox]:checked').length;
-        if(check >= 1){
-            $(".sendInvitationBtn").fadeIn();
-        }else if(check <= 1){
-            $(".sendInvitationBtn").slideToggle();
-
-        }
-    });
-
-    $(".realise").on('keyup click', function(){
-        var id = $(this).data('id')
-        var nMoins1 = $(".nMoins1-"+id).text()
-        var realise = $(this).val()
-        var ecart   = $(".ecart-"+id).val(parseInt(realise) - parseInt(nMoins1) );
-        if(ecart.val() < 0){
-            $(".ecart-"+id).css('color', 'red')
-        }else{
-            $(".ecart-"+id).css('color', 'green')
-        }
-    })
-
-    $(".nplus1").on('keyup change', function(){
-        var id = $(this).data('id')
-        var objectif = $("#objectif-"+id).val()
-        var ecart   = $(this).val() - objectif
-        $("#ecart-"+id).val(ecart)
-        if(ecart < 0){
-            $("#ecart-"+id).css('color', 'red')
-        }else{
-            $("#ecart-"+id).css('color', 'green')
-        }
-    })
 })

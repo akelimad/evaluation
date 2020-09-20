@@ -2,6 +2,7 @@
 // @import 'vendors/bootstrap';
 
 // components
+ @import 'admin';
  @import 'components/layout';
  @import 'components/icons';
  @import 'components/margin_padding';
@@ -11,7 +12,7 @@
  @import 'components/box';
  @import 'components/alert';
  @import 'components/table';
-
  @import 'base/typography';
-
  @import 'bootstrap/base';
+ @import 'style';
+ @import "skins/skin-blue.css";

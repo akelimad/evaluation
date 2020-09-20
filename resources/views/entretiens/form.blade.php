@@ -70,6 +70,9 @@
   .select2-container {
     width: 100% !important;
   }
+  #shedule-datetime-container {
+    display: none;
+  }
 </style>
 
 <form method="POST" action="" id="entretienForm" role="form" class="allInputsFormValidation form-vertical" onsubmit="return chmEntretien.store(event)">
@@ -276,12 +279,13 @@
           <div class="row">
             <div class="col-md-6">
               <label for="">Type d'envoi des emails :</label>
-              <select name="shedule_type" id="shedule_type" class="form-control">
+              <select name="shedule_type" id="shedule_type" class="form-control" chm-validate="required">
+                <option value=""></option>
                 <option value="now">Immédiat</option>
                 <option value="sheduled">Programmé</option>
               </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" id="shedule-datetime-container">
               <div class="form-group">
                 <label for="">Choisissez la date et l'heure</label>
                 <input type="datetime-local" name="sheduled_at" id="sheduled_at" class="form-control">
@@ -325,9 +329,10 @@
   </div>
 </form>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+<script src="{{asset('js/moment.min.js')}}"></script>
+<script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
+<script src="{{asset('js/bootstrap-datepicker.fr.min.js')}}"></script>
 
 <script>
 
@@ -585,5 +590,18 @@
       })
       $('select#users_id_to_evaluate').val(allUsersId).trigger('change')
     })
+
+    $('select#shedule_type').on('change', function () {
+      var val = $(this).val()
+      if (val == 'sheduled') {
+        $('#shedule-datetime-container').show()
+        chmForm.setRule($('#sheduled_at'), 'required')
+      } else {
+        $('#shedule-datetime-container').hide()
+        chmForm.setRule($('#sheduled_at'), 'required', false)
+      }
+    })
+    $('select#shedule_type').trigger('change')
+
   })
 </script>

@@ -181,7 +181,7 @@
         }, {
           @php(session()->forget('popup'))
         });
-      }, 2000)
+      }, 1000)
       @endif
 
     });

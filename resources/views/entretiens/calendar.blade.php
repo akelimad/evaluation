@@ -3,6 +3,11 @@
 @section('breadcrumb')
     <li>Calendrier</li>
 @endsection
+@section('style')
+    @parent
+    <link rel="stylesheet" href="{{ asset('css/fullcalendar.min.css')}}">
+@endsection
+
 @section('content')
     <section class="content entretiens-list">
         <div class="row">
@@ -26,9 +31,13 @@
 @endsection
 
 @section('javascript')
+    @parent
     @if(isset($entretiens))
-    <script src="{{ asset('js/fullCalendar.fr.js')}}"></script>
-    <script>
+        <!-- datepicker -->
+        <script src="{{asset('js/moment.min.js')}}"></script>
+        <script src="{{asset('js/bootstrap-datepicker.fr.min.js')}}"></script>
+        <script src="{{asset('js/fullcalendar.min.js')}}"></script>
+        <script>
         $(function(){
             var $calendar = $('#fullCalendar');
             var today = new Date();
