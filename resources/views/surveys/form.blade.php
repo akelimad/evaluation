@@ -107,7 +107,7 @@
                         <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
                       </div>
                       <div v-if="selectedModelRef == 'ENT'" class="col-md-2 pl-0 pr-0" title="Pondération (%)" >
-                        <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="question.ponderation" class="form-control" @keypress.enter.prevent @keyup.enter="updateQuestion(question)" placeholder="Pondération">
+                        <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="question.ponderation" class="form-control" @keyup.enter="updateQuestion(question)" placeholder="Pondération" @keypress.enter.prevent>
                       </div>
                       <div class="col-md-1">
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
@@ -117,7 +117,7 @@
                   </div>
                   <div v-else class="m-0">
                     <div class="row mb-0">
-                      <div class="col-md-8">
+                      <div class="col-md-7">
                         <label @click="question.edit = true;" class="pull-left control-label mb-0 mr-5">Question @{{ qIndex + 1 }} : @{{ question.title }}</label>
                       </div>
                       <div v-if="!question.edit" class="col-md-2">
@@ -132,13 +132,13 @@
                           </ul>
                         </div>
                       </div>
-                      <div class="col-md-2">
+                      <div class="col-md-3">
                         <div v-if="!question.edit" class="">
                           <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
 
                           <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
 
-                          <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération (%)" >@{{ question.ponderation + ' %' }}</span>
+                          <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération (%)" >@{{ question.ponderation > 0 ? question.ponderation : 0 }} %</span>
                         </div>
                       </div>
                     </div>
@@ -166,11 +166,11 @@
                 <div class="dropdown pull-right">
                   <button class="btn btn-info dropdown-toggle" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-plus"></i> Ajouter une question <span class="caret"></span></button>
                   <ul class="dropdown-menu" aria-labelledby="questionTypes">
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'text')">Text (court)</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'textarea')">Text (long)</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'radio')">Un seul choix</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'checkbox')">Choix multiple</a></li>
-                    <li><a href="javascript:void(0)" @click="addNewQuestion(grpIndex, 'select')">Liste déroulante</a></li>
+                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'text')">Text (court)</a></li>
+                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'textarea')">Text (long)</a></li>
+                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'radio')">Un seul choix</a></li>
+                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'checkbox')">Choix multiple</a></li>
+                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'select')">Liste déroulante</a></li>
                   </ul>
                 </div>
               </div>
@@ -337,11 +337,22 @@
             question.ponderation = question.ponderation > 0 ? question.ponderation : 0
           }
         },
-        addNewQuestion: function (groupIndex, qType) {
+        addQuestion: function (groupIndex, qType) {
+          var newPonderation = 100
+          if (this.groups[groupIndex].questions.length > 0) {
+            newPonderation = ''
+            this.groups[groupIndex].questions.forEach(function (question) {
+              if (question.ponderation <= 0 || question.ponderation == 100) {
+                question.ponderation = ''
+              }
+            })
+          }
+
           this.groups[groupIndex].questions.push(
               {
                 id: null,
                 title: "",
+                ponderation: newPonderation,
                 type: qType,
                 edit: true,
                 active: false,
@@ -357,9 +368,15 @@
               if (this.id > 0) {
                 axios.delete('surveys/'+this.id+'/groupes/'+group.id+'/questions/'+question.id+'/delete', {
                 }).then(function (response) {
+
                 })
               }
-              setTimeout(() => this.groups[grpIndex].questions.splice(qIndex, 1), 300);
+              setTimeout(() => {
+                this.groups[grpIndex].questions.splice(qIndex, 1)
+                if (this.groups[grpIndex].questions.length == 1) {
+                  this.groups[grpIndex].questions[0].ponderation = 100
+                }
+              }, 300)
             } else {
               this.groups[grpIndex].questions[qIndex].active = false
             }
@@ -442,7 +459,8 @@
       },
       computed: {
         validateGrpNbr: function () {
-          return this.number < 1 || this.number > 100
+
+          return this.number < 1 || this.number > 100 || this.title == '' || this.model == ''
         },
       },
       mounted: function() {
