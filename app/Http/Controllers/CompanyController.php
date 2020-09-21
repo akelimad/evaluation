@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\Table;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use App\Role;
 
-class CrmController extends Controller
+class CompanyController extends Controller
 {
 
   public function __construct()
@@ -15,14 +16,61 @@ class CrmController extends Controller
     $this->middleware('auth');
   }
 
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $query = User::with('roles')->whereHas('roles', function ($query) {
+      $query->where('name', '=', 'ADMIN');
+    })->orderBy('id', 'DESC');
+    if ($q = $request->get('q', false)) {
+      $query->whereRaw('(name LIKE ? OR first_name LIKE ? OR last_name LIKE ? OR email LIKE ?)', ["%".$q."%", "%".$q."%", "%".$q."%", "%".$q."%"]);
+    }
+
+    $table->setPrimaryKey('id');
+    $table->setDateFormat('d/m/Y H:i');
+    $table->setBulkActions(true);
+
+    $table->addColumn('name', 'Nom de la société', function ($entity) {
+      return $entity->name;
+    });
+    $table->addColumn('first_name', 'Prénom du contact', function ($entity) {
+      return $entity->first_name;
+    });
+    $table->addColumn('last_name', 'Nom du contact', function ($entity) {
+      return $entity->last_name;
+    });
+    $table->addColumn('email', 'Email');
+
+    $table->addColumn('nbr_users', "Utilisateurs", function ($entity) {
+      return $entity->users->count();
+    });
+
+    $table->addColumn('created_at', 'Créée le');
+
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'route' => ['name' => 'company.form', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"form":{"attributes":{"id":"companyForm", "target-table":"[chm-table]"}}}',
+      ],
+      'bulk_action' => false,
+    ]);
+    // define table actions
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'Company.delete',
+      'bulk_action' => false,
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
   public function index(Request $request)
   {
-    $societies = User::with('roles')->whereHas('roles', function ($query) {
-        $query->where('name', '=', 'ADMIN');
-    })->paginate(10);
-    return view('crm.index', [
-        'results' => $societies,
-    ]);
+    return view('companies.index');
   }
 
   public function form(Request $request)
@@ -40,7 +88,7 @@ class CrmController extends Controller
       $user = new User();
     }
     $roles = Role::select('id', 'name')->where('name', '=', 'ADMIN')->get();
-    echo view('crm.form', compact('user', 'roles'));
+    echo view('companies.form', compact('user', 'roles'));
     $content = ob_get_clean();
     return ['title' => $title, 'content' => $content];
   }
@@ -49,7 +97,7 @@ class CrmController extends Controller
   {
     $id = $request->id;
     $rules = [
-      'logo'      => 'required|max:500',
+      'logo'      => 'required|max:800',
       'name'      => 'required|min:3|max:25',
       'first_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
       'last_name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:25',
@@ -102,9 +150,27 @@ class CrmController extends Controller
     }
   }
 
-  public function delete(Request $request, $id){
-    $user = User::findOrFail($id);
-    $user->delete();
+  public function delete(Request $request){
+    if (empty($request->ids)) return;
+
+    foreach($request->ids as $id) {
+      try {
+        $companyAdmin = User::find($id);
+        $companyUsers = $companyAdmin->users;
+        foreach ($companyUsers as $companyUser) {
+          $companyUser->delete();
+        }
+        $companyAdmin->delete();
+      } catch (\Exception $e) {
+        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+      }
+    }
+
+    return response()->json([
+      'status' => 'alert',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+    ]);
   }
 
   public function uploadLogo(Request $request){
@@ -120,6 +186,10 @@ class CrmController extends Controller
     $user->logo = "";
     $user->save();
     $this->UnlinkImage(public_path('uploads/logos/'.$user->id.'/'.$logo));
+    return response()->json([
+      'status' => 'success',
+      'message' => 'Logo a bien été supprimé'
+    ]);
   }
 
   public function UnlinkImage($filepath)

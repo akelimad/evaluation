@@ -195,7 +195,7 @@
 
         @role(["ROOT"])
         <li class="{{ Request::is('crm') ? 'active' : '' }}">
-          <a href="{{ url('crm') }}"><i class="fa fa-cog"></i> <span>Comptes des sociétés</span></a>
+          <a href="{{ route('companies') }}"><i class="fa fa-industry"></i> <span>Comptes des sociétés</span></a>
         </li>
         @endrole
 

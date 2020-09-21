@@ -105,13 +105,14 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 });
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
-	Route::get('crm', 'CrmController@index');
-	Route::delete('crm/{id}/delete', 'CrmController@delete');
-	Route::delete('crm/logo/remove', 'CrmController@removeLogo');
+	Route::get('companies/table', 'CompanyController@getTable')->name('companies.table');
+	Route::get('companies', 'CompanyController@index')->name('companies');
+	Route::delete('companies/delete', 'CompanyController@delete')->name('companies.delete');
+	Route::delete('companies/logo/remove', 'CompanyController@removeLogo')->name('company.remove-logo');
 });
 Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() {
-	Route::any('crm/form', 'CrmController@form');
-	Route::post('crm/store', 'CrmController@store');
+	Route::any('companies/form', 'CompanyController@form')->name('company.form');
+	Route::post('companies/store', 'CompanyController@store')->name('company.store');
 });
 
 Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretienEvals'); 

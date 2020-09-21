@@ -37,7 +37,7 @@ import Email from './class/email'
 import chmEmailAction from './class/emailAction'
 import Setting from './class/setting'
 import Attachment from './class/attachment'
-import Crm from './class/crm'
+import Company from './class/Company'
 import Fonction from './class/fonction'
 import Department from './class/department'
 import Team from './class/team'
@@ -78,7 +78,7 @@ window.Email = Email
 window.chmEmailAction = chmEmailAction
 window.Setting = Setting
 window.Attachment = Attachment
-window.Crm = Crm
+window.Company = Company
 window.Fonction = Fonction
 window.Department = Department
 window.Team = Team

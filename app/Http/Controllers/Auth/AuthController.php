@@ -76,7 +76,7 @@ class AuthController extends Controller
             $userRoles[] = $role->name;
         }
         if ( in_array("ROOT", $userRoles) ) {
-            return redirect('/crm');
+            return redirect()->route('companies');
         }
         session()->set('popup', '1');
         return redirect('/');

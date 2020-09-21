@@ -1,13 +1,14 @@
 <div class="content">
+  @php($isEditMode = $user->id > 0)
   <input type="hidden" name="id" value="{{ isset($user->id) ? $user->id : null }}">
   {{ csrf_field() }}
   <div class="row">
     <div class="col-md-6">
-      <label for="first_name" class="control-label required">Prénom de la personne de contact</label>
+      <label for="first_name" class="control-label required">Prénom du contact</label>
       <input type="text" name="first_name" class="form-control" id="first_name" placeholder="" required="" value="{{ isset($user->first_name) ? $user->first_name : ''  }}">
     </div>
     <div class="col-md-6">
-      <label for="last_name" class="control-label required">Nom de la personne de contact</label>
+      <label for="last_name" class="control-label required">Nom du contact</label>
       <input type="text" name="last_name" class="form-control" id="last_name" placeholder="" value="{{ isset($user->last_name) ? $user->last_name : '' }}" required>
     </div>
   </div>
@@ -23,17 +24,17 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <label for="password" class="control-label required">Mot de passe</label>
+      <label for="password" class="control-label {{ !$isEditMode ? 'required':'' }}">Mot de passe</label>
       <input id="password" type="password" class="form-control" name="password" {{ isset($user->id) ? '':'required' }}>
     </div>
     <div class="col-md-6">
-      <label for="password" class="control-label required">Confirmation du mot de passe</label>
+      <label for="password" class="control-label {{ !$isEditMode ? 'required':'' }}">Confirmation du mot de passe</label>
       <input id="password-confirm" type="password" class="form-control" name="password_confirmation" {{ isset($user->id) ? '':'required' }}>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
-      <label for="photo" class="control-label required">Logo</label>
+      <label for="photo" class="control-label {{isset($user->id) && $user->logo != '' && App\User::logo($user->id) != '' ? '':'required' }}">Logo</label>
       <div class="input-group">
         <label class="input-group-btn">
           <span class="btn btn-primary">
@@ -45,13 +46,13 @@
       @if(isset($user->id) && $user->logo != '' && App\User::logo($user->id) != '')
         <div class="logo" style="margin-top: 10px;">
           <a href="{{ App\User::logo($user->id) }}" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fa fa-download"></i> Télécharger</a>
-          <bouton onclick="return Crm.removeLogo({id: {{ $user->id }} })" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash"></i> Supprimer
+          <bouton onclick="return Company.removeLogo({id: {{ $user->id }} })" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash"></i> Supprimer
           </bouton>
         </div>
       @endif
     </div>
     <div class="col-md-6">
-      <label for="role" class="control-label required">Rôle </label>
+      <label for="role" class="control-label required">Rôle</label>
       <select name="roles[]" id="role" class="form-control" required>
         @foreach($roles as $role)
           <option value="{{$role->id}}" {{isset($roles_ids) && in_array($role->id, $roles_ids) ? 'selected':''}}> {{$role->name}}</option>
