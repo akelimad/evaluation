@@ -72,31 +72,30 @@
                   <label class="control-label font-16"><i class="fa fa-list"></i> Indicateurs</label>
                 </div>
                 <div class="col-md-12">
-                  <div class="indicators-container">
+                  <div class="indicators-container-obj">
                     <div class="indicator-item" v-for="(indicator, indexIndicator) in objectif.indicators">
-                      <div class="row">
+                      <div class="row mb-10">
                         <div class="col-md-5">
                           <label>
-                            <input type="text" class="form-control" placeholder=" " v-model="indicator.title">
-                            <span>Titre de l'indicateur</span>
+                            <input type="text" class="form-control" placeholder="Titre de l'indicateur" v-model="indicator.title">
                           </label>
                         </div>
-                        <div class="col-md-2 pl-0">
+                        <div class="col-md-2">
                           <label>
-                            <input type="number" min="1" max="100" class="form-control" placeholder=" " v-model="indicator.fixed">
-                            <span>Objectif fixé</span>
+                            <input type="number" min="1" max="100" class="form-control" placeholder="Objectif" v-model="indicator.fixed">
                           </label>
                         </div>
-                        <div class="col-md-2 pl-0">
-                          <input type="number" min="1" max="200" class="form-control" placeholder="Réalisé" title="Sera rempli par l'évalué(e)" disabled v-model="indicator.realized">
+                        <div class="col-md-2">
+                          <label for="">
+                            <input type="number" min="1" max="200" class="form-control" placeholder="Réalisé" title="Sera rempli par l'évalué(e)" disabled v-model="indicator.realized">
+                          </label>
                         </div>
-                        <div class="col-md-2 pl-0">
+                        <div class="col-md-2">
                           <label>
-                            <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder=" " v-model="indicator.ponderation">
-                            <span>Pondération (%)</span>
+                            <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder="Pondération (%)" v-model="indicator.ponderation">
                           </label>
                         </div>
-                        <div class="col-md-1 pl-0">
+                        <div class="col-md-1">
                           <button v-if="indexIndicator + 1 == objectif.indicators.length" type="button" class="btn btn-success pull-right text-success" @click="addIndicator(oIndex)"><i class="fa fa-plus"></i></button>
 
                           <button v-if="indexIndicator + 1 < objectif.indicators.length" type="button" class="btn btn-danger pull-right text-danger" @click="removeIndicator(oIndex, indexIndicator)"><i class="fa fa-minus"></i></button>
@@ -123,6 +122,8 @@
 @endsection
 
 @section('javascript')
+  <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+  <script src="{{asset('js/moment.min.js')}}"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/fr.min.js"></script>
@@ -197,7 +198,10 @@
               sumPonderation += parseInt(obj.ponderation)
             })
             if (sumPonderation >= 100) {
-              alert("Vous ne pouvez pas ajouter un autre indicateur, la somme de la pondération des indicateurs ne doit pas dépasser 100 !")
+              swal({
+                type: 'warning',
+                text: "Vous ne pouvez pas ajouter un autre indicateur, la somme de la pondération des indicateurs ne doit pas dépasser 100 !"
+              })
               return
             }
             this.objectifs[oIndex].indicators.push({

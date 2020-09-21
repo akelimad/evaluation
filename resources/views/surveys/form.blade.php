@@ -322,7 +322,10 @@
             }
           } else {
             this.groups[index].active = false
-            alert("Le questionnaire doit avoir au moins un block, vous ne pouvez pas supprimer ce dernier block !")
+            swal({
+              type: 'warning',
+              text: "Le questionnaire doit avoir au moins un block, vous ne pouvez pas supprimer ce dernier block !"
+            })
           }
         },
         editQuestion: function (question) {
@@ -362,7 +365,10 @@
             }
           } else {
             this.groups[grpIndex].questions[qIndex].active = false
-            alert("Le block doit avoir au moins une question !")
+            swal({
+              type: 'warning',
+              text: "Le block doit avoir au moins une question !"
+            })
           }
         },
         addNewChoice: function(grpIndex, qIndex, choice) {
@@ -386,7 +392,10 @@
               this.groups[grpIndex].questions[qIndex].choices.splice(cIndex, 1)
             }
           } else {
-            alert("Cette question doit avoir au moins 2 options, vous ne pouvez pas supprimer !")
+            swal({
+              type: 'warning',
+              text: "Cette question doit avoir au moins 2 options, vous ne pouvez pas supprimer !"
+            })
           }
         },
         changeQuestionType: function (grpIndex, qIndex, newType) {

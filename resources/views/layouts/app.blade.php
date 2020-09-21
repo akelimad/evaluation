@@ -155,7 +155,7 @@
         @endrole
 
         @role(["ADMIN"])
-        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'departments', 'functions', 'models', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'skills', 'surveys-list', 'objectifs']))
+        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'departments', 'functions', 'models', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'skills', 'surveys-list', 'objectifs', 'permissions']))
         <li class="treeview {{ $isConfig ? 'active menu-open' : '' }}">
           <a href="#">
             <i class="fa fa-gears"></i> <span>Paramétrages</span>

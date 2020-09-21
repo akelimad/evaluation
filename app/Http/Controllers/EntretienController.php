@@ -313,7 +313,7 @@ class EntretienController extends Controller
           'entretien_id' => $entretien->id,
           'email_id' => $collEmail->id,
           'receiver' => $user->email,
-          'sheduled_at' => date('Y-m-d H:i', strtotime($request->sheduled_at)),
+          'sheduled_at' => $request->shedule_type == 'now' ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime($request->sheduled_at)),
         ];
         Campaign::create($campaignData);
         $entretien->users()->attach([$uid => ['mentor_id' => $user->parent->id]]);
