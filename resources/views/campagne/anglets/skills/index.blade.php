@@ -65,6 +65,10 @@
                             <p>Aucun type de compétence trouvé !</p>
                           @endforelse
                         </div>
+                        <div class="col-md-12">
+                          <label for="" class="control-label">Commentaires</label>
+                          <textarea name="" id="" class="form-control" {{ $isMentor ? 'readonly':'' }}></textarea>
+                        </div>
                       </div>
                     </div>
                     @if($isMentor)
@@ -103,6 +107,10 @@
                           @empty
                             <p>Aucun type de compétence trouvé !</p>
                           @endforelse
+                        </div>
+                        <div class="col-md-12">
+                          <label for="" class="control-label">Commentaires</label>
+                          <textarea name="" id="" class="form-control"></textarea>
                         </div>
                       </div>
                     </div>
