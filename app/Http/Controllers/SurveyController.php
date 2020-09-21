@@ -91,7 +91,7 @@ class SurveyController extends Controller
       foreach ($groups as $group) {
         $sumpGrpsPonderations += floatval($group['ponderation']);
         if (empty($group['questions'])) {
-          return ["status" => "error", "message" => 'Veuillez ajouter des questions au block : ' . $group['title']];
+          return ["status" => "error", "message" => 'Veuillez ajouter des questions au thème : ' . $group['title']];
         } else {
           $sumpQstsPonderations = 0;
           foreach ($group['questions'] as $question) {
@@ -101,15 +101,15 @@ class SurveyController extends Controller
             }
           }
           if ($sumpQstsPonderations != 100 && $selectedModelRef == 'ENT') {
-            return ["status" => "error", "message" => "La somme : $sumpQstsPonderations de la pondération des questions doit être égale à 100 pour le block : ". $group['title']];
+            return ["status" => "error", "message" => "La somme : $sumpQstsPonderations de la pondération des questions doit être égale à 100 pour le thème : ". $group['title']];
           }
         }
       }
       if ($sumpGrpsPonderations != 100 && $selectedModelRef == 'ENT') {
-        return ["status" => "error", "message" => "La somme : $sumpGrpsPonderations de la pondération des blocks doit être égale à 100"];
+        return ["status" => "error", "message" => "La somme : $sumpGrpsPonderations de la pondération des thèmes doit être égale à 100"];
       }
     } else {
-      return ["status" => "error", "message" => 'Veuillez ajouter des blocks au questionnaire'];
+      return ["status" => "error", "message" => 'Veuillez ajouter des thèmes au questionnaire'];
     }
 
     if ($survey_id > 0) {

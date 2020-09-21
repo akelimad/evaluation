@@ -51,7 +51,7 @@
 
               <div v-if="groups.length <= 0" class="row mb-30">
                 <div class="col-md-6">
-                  <label for="" class="control-label">Entrer le nombre des blocks pour ce questionnaire</label>
+                  <label for="" class="control-label">Entrer le nombre des thèmes pour ce questionnaire</label>
                   <div class="input-group" :class="{'has-error': errors.has('number')}">
                     <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes" maxlength="3">
                     <span class="input-group-btn">
@@ -75,7 +75,7 @@
               <div v-if="group.edit" class="form-group" :class="{'has-error': errors.has('group')}">
                 <div class="row mb-0">
                   <div :class="selectedModelRef == 'ENT' ? 'col-md-9':'col-md-11'">
-                    <input type="text" name="title" v-model="group.title" class="form-control"  @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du block" v-validate="'required'" @keypress.enter.prevent v-focus>
+                    <input type="text" name="title" v-model="group.title" class="form-control"  @keyup.enter="updateGroup(group)" placeholder="Entrer le titre du thème" v-validate="'required'" @keypress.enter.prevent v-focus>
                     <span v-show="errors.has('group')" class="help-block">@{{ errors.first('group') }}</span>
                   </div>
                   <div v-if="selectedModelRef == 'ENT'" class="col-md-2 pl-0 pr-0" title="Pondération (%)" >
@@ -88,7 +88,7 @@
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
-                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">Block @{{ grpIndex + 1 }} : @{{ group.title }}</label>
+                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">Thème @{{ grpIndex + 1 }} : @{{ group.title }}</label>
                 <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
@@ -177,7 +177,7 @@
             </div>
           </div>
           <div class="add-new-section-btn text-center">
-            <button v-if="groups.length > 0" type="button" class="btn btn-primary" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un block</button>
+            <button v-if="groups.length > 0" type="button" class="btn btn-primary" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un thème</button>
           </div>
         </div>
       </div>
