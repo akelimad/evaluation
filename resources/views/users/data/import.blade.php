@@ -6,49 +6,32 @@
         <div class="box box-primary">
           <div class="box-header">
             <h3 class="box-title"><i class="fa fa-upload"></i> Importer les utilisateurs</h3>
-
             <div class="box-tools">
-
+              <a href="{{ asset('data/user_modele.csv') }}" class="btn btn-warning"> Télécharger un modèle au format
+                csv </a>
             </div>
           </div>
-          <div class="box-body table-responsive no-padding">
-            <div class="form-group">
-              <div class="col-md-4">
-                <p>Fichier modèle</p>
-              </div>
-              <div class="col-md-8">
-                <p>
-                  <a href="{{ asset('data/user_modele.csv') }}" class="btn btn-warning"> Télécharger un modèle au format
-                    csv </a>
-                </p>
-              </div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="form-group">
-              <div class="col-md-4">
-                <p>Veuillez choisir le fichier CSV :</p>
-              </div>
-              <div class="col-md-8">
+          <div class="box-body">
+            <div class="row">
+              <div class="col-md-8 col-md-offset-4">
                 <form action="{{url('users/import_parse')}}" method="post" enctype="multipart/form-data">
                   {{ csrf_field() }}
-                  <div class="input-group form-group col-md-6">
-                    <label class="input-group-btn">
-                      <span class="btn btn-primary">
-                        Parcourir <input type="file" name="usersDataCsv" style="display: none;" equired="" accept=".csv">
-                      </span>
-                    </label>
-                    <input type="text" class="form-control" readonly="">
-                  </div>
-                  <div class="row mt-10">
+                  <div class="row">
                     <div class="col-md-12">
-                      <label for="header">
-                        <input type="checkbox" id="header" name="header" checked=""> Le fichier contient les titres des champs
-                      </label>
+                      <label for="" class="control-label required">Veuillez choisir le fichier CSV :</label>
+                      <div class="input-group form-group col-md-6">
+                        <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                          Parcourir <input type="file" name="usersDataCsv" style="display: none;" required="" accept=".csv" chm-validate="required">
+                        </span>
+                        </label>
+                        <input type="text" class="form-control" readonly="">
+                      </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <button type="submit" class="btn btn-success"> Valider l'importation</button>
+                      <button type="submit" class="btn btn-success"> Continuer <i class="fa fa-long-arrow-right"></i></button>
                     </div>
                   </div>
                 </form>

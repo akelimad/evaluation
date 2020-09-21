@@ -308,7 +308,8 @@ class UserController extends Controller
       $mentorEmail = $row[$fields[6]];
       $tel = $row[$fields[7]];
 
-      if (!empty($prenom) && !empty($nom) && !empty($email) && !empty($roles) && (!empty($mentorEmail) || $mentorEmail == '0')) {
+      $mentor = User::getUsers()->where('email', '=', $mentorEmail)->first();
+      if (!empty($prenom) && !empty($nom) && !empty($email) && !empty($roles) && (!empty($mentorEmail) && !is_null($mentor) || $mentorEmail == '0')) {
         $existUser = User::where('email', $email)->first();
         if ($existUser) {
           $user = $existUser;
@@ -326,7 +327,7 @@ class UserController extends Controller
         $user->status = 1;
         $user->function = $this->getFunctionIdByName($fonction);
         $user->service = $this->getDepartmentIdByName($department);
-        $mentor = User::where('email', '=', $mentorEmail)->first();
+
         if ($mentor != null) {
           $user->user_id = $mentor->id;
         } else {
@@ -337,7 +338,7 @@ class UserController extends Controller
         $user->roles()->sync($this->getRoleByName($roles));
         $count++;
       } else {
-        return redirect('users')->with("warning', 'Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(Prénom, nom, email, role, Mentor email) est vide!");
+        return redirect('users')->with("warning", "Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(prénom, nom, email / ou email du manager n'existe pas, role, manager email) est vide!");
       }
     }
     return redirect('users')->with('success', 'Les utilisateurs ont été importés avec succès avec ' . $added . ' ajout et ' . $updated . ' mis à jour !');

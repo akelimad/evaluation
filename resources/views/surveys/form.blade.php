@@ -50,12 +50,12 @@
               </div>
 
               <div v-if="groups.length <= 0" class="row mb-30">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <label for="" class="control-label">Entrer le nombre des blocks pour ce questionnaire</label>
                   <div class="input-group" :class="{'has-error': errors.has('number')}">
                     <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes" maxlength="3">
                     <span class="input-group-btn">
-                      <button class="btn btn-success" @click="addGroups()" :disabled="validateGrpNbr" type="button">Valider</button>
+                      <button class="btn btn-success" @click="addGroups()" :disabled="validateGrpNbr" type="button">Continuez</button>
                     </span>
                     <div class="clearfix"></div>
                   </div>
@@ -425,6 +425,8 @@
               }).catch(function (error) {
                 console.log(error)
               });
+            } else {
+              swal({type: 'error', text: "Veuillez remplir tous les champs obligatoires"})
             }
           })
         }
