@@ -161,9 +161,19 @@
             <a href="{{ url()->previous() }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
             @if(Auth::user()->id == $user->id)
               @if(Auth::user()->hasRole('ADMIN'))
-                <a href="javascript:void(0)" onclick="return Crm.form({{{$user->id}}})" class="btn btn-primary"> <i class="glyphicon glyphicon-pencil"></i> Mettre à jour</a>
+                <a
+                    href="javascript:void(0)"
+                    chm-modal="{{ route('company.form', ['id' => $user->id]) }}"
+                    chm-modal-options='{"form":{"attributes":{"id":"companyForm"}}}'
+                    class="btn btn-primary"
+                ><i class="fa fa-pencil"></i>&nbsp;{{ "Mettre à jour" }}</a>
               @else
-                <a href="javascript:void(0)" onclick="return chmUser.form({{{ $user->id }}})" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i> Mettre à jour</a>
+                <a
+                    href="javascript:void(0)"
+                    chm-modal="{{ route('user.form', ['id' => $user->id]) }}"
+                    chm-modal-options='{"form":{"attributes":{"id":"userForm"}}}'
+                    class="btn btn-primary"
+                ><i class="fa fa-pencil"></i>&nbsp;{{ "Mettre à jour" }}</a>
               @endif
             @endif
           </div>

@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="box-body">
-            <form action="" method="post">
+            <form action="" method="post" chm-form>
               {{ csrf_field() }}
               <table class="table table-hover table-striped">
                 <thead>

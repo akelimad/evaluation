@@ -73,19 +73,19 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
 	Route::get('config/settings/general', 'SettingController@general')->name('general.settings');
 
 	Route::get('departments/table', 'DepartmentController@getTable')->name('departments.table');
-	Route::get('config/setting/departments', 'DepartmentController@index');
+	Route::get('config/settings/departments', 'DepartmentController@index')->name('departments');
 	Route::any('department/form', 'DepartmentController@form')->name('department.form');
 	Route::post('department/store', 'DepartmentController@store');
 	Route::delete('department/delete', 'DepartmentController@delete');
 
 	Route::get('functions/table', 'FonctionController@getTable')->name('functions.table');
-	Route::get('config/setting/functions', 'FonctionController@index')->name('functions');
+	Route::get('config/settings/functions', 'FonctionController@index')->name('functions');
 	Route::any('function/form', 'FonctionController@form')->name('function.form');
 	Route::post('function/store', 'FonctionController@store')->name('function.store');
 	Route::delete('function/delete', 'FonctionController@delete')->name('function.delete');
 
 	Route::get('models/table', 'ModeleController@getTable')->name('models.table');
-	Route::get('config/setting/models', 'ModeleController@index')->name('models');
+	Route::get('config/settings/models', 'ModeleController@index')->name('models');
 	Route::any('model/form', 'ModeleController@form')->name('model.form');
 	Route::post('model/store', 'ModeleController@store')->name('model.store');
 	Route::delete('model/delete', 'ModeleController@delete')->name('model.delete');

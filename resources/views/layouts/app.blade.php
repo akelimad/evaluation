@@ -155,7 +155,7 @@
         @endrole
 
         @role(["ADMIN"])
-        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'skills', 'surveys-list', 'objectifs']))
+        @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'departments', 'functions', 'models', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'skills', 'surveys-list', 'objectifs']))
         <li class="treeview {{ $isConfig ? 'active menu-open' : '' }}">
           <a href="#">
             <i class="fa fa-gears"></i> <span>Paramétrages</span>
@@ -194,7 +194,7 @@
         @endrole
 
         @role(["ROOT"])
-        <li class="{{ Request::is('crm') ? 'active' : '' }}">
+        <li class="{{ \Request::route()->getName() == 'companies' ? 'active' : '' }}">
           <a href="{{ route('companies') }}"><i class="fa fa-industry"></i> <span>Comptes des sociétés</span></a>
         </li>
         @endrole
