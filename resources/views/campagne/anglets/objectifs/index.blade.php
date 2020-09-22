@@ -157,131 +157,131 @@
                         </div>
                       </div>
                     </div>
-<!-- *************************************************************************************** !-->
+                    <!-- *************************************************************************************** !-->
                     @if($isMentor)
                       <div class="col-md-6 objectifs-type">
-                      <h4 class="alert alert-info p-5">{{ $user->parent->fullname() }}</h4>
-                      <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#mentor-personnel">Individuel</a></li>
-                        <li><a data-toggle="tab" href="#mentor-team">Collectif</a></li>
-                      </ul>
-                      <div class="tab-content pt-30">
-                        <div id="mentor-personnel" class="tab-pane fade in active">
-                          @forelse($objectifsPersonnal as $objectif)
-                            <div class="item">
-                              <p class="bg-gray p-5">
-                                <b>Titre :</b> {{ $objectif->title }}
-                                <span class="pull-right font-20">{{ \App\Objectif::getTotalNote($e->id, $user->id, $objectif->id, 'mentor_personnal') }} %</span>
-                              </p>
-                            </div>
-                            <div class="item">
-                              <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
-                            </div>
-                            <div class="item">
-                              <p class="mb-0"><b>Indicateurs :</b></p>
-                              <table class="table">
-                                <thead>
-                                <tr>
-                                  <th width="80%" class="text-center">Réalisé</th>
-                                  <th width="20%" class="text-center">En %</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($objectif->getIndicators() as $indicator)
+                        <h4 class="alert alert-info p-5">{{ $user->parent->fullname() }}</h4>
+                        <ul class="nav nav-tabs">
+                          <li class="active"><a data-toggle="tab" href="#mentor-personnel">Individuel</a></li>
+                          <li><a data-toggle="tab" href="#mentor-team">Collectif</a></li>
+                        </ul>
+                        <div class="tab-content pt-30">
+                          <div id="mentor-personnel" class="tab-pane fade in active">
+                            @forelse($objectifsPersonnal as $objectif)
+                              <div class="item">
+                                <p class="bg-gray p-5">
+                                  <b>Titre :</b> {{ $objectif->title }}
+                                  <span class="pull-right font-20">{{ \App\Objectif::getTotalNote($e->id, $user->id, $objectif->id, 'mentor_personnal') }} %</span>
+                                </p>
+                              </div>
+                              <div class="item">
+                                <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
+                              </div>
+                              <div class="item">
+                                <p class="mb-0"><b>Indicateurs :</b></p>
+                                <table class="table">
+                                  <thead>
                                   <tr>
-                                    <td>
-                                      <input type="text"
-                                             class="slider"
-                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_personnal_realized]"
-                                             data-provide="slider"
-                                             data-slider-min="0"
-                                             data-slider-max="{{ $indicator['fixed'] * 2 }}"
-                                             data-slider-step="1"
-                                             data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor_personnal') }}"
-                                             data-slider-tooltip="always">
-                                    </td>
-                                    <td class="text-center">
-                                      {{ round((\App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor') / $indicator['fixed']) * 100) }}
-                                    </td>
+                                    <th width="80%" class="text-center">Réalisé</th>
+                                    <th width="20%" class="text-center">En %</th>
                                   </tr>
-                                @endforeach
-                                </tbody>
-                              </table>
-                            </div>
-                          @empty
-                            <tr>
-                              <td>
-                                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
-                              </td>
-                            </tr>
-                          @endforelse
-                        </div>
-                        <div id="mentor-team" class="tab-pane fade">
-                          @forelse($objectifsTeam as $objectif)
-                            <div class="item">
-                              <p class="bg-gray p-5"><b>Titre :</b>
-                                {{ $objectif->title }}
-                                <span class="pull-right font-20">{{ \App\Objectif::getTotalNote($e->id, $user->id, $objectif->id, 'mentor_team') }} %</span>
-                              </p>
-                            </div>
-                            <div class="item">
-                              <p><b>Collectif :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
-                            </div>
-                            <div class="item">
-                              <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
-                            </div>
-                            <div class="item">
-                              <p class="mb-0"><b>Indicateurs :</b></p>
-                              <table class="table">
-                                <thead>
-                                <tr>
-                                  <th width="90%" class="text-center">Réalisé <span title="Cette valeur ne peut être remplie que par les managers" data-toggle="tooltip"><i class="fa fa-question-circle font-16"></i></span>
-                                  </th>
-                                  <th width="10%" class="text-center"><span title="Pondération en %" data-toggle="tooltip">P <i class="fa fa-question-circle"></i></span></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($objectif->getIndicators() as $indicator)
+                                  </thead>
+                                  <tbody>
+                                  @foreach($objectif->getIndicators() as $indicator)
+                                    <tr>
+                                      <td>
+                                        <input type="text"
+                                               class="slider"
+                                               name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_personnal_realized]"
+                                               data-provide="slider"
+                                               data-slider-min="0"
+                                               data-slider-max="{{ $indicator['fixed'] * 2 }}"
+                                               data-slider-step="1"
+                                               data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor_personnal') }}"
+                                               data-slider-tooltip="always">
+                                      </td>
+                                      <td class="text-center">
+                                        {{ round((\App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor') / $indicator['fixed']) * 100) }}
+                                      </td>
+                                    </tr>
+                                  @endforeach
+                                  </tbody>
+                                </table>
+                              </div>
+                            @empty
+                              <tr>
+                                <td>
+                                  @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
+                                </td>
+                              </tr>
+                            @endforelse
+                          </div>
+                          <div id="mentor-team" class="tab-pane fade">
+                            @forelse($objectifsTeam as $objectif)
+                              <div class="item">
+                                <p class="bg-gray p-5"><b>Titre :</b>
+                                  {{ $objectif->title }}
+                                  <span class="pull-right font-20">{{ \App\Objectif::getTotalNote($e->id, $user->id, $objectif->id, 'mentor_team') }} %</span>
+                                </p>
+                              </div>
+                              <div class="item">
+                                <p><b>Collectif :</b> {{ $objectif->team > 0 ? \App\Team::find($objectif->team)->name : '---' }}</p>
+                              </div>
+                              <div class="item">
+                                <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
+                              </div>
+                              <div class="item">
+                                <p class="mb-0"><b>Indicateurs :</b></p>
+                                <table class="table">
+                                  <thead>
                                   <tr>
-                                    <td>
-                                      <input type="text"
-                                             class="slider"
-                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_team_realized]"
-                                             data-provide="slider"
-                                             data-slider-min="0"
-                                             data-slider-max="{{ $indicator['fixed'] * 2 }}"
-                                             data-slider-step="1"
-                                             data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor_team') }}"
-                                             data-slider-tooltip="always"
-                                             data-slider-enabled="true">
-                                    </td>
-                                    <td class="text-center">{{ $indicator['ponderation'] }}</td>
+                                    <th width="90%" class="text-center">Réalisé <span title="Cette valeur ne peut être remplie que par les managers" data-toggle="tooltip"><i class="fa fa-question-circle font-16"></i></span>
+                                    </th>
+                                    <th width="10%" class="text-center"><span title="Pondération en %" data-toggle="tooltip">P <i class="fa fa-question-circle"></i></span></th>
                                   </tr>
-                                @endforeach
-                                </tbody>
-                              </table>
-                            </div>
-                          @empty
-                            <tr>
-                              <td>
-                                @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
-                              </td>
-                            </tr>
-                          @endforelse
+                                  </thead>
+                                  <tbody>
+                                  @foreach($objectif->getIndicators() as $indicator)
+                                    <tr>
+                                      <td>
+                                        <input type="text"
+                                               class="slider"
+                                               name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_team_realized]"
+                                               data-provide="slider"
+                                               data-slider-min="0"
+                                               data-slider-max="{{ $indicator['fixed'] * 2 }}"
+                                               data-slider-step="1"
+                                               data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor_team') }}"
+                                               data-slider-tooltip="always"
+                                               data-slider-enabled="true">
+                                      </td>
+                                      <td class="text-center">{{ $indicator['ponderation'] }}</td>
+                                    </tr>
+                                  @endforeach
+                                  </tbody>
+                                </table>
+                              </div>
+                            @empty
+                              <tr>
+                                <td>
+                                  @include('partials.alerts.info', ['messages' => "Aucun résultat trouvé" ])
+                                </td>
+                              </tr>
+                            @endforelse
+                          </div>
                         </div>
                       </div>
-                    </div>
                     @endif
                   </div>
                   @if(!App\Entretien::answered($e->id, Auth::user()->id))
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="save-action mt-20">
-                        <button type="submit" class="btn btn-success" > <i class="fa fa-check"></i> Enregistrer tout</button>
-                        <div class="clearfix"></div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="save-action mt-20">
+                          <button type="submit" class="btn btn-success" > <i class="fa fa-check"></i> Enregistrer tout</button>
+                          <div class="clearfix"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
                   @endif
                 </form>
               </div>
