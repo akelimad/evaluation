@@ -278,7 +278,7 @@
           </div>
           <div class="row">
             <div class="col-md-6">
-              <label for="">Type d'envoi des emails :</label>
+              <label for="" class="control-label required">Type d'envoi des emails :</label>
               <select name="shedule_type" id="shedule_type" class="form-control" chm-validate="required">
                 <option value=""></option>
                 <option value="now">Immédiat</option>
@@ -287,7 +287,7 @@
             </div>
             <div class="col-md-6" id="shedule-datetime-container">
               <div class="form-group">
-                <label for="">Choisissez la date et l'heure</label>
+                <label for="" class="control-label">Choisissez la date et l'heure</label>
                 <input type="datetime-local" name="sheduled_at" id="sheduled_at" class="form-control">
               </div>
             </div>

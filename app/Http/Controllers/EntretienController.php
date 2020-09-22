@@ -624,9 +624,10 @@ class EntretienController extends Controller
       $entretien->salaries()->delete();
       $entretien->comments()->delete();
       $entretien->delete();
+      \Session::flash('success', "Campagne a été supprimée avec succès !");
       return [
         "status" => "success",
-        "message" => "Entretien a été supprimée avec succès !",
+        "message" => "Campagne a été supprimée avec succès !",
         "redirectUrl" => route('entretiens', [])
       ];
     } else {
