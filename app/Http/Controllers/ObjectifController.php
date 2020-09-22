@@ -62,15 +62,23 @@ class ObjectifController extends Controller
     }
 
     if (!empty($request->objectifs)) {
-      foreach ($request->objectifs as $objectid_id => $indicatorData) {
+      foreach ($request->objectifs as $objectid_id => $objectifData) {
+        $indicators = isset($objectifData['indicators']) ? $objectifData['indicators'] : [];
+        $user_comment = isset($objectifData['user_comment']) ? $objectifData['user_comment'] : null;
+        $mentor_comment = isset($objectifData['mentor_comment']) ? $objectifData['mentor_comment'] : null;
+        //dd($mentor_comment);
         $object = Objectif_user::where('objectif_id', $objectid_id)->where('user_id', $user->id)->where('entretien_id', $request->entretien_id);
         $objectif_user = $object->first();
+
+        //dd($indicators);
 
         $data['objectif_id'] = $objectid_id;
         $data['user_id'] = $user_id;
         $data['entretien_id'] = $request->entretien_id;
         $data['mentor_id'] = $mentor_id;
-        $data['indicators_data'] = json_encode([$indicatorData]);
+        $data['indicators_data'] = json_encode([$indicators]);
+        $data['user_comment'] = empty($user_comment) && $objectif_user ? $objectif_user->user_comment : $user_comment;
+        $data['mentor_comment'] = empty($mentor_comment) && $objectif_user ? $objectif_user->mentor_comment : $mentor_comment;
 
         if (!$objectif_user) {
           $objectif_user = new Objectif_user();

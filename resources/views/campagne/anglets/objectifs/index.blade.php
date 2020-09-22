@@ -51,7 +51,7 @@
                             <div class="item">
                               <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
                             </div>
-                            <div class="item">
+                            <div class="item indicators">
                               <p class="mb-0"><b>Indicateurs :</b></p>
                               <table class="table">
                                 <thead>
@@ -71,7 +71,7 @@
                                     <td>
                                       <input type="text"
                                              class="slider"
-                                             name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][user_realized]"
+                                             name="objectifs[{{ $objectif->id }}][indicators][{{ $indicator['id'] }}][user_realized]"
                                              data-provide="slider"
                                              data-slider-min="0"
                                              data-slider-max="{{ $indicator['fixed'] * 2 }}"
@@ -79,6 +79,7 @@
                                              data-slider-value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id']) }}"
                                              data-slider-enabled="{{ $user->id == Auth::user()->id }}"
                                              data-slider-tooltip="always">
+                                      <input type="hidden" name="objectifs[{{ $objectif->id }}][indicators][{{ $indicator['id'] }}][mentor_personnal_realized]" value="{{ \App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id'], 'mentor_personnal') }}">
                                     </td>
                                     <td class="text-center">
                                       {{ round((\App\Objectif_user::getRealised($e->id, $user->id, $objectif->id, $indicator['id']) / $indicator['fixed']) * 100) }}
@@ -88,6 +89,11 @@
                                 @endforeach
                                 </tbody>
                               </table>
+                            </div>
+                            <div class="item comment-box">
+                              <label for="" class="control-label">Commentaires</label>
+                              @php($objectif_user = \App\Objectif::getObjectif($e->id, $user, $user->parent, $objectif->id))
+                              <textarea name="objectifs[{{ $objectif->id }}][user_comment]" class="form-control" {{ $isMentor ? 'disabled':'' }}>{{ $objectif_user ? $objectif_user->user_comment : '' }}</textarea>
                             </div>
                           @empty
                             <tr>
@@ -111,7 +117,7 @@
                             <div class="item">
                               <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
                             </div>
-                            <div class="item">
+                            <div class="item indicators">
                               <p class="mb-0"><b>Indicateurs :</b></p>
                               <table class="table">
                                 <thead>
@@ -147,6 +153,10 @@
                                 </tbody>
                               </table>
                             </div>
+                            <div class="item comment-box">
+                              <label for="" class="control-label">Commentaires</label>
+                              <textarea name="" class="form-control" disabled></textarea>
+                            </div>
                           @empty
                             <tr>
                               <td>
@@ -177,7 +187,7 @@
                               <div class="item">
                                 <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
                               </div>
-                              <div class="item">
+                              <div class="item indicators">
                                 <p class="mb-0"><b>Indicateurs :</b></p>
                                 <table class="table">
                                   <thead>
@@ -192,7 +202,7 @@
                                       <td>
                                         <input type="text"
                                                class="slider"
-                                               name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_personnal_realized]"
+                                               name="objectifs[{{ $objectif->id }}][indicators][{{ $indicator['id'] }}][mentor_personnal_realized]"
                                                data-provide="slider"
                                                data-slider-min="0"
                                                data-slider-max="{{ $indicator['fixed'] * 2 }}"
@@ -207,6 +217,11 @@
                                   @endforeach
                                   </tbody>
                                 </table>
+                              </div>
+                              <div class="item comment-box">
+                                <label for="" class="control-label">Commentaires</label>
+                                @php($objectif_user = \App\Objectif::getObjectif($e->id, $user, $user->parent, $objectif->id))
+                                <textarea name="objectifs[{{ $objectif->id }}][mentor_comment]" class="form-control">{{ $objectif_user ? $objectif_user->mentor_comment : '' }}</textarea>
                               </div>
                             @empty
                               <tr>
@@ -230,7 +245,7 @@
                               <div class="item">
                                 <p><b>Date d'échéance :</b> {{ date('d/m/Y', strtotime($objectif->deadline)) }}</p>
                               </div>
-                              <div class="item">
+                              <div class="item indicators">
                                 <p class="mb-0"><b>Indicateurs :</b></p>
                                 <table class="table">
                                   <thead>
@@ -246,7 +261,7 @@
                                       <td>
                                         <input type="text"
                                                class="slider"
-                                               name="objectifs[{{ $objectif->id }}][{{ $indicator['id'] }}][mentor_team_realized]"
+                                               name="objectifs[{{ $objectif->id }}][indicators][{{ $indicator['id'] }}][mentor_team_realized]"
                                                data-provide="slider"
                                                data-slider-min="0"
                                                data-slider-max="{{ $indicator['fixed'] * 2 }}"
@@ -260,6 +275,11 @@
                                   @endforeach
                                   </tbody>
                                 </table>
+                              </div>
+                              <div class="item comment-box">
+                                <label for="" class="control-label">Commentaires</label>
+                                @php($objectif_user = \App\Objectif::getObjectif($e->id, $user, $user->parent, $objectif->id))
+                                <textarea name="objectifs[{{ $objectif->id }}][mentor_comment]" class="form-control">{{ $objectif_user ? $objectif_user->mentor_comment : '' }}</textarea>
                               </div>
                             @empty
                               <tr>

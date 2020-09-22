@@ -67,7 +67,8 @@
                         </div>
                         <div class="col-md-12">
                           <label for="" class="control-label">Commentaires</label>
-                          <textarea name="" id="" class="form-control" {{ $isMentor ? 'readonly':'' }}></textarea>
+                          @php($skill_user = \App\Skill::getSkill($skill->id, $user->id, $e->id))
+                          <textarea name="user_comment" id="user_comment" class="form-control" {{ $isMentor ? 'readonly':'' }}>{{ $skill_user ? $skill_user->user_comment : '' }}</textarea>
                         </div>
                       </div>
                     </div>
@@ -110,7 +111,8 @@
                         </div>
                         <div class="col-md-12">
                           <label for="" class="control-label">Commentaires</label>
-                          <textarea name="" id="" class="form-control"></textarea>
+                          @php($skill_user = \App\Skill::getSkill($skill->id, $user->id, $e->id))
+                          <textarea name="mentor_comment" id="mentor_comment" class="form-control">{{ $skill_user ? $skill_user->mentor_comment : '' }}</textarea>
                         </div>
                       </div>
                     </div>
