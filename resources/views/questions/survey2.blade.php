@@ -62,7 +62,7 @@
             <div class="panel panel-info mb-20">
               <div class="panel-heading">{{ $g->name }}</div>
               <div class="panel-body">
-                <div class="row">
+                <div class="row mb-0">
                   @forelse($g->questions as $q)
                     <div class="col-md-12 mb-30">
                       <div class="form-group">

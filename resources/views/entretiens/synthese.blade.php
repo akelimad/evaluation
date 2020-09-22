@@ -4,9 +4,6 @@
   <section class="content evaluations">
     <div class="row">
       <div class="col-md-12">
-        @if(session()->has('message'))
-          @include('partials.alerts.success', ['messages' => session()->get('message') ])
-        @endif
         <div class="card box box-primary">
           <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} - {{ $user->fullname() }} </h3>
           <div class="nav-tabs-custom">

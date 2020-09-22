@@ -75,7 +75,7 @@
   }
 </style>
 
-<form method="POST" action="" id="entretienForm" role="form" class="allInputsFormValidation form-vertical" onsubmit="return chmEntretien.store(event)">
+<form method="POST" action="" id="entretienForm" role="form" class="allInputsFormValidation form-vertical" onsubmit="return chmEntretien.store(event)" novalidate>
   <div class="content p-30">
     <input type="hidden" name="type" value="annuel">
     <input type="hidden" name="id" value="{{ $entretien->id }}">

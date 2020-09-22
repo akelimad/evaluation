@@ -40,7 +40,7 @@
                               <td><a title="{{$f->coll_comment}}" data-toggle="tooltip"><i class="fa fa-comment"></i></a></td>
                               <td>
                                 @if($user->id == Auth::user()->id)
-                                  <span class="label">
+                                  <span class="label labdel-default">
                                     @if($f->status == 0)En attente
                                     @elseif($f->status == 1)Refusé
                                     @elseif($f->status == 2)Accepté
@@ -99,4 +99,11 @@
     </div>
   </section>
 @endsection
-  
+
+@section('javascript')
+  @parent
+  <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+  <script src="{{asset('js/moment.min.js')}}"></script>
+  <script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
+  <script src="{{asset('js/bootstrap-datepicker.fr.min.js')}}"></script>
+@endsection

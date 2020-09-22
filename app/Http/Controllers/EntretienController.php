@@ -432,7 +432,7 @@ class EntretienController extends Controller
     $user = User::findOrFail($uid);
     $entretien = Entretien::findOrFail($eid);
     MailerController::send($user, $entretien, $email);
-    return redirect()->back()->with('message', 'Un email est envoyé avec succès à ' . $user->name . " " . $user->last_name);
+    return redirect()->back()->with('success', "Un email est envoyé avec succès à {$user->fullname()}");
   }
 
   public function notifyMentorInterview($eid, $uid)
