@@ -278,17 +278,19 @@
           </div>
           <div class="row">
             <div class="col-md-6">
+              @php($campaign = \App\Campaign::get($entretien->id))
               <label for="" class="control-label required">Type d'envoi des emails :</label>
               <select name="shedule_type" id="shedule_type" class="form-control" chm-validate="required">
                 <option value=""></option>
-                <option value="now">Immédiat</option>
-                <option value="sheduled">Programmé</option>
+                <option value="now" {{ $campaign && $campaign->shedule_type == 'now' ? 'selected':'' }}>Immédiat</option>
+                <option value="sheduled" {{ $campaign && $campaign->shedule_type == 'sheduled' ? 'selected':'' }}>Programmé</option>
               </select>
+              <span class="text-muted">Ce ne serait pris en compte que sur les prochains envois si vous avez modifié les collaborateurs à évaluer</span>
             </div>
             <div class="col-md-6" id="shedule-datetime-container">
               <div class="form-group">
                 <label for="" class="control-label">Choisissez la date et l'heure</label>
-                <input type="datetime-local" name="sheduled_at" id="sheduled_at" class="form-control">
+                <input type="datetime-local" name="sheduled_at" id="sheduled_at" min="{{ date('Y-m-d') }}T{{ date('H:i') }}" class="form-control" value="{{ $campaign ? date('Y-m-d', strtotime($campaign->sheduled_at)).'T'.date('H:i', strtotime($campaign->sheduled_at)) : '' }}">
               </div>
             </div>
           </div>
