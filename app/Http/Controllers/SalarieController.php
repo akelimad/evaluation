@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\Table;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -21,6 +22,44 @@ class SalarieController extends Controller
   {
     $this->middleware('auth');
   }
+
+
+  public function getTable(Request $request)
+  {
+    $eid = $request->get('eid');
+    $uid = $request->get('uid');
+    $table = new Table($request);
+    $query = Salary::where('user_id', $uid)->where('entretien_id', $eid)->orderBy('created_at', 'DESC');
+
+    $table->setPrimaryKey('id');
+    $table->addColumn('created_at', 'Date');
+    $table->addColumn('brut', 'Brut');
+    $table->addColumn('prime', 'Prime');
+    $table->addColumn('comment', 'Commentaire');
+    $table->setBulkActions(true);
+
+    // define table actions
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'route' => ['name' => 'prime.edit', 'args' => ['eid' => $eid, 'uid' => $uid, 'id' => '[id]']],
+      'attrs' => [
+        'chm-modal' => '',
+        'chm-modal-options' => '{"form":{"attributes":{"id":"primeForm", "target-table":"[chm-table]"}}}',
+      ],
+      'bulk_action' => false,
+    ]);
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'chmSalary.delete',
+      'bulk_action' => true,
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
 
   /**
    * Display a listing of the resource.
@@ -137,8 +176,23 @@ class SalarieController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function delete(Request $request)
   {
-    //
+    if (empty($request->ids)) return;
+
+    foreach($request->ids as $id) {
+      $prime = Salary::find($id);
+      try {
+        $prime->delete();
+      } catch (\Exception $e) {
+        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+      }
+    }
+
+    return response()->json([
+      'status' => 'alert',
+      'title' => 'Confirmation',
+      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+    ]);
   }
 }

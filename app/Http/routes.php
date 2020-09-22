@@ -149,16 +149,20 @@ Route::post('objectif/store', 'EntretienObjectifController@store')->name('object
 Route::get('objectif/{id}', 'EntretienObjectifController@show')->name('objectif.show');
 Route::delete('objectif/delete', 'EntretienObjectifController@delete')->name('objectif.delete');
 
+Route::get('formations/table', 'FormationController@getTable')->name('formations.table');
 Route::get('entretiens/{e_id}/u/{uid}/formations', 'FormationController@index')->name('anglets.formations');
-Route::any('entretiens/{e_id}/formations/create', 'FormationController@create');
-Route::post('entretiens/{e_id}/formations/store', 'FormationController@store');
-Route::any('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit');
+Route::any('entretiens/{e_id}/formations/create', 'FormationController@create')->name('formation.add');
+Route::post('entretiens/{e_id}/formations/store', 'FormationController@store')->name('formation.store');
+Route::any('entretiens/{e_id}/formations/{id}/edit', 'FormationController@edit')->name('formation.edit');
+Route::delete('formations/delete', 'FormationController@delete')->name('formations.delete');
 Route::put('entretiens/formations/{id}/mentorUpdate', 'FormationController@update'); //update status & realise
 
+Route::get('primes/table', 'SalarieController@getTable')->name('primes.table');
 Route::get('entretiens/{eid}/u/{uid}/primes', 'SalarieController@index')->name('anglets.primes');
-Route::any('entretiens/{eid}/u/{uid}/salaires/create', 'SalarieController@create');
-Route::post('entretiens/{eid}/u/{uid}/salaires/store', 'SalarieController@store');
-Route::any('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edit');
+Route::any('entretiens/{eid}/u/{uid}/salaires/create', 'SalarieController@create')->name('prime.add');
+Route::post('entretiens/{eid}/u/{uid}/salaires/store', 'SalarieController@store')->name('prime.store');
+Route::any('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edit')->name('prime.edit');
+Route::delete('primes/delete', 'SalarieController@delete')->name('prime.delete');
 
 Route::get('entretiens/{eid}/u/{uid}/commentaires', 'CommentController@index')->name('anglets.commentaires');
 Route::any('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create');

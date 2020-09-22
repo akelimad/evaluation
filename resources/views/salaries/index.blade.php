@@ -5,50 +5,19 @@
     <div class="row">
       <div class="col-md-12">
         <div class="box box-primary card">
-          <h3 class="mb40"> Liste des primes pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }}</h2>
+          <h3 class="mb40">Liste des primes pour: {{ $e->titre }} - {{ $user->fullname() }}</h2>
             <div class="nav-tabs-custom">
               @include('partials.tabs')
               <div class="tab-content">
-                @if(count($salaries)>0)
-                  <div class="box-body table-responsive no-padding mb40">
-                    <table class="table table-hover table-striped text-center">
-                      <thead>
-                      <tr>
-                        <th>Date</th>
-                        <th>Brut</th>
-                        <th>Prime</th>
-                        <th>Commentaire</th>
-                        @if($user->id != Auth::user()->id)
-                          <th class="">Actions</th>
-                        @endif
-                      </tr>
-                      </thead>
-                      <tbody>
-                      @foreach($salaries as $s)
-                        <tr>
-                          <td>{{ Carbon\Carbon::parse($s->created_at)->format('d/m/Y') }}</td>
-                          <td> {{ $s->brut or '---' }} </td>
-                          <td> {{ $s->prime or '---' }} </td>
-                          <td> {{ $s->comment ? $s->comment : '---' }} </td>
-                          @if($user->id != Auth::user()->id)
-                            <td>
-                              @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                                <a href="javascript:void(0)"
-                                   onclick="return chmSalary.edit({eid: {{$e->id}} , uid: {{$user->id}}, sid: {{$s->id}} })"
-                                   class="btn-warning icon-fill"> <i class="glyphicon glyphicon-pencil"></i> </a>
-                              @endif
-                            </td>
-                          @endif
-                        </tr>
-                      @endforeach
-                      </tbody>
-                    </table>
-                  </div>
-                @else
-                  @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
-                @endif
-
-                {{ $salaries->links() }}
+                <div class="col-md-12 mb-20">
+                  {{ request()->query->set('eid', $e->id) }}
+                  {{ request()->query->set('uid', $user->id) }}
+                  <div chm-table="{{ route('primes.table') }}"
+                       chm-table-options='{"with_ajax": true}'
+                       chm-table-params='{{ json_encode(request()->query->all()) }}'
+                       id="PrimesTableContainer"
+                  ></div>
+                </div>
 
                 <div class="mt-20">
                   <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>

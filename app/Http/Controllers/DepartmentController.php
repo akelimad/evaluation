@@ -137,7 +137,6 @@ class DepartmentController extends Controller
       'title' => 'Confirmation',
       'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
     ]);
-
   }
 
 }
