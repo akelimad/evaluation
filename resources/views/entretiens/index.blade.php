@@ -3,6 +3,23 @@
 @section('breadcrumb')
   <li>Campagnes</li>
 @endsection
+<style>
+  .entretiens-status {
+    border-bottom: 1px solid #b7b4b4;
+  }
+  .entretiens-status a {
+    padding: 12px 30px;
+    display: inline-block;
+    border-bottom: 3px solid transparent;
+    color: black;
+  }
+  .entretiens-status a.active,
+  .entretiens-status a:focus,
+  .entretiens-status a:hover {
+    border-bottom: 3px solid #337ab7;
+    color: #337ab7;
+  }
+</style>
 @section('content')
   <section class="content entretiens-list">
     <div class="row mb-30">
@@ -18,9 +35,11 @@
 
     <div class="row mb-30">
       <div class="col-md-12">
-        <a href="{{ route('entretiens', ['status' => \App\Entretien::ACTIF_STATUS]) }}" class="btn {{ request()->get('status', \App\Entretien::ACTIF_STATUS) == \App\Entretien::ACTIF_STATUS ? 'bg-gray-active':'' }}"> <i class="fa fa-spinner"></i> {{ \App\Entretien::ACTIF_STATUS }}</a>
-        <a href="{{ route('entretiens', ['status' => \App\Entretien::FINISHED_STATUS]) }}" class="btn {{ request()->get('status') == \App\Entretien::FINISHED_STATUS ? 'bg-gray-active':'' }}"> <i class="fa fa-calendar-times-o"></i> {{ \App\Entretien::FINISHED_STATUS }}</a>
-        <a href="{{ route('entretiens', ['status' => 'all']) }}" class="btn {{ request()->get('status') == 'all' ? 'bg-gray-active':'' }}"> <i class="fa fa-list"></i> Tout</a>
+        <div class="entretiens-status">
+          <a href="{{ route('entretiens', ['status' => \App\Entretien::ACTIF_STATUS]) }}" class="{{ request()->get('status', \App\Entretien::ACTIF_STATUS) == \App\Entretien::ACTIF_STATUS ? 'active':'' }}"> <i class="fa fa-spinner"></i> {{ \App\Entretien::ACTIF_STATUS }}</a>
+          <a href="{{ route('entretiens', ['status' => \App\Entretien::FINISHED_STATUS]) }}" class="{{ request()->get('status') == \App\Entretien::FINISHED_STATUS ? 'active':'' }}"> <i class="fa fa-calendar-times-o"></i> {{ \App\Entretien::FINISHED_STATUS }}</a>
+          <a href="{{ route('entretiens', ['status' => 'all']) }}" class="{{ request()->get('status') == 'all' ? 'active':'' }}"> <i class="fa fa-list"></i> Tout</a>
+        </div>
       </div>
     </div>
 
