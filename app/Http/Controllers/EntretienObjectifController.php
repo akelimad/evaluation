@@ -84,6 +84,9 @@ class EntretienObjectifController extends Controller
     $id = $request->id;
     if ($id > 0) {
       $objectif = EntretienObjectif::findOrFail($id);
+      if ($objectif->user_id != User::getOwner()->id) {
+        abort(403);
+      }
     } else {
       $objectif = new EntretienObjectif();
     }
@@ -159,6 +162,13 @@ class EntretienObjectifController extends Controller
 
     foreach($request->ids as $id) {
       $objectif = EntretienObjectif::find($id);
+      if ($objectif->user_id != User::getOwner()->id) {
+        return response()->json([
+          'status' => 'alert',
+          'title' => 'Erreur survenue',
+          'content' => "Vous n'avez pas les autorisations pour effectuer cette action",
+        ]);
+      }
       try {
         $objectif->delete();
       } catch (\Exception $e) {

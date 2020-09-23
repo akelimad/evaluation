@@ -177,7 +177,8 @@
         swal({
           title: "Bienvenue",
           text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration",
-          type: "success"
+          type: "success",
+          allowOutsideClick: false
         }, {
           @php(session()->forget('popup'))
         });

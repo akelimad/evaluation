@@ -85,6 +85,9 @@ class EntretienController extends Controller
   public function show($id)
   {
     $e = Entretien::findOrFail($id);
+    if ($e->user_id != User::getOwner()->id) {
+      abort(403);
+    }
     if ($e->isFeedback360()) {
       $teamsUsers = [];
       if (!empty($e->users[0]->teams)) {
@@ -172,6 +175,9 @@ class EntretienController extends Controller
     ob_start();
     if (isset($id) && is_numeric($id)) {
       $entretien = Entretien::findOrFail($id);
+      if ($entretien->user_id != User::getOwner()->id) {
+        abort(403);
+      }
       $title = "Modifier la campagne";
     } else {
       $entretien = new Entretien();
@@ -492,6 +498,9 @@ class EntretienController extends Controller
   {
     ob_start();
     $e = Entretien::findOrFail($eid);
+    if ($e->user_id != User::getOwner()->id) {
+      abort(403);
+    }
     $user = User::findOrFail($uid);
     $evaluations = Entretien::findEvaluations($e);
 
@@ -521,6 +530,9 @@ class EntretienController extends Controller
   public function printPdf($eid, $uid)
   {
     $e = Entretien::findOrFail($eid);
+    if ($e->user_id != User::getOwner()->id) {
+      abort(403);
+    }
     $user = User::findOrFail($uid);
     $surveyId = Evaluation::surveyId($e->id, 1);
     $survey = Survey::find($surveyId);
@@ -616,6 +628,9 @@ class EntretienController extends Controller
     $user = Auth::user();
     if($user->hasRole('ADMIN') OR $user->hasRole('RH')) {
       $entretien = Entretien::findOrFail($eid);
+      if ($entretien->user_id != User::getOwner()->id) {
+        abort(403);
+      }
       $entretien->users()->detach();
       $entretien->evaluations()->detach();
       \DB::table('skill_user')->where('entretien_id', $eid)->delete();

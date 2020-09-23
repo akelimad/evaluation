@@ -31,3 +31,14 @@
     </div>
   </section>
 @endsection
+
+@section('javascript')
+  @parent
+  <script>
+    $(document).ready(function () {
+      $(window).on('chmModalLoaded', function () {
+        alert('loaded')
+      })
+    })
+  </script>
+@endsection

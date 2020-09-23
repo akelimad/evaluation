@@ -70,6 +70,9 @@ class SurveyController extends Controller
     $id = $request->id;
     if ($id > 0) {
       $survey = Survey::findOrFail($id);
+      if ($survey->user_id != User::getOwner()->id) {
+        abort(403);
+      }
       $pageTitle = "Modifier le questionnaire";
     } else {
       $survey = new Survey();
@@ -187,6 +190,13 @@ class SurveyController extends Controller
     foreach($request->ids as $id) {
       try {
         $survey = Survey::find($id);
+        if ($survey->user_id != User::getOwner()->id) {
+          return response()->json([
+            'status' => 'alert',
+            'title' => 'Erreur survenue',
+            'content' => "Vous n'avez pas les autorisations pour effectuer cette action",
+          ]);
+        }
         if ($survey->groupes()->count() > 0) {
           foreach ($survey->groupes()->get() as $group) {
             $group->delete();
