@@ -10,7 +10,7 @@
           @endif
         </div>
         <div class="box box-primary direct-chat direct-chat-warning card">
-          <h3 class="mb40">Commentaire pour: {{ $e->titre }} - {{ $user->name." ".$user->last_name }} </h3>
+          <h3 class="mb40">Commentaire pour: {{ $e->titre }} - {{ $user->fullname() }} </h3>
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')
@@ -45,11 +45,11 @@
                     @if(($user->id == Auth::user()->id && App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id)) or ($user->id != Auth::user()->id))
                       <div class="col-md-6">
                         <h4 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du
-                          manager : {{ $user->parent->name." ".$user->parent->last_name }}</h4>
+                          manager : {{ $user->parent->fullname() }}</h4>
 
                         <div class="direct-chat-msg right">
                           <div class="direct-chat-info clearfix">
-                            <span class="direct-chat-name pull-right">{{ $user->parent->name." ".$user->parent->last_name }}</span>
+                            <span class="direct-chat-name pull-right">{{ $user->parent->fullname() }}</span>
                             <span class="direct-chat-timestamp pull-left">{{ $comment->mentor_updated_at != null ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y à H:i') : '' }}</span>
                           </div>
                           <img class="direct-chat-img mb-20" src="{{ App\User::avatar($user->parent->id) }}" alt="message user image">
@@ -63,7 +63,7 @@
                             </form>
                           @else
                             <div class="direct-chat-text">
-                              {{ $comment->mentorComment ? $comment->mentorComment : '----' }}
+                              {!! $comment->mentorComment != '' ? nl2br($comment->mentorComment) : '---' !!}
                               @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
                                 <a
                                     href="javascript:void(0)"
@@ -98,7 +98,7 @@
           <div class="callout callout-info">
             <p class="">
               <i class="fa fa-info-circle fa-2x"></i>
-              <span class="content-callout">Cette page affiche le commentaires de la part du collaborateur: <b>{{ $user->name." ".$user->last_name }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
+              <span class="content-callout">Cette page affiche le commentaires de la part du collaborateur: <b>{{ $user->fullname() }}</b> pour l'entretien: <b>{{ $e->titre }}</b> </span>
             </p>
           </div>
         </div>
