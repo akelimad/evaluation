@@ -163,6 +163,9 @@
                 </div>
               </div>
               <div class="add-new-question-btn">
+                <div class="pull-left">
+                  <label :for="grpIndex+'_editMode'"><input type="checkbox" :id="grpIndex+'_editMode'" value="0" v-bind="group.editAllQuestion" @change="turnOnEditMode(grpIndex)"> Mode édition</label>
+                </div>
                 <div class="dropdown pull-right">
                   <button class="btn btn-info dropdown-toggle" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-plus"></i> Ajouter une question <span class="caret"></span></button>
                   <ul class="dropdown-menu" aria-labelledby="questionTypes">
@@ -244,13 +247,19 @@
               @endforeach
             ],
             edit: false,
-            active: false
+            active: false,
+            editAllQuestion: false
           },
           @endforeach
         ],
         submitted: false,
       },
       methods: {
+        turnOnEditMode: function (grpIndex) {
+          this.groups[grpIndex].questions.forEach(function (question) {
+            question.edit = !question.edit
+          })
+        },
         showHideEvalSelect: function (e) {
           if (e.target.options.selectedIndex > -1) {
             const theTarget = e.target.options[e.target.options.selectedIndex].dataset;

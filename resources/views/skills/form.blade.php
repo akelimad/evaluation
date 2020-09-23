@@ -31,9 +31,6 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h3 class="styled-title">Types de compétences</h3>
-    </div>
-    <div class="col-md-12">
       <div class="panel panel-default mb-20" v-for="(type, tIndex) in types">
         <div class="panel-heading" v-if="mode == 'add'" >
           <span class="badge">@{{ tIndex + 1 }}</span>
