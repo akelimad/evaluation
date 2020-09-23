@@ -401,7 +401,7 @@
           <div class="col-md-8">
             <div class="rating pull-left">
               @foreach([10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5] as $value)
-                <input type="radio" {{ $note >= $value && $note < $value + 0.5 ? 'checked':'' }} id="star{{ $value }}" name="rating" value="{{ $value }}" /><label class= "{{ is_int($value) ? 'full' : 'half' }} mb-0" for="star{{ $value }}" title="{{ $value }}"></label>
+                <input type="radio" id="{{$survey->id}}_star{{ $value }}" name="{{$survey->id}}_rating" value="{{ $value }}" {{ $note >= $value && $note < $value + 0.5 ? 'checked':'' }} /><label class= "{{ is_int($value) ? 'full' : 'half' }} mb-0" for="{{$survey->id}}_star{{ $value }}" title="{{ $value }}"></label>
               @endforeach
             </div>
           </div>

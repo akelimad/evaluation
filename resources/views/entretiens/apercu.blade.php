@@ -27,7 +27,7 @@
             <div class="panel-body">
               @php($surveyId = App\Evaluation::surveyId($e->id, 1))
               @php($survey = App\Survey::findOrFail($surveyId))
-              @include('questions.survey2', ['groupes' => $survey->groupes])
+              @include('questions.survey2', ['groupes' => $survey->groupes, 'survey' => $survey])
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
               <div class="panel-body">
                 @php($surveyId = App\Evaluation::surveyId($e->id, 2))
                 @php($survey = App\Survey::findOrFail($surveyId))
-                @include('questions.survey2', ['groupes' => $survey->groupes])
+                @include('questions.survey2', ['groupes' => $survey->groupes, 'survey' => $survey])
               </div>
             </div>
           </div>
