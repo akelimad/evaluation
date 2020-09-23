@@ -36,7 +36,7 @@
             @foreach($table->getColumns() as $column)
               @if (isset($sortables[$column['name']]))
                 @php($orderby = $sortables[$column['name']])
-                <th {{ chm_table_column_attrs($column) }}>
+                <th {!! chm_table_column_attrs($column) !!}>
                 <span chm-table-sort="{{ $sortables[$column->name] }}">
                   @if(request()->query->get('orderby') == $orderby)<i class="fa fa-sort-amount-{{ request()->query->get('order') }}" style="font-size: 14px;"></i>&nbsp;
                   @endif
@@ -65,7 +65,7 @@
               @endif
 
               @foreach($table->getColumns() as $column)
-                <td {{ chm_table_column_attrs($column) }}>{!! !is_null($column['callback']) ? chm_table_exec($column['callback'], $item) : chm_table_attribute($column['name'], $item, $table) !!}</td>
+                <td {!! chm_table_column_attrs($column) !!}>{!! !is_null($column['callback']) ? chm_table_exec($column['callback'], $item) : chm_table_attribute($column['name'], $item, $table) !!}</td>
               @endforeach
 
               @if (count($table->getActions()) > 0)

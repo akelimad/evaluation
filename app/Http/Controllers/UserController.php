@@ -74,6 +74,11 @@ class UserController extends Controller
       return '---';
     });
     $table->addColumn('created_at', 'Créé le');
+    $table->addColumn('online', 'Statut', function ($entity) {
+      $statusLabel = $entity->isOnline() ? 'success' : 'danger';
+      $lastActivity = !is_null($entity->last_activity_at) ? date('d.m.Y à H:i', strtotime($entity->last_activity_at)) : '---';
+      return '<span class="label label-'.$statusLabel.' empty" title="Dernière activité : '.$lastActivity.'"></span>';
+    }, ['attr' => ['class' => 'text-center']]);
 
     // define table actions
     $table->addAction('show', [
