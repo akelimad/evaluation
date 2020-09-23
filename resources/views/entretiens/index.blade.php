@@ -8,6 +8,7 @@
     border-bottom: 1px solid #b7b4b4;
   }
   .entretiens-status a {
+    transition: all .2s ease-in-out;
     padding: 12px 30px;
     display: inline-block;
     border-bottom: 3px solid transparent;
