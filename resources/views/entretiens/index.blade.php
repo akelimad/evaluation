@@ -38,8 +38,8 @@
                 <p><b>Date limite pour l'évaluation {{ $e->model == "Feedback 360" ? " des collègues":"manager" }} :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</span></p>
                 <p><b>Nombre de collaborateurs impliqués :</b> <span class="badge pull-right">{{ $e->users->count() }}</span></p>
               </div>
-              <div class="box-footer">
-                <a href="{{ route('entretien.show', ['id' => $e->id]) }}" class="btn btn-primary pull-right"><i class="fa fa-gear"></i> Gérer la campagne</a>
+              <div class="box-footer text-center">
+                <a href="{{ route('entretien.show', ['id' => $e->id]) }}" class="btn btn-primary"><i class="fa fa-gear"></i> Gérer la campagne</a>
               </div>
             </div>
           </div>

@@ -29,11 +29,15 @@
                         <img class="direct-chat-img" src="{{ App\User::avatar($user->id) }}" alt="message user image">
 
                         <div class="direct-chat-text">
-                          {{ $comment->userComment or '---' }}
+                          {!! $comment->userComment != '' ? nl2br($comment->userComment) : '---' !!}
                           @if($user->id == Auth::user()->id && !App\Entretien::answered($e->id, $user->id))
-                            <a href="javascript:void(0)"
-                               onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->id}}, cid: {{$comment->id}} })"
-                               class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"> <i class="fa fa-pencil"></i> </a>
+                            <a
+                                href="javascript:void(0)"
+                                chm-modal="{{ route('comment.edit', ['eid' => $e->id, 'uid' => $user->id, 'id' => $comment->id]) }}"
+                                chm-modal-options='{"form":{"attributes":{"id":"commentForm"}}}'
+                                class="btn-warning icon-fill"
+                                data-toggle="tooltip" title="Modifier votre commentaire"
+                            ><i class="fa fa-pencil"></i></a>
                           @endif
                         </div>
                       </div>
@@ -61,7 +65,13 @@
                             <div class="direct-chat-text">
                               {{ $comment->mentorComment ? $comment->mentorComment : '----' }}
                               @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                                <a href="javascript:void(0)" onclick="return chmComment.edit({eid: {{$e->id}}, uid: {{$user->parent->id}}, cid: {{$comment->id}} })" class="btn-warning icon-fill" data-toggle="tooltip" title="Editer votre commentaire"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <a
+                                    href="javascript:void(0)"
+                                    chm-modal="{{ route('comment.edit', ['eid' => $e->id, 'uid' => $user->id, 'id' => $comment->id]) }}"
+                                    chm-modal-options='{"form":{"attributes":{"id":"commentForm"}}}'
+                                    class="btn-warning icon-fill icon-fill"
+                                    data-toggle="tooltip" title="Modifier votre commentaire"
+                                ><i class="fa fa-pencil"></i></a>
                               @endif
                             </div>
                           @endif
@@ -70,14 +80,15 @@
                     @endif
                   </div>
                 </div>
-              @else
-                <div class="mb-20">
-                  @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
-                </div>
               @endif
               <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
               @if(!App\Entretien::answered($e->id, $user->id) && !$comment)
-                <a onclick="return chmComment.create({eid: {{$e->id}}, uid:{{$user->id}} })" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un commentaire</a>
+                  <a
+                      href="javascript:void(0)"
+                      chm-modal="{{ route('comment.add', ['eid' => $e->id, 'uid' => $user->id]) }}"
+                      chm-modal-options='{"form":{"attributes":{"id":"commentForm"}}}'
+                      class="btn btn-primary"
+                  ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter un commentaire" }}</a>
               @endif
             </div>
           </div>
@@ -95,4 +106,3 @@
     </div>
   </section>
 @endsection
-  

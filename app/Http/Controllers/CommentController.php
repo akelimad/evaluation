@@ -8,164 +8,151 @@ use App\Http\Requests;
 use App\Entretien;
 use App\User;
 use App\Comment;
-use Carbon\Carbon; 
+use Carbon\Carbon;
 use Auth;
 
 class CommentController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function index($eid, $uid)
+  {
+    $e = Entretien::findOrFail($eid);
+    if (!$e->canBeFilledByUser($uid)) {
+      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+    }
+    $user = User::findOrFail($uid);
+    $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
+    $evaluations = Entretien::findEvaluations($e);
+    return view('comments.index', compact('comment', 'e', 'user', 'evaluations'));
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function create($eid, $uid, Request $request)
+  {
+    if ($request->method() == "POST") {
+      return $this->store($request);
+    }
+    ob_start();
+    $e = Entretien::findOrFail($eid);
+    $user = User::findOrFail($uid);
+    $comment = new Comment();
+    echo view('comments.form', compact('e', 'user', 'comment'));
+    $content = ob_get_clean();
+    return ['title' => 'Ajouter un commentaire', 'content' => $content];
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(Request $request)
+  {
+    $id = $request->id;
+    $user = User::find($request->uid);
+    $isMentor = $user->id != Auth::user()->id;
+    if ($id) {
+      $cmt = Comment::find($id);
+    } else {
+      $cmt = new Comment();
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index($eid, $uid)
-    {
-        $e = Entretien::findOrFail($eid);
-        if (!$e->canBeFilledByUser($uid)) {
-            return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
-        }
-        $user = User::findOrFail($uid);
-        $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
-        $evaluations = Entretien::findEvaluations($e);
-        return view('comments.index', compact('comment', 'e', 'user', 'evaluations') );
+    $cmt->entretien_id = $request->eid;
+    $cmt->user_id = $user->id;
+    $cmt->mentor_id = $user->parent->id;
+    if($isMentor) {
+      $cmt->mentorComment = $request->comment;
+      $cmt->mentor_updated_at = date('Y-m-d H:i:s');
+    } else {
+      $cmt->userComment = $request->comment;
     }
+    $cmt->save();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create($eid, $uid, Request $request)
-    {
-        if ($request->method() == "POST") {
-            return $this->store($eid, $request);
-        }
-        ob_start();
-        $e = Entretien::findOrFail($eid);
-        $user = User::findOrFail($uid);
-        echo view('comments.form', compact('e', 'user'));
-        $content = ob_get_clean();
-        return ['title' => 'Ajouter un commentaire', 'content' => $content];
+    if ($cmt->save()) {
+      return ["status" => 'reload'];
+    } else {
+      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
     }
+  }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store($e_id, Request $request)
-    {
-        $id = $request->id;
-        if($id){
-            $cmt = Comment::findOrFail($id);
-        }else{
-            $cmt = new Comment();
-        }
+  /**
+   * Display the specified resource.
+   *
+   * @param  int $id
+   * @return \Illuminate\Http\Response
+   */
+  public function show($id)
+  {
+    //
+  }
 
-        if(Auth::user()->hasRole('MENTOR')) {
-            $cmt->mentor_id = Auth::user()->id;
-            $cmt->mentorComment = $request->comment;
-            $cmt->mentor_updated_at = date('Y-m-d H:i:s');
-        }else {
-            $cmt->userComment = $request->comment;
-            $cmt->user_id = $request->uid;
-            $cmt->entretien_id = $request->eid;
-        }
-        $cmt->save();
-
-        if($cmt->save()) {
-            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
-        } else {
-            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
-        }
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param  int $id
+   * @return \Illuminate\Http\Response
+   */
+  public function edit($eid, $uid, $id, Request $request)
+  {
+    if ($request->method() == "POST") {
+      return $this->store($request);
     }
+    ob_start();
+    $e = Entretien::find($eid);
+    $user = User::find($uid);
+    $comment = Comment::find($id);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+    echo view('comments.form', compact('e', 'user', 'comment'));
+    $content = ob_get_clean();
+    return ['title' => 'Modifier votre commentaire', 'content' => $content];
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($eid, $uid ,$cid, Request $request)
-    {
-        if ($request->method() == "POST") {
-            return $this->store($eid, $request);
-        }
-        ob_start();
-        $e = Entretien::findOrFail($eid);
-        $user = User::findOrFail($uid);
-        $c = Comment::findOrFail($cid);
-        $comment = "";
-        if($user->hasRole('MENTOR')) {
-            $comment = $c->mentorComment;
-        }else{
-            $comment = $c->userComment;
-        }
-        echo view('comments.form', compact('e', 'user', 'c', 'comment'));
-        $content = ob_get_clean();
-        return ['title' => 'Modifier votre commentaire', 'content' => $content];
-    }
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function mentorUpdate(Request $request,$eid, $uid, $cid)
+  {
+    $user = User::findOrFail($uid);
+    $comment = Comment::findOrFail($cid);
+    $comment->mentor_id = $request->mentor_id;
+    $comment->mentorComment = $request->comment;
+    $comment->mentor_updated_at = date('Y-m-d H:i:s');
+    $comment->save();
+    return redirect()->back();
+  }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function mentorUpdate(Request $request,$eid, $uid, $cid)
-    {
-        $user = User::findOrFail($uid);
-        $comment = Comment::findOrFail($cid);
-        $comment->mentor_id = $request->mentor_id;
-        $comment->mentorComment = $request->comment;
-        $comment->mentor_updated_at = date('Y-m-d H:i:s');
-        $comment->save();
-        return redirect()->back()->with("mentor_comment", "Vous venez de commenter avec succès sur le(la) collaborateur(trice) ".$user->name." ".$user->last_name );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  int $id
+   * @return \Illuminate\Http\Response
+   */
+  public function destroy($id)
+  {
+    //
+  }
 }

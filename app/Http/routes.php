@@ -165,10 +165,10 @@ Route::any('entretiens/{eid}/u/{uid}/salaires/{id}/edit', 'SalarieController@edi
 Route::delete('primes/delete', 'SalarieController@delete')->name('prime.delete');
 
 Route::get('entretiens/{eid}/u/{uid}/commentaires', 'CommentController@index')->name('anglets.commentaires');
-Route::any('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create');
-Route::post('entretiens/{eid}/u/{uid}/commentaires/store', 'CommentController@store');
-Route::any('entretiens/{eid}/u/{uid}/commentaires/{id}/edit', 'CommentController@edit');
-Route::put('entretiens/{eid}/u/{uid}/commentaires/{cid}/mentorUpdate', 'CommentController@mentorUpdate');
+Route::any('entretiens/{eid}/u/{uid}/commentaires/create', 'CommentController@create')->name('comment.add');
+Route::post('entretiens/{eid}/u/{uid}/commentaires/store', 'CommentController@store')->name('comment.store');
+Route::any('entretiens/{eid}/u/{uid}/commentaires/{id}/edit', 'CommentController@edit')->name('comment.edit');
+Route::put('entretiens/{eid}/u/{uid}/commentaires/{cid}/mentorUpdate', 'CommentController@mentorUpdate')->name('mentor.replay');
 
 Route::get('entretiens/{eid}/u/{uid}/carrieres', 'CarreerController@index')->name('anglets.carrieres');
 Route::get('entretiens/{eid}/u/{uid}/carrieres/create', 'CarreerController@create');

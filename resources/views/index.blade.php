@@ -79,9 +79,9 @@
                           </td>
                           <td class="text-center">
                             @if($userAnswered)
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block"><i class="fa fa-eye"></i> Voir</a>
+                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
                             @else
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block"><i class="fa fa-pencil"></i> Remplir</a>
+                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
                             @endif
                           </td>
                         </tr>
@@ -139,9 +139,9 @@
                               </td>
                               <td class="text-center">
                                 @if($mentorAnswered)
-                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block"><i class="fa fa-eye"></i> Voir</a>
+                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
                                 @else
-                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block"><i class="fa fa-pencil"></i> Remplir</a>
+                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
                                 @endif
                               </td>
                             </tr>
