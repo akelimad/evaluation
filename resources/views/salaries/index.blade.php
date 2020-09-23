@@ -22,8 +22,12 @@
                 <div class="mt-20">
                   <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
                   @if($user->id != Auth::user()->id && !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id))
-                    <a onclick="return chmSalary.create({eid: {{$e->id}} , uid: {{$user->id}} })" data-id="{{$e->id}}"
-                       class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une prime</a>
+                    <a
+                        href="javascript:void(0)"
+                        chm-modal="{{ route('prime.add', ['eid' => $e->id, 'uid' => $user->id]) }}"
+                        chm-modal-options='{"form":{"attributes":{"id":"primeForm","target-table":"[chm-table]"}}}'
+                        class="btn btn-primary"
+                    ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter une prime" }}</a>
                   @endif
                 </div>
               </div>

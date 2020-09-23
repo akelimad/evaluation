@@ -45,6 +45,9 @@
           </div>
         @endforeach
       </div>
+      @if(!request()->get('status', false))
+        {{ request()->query->set('status', 'Actif') }}
+      @endif
       @include('partials.pagination')
     @else
       @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
