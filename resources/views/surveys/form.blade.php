@@ -103,11 +103,11 @@
                   <div v-if="question.edit" class="form-group mb-0" :class="{'has-error': errors.has('question')}">
                     <div class="row">
                       <div :class="selectedModelRef == 'ENT' ? 'col-md-9':'col-md-11'">
-                        <input name="question" v-model="question.title" class="form-control" @keyup.enter="updateGroup(question)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
+                        <input name="question" v-model="question.title" class="form-control" @keyup.enter="updateQuestion(question, grpIndex)" v-focus placeholder="Entrez le titre de la question" v-validate="'required'" @keypress.enter.prevent>
                         <span v-show="errors.has('question')" class="help-block">@{{ errors.first('question') }}</span>
                       </div>
                       <div v-if="selectedModelRef == 'ENT'" class="col-md-2 pl-0 pr-0" title="Pondération (%)" >
-                        <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="question.ponderation" class="form-control" @keyup.enter="updateQuestion(question)" placeholder="Pondération" @keypress.enter.prevent>
+                        <input type="number" min="1" max="{{ App\Setting::get('max_note', 5) }}" name="ponderation" v-model="question.ponderation" class="form-control" @keyup.enter="updateQuestion(question, grpIndex)" placeholder="Pondération" @keypress.enter.prevent>
                       </div>
                       <div class="col-md-1">
                         <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer cette question" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
@@ -118,7 +118,7 @@
                   <div v-else class="m-0">
                     <div class="row mb-0">
                       <div class="col-md-7">
-                        <label @click="question.edit = true;" class="pull-left control-label mb-0 mr-5">Question @{{ qIndex + 1 }} : @{{ question.title }}</label>
+                        <label @click="editQuestion(question, grpIndex)" class="pull-left control-label mb-0 mr-5">Question @{{ qIndex + 1 }} : @{{ question.title }}</label>
                       </div>
                       <div v-if="!question.edit" class="col-md-2">
                         <div class="dropdown" style="display: inline-block;">
@@ -136,7 +136,7 @@
                         <div v-if="!question.edit" class="">
                           <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeQuestion(grpIndex, qIndex, group, question)"><i class="fa fa-trash"></i></button>
 
-                          <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question)" title="Modifier"><i class="fa fa-pencil"></i></button>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editQuestion(question, grpIndex)" title="Modifier"><i class="fa fa-pencil"></i></button>
 
                           <span v-if="selectedModelRef == 'ENT'" class="badge pull-right mr-10 text-muted" title="Pondération (%)" >@{{ question.ponderation > 0 ? question.ponderation : 0 }} %</span>
                         </div>
@@ -164,7 +164,15 @@
               </div>
               <div class="add-new-question-btn">
                 <div class="pull-left">
-                  <label :for="grpIndex+'_editMode'"><input type="checkbox" :id="grpIndex+'_editMode'" value="0" v-bind="group.editAllQuestion" @change="turnOnEditMode(grpIndex)"> Mode édition</label>
+                  <div class="custom-switch-btn">
+                    <label class="switch" :for="grpIndex+'_editMode'">
+                      <input type="checkbox" :id="grpIndex+'_editMode'" class="hidden" v-model="group.editAllQuestion" @change="turnOnEditMode(grpIndex)">
+                      <div class="slider round">
+                        <span class="on">ON</span><span class="off">OFF</span>
+                      </div>
+                    </label>
+                    <label class="mb-0 ml-5" style="display: inline-block; position: absolute; height: 27px; line-height: 27px;">Mode édition</label>
+                  </div>
                 </div>
                 <div class="dropdown pull-right">
                   <button class="btn btn-info dropdown-toggle" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-plus"></i> Ajouter une question <span class="caret"></span></button>
@@ -176,6 +184,7 @@
                     <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'select')">Liste déroulante</a></li>
                   </ul>
                 </div>
+                <div class="clearfix"></div>
               </div>
             </div>
           </div>
@@ -256,8 +265,9 @@
       },
       methods: {
         turnOnEditMode: function (grpIndex) {
+          var group = this.groups[grpIndex]
           this.groups[grpIndex].questions.forEach(function (question) {
-            question.edit = !question.edit
+            question.edit = group.editAllQuestion
           })
         },
         showHideEvalSelect: function (e) {
@@ -301,6 +311,17 @@
           group.edit = true
         },
         updateGroup: function (group) {
+          var sumGrpsPonderations = 0
+          this.groups.forEach(function (grpObject) {
+            sumGrpsPonderations += parseFloat(grpObject.ponderation)
+          })
+          if (sumGrpsPonderations > 100) {
+            swal({
+              type: "warning",
+              text: "La somme de la pondération des thèmes ne doit pas dépasser 100"
+            })
+            return;
+          }
           if (group.title.trim() != '') {
             group.edit = false
             group.ponderation = group.ponderation > 0 ? group.ponderation : 0
@@ -337,14 +358,31 @@
             })
           }
         },
-        editQuestion: function (question) {
+        editQuestion: function (question, grpIndex) {
           question.edit = true
+          this.groups[grpIndex].editAllQuestion = true
         },
-        updateQuestion: function (question) {
+        updateQuestion: function (question, grpIndex) {
+          var sumGrpQstsPonderations = 0
+          this.groups[grpIndex].questions.forEach(function (qstObject) {
+            sumGrpQstsPonderations += parseFloat(qstObject.ponderation)
+          })
+          if (sumGrpQstsPonderations > 100) {
+            swal({
+              type: "warning",
+              text: "La somme de la pondération des questions du thème ne doit pas dépasser 100"
+            })
+            return;
+          }
           if (question.title.trim() != '') {
             question.edit = false
             question.ponderation = question.ponderation > 0 ? question.ponderation : 0
           }
+          var existQstInEditMode = false
+          this.groups[grpIndex].questions.forEach(function (qstObject) {
+            if (qstObject.edit == true) existQstInEditMode = true
+          })
+          if (!existQstInEditMode) this.groups[grpIndex].editAllQuestion = false
         },
         addQuestion: function (groupIndex, qType) {
           var newPonderation = 100
@@ -468,7 +506,6 @@
       },
       computed: {
         validateGrpNbr: function () {
-
           return this.number < 1 || this.number > 100 || this.title == '' || this.model == ''
         },
       },
@@ -477,7 +514,7 @@
       },
       directives: {
         focus: {
-          inserted (el) {
+          inserted: function (el, binding) {
             el.focus()
           }
         }
