@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="box box-primary card">
-          <h3 class="mb40">Liste des primes pour: {{ $e->titre }} - {{ $user->fullname() }}</h2>
+          <h3 class="mt-0 mb40">Liste des primes pour: {{ $e->titre }} - {{ $user->fullname() }}</h2>
             <div class="nav-tabs-custom">
               @include('partials.tabs')
               <div class="tab-content">

@@ -63,7 +63,7 @@ class FormationController extends Controller
   {
     $e = Entretien::findOrFail($e_id);
     if (!$e->canBeFilledByUser($uid)) {
-      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+      return redirect()->route('home')->with("danger", Entretien::canBeFilledByUserMessage());
     }
     $user = User::findOrFail($uid);
     $evaluations = Entretien::findEvaluations($e);

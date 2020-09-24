@@ -9,7 +9,7 @@
           @include('partials.alerts.success', ['messages' => Session::get('success_update') ])
         @endif
         <div class="box box-primary card">
-          <h3 class="mb40"> Liste des compétences pour : {{$e->titre}} - {{ $user->fullname() }}
+          <h3 class="mt-0 mb40"> Liste des compétences pour : {{$e->titre}} - {{ $user->fullname() }}
           </h3>
 
           <div class="nav-tabs-custom">
@@ -24,7 +24,7 @@
                   <input type="hidden" name="mentor_id" value="{{ $user->parent->id }}">
                   <div class="row">
                     <div class="col-md-12 mt-20">
-                      <p class="m-0 styled-title">Fiche métier : {{ $skill->title }}</p>
+                      <h3 class="m-0">Fiche métier : {{ $skill->title }}</h3>
                     </div>
                   </div>
                   <div class="row">

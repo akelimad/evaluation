@@ -29,7 +29,7 @@ class ObjectifController extends Controller
   {
     $entretien = Entretien::findOrFail($eid);
     if (!$entretien->canBeFilledByUser($uid)) {
-      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+      return redirect()->route('home')->with("danger", Entretien::canBeFilledByUserMessage());
     }
     $evaluations = Entretien::findEvaluations($entretien);
 

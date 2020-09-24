@@ -191,4 +191,25 @@ export default class chmEntretien {
     })
   }
 
+  static changeStatus(event, ids) {
+    var token = $('input[name="_token"]').val()
+    var isChecked = $(event.target).is(':checked')
+    window.chmModal.show({
+      type: 'POST',
+      url: window.chmSite.url('entretiens/change-status'),
+      data: {'_token': token, isChecked: isChecked, ids: ids},
+    }, {
+      message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Changement du statut en cours...',
+      onSuccess: function (response) {
+        if (response.status == 'success') {
+          swal({
+            type: 'success',
+            text: response.message,
+            allowOutsideClick: false
+          })
+        }
+      }
+    })
+  }
+
 }

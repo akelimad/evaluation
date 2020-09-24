@@ -31,10 +31,29 @@
 				<div class="box box-default">
 					<div class="box-body">
 						<div class="row mb-0">
-							<div class="col-md-6 mb-20"><b>Campagne :</b> {{ $e->titre }}</div>
-							<div class="col-md-6 mb-20"><b>Participants :</b> {{ $countInterviewUsers }} <span class="pull-right"><b>Créée le</b> {{ date('d/m/Y à H:i', strtotime($e->created_at)) }}</span></div>
-							<div class="col-md-6 mb-sm-20"><b>Date limite pour l'auto-évaluation :</b> {{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</div>
-							<div class="col-md-6 "><b>Date limite pour l'évaluation manager :</b> {{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</div>
+							<div class="col-md-6 mb-sm-20">
+								<div class="custom-switch-btn">
+									<label class="switch" for="change_status" title="Activer / Désactiver la campagne" data-toggle="tooltip">
+										<input type="checkbox" id="change_status" value="0" class="hidden" onchange="chmEntretien.changeStatus(event, [{{ $e->id }}])" {{ $e->isEnabled() ? 'checked':'' }}>
+										<div class="slider round">
+											<span class="on">ON</span><span class="off">OFF</span>
+										</div>
+									</label>
+									<label class="mb-0 ml-5" style="display: inline-block; position: absolute; height: 27px; line-height: 27px;"><b>Activation</b></label>
+								</div>
+							</div>
+							<div class="col-md-6 mb-30">
+								<div class="inner-content">
+									<b>Participants :</b> {{ $countInterviewUsers }}
+									<span class="pull-right"><b>Créée le</b> {{ date('d/m/Y à H:i', strtotime($e->created_at)) }}</span>
+								</div>
+							</div>
+							<div class="col-md-6 mb-sm-20">
+								<b>Date limite pour l'auto-évaluation :</b> {{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}
+							</div>
+							<div class="col-md-6 ">
+								<b>Date limite pour l'évaluation manager :</b> {{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
+							</div>
 						</div>
 					</div>
 				</div>

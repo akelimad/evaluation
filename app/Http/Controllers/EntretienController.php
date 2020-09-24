@@ -66,11 +66,13 @@ class EntretienController extends Controller
       $selected = "all";
     }
     $query = Entretien::getAll();
-    if ($status = $request->get('status', Entretien::ACTIF_STATUS)) {
-      if ($status == Entretien::ACTIF_STATUS) {
+    if ($status = $request->get('status', Entretien::CURRENT_STATUS)) {
+      if ($status == Entretien::CURRENT_STATUS) {
         $query->where('date_limit', '>=', date('Y-m-d'));
-      } else if ($status == Entretien::FINISHED_STATUS) {
+      } else if ($status == Entretien::EXPIRED_STATUS) {
         $query->where('date_limit', '<', date('Y-m-d'));
+      } else if ($status == Entretien::FINISHED_STATUS) {
+        $query->where('status', $status);
       }
     }
     $query->orderBy('id', 'DESC');
@@ -152,7 +154,7 @@ class EntretienController extends Controller
   {
     $entretien = Entretien::findOrFail($e_id);
     if (!$entretien->canBeFilledByUser($uid)) {
-      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+      return redirect()->route('home')->with("danger", Entretien::canBeFilledByUserMessage());
     }
     $evaluations = Entretien::findEvaluations($entretien);
     // $evaluation = Evaluation::where('title', $type)->first();
@@ -279,10 +281,11 @@ class EntretienController extends Controller
     $entretien->model_id = $request->model;
     $entretien->options = json_encode($request->options);
     $entretien->user_id = User::getOwner()->id;
+    $entretien->enabled = true;
 
     // update status
     if (date('Y-m-d', strtotime('now')) < $date_limit) {
-      $entretien->status = Entretien::ACTIF_STATUS;
+      $entretien->status = Entretien::CURRENT_STATUS;
     }
 
     $entretien->save();
@@ -732,6 +735,26 @@ class EntretienController extends Controller
     echo view('entretiens.reopen', compact('e', 'params'));
     $content = ob_get_clean();
     return ['title' => "Réouvrir", 'content' => $content];
+  }
+
+  public function changeStatus(Request $request) {
+    $ids = $request->ids;
+    $isChecked = $request->isChecked;
+    if (empty($ids)) {
+      return [
+        'status' => "danger",
+        'message' => "Impossible de trouver l'ID de la campagne",
+      ];
+    }
+    foreach ($ids as $id) {
+      $entretien = Entretien::find($id);
+      $entretien->enabled = $isChecked === 'true';
+      $entretien->save();
+    }
+    return [
+      'status' => "success",
+      'message' => "Le changement du statut a bien été effectué",
+    ];
   }
 
 }

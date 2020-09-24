@@ -34,7 +34,7 @@ class SkillController extends Controller
   {
     $e = Entretien::findOrFail($e_id);
     if (!$e->canBeFilledByUser($uid)) {
-      return redirect()->route('home')->with("danger", "Désolé, vous avez dépassé la date limite");
+      return redirect()->route('home')->with("danger", Entretien::canBeFilledByUserMessage());
     }
     $evaluations = Entretien::findEvaluations($e);
     $user = $e->users()->where('entretien_user.user_id', $uid)->first();

@@ -8,8 +8,11 @@ use Carbon\Carbon;
 
 class Entretien extends Model
 {
-  const ACTIF_STATUS = "Actif";
+  const ENABLED_STATUS = "Actif";
+  const DISABLED_STATUS = "Inactif";
+  const CURRENT_STATUS = "En cours";
   const FINISHED_STATUS = "Fini";
+  const EXPIRED_STATUS = "Expiré";
 
   public static function answered($eid, $uid)
   {
@@ -171,20 +174,32 @@ class Entretien extends Model
   }
 
   public function getStatus() {
-    $status = $this::ACTIF_STATUS;
-    if (date('Y-m-d', strtotime('now')) > $this->date_limit) {
-      $status = $this::FINISHED_STATUS;
+    $status = $this->status;
+    if ($this::isExpired()) {
+      return $this::EXPIRED_STATUS;
     }
 
     return $status;
   }
 
-  public function isActif() {
-    return $this->getStatus() == $this::ACTIF_STATUS;
+  public function isCurrent() {
+    return $this->status == $this::CURRENT_STATUS;
+  }
+
+  public function isEnabled() {
+    return $this->enabled == 1;
+  }
+
+  public function isDisabled() {
+    return $this->enabled == 0;
+  }
+
+  public function isExpired() {
+    return date('Y-m-d', strtotime('now')) > $this->date_limit || $this->status == $this::EXPIRED_STATUS;
   }
 
   public function isFinished() {
-    return $this->getStatus() == $this::FINISHED_STATUS;
+    return $this->status = $this::FINISHED_STATUS;
   }
 
   public function getOptions() {
@@ -200,6 +215,9 @@ class Entretien extends Model
   }
 
   public function canBeFilledByUser($user_id) {
+    if ($this->status == Entretien::DISABLED_STATUS) {
+      return false;
+    }
     $user = User::find($user_id);
     if (Auth::user() == $user) {
       return date('Y-m-d', strtotime($this->date)) >= date('Y-m-d');
@@ -207,6 +225,10 @@ class Entretien extends Model
       return date('Y-m-d', strtotime($this->date_limit)) >= date('Y-m-d');
     }
     return false;
+  }
+
+  public static function canBeFilledByUserMessage() {
+    return "Désolé, vous avez dépassé la date limite, ou la campagne est désactivée";
   }
 
 

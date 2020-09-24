@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card box box-primary">
-          <h3 class="mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} - {{ $user->fullname() }} </h3>
+          <h3 class="mt-0 mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} - {{ $user->fullname() }} </h3>
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">

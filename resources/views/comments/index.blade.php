@@ -10,7 +10,7 @@
           @endif
         </div>
         <div class="box box-primary direct-chat direct-chat-warning card">
-          <h3 class="mb40">Commentaire pour: {{ $e->titre }} - {{ $user->fullname() }} </h3>
+          <h3 class="mt-0 mb40">Commentaire pour: {{ $e->titre }} - {{ $user->fullname() }} </h3>
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')

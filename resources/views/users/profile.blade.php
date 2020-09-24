@@ -116,7 +116,7 @@
                         <tr>
                           <td>
                             <span><i class="fa fa-search fa-1x fa-fw"></i> <a href="javascript:void(0)" onclick="return chmEntretien.apercu({eid: {{$entretien->id}}, uid: {{$user->id}} })">{{ $entretien->titre }} </a></span>
-                            <span class="label label-{{ $entretien->isActif() ? 'success':'danger' }} pl-10 pr-10 ml-30 font-14">{{ $entretien->getStatus() }}</span></td>
+                            <span class="label label-{{ $entretien->isCurrent() ? 'success':'danger' }} pl-10 pr-10 ml-30 font-14">{{ $entretien->status }}</span></td>
                           <td>{{ date('d/m/Y', strtotime($entretien->date_limit)) }}</td>
                         </tr>
                       @empty

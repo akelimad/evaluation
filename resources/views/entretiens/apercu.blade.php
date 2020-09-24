@@ -159,7 +159,7 @@
               @forelse($skill->getSkillsTypes() as $type)
                 <div class="row">
                   <div class="col-md-12">
-                    <h3 class="styled-title">{{ $type['title'] }} <span class="pull-right">{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></h3>
+                    <h3 style="border-bottom: 2px solid gray;">{{ $type['title'] }} <span class="pull-right">{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></h3>
                     <canvas class="chart" id="type_{{ $type['id'] }}_chart" style="max-height: 600px;"></canvas>
                   </div>
                 </div>

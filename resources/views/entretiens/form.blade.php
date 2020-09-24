@@ -30,11 +30,14 @@
     position: relative;
     width: 22px;
     height: 22px;
-    line-height: 22px;
+    line-height: 22px !important;
     border-radius: 50%;
     color: #fff;
     text-align: center;
     box-shadow: 0 0 0 3px #fff;
+  }
+  .circle i {
+    line-height: 22px !important;
   }
 
   /* Vertical Line */
@@ -279,13 +282,12 @@
           <div class="row">
             <div class="col-md-6">
               @php($campaign = \App\Campaign::get($entretien->id))
-              <label for="" class="control-label required">Type d'envoi des emails :</label>
+              <label for="" class="control-label required">Date de lancement</label>
               <select name="shedule_type" id="shedule_type" class="form-control" chm-validate="required">
                 <option value=""></option>
-                <option value="now" {{ $campaign && $campaign->shedule_type == 'now' ? 'selected':'' }}>Immédiat</option>
+                <option value="now" {{ ($campaign && $campaign->shedule_type == 'now') || !$campaign && $entretien->id > 0 ? 'selected':'' }}>Immédiat</option>
                 <option value="sheduled" {{ $campaign && $campaign->shedule_type == 'sheduled' ? 'selected':'' }}>Programmé</option>
               </select>
-              <span class="text-muted">Ce ne serait pris en compte que sur les prochains envois si vous avez modifié les collaborateurs à évaluer</span>
             </div>
             <div class="col-md-6" id="shedule-datetime-container">
               <div class="form-group">

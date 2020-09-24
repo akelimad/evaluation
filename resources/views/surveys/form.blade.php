@@ -163,7 +163,7 @@
                 </div>
               </div>
               <div class="add-new-question-btn">
-                <div class="pull-left">
+                <div v-if="group.questions.length > 0" class="pull-left">
                   <div class="custom-switch-btn">
                     <label class="switch" :for="grpIndex+'_editMode'">
                       <input type="checkbox" :id="grpIndex+'_editMode'" class="hidden" v-model="group.editAllQuestion" @change="turnOnEditMode(grpIndex)">
