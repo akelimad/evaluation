@@ -44,7 +44,7 @@
                 </span>
                 </th>
               @else
-                <th {{ chm_table_column_attrs($column) }}>{{ $column['label'] }}</th>
+                <th {!! chm_table_column_attrs($column) !!}>{{ $column['label'] }}</th>
               @endif
             @endforeach
             @if (count($table->getActions()) > 0)

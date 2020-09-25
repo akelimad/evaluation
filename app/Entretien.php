@@ -19,11 +19,7 @@ class Entretien extends Model
     $eu = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)
       ->where('user_submitted', 2)
       ->first();
-    if ($eu) {
-      return $eu;
-    } else {
-      return false;
-    }
+    return $eu ? $eu : false;
   }
 
   public static function answeredMentor($eid, $uid, $mid)
@@ -31,11 +27,7 @@ class Entretien extends Model
     $eu = Entretien_user::where('entretien_id', $eid)->where('user_id', $uid)->where('mentor_id', $mid)
       ->where('mentor_submitted', 2)
       ->first();
-    if ($eu) {
-      return $eu;
-    } else {
-      return false;
-    }
+    return $eu ? $eu : false;
   }
 
   public function users()
@@ -215,20 +207,34 @@ class Entretien extends Model
   }
 
   public function canBeFilledByUser($user_id) {
-    if ($this->status == Entretien::DISABLED_STATUS) {
+    $user = User::find($user_id);
+    $isMentor = Auth::user() != $user;
+    $isColl = Auth::user() != $user;
+    $campaign = Campaign::where('entretien_id', $this->id)->first();
+    if (
+      $this->status == Entretien::DISABLED_STATUS || // is desabled
+      $isMentor && date('Y-m-d', strtotime($this->date_limit)) < date('Y-m-d') || // already expired for mentor
+      $isColl && date('Y-m-d', strtotime($this->date)) < date('Y-m-d') || // already expired for collaborator
+      $campaign && $campaign->shedule_type == "sheduled" && date('Y-m-d H:i', strtotime($campaign->sheduled_at)) > date('Y-m-d H:i') // not yet started
+    ) {
       return false;
     }
-    $user = User::find($user_id);
-    if (Auth::user() == $user) {
-      return date('Y-m-d', strtotime($this->date)) >= date('Y-m-d');
-    } else if (Auth::user() != $user) {
-      return date('Y-m-d', strtotime($this->date_limit)) >= date('Y-m-d');
-    }
-    return false;
+
+    return true;
   }
 
   public static function canBeFilledByUserMessage() {
-    return "Désolé, vous avez dépassé la date limite, ou la campagne est désactivée";
+    return "Désolé, vous avez dépassé la date limite, ou la campagne est désactivée, ou pas encore lancée";
+  }
+
+  public function getStartDate() {
+    $campaign = Campaign::where('entretien_id', $this->id)->first();
+    if (!$campaign) return '---';
+    if ($campaign->shedule_type == "sheduled") {
+      return date('d/m/Y à H:i', strtotime($campaign->sheduled_at));
+    } else {
+      return date('d/m/Y à H:i');
+    }
   }
 
 

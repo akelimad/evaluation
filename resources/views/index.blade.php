@@ -55,6 +55,7 @@
                       <thead>
                       <tr>
                         <th>Titre</th>
+                        <th>Date de lancement</th>
                         <th>Date limite</th>
                         <th class="text-center">Collaborateur</th>
                         <th class="text-center">Manager</th>
@@ -69,7 +70,10 @@
                             <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{$e->titre}}</a>
                           </td>
                           <td>
-                            {{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}}
+                            {{ $e->getStartDate() }}
+                          </td>
+                          <td>
+                            {{ Carbon\Carbon::parse($e->date)->format('d/m/Y') }}
                           </td>
                           <td class="text-center">
                             <span class="label label-{{$userAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$userAnswered ? 'Remplie le '.Carbon\Carbon::parse($userAnswered->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
@@ -111,7 +115,8 @@
                         <tr>
                           <th>Nom et prénom</th>
                           <th>Campagne</th>
-                          <th class="text-center">Date d'expiration</th>
+                          <th>Date de lancement</th>
+                          <th>Date limite</th>
                           <th class="text-center">Collaborateur</th>
                           <th class="text-center">Manager</th>
                           <th class="text-center">Actions</th>
@@ -128,7 +133,10 @@
                               <td>
                                 <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{ $e->titre }}</a>
                               </td>
-                              <td class="text-center">
+                              <td>
+                                {{ $e->getStartDate() }}
+                              </td>
+                              <td>
                                 {{ date('d/m/Y', strtotime($e->date_limit)) }}
                               </td>
                               <td class="text-center">
