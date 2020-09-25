@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'locale' => 'fr',
+    'locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'fr',
+    'fallback_locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -160,6 +160,7 @@ return [
         Zizaco\Entrust\EntrustServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Barryvdh\TranslationManager\ManagerServiceProvider::class,
 
 
     ],

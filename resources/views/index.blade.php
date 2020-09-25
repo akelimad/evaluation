@@ -8,7 +8,7 @@
           <div class="box-body box-profile box-widget widget-user">
             <h3 class="widget-user-username">Bienvenue {{Auth::user()->displayName()}}</h3>
             @if(!Auth::user()->hasRole('ADMIN'))
-              <p>Voici les informations de votre Manager :</p>
+              <p>{{ __("Voici les informations de votre Manager :") }}</p>
             @endif
             @if(Auth::user()->hasRole('ADMIN'))
               <div class="home-box-img-profile">

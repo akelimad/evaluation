@@ -10,7 +10,7 @@
         <div class="small-box bg-green">
           <div class="inner">
             <h3> {{ $inProgress }} </h3>
-            <p>Campages en cours</p>
+            <p>{{ __("Campages en cours") }}</p>
           </div>
           <div class="icon"><i class="fa fa-comments"></i></div>
           <a href="" class="small-box-footer"> </a>
