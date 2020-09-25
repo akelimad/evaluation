@@ -21,7 +21,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins, AuthenticatesUsers;
 
     /**
      * Where to redirect users after login / registration.
@@ -80,6 +80,10 @@ class AuthController extends Controller
         }
         session()->set('popup', '1');
         return redirect('/');
+    }
+
+    public function logout() {
+
     }
 
 }

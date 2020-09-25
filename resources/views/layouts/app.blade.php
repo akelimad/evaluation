@@ -91,13 +91,15 @@
                   <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> Profil</a>
                 </div>
                 <div class="pull-right">
-                  <a href="{{url('/logout')}}" class="btn btn-info"><i class="fa fa-sign-out"></i> Déconnexion</a>
+                  <a href="{{ route('logout') }}" class="btn btn-info" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Déconnexion</a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
                 </div>
               </li>
             </ul>
           </li>
           <li>
-            <a href="{{url('logout')}}"><i class="fa fa-power-off"></i></a>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Déconnexion</a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
           </li>
           <!-- disable control sidebar skin -->
           <li style="display: none;">
