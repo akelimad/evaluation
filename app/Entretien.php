@@ -212,7 +212,7 @@ class Entretien extends Model
     $isColl = Auth::user() != $user;
     $campaign = Campaign::where('entretien_id', $this->id)->first();
     if (
-      $this->status == Entretien::DISABLED_STATUS || // is desabled
+      $this->isDisabled() || // is desabled
       $isMentor && date('Y-m-d', strtotime($this->date_limit)) < date('Y-m-d') || // already expired for mentor
       $isColl && date('Y-m-d', strtotime($this->date)) < date('Y-m-d') || // already expired for collaborator
       $campaign && $campaign->shedule_type == "sheduled" && date('Y-m-d H:i', strtotime($campaign->sheduled_at)) > date('Y-m-d H:i') // not yet started
