@@ -1,4 +1,8 @@
 <style>
+  .panel .form-group {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ececec;
+  }
   .slider.slider-horizontal {
     width: 100% !important;
   }
@@ -70,9 +74,9 @@
                           <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
                         @endif
                         @if($q->type == 'text')
-                          <input type="{{$q->type}}" class="form-control" readonly="" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}">
+                          <input type="{{$q->type}}" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" disabled>
                         @elseif($q->type == 'textarea')
-                          <textarea class="form-control" readonly>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer :''}}</textarea>
+                          <textarea class="form-control" disabled>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer :''}}</textarea>
                         @elseif($q->type == "checkbox")
                           @foreach($q->children as $child)
                             <div class="survey-checkbox">
@@ -118,8 +122,8 @@
                           @endforeach
                         @elseif ($q->type == "select")
                           <div class="row">
-                            <div class="col-md-3">
-                              <select name="answers[{{$q->id}}][ansr]" id="" class="form-control">
+                            <div class="col-md-6">
+                              <select name="answers[{{$q->id}}][ansr]" id="" class="form-control" disabled>
                                 <option value=""></option>
                                 @foreach($q->children as $child)
                                   <option value="{{ $child->id }}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'selected' : '' }}>{{ $child->titre }}</option>
@@ -228,14 +232,14 @@
                         <div class="form-group">
                           @if($q->parent == null)
                             <div class="row mb-0">
-                              <div class="col-md-{{ $q->ponderation > 0 ? '8' : '12' }}">
+                              <div class="col-md-{{ $q->ponderation > 0 ? '6' : '12' }}">
                                 <label for="" class="questionTitle"><i class="fa fa-caret-right"></i>
                                   {{$q->titre}}
                                 </label>
                               </div>
                               @if($q->ponderation > 0)
                                 @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $e->id))
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                   @if(Route::currentRouteName() == 'entretien.apercu')
                                     <span>Note : {{ $mentorAnswer ? $mentorAnswer->note : ''}}/{{ App\Setting::get('max_note') }}</span>
                                   @else
@@ -303,7 +307,7 @@
                             @endforeach
                           @elseif ($q->type == "select")
                             <div class="row">
-                              <div class="col-md-3">
+                              <div class="col-md-6">
                                 <select name="answers[{{$q->id}}][ansr]" id="" class="form-control">
                                   <option value=""></option>
                                   @foreach($q->children as $child)
