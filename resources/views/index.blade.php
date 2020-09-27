@@ -6,7 +6,7 @@
       <div class="col-md-3">
         <div class="box box-primary">
           <div class="box-body box-profile box-widget widget-user">
-            <h3 class="widget-user-username">Bienvenue {{Auth::user()->displayName()}}</h3>
+            <h3 class="widget-user-username">{{ __("Bienvenue") }} {{Auth::user()->displayName()}}</h3>
             @if(!Auth::user()->hasRole('ADMIN'))
               <p>{{ __("Voici les informations de votre Manager :") }}</p>
             @endif
@@ -18,7 +18,7 @@
               <img src="{{ App\User::avatar($mentor->id) }}" alt="" class="profile-user-img img-responsive img-circle">
             @endif
             @if(!Auth::user()->hasRole('ADMIN'))
-              <h3 class="profile-username text-center">{{ $mentor->name }} {{ $mentor->last_name }} </h3>
+              <h3 class="profile-username text-center">{{ $mentor->fullname() }} </h3>
               <p class="text-muted text-center">
                 {{ (!empty($mentor->function)) ? App\Fonction::findOrFail($mentor->function)->title : '---' }}
               </p>
@@ -26,16 +26,15 @@
 
             <ul class="list-group list-group-unbordered">
               @if(!Auth::user()->hasRole('ADMIN'))
-                <li class="list-group-item"><b>Département : </b>
+                <li class="list-group-item"><b>{{ __("Département :") }}</b>
                   <a class="">{{ (!empty($mentor->service)) ? App\Department::findOrFail($mentor->service)->title : '---' }}</a>
                 </li>
-                <li class="list-group-item"><b>Téléphone mobile: </b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
+                <li class="list-group-item"><b>{{ __("Téléphone mobile:") }}</b> <a class="">{{ $mentor->tel ? $mentor->tel : '---' }}</a></li>
               @endif
-              <li class="list-group-item"><b>Email: </b> <a class="">{{ $mentor->email }}</a></li>
+              <li class="list-group-item"><b>{{ __("Email :") }}</b> <a class="">{{ $mentor->email }}</a></li>
             </ul>
             @role(["COLLABORATEUR"])
-            <p><i>N'hésitez pas à solliciter votre Manager si vous avez la moindre question concernant votre suivi
-                RH.</i></p>
+            <p><i>{{ __("N'hésitez pas à solliciter votre Manager si vous avez la moindre question concernant votre suivi RH.") }}</i></p>
             @endrole
           </div>
         </div>
@@ -44,7 +43,7 @@
       <div class="col-md-9">
         <div class="card portlet box box-primary">
           <div class="nav-tabs-custom portlet-title">
-            <div class="caption caption-red mb-10">Mes entretiens</div>
+            <div class="caption caption-red mb-10">{{ __("Mes entretiens") }}</div>
           </div>
           <div class="portlet-body">
             <div class="tab-content">
@@ -54,12 +53,12 @@
                     <table class="table table-hover table-striped">
                       <thead>
                       <tr>
-                        <th>Titre</th>
-                        <th>Date de lancement</th>
-                        <th>Date limite</th>
-                        <th class="text-center">Collaborateur</th>
-                        <th class="text-center">Manager</th>
-                        <th class="text-center">Actions</th>
+                        <th>{{ __("Titre") }}</th>
+                        <th>{{ __("Date de lancement") }}</th>
+                        <th>{{ __("Date limite") }}</th>
+                        <th class="text-center">{{ __("Collaborateur") }}</th>
+                        <th class="text-center">{{ __("Manager") }}</th>
+                        <th class="text-center">{{ __("Actions") }}</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -103,7 +102,7 @@
         @if(count($collaborateurs)>0)
           <div class="card portlet box box-primary">
             <div class="nav-tabs-custom portlet-title">
-              <div class="caption caption-red mb-10">Mes collaborateurs</div>
+              <div class="caption caption-red mb-10">{{ __("Mes collaborateurs") }}</div>
             </div>
             <div class="portlet-body">
               <div class="tab-content">
@@ -113,13 +112,13 @@
                       <table class="table table-hover table-striped">
                         <thead>
                         <tr>
-                          <th>Nom et prénom</th>
-                          <th>Campagne</th>
-                          <th>Date de lancement</th>
-                          <th>Date limite</th>
-                          <th class="text-center">Collaborateur</th>
-                          <th class="text-center">Manager</th>
-                          <th class="text-center">Actions</th>
+                          <th>{{ __("Nom et prénom") }}</th>
+                          <th>{{ __("Campagne") }}</th>
+                          <th>{{ __("Date de lancement") }}</th>
+                          <th>{{ __("Date limite") }}</th>
+                          <th class="text-center">{{ __("Collaborateur") }}</th>
+                          <th class="text-center">{{ __("Manager") }}</th>
+                          <th class="text-center">{{ __("Actions") }}</th>
                         </tr>
                         </thead>
                         <tbody>

@@ -224,7 +224,7 @@ class Entretien extends Model
   }
 
   public static function canBeFilledByUserMessage() {
-    return "Désolé, vous avez dépassé la date limite, ou la campagne est désactivée, ou pas encore lancée";
+    return __("Désolé, vous avez dépassé la date limite, ou la campagne est désactivée, ou pas encore lancée");
   }
 
   public function getStartDate() {

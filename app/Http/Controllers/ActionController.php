@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Action;
 use App\Email;
 use App\Http\Requests;
+use Symfony\Component\CssSelector\XPath\TranslatorInterface;
 
 class ActionController extends Controller
 {
@@ -48,7 +49,7 @@ class ActionController extends Controller
         $action->type = $request->type;
         $action->save();
         if($action->save()) {
-            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+            return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès.')];
         } else {
             return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
         }
