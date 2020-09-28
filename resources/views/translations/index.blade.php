@@ -26,7 +26,7 @@
 
     @include('translations.search')
 
-    <div class="row">
+    <div class="row mb-0">
       <div class="col-md-12">
         <div class="box p-0">
           <div class="box-body pt-0">
@@ -46,12 +46,6 @@
   @parent
   <script>
     $(document).ready(function($) {
-      $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-          console.log('beforesend');
-          settings.data += "&_token={{ csrf_token()  }}";
-        }
-      });
 
       $('.form-find').on('submit', function (e) {
         e.preventDefault()
@@ -62,9 +56,10 @@
             "_token": $('input[name="_token"]').val(),
           }
         }, {
-          message: '<i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;' + "{{ __("Sanne en cours ...") }}",
+          message: '<i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;' + "{{ __("Scanne en cours ...") }}",
           onSuccess: (response) => {
             if ('status' in response && response.status === 'ok') {
+              window.chmTable.refresh('#TranslationsTableContainer')
               swal({
                 type: 'success',
                 text: "{{ __("Le scanne est terminé avec succès") }}"
@@ -88,8 +83,13 @@
             if ('status' in response && response.status === 'ok') {
               swal({
                 type: 'success',
-                text: "{{ __("La publication est terminée avec succès") }}"
-              })
+                text: "{{ __("La publication est terminée avec succès") }}",
+                showCancelButton: true,
+                cancelButtonText: "{{ __("Fermer") }}",
+                confirmButtonText: "{{ __("Actualiser") }}",
+              }).then(function () {
+                window.location.reload()
+              }).catch(swal.noop);
             }
           }
         })

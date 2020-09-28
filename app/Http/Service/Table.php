@@ -69,7 +69,7 @@ class Table {
 
     $user = Auth::user();
     if (!$user) {
-      return new Response("<div class='alert alert-warning'>". $this->trans->trans("Session expirée, veuillez vous reconnecter !") ."</div>");
+      return new Response("<div class='alert alert-warning'>". __("Session expirée, veuillez vous reconnecter !") ."</div>");
     }
     return new Response($output);
   }

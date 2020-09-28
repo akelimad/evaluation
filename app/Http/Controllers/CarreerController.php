@@ -89,9 +89,9 @@ class CarreerController extends Controller
             }
         }
         if($carr->save()) {
-            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+            return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès.")];
         } else {
-            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+            return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard.")];
         }
     }
 
@@ -120,7 +120,7 @@ class CarreerController extends Controller
         $c = Carreer::findOrFail($cid);
         echo view('carreers.form', compact('e', 'user', 'c'));
         $content = ob_get_clean();
-        return ['title' => 'Modifier votre carrière', 'content' => $content];
+        return ['title' => __("Modifier votre carrière"), 'content' => $content];
     }
 
     /**
@@ -149,7 +149,7 @@ class CarreerController extends Controller
         $carreer->mentor_id = $request->mentor_id;
         $carreer->mentorComment = $request->mentorComment;
         $carreer->save();
-        return redirect()->back()->with("mentor_comment", "Vous venez de commenter avec succès sur le(la) collaborateur(trice) ".$user->name." ".$user->last_name );
+        return redirect()->back()->with("mentor_comment", __("Vous venez de commenter avec succès sur le(la) collaborateur(trice) :coll_fullname", ['coll_name' => $user->fullname()]));
     }
 
     /**

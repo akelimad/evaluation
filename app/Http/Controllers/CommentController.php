@@ -56,7 +56,7 @@ class CommentController extends Controller
     $comment = new Comment();
     echo view('comments.form', compact('e', 'user', 'comment'));
     $content = ob_get_clean();
-    return ['title' => 'Ajouter un commentaire', 'content' => $content];
+    return ['title' => __("Ajouter un commentaire"), 'content' => $content];
   }
 
   /**
@@ -90,7 +90,7 @@ class CommentController extends Controller
     if ($cmt->save()) {
       return ["status" => 'reload'];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard.")];
     }
   }
 
@@ -123,7 +123,7 @@ class CommentController extends Controller
 
     echo view('comments.form', compact('e', 'user', 'comment'));
     $content = ob_get_clean();
-    return ['title' => 'Modifier votre commentaire', 'content' => $content];
+    return ['title' => __("Modifier votre commentaire"), 'content' => $content];
   }
 
   /**

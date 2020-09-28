@@ -40,11 +40,11 @@
                 <span chm-table-sort="{{ $sortables[$column->name] }}">
                   @if(request()->query->get('orderby') == $orderby)<i class="fa fa-sort-amount-{{ request()->query->get('order') }}" style="font-size: 14px;"></i>&nbsp;
                   @endif
-                  {{ $column['label'] }}
+                  {{ __($column['label']) }}
                 </span>
                 </th>
               @else
-                <th {!! chm_table_column_attrs($column) !!}>{{ $column['label'] }}</th>
+                <th {!! chm_table_column_attrs($column) !!}>{{ __($column['label']) }}</th>
               @endif
             @endforeach
             @if (count($table->getActions()) > 0)

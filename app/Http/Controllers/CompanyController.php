@@ -144,9 +144,9 @@ class CompanyController extends Controller
       $user->roles()->sync($request->roles); 
     }
     if($user->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès.")];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard.")];
     }
   }
 
@@ -162,14 +162,14 @@ class CompanyController extends Controller
         }
         $companyAdmin->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard.")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> ' . __("La suppression a été effectuée avec succès"),
     ]);
   }
 

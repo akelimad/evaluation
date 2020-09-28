@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>@yield('title', 'Accueil') | E-EVALUATION</title>
+  <title>@yield('title', 'Accueil') | {{ __("E-EVALUATION") }}</title>
   <link rel="website" href="{{ url('/') }}">
   {{ csrf_field() }}
   <base href="{{ url('/') }}">
@@ -40,7 +40,7 @@
   <!-- <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i> -->
   <div class="looding">
     <div class="reloadDouble"></div>
-    <p class="help-block">Chargement ... </p>
+    <p class="help-block">{{ __("Chargement ...") }}</p>
   </div>
 </div>
 <div class="wrapper">
@@ -50,7 +50,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>M</b>E</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>E</b>-évaluations</span>
+      <span class="logo-lg">{!! __("<b>E</b>-évaluations") !!}</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -88,17 +88,17 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> Profil</a>
+                  <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> {{ __("Profil") }}</a>
                 </div>
                 <div class="pull-right">
-                  <a href="{{ route('logout') }}" class="btn btn-info" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Déconnexion</a>
+                  <a href="{{ route('logout') }}" class="btn btn-info" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> {{ __("Déconnexion") }}</a>
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
                 </div>
               </li>
             </ul>
           </li>
           <li>
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Déconnexion</a>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> {{ __("Déconnexion") }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
           </li>
           <!-- disable control sidebar skin -->
@@ -125,7 +125,7 @@
         </div>
         <div class="pull-left info">
           <p>{{App\User::displayName()}}</p>
-          <a href="#"><i class="fa fa-circle text-success"></i> En ligne</a>
+          <a href="#"><i class="fa fa-circle text-success"></i> {{ __("En ligne") }}</a>
         </div>
       </div>
       <form action="#" method="get" class="sidebar-form">
@@ -141,55 +141,55 @@
       <ul class="sidebar-menu" data-widget="tree">
         @role(["ADMIN", "RH"])
         <li class="{{ Request::is('dashboard') ? 'active' : '' }}">
-          <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>Tableau de board</span></a>
+          <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>{{ __("Tableau de board") }}</span></a>
         </li>
         @endrole
 
         @role(["MENTOR", "COLLABORATEUR"])
         <li class="{{ Request::is('/') ? 'active' : '' }}">
-          <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>Mes entretiens</span></a>
+          <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>{{ __("Mes entretiens") }}</span></a>
         </li>
         @endrole
 
         @role(["ADMIN", "RH"])
-        <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>Campagnes</span></a></li>
-        <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>Calendrier des campagnes</span></a></li>
+        <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>{{ __("Campagnes") }}</span></a></li>
+        <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>{{ __("Calendrier des campagnes") }}</span></a></li>
         @endrole
 
         @role(["ADMIN"])
         @php($isConfig = in_array(\Request::route()->getName(), ['general.settings', 'departments', 'functions', 'models', 'config.skills', 'config.emails', 'config.roles', 'teams', 'users', 'skills', 'surveys-list', 'objectifs', 'permissions']))
         <li class="treeview {{ $isConfig ? 'active menu-open' : '' }}">
           <a href="#">
-            <i class="fa fa-gears"></i> <span>Paramétrages</span>
+            <i class="fa fa-gears"></i> <span>{{ __("Paramétrages") }}</span>
             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
           <ul class="treeview-menu" style="{{ $isConfig ? 'display: block;' : '' }}">
             <li class="{{ Request::is('config/settings/general') ? 'active' : '' }}">
-              <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> Champs éditables</a>
+              <a href="{{ url('config/settings/general') }}"><i class="fa fa-wrench"></i> {{ __("Champs éditables") }}</a>
             </li>
             <li class="{{ Request::is('users') ? 'active' : '' }}">
-              <a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>Utilisateurs</span></a>
+              <a href="{{ url('users') }}"><i class="fa fa-users"></i> <span>{{ __("Utilisateurs") }}</span></a>
             </li>
             <li class="{{ Request::is('config/surveys') ? 'active' : '' }}">
-              <a href="{{ url('config/surveys') }}"><i class="fa fa-pencil"></i> <span>Questionnaires</span></a>
+              <a href="{{ url('config/surveys') }}"><i class="fa fa-pencil"></i> <span>{{ __("Questionnaires") }}</span></a>
             </li>
             <li class="{{ Request::is('config/objectifs') ? 'active' : '' }}">
-              <a href="{{ url('config/objectifs') }}"><i class="fa fa-signal"></i> Objectifs </a>
+              <a href="{{ url('config/objectifs') }}"><i class="fa fa-signal"></i> {{ __("Objectifs") }}</a>
             </li>
             <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
-              <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> Fiches métiers</a>
+              <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> {{ __("Fiches métiers") }}</a>
             </li>
             <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
-              <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> Courriers automatiques</a>
+              <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> {{ __("Courriers automatiques") }}</a>
             </li>
             <li class="{{ Request::is('config/teams') ? 'active' : '' }}">
-              <a href="{{ route('teams') }}"><i class="fa fa-users"></i> Equipes</a>
+              <a href="{{ route('teams') }}"><i class="fa fa-users"></i> {{ __("Equipes") }}</a>
             </li>
             <li class="{{ Request::is('config/roles') ? 'active' : '' }}">
-              <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> Rôles</a>
+              <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> {{ __("Rôles") }}</a>
             </li>
             <li class="{{ Request::is('config/permissions') ? 'active' : '' }}">
-              <a href="{{ url('config/permissions') }}"><i class="fa fa-lock"></i> Permissions</a>
+              <a href="{{ url('config/permissions') }}"><i class="fa fa-lock"></i> {{ __("Permissions") }}</a>
             </li>
           </ul>
         </li>
@@ -197,7 +197,7 @@
 
         @role(["ROOT"])
         <li class="{{ \Request::route()->getName() == 'companies' ? 'active' : '' }}">
-          <a href="{{ route('companies') }}"><i class="fa fa-industry"></i> <span>Comptes des sociétés</span></a>
+          <a href="{{ route('companies') }}"><i class="fa fa-industry"></i> <span>{{ __("Comptes des sociétés") }}</span></a>
         </li>
         @endrole
 
@@ -210,7 +210,7 @@
   <div class="content-wrapper">
     <section class="content-header">
       <ol class="breadcrumb">
-        <li><a href="{{ route('home') }}" class="text-blue"><i class="fa fa-home"></i> Accueil</a></li>
+        <li><a href="{{ route('home') }}" class="text-blue"><i class="fa fa-home"></i> {{ __("Accueil") }}</a></li>
         @yield('breadcrumb')
       </ol>
     </section>
@@ -240,7 +240,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <strong>Copyright &copy; {{ date('Y') }} </strong> Lycom Tous droits réservés.
+    <strong>{{ __("Copyright") }} &copy; {{ date('Y') }} </strong> {{ __("Lycom Tous droits réservés.") }}
   </footer>
 
   <!-- Control Sidebar -->

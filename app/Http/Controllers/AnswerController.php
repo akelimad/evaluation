@@ -108,11 +108,10 @@ class AnswerController extends Controller
           'note' => Answer::cutNum($note),
           $proporty => 1 // means coll or mentor start responding
         ]);
-      return redirect()->back()->with('success', "Les informations ont été sauvegardées avec succès");
+      return redirect()->back()->with('success', __("Les informations ont été sauvegardées avec succès"));
     } catch (\Exception $e) {
-      return redirect()->back()->with('success', "Une erreur est survenue, réessayez plus tard");
+      return redirect()->back()->with('success', __("Une erreur est survenue, réessayez plus tard"));
     }
-
 
     return redirect()->back();
   }
