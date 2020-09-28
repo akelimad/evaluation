@@ -36,4 +36,14 @@ class LoginController extends Controller
   {
     $this->middleware('guest', ['except' => 'logout']);
   }
+
+  public function authenticated($request , $user){
+    $userRoles = \Auth::user()->roles->pluck('name')->toArray();
+    if ( in_array("ROOT", $userRoles) ) {
+      return redirect()->route('companies');
+    }
+    $request->session()->put('popup', '1');
+    return redirect('/');
+  }
+
 }
