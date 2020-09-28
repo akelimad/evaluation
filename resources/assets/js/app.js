@@ -42,6 +42,7 @@ import Fonction from './class/fonction'
 import Department from './class/department'
 import Team from './class/team'
 import Modele from './class/modele'
+import Translation from './class/translation'
 
 // Standart jQuery script
 import './custom'
@@ -83,3 +84,4 @@ window.Fonction = Fonction
 window.Department = Department
 window.Team = Team
 window.Modele = Modele
+window.Translation = Translation

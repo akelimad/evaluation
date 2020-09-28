@@ -191,3 +191,7 @@ Route::delete('team/delete', 'TeamController@delete')->name('team.delete');
 
 Route::post('entretien/{id}/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
 Route::delete('entretien/{id}/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
+
+Route::get('table/translations', 'TranslationController@getTable')->name('interface.translations.table');
+Route::get('interface/translations', 'TranslationController@index')->name('interface.translations');
+Route::post('interface/translations/store', 'TranslationController@store')->name('translations.store');
