@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i" rel="stylesheet">
 </head>
-<body class="hold-transition login-page" style="background: url('../img/bg-login.jpg') no-repeat center center;">
+<body class="hold-transition login-page" style="background: url({{ asset('../img/bg-login.jpg') }}) no-repeat center center;">
 	<div class="container">
 	  @yield('content')
 	</div>

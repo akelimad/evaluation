@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Notifications\PasswordReset;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Auth;
+use Mail;
 use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
@@ -261,6 +263,16 @@ class User extends Authenticatable
     }
 
     return $managers;
+  }
+
+  public function sendPasswordResetNotification($token){
+    Mail::send('auth.emails.password', [
+      'firstname'      => $this->name,
+      'reset_url'     => route('password.reset', ['token' => $token, 'email' => $this->email]),
+    ], function($message) {
+      $message->subject(__("Réinitialiser votre mot de passe"));
+      $message->to($this->email);
+    });
   }
 
 
