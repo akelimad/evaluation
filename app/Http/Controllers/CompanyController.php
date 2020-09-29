@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Email;
 use App\Http\Service\Table;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -144,6 +145,23 @@ class CompanyController extends Controller
       $user->roles()->sync($request->roles); 
     }
     if($user->save()) {
+      $emailTemplates = Email::where('user_id', 0)->get(); // default email template
+      if ($emailTemplates->count() > 0) {
+        foreach ($emailTemplates as $emailTemplate) {
+          $model = Email::where('user_id', $user->id)->where('ref', $emailTemplate->ref)->first();
+          if (!$model) {
+            $emailTpl = new Email();
+            $emailTpl->user_id = $user->id;
+            $emailTpl->ref = $emailTemplate->ref;
+            $emailTpl->sender = $user->email;
+            $emailTpl->name = $user->name;
+            $emailTpl->subject = $emailTemplate->subject;
+            $emailTpl->message = $emailTemplate->message;
+            $emailTpl->save();
+          }
+        }
+      }
+
       return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
     } else {
       return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard")];

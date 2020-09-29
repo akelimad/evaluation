@@ -36,12 +36,14 @@ class EmailController extends Controller
       'attrs' => [
         'chm-modal'=> '',
         'chm-modal-options'=> '{"form":{"attributes":{"id":"emailForm", "target-table":"[chm-table]"}}}',
-      ]
+      ],
+      'bulk_action' => false,
     ]);
     $table->addAction('delete', [
       'icon' => 'fa fa-trash',
       'label' => 'Supprimer',
       'callback' => 'Email.delete',
+      'bulk_action' => true,
     ]);
 
     // render the table
