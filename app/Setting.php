@@ -29,13 +29,6 @@ class Setting extends Model
       'model' => 'App\Service',
       'active' => 'func',
     ],
-    [
-      'label' => "Modèles de compagnes",
-      'route' => 'config/settings/models',
-      'icon'  => 'fa fa-long-arrow-right',
-      'model' => 'App\Model',
-      'active' => 'model',
-    ]
   ];
 
   /**

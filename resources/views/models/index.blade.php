@@ -2,11 +2,14 @@
 @section('title', 'Fonctions')
 @section('breadcrumb')
   <li>Paramétrage</li>
-  <li>Fonctions</li>
+  <li>Modèles</li>
 @endsection
 @section('content')
   <section class="content setting">
     <div class="row">
+      @php($isAdmin = false)
+      @role(["ADMIN"])
+      @php($isAdmin = true)
       <div class="col-md-3">
         <div class="box box-primary">
           <div class="box-body">
@@ -19,7 +22,8 @@
           </div>
         </div>
       </div>
-      <div class="col-md-9">
+      @endrole
+      <div class="col-md-{{ $isAdmin ? '9':'12' }}">
         <div class="box box-primary">
           <div class="box-header">
             <h3 class="box-title">Liste des modèles <span class="badge badge-count">0</span></h3>

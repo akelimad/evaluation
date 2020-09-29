@@ -202,6 +202,9 @@
         <li class="{{ \Request::route()->getName() == 'interface.translations' ? 'active' : '' }}">
           <a href="{{ route('interface.translations') }}"><i class="fa fa-language"></i> <span>{{ __("Traductions") }}</span></a>
         </li>
+        <li class="{{ \Request::route()->getName() == 'models' ? 'active' : '' }}">
+          <a href="{{ route('models') }}"><i class="fa fa-cog"></i> <span>{{ __("Modèles des campagnes") }}</span></a>
+        </li>
         @endrole
 
       </ul>

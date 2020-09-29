@@ -84,12 +84,6 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
   Route::post('function/store', 'FonctionController@store')->name('function.store');
   Route::delete('function/delete', 'FonctionController@delete')->name('function.delete');
 
-  Route::get('models/table', 'ModeleController@getTable')->name('models.table');
-  Route::get('config/settings/models', 'ModeleController@index')->name('models');
-  Route::any('model/form', 'ModeleController@form')->name('model.form');
-  Route::post('model/store', 'ModeleController@store')->name('model.store');
-  Route::delete('model/delete', 'ModeleController@delete')->name('model.delete');
-
   Route::get('roles/table', 'RoleController@getTable')->name('roles.table');
   Route::get('config/roles', 'RoleController@index')->name('config.roles');
   Route::any('role/form', 'RoleController@form')->name('role.form');
@@ -109,6 +103,12 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
   Route::get('companies', 'CompanyController@index')->name('companies');
   Route::delete('companies/delete', 'CompanyController@delete')->name('companies.delete');
   Route::delete('companies/logo/remove', 'CompanyController@removeLogo')->name('company.remove-logo');
+
+  Route::get('models/table', 'ModeleController@getTable')->name('models.table');
+  Route::get('config/settings/models', 'ModeleController@index')->name('models');
+  Route::any('model/form', 'ModeleController@form')->name('model.form');
+  Route::post('model/store', 'ModeleController@store')->name('model.store');
+  Route::delete('model/delete', 'ModeleController@delete')->name('model.delete');
 });
 Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() {
   Route::any('companies/form', 'CompanyController@form')->name('company.form');
