@@ -105,10 +105,10 @@ class SkillController extends Controller
     $id = $request->id;
     if ($id > 0) {
       $skill = Skill::find($id);
-      $title = "Modifier la fiche métier";
+      $title = __("Modifier la fiche métier");
     } else {
       $skill = new Skill();
-      $title = "Ajouter une fiche métier";
+      $title = __("Ajouter une fiche métier");
     }
     ob_start();
     echo view('skills.form', compact('skill'));
@@ -136,7 +136,7 @@ class SkillController extends Controller
     }
     $functionAlreayHasSkills = $functionAlreayHasSkills->get()->count() > 0;
     if ($functionAlreayHasSkills) {
-      $validator->getMessageBag()->add('funct_exists', "Cett fonction a déjà une fiche métier");
+      $validator->getMessageBag()->add('funct_exists', __("Cette fonction a déjà une fiche métier"));
     }
     // validate ponderation
     foreach ($skillData['types'] as $tKey => $type) {
@@ -146,7 +146,7 @@ class SkillController extends Controller
         $sum += $skill['ponderation'];
       }
       if ($sum != 100) {
-        $validator->getMessageBag()->add('type-'.$tKey, "La somme de la pondération doit être égale à 100 pour le type de compétences : ". $type['title']);
+        $validator->getMessageBag()->add('type-'.$tKey, __("La somme de la pondération doit être égale à 100 pour le type de compétences (:type)", ['type' => $type['title']]));
       }
     }
     $messages = $validator->errors();
@@ -163,9 +163,9 @@ class SkillController extends Controller
     }
 
     if ($skill->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès')];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __('Une erreur est survenue, réessayez plus tard')];
     }
   }
 
@@ -194,7 +194,7 @@ class SkillController extends Controller
       $model->update($data);
     }
 
-    return redirect()->back()->with("note_update", "Les informations ont été sauvegardées avec succès !");
+    return redirect()->back()->with("note_update", __("Les informations ont été sauvegardées avec succès"));
   }
 
   /**
@@ -212,14 +212,14 @@ class SkillController extends Controller
       try {
         $skill->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 

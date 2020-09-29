@@ -75,10 +75,10 @@ class ModeleController extends Controller
     ob_start();
     if ($id > 0) {
       $model = Modele::findOrFail($id);
-      $title = "Modifier la modèle";
+      $title = __("Modifier la modèle");
     } else {
       $model = new Modele();
-      $title = "Ajouter un modèle";
+      $title = __("Ajouter un modèle");
     }
     echo view('models.form', compact('model'));
     $content = ob_get_clean();
@@ -103,9 +103,9 @@ class ModeleController extends Controller
       $model->ref = $request->ref;
       $model->title = $request->title;
       $model->save();
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
     } catch (\Exception $e) {
-      return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard"];
+      return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
     }
   }
 
@@ -124,14 +124,14 @@ class ModeleController extends Controller
       try {
         $model->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 

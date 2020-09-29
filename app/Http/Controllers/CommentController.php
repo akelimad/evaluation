@@ -90,7 +90,7 @@ class CommentController extends Controller
     if ($cmt->save()) {
       return ["status" => 'reload'];
     } else {
-      return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard.")];
+      return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard")];
     }
   }
 

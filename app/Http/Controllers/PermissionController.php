@@ -62,7 +62,7 @@ class PermissionController extends Controller
 
       return response()->json([
         'status' => 'success',
-        'message' => "Les droits d'accès ont bien été mis à jour"
+        'message' => __("Les droits d'accès ont bien été mis à jour")
       ]);
     }
     return view('permissions.index');

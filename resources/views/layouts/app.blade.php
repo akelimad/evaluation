@@ -200,7 +200,7 @@
           <a href="{{ route('companies') }}"><i class="fa fa-industry"></i> <span>{{ __("Comptes des sociétés") }}</span></a>
         </li>
         <li class="{{ \Request::route()->getName() == 'interface.translations' ? 'active' : '' }}">
-          <a href="{{ route('interface.translations') }}"><i class="fa fa-industry"></i> <span>{{ __("Traductions") }}</span></a>
+          <a href="{{ route('interface.translations') }}"><i class="fa fa-language"></i> <span>{{ __("Traductions") }}</span></a>
         </li>
         @endrole
 

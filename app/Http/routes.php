@@ -115,8 +115,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() 
 	Route::post('companies/store', 'CompanyController@store')->name('company.store');
 });
 
-Route::post('entretiens/storeEntretienEvals', 'EntretienController@storeEntretienEvals'); 
-Route::get('entretiens/list', 'EntretienController@entretiensList'); 
+Route::get('entretiens/list', 'EntretienController@entretiensList');
 Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif');
 
 Route::get('entretiens/form', 'EntretienController@form');

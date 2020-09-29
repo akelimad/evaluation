@@ -84,7 +84,7 @@ class FormationController extends Controller
     $entretien = Entretien::findOrFail($e_id);
     echo view('formations.form', ['e' => $entretien]);
     $content = ob_get_clean();
-    return ['title' => 'Ajouter une formation', 'content' => $content];
+    return ['title' => __("Ajouter une formation"), 'content' => $content];
   }
 
   /**
@@ -119,9 +119,9 @@ class FormationController extends Controller
     $formation->coll_comment = $request->coll_comment;
     $formation->save();
     if ($formation->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès')];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __('Une erreur est survenue, réessayez plus tard')];
     }
   }
 
@@ -152,7 +152,7 @@ class FormationController extends Controller
     $formation = Formation::findOrFail($id);
     echo view('formations.form', ['f' => $formation, 'e' => $entretien]);
     $content = ob_get_clean();
-    return ['title' => 'Modifier la formation', 'content' => $content];
+    return ['title' => __('Modifier la formation'), 'content' => $content];
   }
 
   /**
@@ -186,14 +186,14 @@ class FormationController extends Controller
       try {
         $formation->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 }

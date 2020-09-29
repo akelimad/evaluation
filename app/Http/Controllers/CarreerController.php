@@ -89,9 +89,9 @@ class CarreerController extends Controller
             }
         }
         if($carr->save()) {
-            return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès.")];
+            return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
         } else {
-            return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard.")];
+            return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard")];
         }
     }
 

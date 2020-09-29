@@ -79,7 +79,7 @@ class TranslationController extends Controller
 
     return [
       'status' => 'success',
-      'message' => __("Les informations ont bien été enregistrées"),
+      'message' => __("Les informations ont été sauvegardées avec succès"),
     ];
   }
 }

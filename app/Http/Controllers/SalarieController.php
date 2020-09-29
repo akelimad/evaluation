@@ -97,7 +97,7 @@ class SalarieController extends Controller
     $user = User::findOrFail($uid);
     echo view('salaries.form', compact('e', 'user'));
     $content = ob_get_clean();
-    return ['title' => 'Ajouter une prime', 'content' => $content];
+    return ['title' => __('Ajouter une prime'), 'content' => $content];
   }
 
   /**
@@ -121,9 +121,9 @@ class SalarieController extends Controller
     $salary->entretien_id = $request->eid;
     $salary->save();
     if ($salary->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès')];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __('Une erreur est survenue, réessayez plus tard')];
     }
   }
 
@@ -155,7 +155,7 @@ class SalarieController extends Controller
     $s = Salary::findOrFail($sid);
     echo view('salaries.form', compact('e', 'user', 's'));
     $content = ob_get_clean();
-    return ['title' => 'Modifier une prime', 'content' => $content];
+    return ['title' => __('Modifier une prime'), 'content' => $content];
   }
 
   /**
@@ -185,14 +185,14 @@ class SalarieController extends Controller
       try {
         $prime->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 }

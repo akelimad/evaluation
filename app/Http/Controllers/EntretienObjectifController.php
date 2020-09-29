@@ -108,7 +108,7 @@ class EntretienObjectifController extends Controller
 
     foreach ($objectifs as $objectif) {
       if (isset($objectif['indicators']) && count($objectif['indicators']) < 1) {
-        return response()->json(['status' => 'error', 'message' => 'Veuillez ajouter au moins 1 indicateur pour chaque objectif']);
+        return response()->json(['status' => 'error', 'message' => __('Veuillez ajouter au moins 1 indicateur pour chaque objectif')]);
       }
     }
 
@@ -128,9 +128,9 @@ class EntretienObjectifController extends Controller
         $entretienObjectif->user_id = $user_id;
         $entretienObjectif->save();
       }
-      return response()->json(['status' => 'success', 'message' => 'Les informations ont été sauvegardées avec succès.']);
+      return response()->json(['status' => 'success', 'message' => __('Les informations ont été sauvegardées avec succès')]);
     } else {
-      return response()->json(['status' => 'error', 'message' => 'Une erreur est survenue, réessayez plus tard.']);
+      return response()->json(['status' => 'error', 'message' => __('Une erreur est survenue, réessayez plus tard')]);
     }
   }
 
@@ -146,7 +146,7 @@ class EntretienObjectifController extends Controller
     $objectif = EntretienObjectif::find($id);
     echo view('objectifs.show', compact('objectif'));
     $content = ob_get_clean();
-    return ['title' => "Détails de l'objectif", 'content' => $content];
+    return ['title' => __("Détails de l'objectif"), 'content' => $content];
   }
 
 
@@ -165,21 +165,21 @@ class EntretienObjectifController extends Controller
       if ($objectif->user_id != User::getOwner()->id) {
         return response()->json([
           'status' => 'alert',
-          'title' => 'Erreur survenue',
-          'content' => "Vous n'avez pas les autorisations pour effectuer cette action",
+          'title' => __('Erreur survenue'),
+          'content' => __("Vous n'avez pas les autorisations pour effectuer cette action"),
         ]);
       }
       try {
         $objectif->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 

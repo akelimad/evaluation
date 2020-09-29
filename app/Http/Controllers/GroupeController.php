@@ -67,9 +67,9 @@ class GroupeController extends Controller
         $request->session()->flash('success', "Le type de questions a été ajouté avec succès.");
         // $request->session()->flash('success', "La groupe à été ajouté avec succès. <a href='{$url}'>cliquer ici pour voir la liste des groupe du questionnaire</a>");
         if($groupe->save()) {
-            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+            return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès'];
         } else {
-            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+            return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard'];
         }
     }
 

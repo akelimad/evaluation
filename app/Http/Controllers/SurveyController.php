@@ -73,10 +73,10 @@ class SurveyController extends Controller
       if ($survey->user_id != User::getOwner()->id) {
         abort(403);
       }
-      $pageTitle = "Modifier le questionnaire";
+      $pageTitle = __("Modifier le questionnaire");
     } else {
       $survey = new Survey();
-      $pageTitle = "Ajouter un questionnaire";
+      $pageTitle = __("Ajouter un questionnaire");
     }
     $evaluations = Evaluation::all();
 
@@ -94,25 +94,37 @@ class SurveyController extends Controller
       foreach ($groups as $group) {
         $sumpGrpsPonderations += floatval($group['ponderation']);
         if (empty($group['questions'])) {
-          return ["status" => "error", "message" => 'Veuillez ajouter des questions au thème : ' . $group['title']];
+          return [
+            "status" => "error",
+            "message" => __("Veuillez ajouter des questions au thème (:theme)", ['theme' => $group['title']])
+          ];
         } else {
           $sumpQstsPonderations = 0;
           foreach ($group['questions'] as $question) {
             $sumpQstsPonderations += floatval($question['ponderation']);
             if (in_array($question['type'], ['radio', 'checkbox', 'select']) && empty($question['choices'])) {
-              return ["status" => "error", "message" => 'Veuillez ajouter des choix de réponse pour la question : '. $question['title']];
+              return [
+                "status" => "error",
+                "message" => __("Veuillez ajouter des choix de réponse pour la question (:qst)", ['qst' => $question['title']])
+              ];
             }
           }
           if ($sumpQstsPonderations != 100 && $selectedModelRef == 'ENT') {
-            return ["status" => "error", "message" => "La somme : $sumpQstsPonderations de la pondération des questions doit être égale à 100 pour le thème : ". $group['title']];
+            return [
+              "status" => "error",
+              "message" => __("La somme (:sum)  de la pondération des questions doit être égale à 100 pour le thème (:thme) ", ['sum' => $sumpQstsPonderations, 'theme' => $group['title']])
+            ];
           }
         }
       }
       if ($sumpGrpsPonderations != 100 && $selectedModelRef == 'ENT') {
-        return ["status" => "error", "message" => "La somme : $sumpGrpsPonderations de la pondération des thèmes doit être égale à 100"];
+        return [
+          "status" => "error",
+          "message" => __("La somme (:sum)  de la pondération des thèmes doit être égale à 100", ['sum' => $sumpGrpsPonderations])
+        ];
       }
     } else {
-      return ["status" => "error", "message" => 'Veuillez ajouter des thèmes au questionnaire'];
+      return ["status" => "error", "message" => __('Veuillez ajouter des thèmes au questionnaire')];
     }
 
     if ($survey_id > 0) {
@@ -168,9 +180,9 @@ class SurveyController extends Controller
     }
 
     if ($survey->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès')];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __('Une erreur est survenue, réessayez plus tard')];
     }
   }
 
@@ -180,7 +192,7 @@ class SurveyController extends Controller
     $survey = Survey::findOrFail($sid);
     echo view('surveys.preview', compact('survey'));
     $content = ob_get_clean();
-    return ['title' => 'Visualiser le questionnaire', 'content' => $content];
+    return ['title' => __('Visualiser le questionnaire'), 'content' => $content];
   }
 
   public function delete(Request $request)
@@ -193,8 +205,8 @@ class SurveyController extends Controller
         if ($survey->user_id != User::getOwner()->id) {
           return response()->json([
             'status' => 'alert',
-            'title' => 'Erreur survenue',
-            'content' => "Vous n'avez pas les autorisations pour effectuer cette action",
+            'title' => __('Erreur survenue'),
+            'content' => __("Vous n'avez pas les autorisations pour effectuer cette action"),
           ]);
         }
         if ($survey->groupes()->count() > 0) {
@@ -207,7 +219,7 @@ class SurveyController extends Controller
       } catch (\Exception $e) {
         return response()->json([
           'status' => 'alert',
-          'title' => 'Erreur survenue',
+          'title' => __('Erreur survenue'),
           'content' => '<i class="fa fa-exclamation text-danger"></i> '. $e->getMessage(),
         ]);
       }
@@ -216,7 +228,7 @@ class SurveyController extends Controller
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 }

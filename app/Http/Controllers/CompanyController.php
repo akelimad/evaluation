@@ -144,9 +144,9 @@ class CompanyController extends Controller
       $user->roles()->sync($request->roles); 
     }
     if($user->save()) {
-      return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès.")];
+      return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
     } else {
-      return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard.")];
+      return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard")];
     }
   }
 
@@ -162,7 +162,7 @@ class CompanyController extends Controller
         }
         $companyAdmin->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard.")];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
@@ -188,7 +188,7 @@ class CompanyController extends Controller
     $this->UnlinkImage(public_path('uploads/logos/'.$user->id.'/'.$logo));
     return response()->json([
       'status' => 'success',
-      'message' => 'Logo a bien été supprimé'
+      'message' => __("Logo a bien été supprimé")
     ]);
   }
 

@@ -21,7 +21,7 @@ class EntretienUserController extends Controller
     $role = $request->params['role'];
 
     if (empty($usersId) || !is_numeric($eid)) {
-      return ['status' => 'danger', 'message' => "Aucun utilisateur n'a été sélectionné ou entretien ID introuvable"];
+      return ['status' => 'danger', 'message' => __("Aucun utilisateur n'a été sélectionné ou entretien ID introuvable")];
     }
 
     if ($role == 'coll') {
@@ -48,7 +48,10 @@ class EntretienUserController extends Controller
       $i++;
     }
 
-    return ['status' => 'success', 'message' => "Un email de relance a bien été envoyé à(aux) <b>$i</b> utilisateur(s) sélectionné(s)"];
+    return [
+      'status' => 'success',
+      'message' => __("Un email de relance a bien été envoyé à(aux) :count utilisateur(s) sélectionné(s)", ['count' => $i])
+    ];
   }
 
   public function delete(Request $request) {
@@ -56,6 +59,6 @@ class EntretienUserController extends Controller
     $usersId = $request->params['usersId'];
     \DB::table('entretien_user')->where('entretien_id', $eid)->whereIn('user_id', $usersId)->delete();
 
-    return ['status' => 'success', 'message' => "La suppression a bien été effectutée"];
+    return ['status' => 'success', 'message' => __("La suppression a bien été effectutée")];
   }
 }

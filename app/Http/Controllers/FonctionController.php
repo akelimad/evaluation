@@ -76,10 +76,10 @@ class FonctionController extends Controller
     ob_start();
     if (isset($id) && is_numeric($id)) {
       $fonction = Fonction::findOrFail($id);
-      $title = "Modifier la fonction";
+      $title = __("Modifier la fonction");
     } else {
       $fonction = new Fonction();
-      $title = "Ajouter une fonction";
+      $title = __("Ajouter une fonction");
     }
     echo view('functions.form', compact('fonction'));
     $content = ob_get_clean();
@@ -108,9 +108,9 @@ class FonctionController extends Controller
       }
     }
     if ($fonction->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès')];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __('Une erreur est survenue, réessayez plus tard')];
     }
   }
 
@@ -129,14 +129,14 @@ class FonctionController extends Controller
       try {
         $func->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 

@@ -64,10 +64,10 @@ class TeamController extends Controller
     $id = $request->id;
     if (isset($id) && is_numeric($id)) {
       $team = Team::findOrFail($id);
-      $title = "Modifier l'équipe";
+      $title = __("Modifier l'équipe");
     } else {
       $team = new Team();
-      $title = "Ajouter une équipe";
+      $title = __("Ajouter une équipe");
     }
     $collaborators = User::getUsers()->where('user_id', '<>', 0)->get();
     $teamUsers = $team->users()->get()->pluck('id')->toArray();
@@ -95,7 +95,7 @@ class TeamController extends Controller
       $team->users()->sync($teamUsersId);
     }
 
-    return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+    return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès')];
   }
 
   /**
@@ -110,14 +110,14 @@ class TeamController extends Controller
       try {
         $team->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 

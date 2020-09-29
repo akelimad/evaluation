@@ -197,7 +197,7 @@ class UserController extends Controller
     }
     $validator = \Validator::make($request->all(), $rules);
     $messages = $validator->errors();
-    if($exist > 0) $messages->add('exist_email', 'Cet email existe déjà !');
+    if($exist > 0) $messages->add('exist_email', __("Cet email existe déjà !"));
     if (count($messages) > 0) {
       return ["status" => "danger", "message" => $messages];
     }
@@ -232,9 +232,9 @@ class UserController extends Controller
     }
     $user->teams()->sync([$request->team_id]);
     if ($user->save()) {
-      return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+      return ["status" => "success", "message" => __('Les informations ont été sauvegardées avec succès')];
     } else {
-      return ["status" => "warning", "message" => 'Une erreur est survenue, réessayez plus tard.'];
+      return ["status" => "warning", "message" => __('Une erreur est survenue, réessayez plus tard')];
     }
 
   }
@@ -247,14 +247,14 @@ class UserController extends Controller
       try {
         $user->delete();
       } catch (\Exception $e) {
-        return ["status" => "danger", "message" => "Une erreur est survenue, réessayez plus tard."];
+        return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
       }
     }
 
     return response()->json([
       'status' => 'alert',
       'title' => 'Confirmation',
-      'content' => '<i class="fa fa-check-circle text-green"></i> La suppression a été effectuée avec succès',
+      'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
 
@@ -343,10 +343,10 @@ class UserController extends Controller
         $user->roles()->sync($this->getRoleByName($roles));
         $count++;
       } else {
-        return redirect('users')->with("warning", "Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(prénom, nom, email / ou email du manager n'existe pas, role, manager email) est vide!");
+        return redirect('users')->with("warning", __("Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(prénom, nom, email / ou email du manager n'existe pas, role, manager email) est vide!"));
       }
     }
-    return redirect('users')->with('success', 'Les utilisateurs ont été importés avec succès avec ' . $added . ' ajout et ' . $updated . ' mis à jour !');
+    return redirect('users')->with('success', __("Les utilisateurs ont été importés avec succès avec :count_added ajout et :count_updated mis à jour !", ['count_added' => $added, 'count_updated' => $updated]));
 
   }
 

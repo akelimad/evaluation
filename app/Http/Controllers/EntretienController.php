@@ -49,7 +49,7 @@ class EntretienController extends Controller
     $entretiens = Entretien::getAll()->get();
     echo view('entretiens.list', compact('entretiens', 'ids'));
     $content = ob_get_clean();
-    return ['title' => 'Liste des entretiens', 'content' => $content];
+    return ['title' => __("Liste des entretiens"), 'content' => $content];
   }
 
   /**
@@ -180,10 +180,10 @@ class EntretienController extends Controller
       if ($entretien->user_id != User::getOwner()->id) {
         abort(403);
       }
-      $title = "Modifier la campagne";
+      $title = __("Modifier la campagne");
     } else {
       $entretien = new Entretien();
-      $title = "Ajouter une campagne";
+      $title = __("Ajouter une campagne");
     }
     $e_users = [];
     foreach ($entretien->users as $user) {
@@ -244,24 +244,24 @@ class EntretienController extends Controller
     ];
     $validator = \Validator::make($request->all(), $rules, $messages);
     if (empty($selectedUsers) && $id <= 0) {
-      $validator->getMessageBag()->add('users_empty', "Aucun utilisateur trouvé, veuillez sélectionner les personnes à évaluer");
+      $validator->getMessageBag()->add('users_empty', __("Aucun utilisateur trouvé, veuillez sélectionner les personnes à évaluer"));
     }
     if ($model == "Feedback 360") {
       if (count($selectedUsers) > 1) {
-        $validator->getMessageBag()->add('user', "Vous ne pouvez pas sélectionner plus que 1 participant pour le feedback 360");
+        $validator->getMessageBag()->add('user', __("Vous ne pouvez pas sélectionner plus que 1 participant pour le feedback 360"));
       }
       foreach ($selectedUsers as $key => $uid) {
         $user = User::find($uid);
         $userTeams = $user->teams;
         if ($userTeams->count() <= 0) {
-          $validator->getMessageBag()->add('teams_'.$uid, sprintf("Le collaborateur (trice) (%s) n'est affecté(e) à aucune équipe", $user->fullname()));
+          $validator->getMessageBag()->add('teams_'.$uid, __("Le collaborateur (trice) (:user_flname) n'est affecté(e) à aucune équipe", ['user_flname' => $user->fullname()]));
         }
         $countCollaboratorInTeams = 0;
         foreach ($userTeams as $team) {
           $countCollaboratorInTeams += $team->users->count();
         }
         if ($countCollaboratorInTeams < 2) {
-          $validator->getMessageBag()->add('team_coll'.$uid, sprintf("Le collaborateur (trice) (%s) n'a pas des collègues dans ses équipes", $user->fullname()));
+          $validator->getMessageBag()->add('team_coll'.$uid, __("Le collaborateur (trice) (:user_flname) n'a pas des collègues dans ses équipes", [':user_flname' => $user->fullname()]));
         }
       }
     }
@@ -348,7 +348,7 @@ class EntretienController extends Controller
       }
     }
 
-    return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+    return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
   }
 
   public function storeCheckedUsers(Request $request)
@@ -357,18 +357,6 @@ class EntretienController extends Controller
     $selectedUsers = json_decode($request->ids);
     $date = Carbon::createFromFormat('Y-m-d', $entretien->date);
     $date_limit = Carbon::createFromFormat('Y-m-d', $entretien->date_limit);
-
-    $hasAlreadyInt = [];
-    // dd($selectedUsers);
-    foreach ($selectedUsers as $uid) {
-      if (Entretien::existInterview($entretien->id, $uid, $date, $date_limit)) {
-        $hasAlreadyInt[] = User::findOrFail($uid)->name;
-      }
-    }
-    if (count($hasAlreadyInt) > 0) {
-      // $messages->add('existInterview', "Il ya déjà un entretien programmé dans la période choisie pour les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!");
-      return ["status" => "danger", "message" => "Il ya déjà un entretien programmé dans la période choisie pour les collaborateurs sélectionnés (" . implode(', ', $hasAlreadyInt) . ") !!"];
-    }
 
     // if (count($messages) > 0) {
     //   return ["status" => "danger", "message" => $messages];
@@ -388,51 +376,9 @@ class EntretienController extends Controller
       }
     }
     $url = url('entretiens/evaluations');
-    $request->session()->flash('attach_users_entretien', "Les utilisateurs ont bien été ajoutés à l'entretien et un email a été envoyé à leurs mentors. <a href='{$url}'>cliquer ici pour les consulter</a>");
-    return ["status" => "success", "message" => 'Les informations ont été sauvegardées avec succès.'];
+    $request->session()->flash('success', "Les utilisateurs ont bien été ajoutés à l'entretien et un email a été envoyé à leurs mentors. <a href='{$url}'>cliquer ici pour les consulter</a>");
+    return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
 
-  }
-
-  public function storeEntretienEvals(Request $request)
-  {
-    // dd($request->all());
-    $evaluationsIds = [];
-    $entretien = Entretien::findOrFail($request->entretien_id);
-    $entretienSkills = $entretien->skills->count();
-    $skillsChecked = false;
-    if(count($request->choix) > 0) {
-      foreach ($request->choix as $key => $choix) {
-        if (isset($choix['evaluation_id'])) {
-          if($choix['evaluation_id'] == 4 && $entretienSkills == 0){
-            $skillsChecked = true;
-          } else {
-            $evaluationsIds[] = $choix['evaluation_id'];
-          }
-        }
-      }
-      $entretien->evaluations()->sync($evaluationsIds);
-      foreach ($request->choix as $key => $choix) {
-        $survey_id = isset($choix['survey_id']) ? $choix['survey_id'] : null;
-        $evaluation_id = isset($choix['evaluation_id']) ? $choix['evaluation_id'] : null;
-        if (!is_numeric($evaluation_id) || !is_numeric($survey_id)) continue;
-
-        Entretien_evaluation::where('entretien_id', $entretien->id)
-        ->where('evaluation_id', $evaluation_id)->update(['survey_id'=>$survey_id]);
-        Session::flash('success', "Les informations ont été sauvegardées avec succès.");
-        // 1 = evaluations, 2 = carrieres
-        if(in_array($evaluation_id, [1, 2])) {
-          $incompleteSurvey = Survey::icompleteSurvey($survey_id);
-          if ($incompleteSurvey) {
-            Session::flash('warning', "le questionnaire est incomplet, vous ne pouvez pas l'affecter à l'entretien. veuillez attribuer les choix pour les questions multichoix !!");
-          }
-        }
-      }
-      if($skillsChecked && $entretienSkills == 0) {
-        Session::flash('warning', "Aucune compétence trouvée liée à cet entretien. vous ne pouvez pas activer cette section. veuillez aller dans la configuration et en créer.");
-      }
-    }
-
-    return redirect('entretiens/index');
   }
 
   public function notifyUserInterview($eid, $uid)
@@ -441,7 +387,7 @@ class EntretienController extends Controller
     $user = User::findOrFail($uid);
     $entretien = Entretien::findOrFail($eid);
     MailerController::send($user, $entretien, $email);
-    return redirect()->back()->with('success', "Un email est envoyé avec succès à {$user->fullname()}");
+    return redirect()->back()->with('success', __("Un email est envoyé avec succès à :user_flname", ['user_flname' => $user->fullname()]));
   }
 
   public function notifyMentorInterview($eid, $uid)
@@ -451,7 +397,7 @@ class EntretienController extends Controller
     $mentor = $user->parent;
     $entretien = Entretien::findOrFail($eid);
     MailerController::send($mentor, $entretien, $email);
-    return redirect()->back()->with('relanceMentor', 'Un email de relance est envoyé avec succès à ' . $mentor->name . " " . $mentor->last_name . " pour évaluer " . $user->name . " " . $user->last_name);
+    return redirect()->back()->with('relanceMentor', "Un email de relance est envoyé avec succès à :manager_flname pour évaluer :user_flname", ['manager_flname' => $mentor->fullname(), 'user_flname' => $user->fullname()]);
   }
 
   public function RemoveDuplicate($array, $key)
@@ -485,7 +431,7 @@ class EntretienController extends Controller
           MailerController::send($mentor, $entretien, $email);
         }
       }
-      return redirect()->back()->with('relanceMentor', 'Un email de relance a été envoyé avec succès aux mentors. ');
+      return redirect()->back()->with('relanceMentor', __('Un email de relance a été envoyé avec succès aux mentors'));
     }
   }
 
@@ -493,7 +439,7 @@ class EntretienController extends Controller
   {
     $user = User::findOrFail($uid);
     $user->entretiens()->updateExistingPivot($eid, ['motif' => $request->motif]);
-    Session::flash('success_motif_save', "Le motif d'abscence a bien été sauvegardé.");
+    Session::flash('success_motif_save', __("Le motif d'abscence a bien été sauvegardé"));
     return redirect('entretiens/evaluations');
   }
 
@@ -562,11 +508,11 @@ class EntretienController extends Controller
           'labels' => $skill->getDataAsArray($key),
           'datasets' => [
             [
-              'label' => 'Collaborateur',
+              'label' => __('Collaborateur'),
               'data' => array_values(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'user'))
             ],
             [
-              'label' => 'Manager',
+              'label' => __('Manager'),
               'data' => array_values(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'mentor'))
             ],
           ]
@@ -585,11 +531,11 @@ class EntretienController extends Controller
           'labels' => $objectif->getIndicatorsTitle(),
           'datasets' => [
             [
-              'label' => 'Collaborateur',
+              'label' => __('Collaborateur'),
               'data' => array_values($collValues)
             ],
             [
-              'label' => 'Manager',
+              'label' => __('Manager'),
               'data' => array_values($mentorValues)
             ],
           ]
@@ -607,7 +553,7 @@ class EntretienController extends Controller
           'labels' => $objectif->getIndicatorsTitle(),
           'datasets' => [
             [
-              'label' => 'Manager',
+              'label' => __('Manager'),
               'data' => array_values($teamValues)
             ],
           ]
@@ -643,14 +589,14 @@ class EntretienController extends Controller
       $entretien->salaries()->delete();
       $entretien->comments()->delete();
       $entretien->delete();
-      \Session::flash('success', "Campagne a été supprimée avec succès !");
+      \Session::flash('success', __("Campagne a été supprimée avec succès !"));
       return [
         "status" => "success",
-        "message" => "Campagne a été supprimée avec succès !",
+        "message" => __("Campagne a été supprimée avec succès !"),
         "redirectUrl" => route('entretiens', [])
       ];
     } else {
-      return ["status" => "danger", "message" => "Stop ! Vous n'avez pas la permission !"];
+      return ["status" => "danger", "message" => __("Stop ! Vous n'avez pas la permission !")];
     }
   }
 
@@ -679,14 +625,14 @@ class EntretienController extends Controller
       if($rhs->count() > 0) {
         foreach ($rhs as $rh) {
           MailerController::send($rh, $entretien, $rh_validate);
-          $alertmsg = ", Un email a bien été envoyé aux responsables RH";
+          $alertmsg = __(", Un email a bien été envoyé aux responsables RH");
         }
       }
     }
     $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
     MailerController::send(Auth::user(), $entretien, $submit_email);
 
-    \Session::flash('success', "Les informations ont bien été soumises" . $alertmsg);
+    \Session::flash('success', __("Les informations ont bien été soumises") . $alertmsg);
 
     return [
       'status' => "success",
@@ -725,7 +671,7 @@ class EntretienController extends Controller
         ->update($fieldsToUpdate);
       return [
         'status' => "success",
-        'message' => "L'opération a été effectué avec succès",
+        'message' => __("L'opération a été effectué avec succès"),
         'redirectUrl' => route('home')
       ];
     }
@@ -734,7 +680,7 @@ class EntretienController extends Controller
     $e = Entretien::find($params['eid']);
     echo view('entretiens.reopen', compact('e', 'params'));
     $content = ob_get_clean();
-    return ['title' => "Réouvrir", 'content' => $content];
+    return ['title' => __("Réouvrir"), 'content' => $content];
   }
 
   public function changeStatus(Request $request) {
@@ -743,7 +689,7 @@ class EntretienController extends Controller
     if (empty($ids)) {
       return [
         'status' => "danger",
-        'message' => "Impossible de trouver l'ID de la campagne",
+        'message' => __("Impossible de trouver l'ID de la campagne"),
       ];
     }
     foreach ($ids as $id) {
@@ -753,7 +699,7 @@ class EntretienController extends Controller
     }
     return [
       'status' => "success",
-      'message' => "Le changement du statut a bien été effectué",
+      'message' => __("Le changement du statut a bien été effectué"),
     ];
   }
 

@@ -49,9 +49,9 @@ class ActionController extends Controller
         $action->type = $request->type;
         $action->save();
         if($action->save()) {
-            return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès.")];
+            return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
         } else {
-            return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard.")];
+            return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard")];
         }
     }
 
