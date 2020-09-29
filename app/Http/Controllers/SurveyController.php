@@ -112,7 +112,7 @@ class SurveyController extends Controller
           if ($sumpQstsPonderations != 100 && $selectedModelRef == 'ENT') {
             return [
               "status" => "error",
-              "message" => __("La somme (:sum)  de la pondération des questions doit être égale à 100 pour le thème (:thme) ", ['sum' => $sumpQstsPonderations, 'theme' => $group['title']])
+              "message" => __("La somme (:sum)  de la pondération des questions doit être égale à 100 pour le thème (:theme) ", ['sum' => $sumpQstsPonderations, 'theme' => $group['title']])
             ];
           }
         }

@@ -115,6 +115,11 @@
   @endrole
 </div>
 
+<link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+<script src="{{asset('js/moment.min.js')}}"></script>
+<script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
+<script src="{{asset('js/bootstrap-datepicker.fr.min.js')}}"></script>
+
 <script>
   $(document).ready(function () {
     // Initialise select2

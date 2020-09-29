@@ -110,38 +110,40 @@
   <tbody>
     <tr>
       <td>Date de l'entretien</td>
-      <td>{{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}}</td>
+      <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
     </tr>
     <tr>
       <td>Pour l'année</td>
-      <td>{{ Carbon\Carbon::parse(date('Y'))->format('Y')}}</td>
+      <td>{{ date('Y') }}</td>
     </tr>
     <tr>
       <td colspan="2"></td>
     </tr>
     <tr>
       <td>Nom et prénom</td>
-      <td>{{ $user->last_name . ' ' .$user->name }}</td>
+      <td>{{ $user->fullname() }}</td>
     </tr>
     <tr>
       <td>Matricule</td>
       <td>{{ $user->mle }}</td>
     </tr>
     <tr>
-      <td>Direction</td>
-      <td>{{ $user->service }}</td>
+      <td>Département</td>
+      <td>{{ App\Department::find($user->service) ? App\Department::find($user->service)->title : '---' }}</td>
     </tr>
     <tr>
-      <td>Fonction exercée</td>
-      <td>{{ $user->service }}</td>
+      <td>Fonction</td>
+      <td> {{ App\Fonction::find($user->function) ? App\Fonction::find($user->function)->title : '---' }}</td>
     </tr>
     <tr>
       <td>Nom et fonction de l'évaluateur</td>
-      <td>{{ $user->parent->last_name }}, {{ is_numeric($user->parent->function) ? App\Fonction::find($user->parent->function)->title : '---' }}</td>
+      <td>{{ $user->parent->last_name }}, {{ App\Fonction::find($user->parent->function) ? App\Fonction::find($user->parent->function)->title : '---' }}</td>
     </tr>
     <tr>
       <td>Date d'embauche dans la société</td>
-      <td>{{ !is_null($user->date_recruiting) ? Carbon\Carbon::parse($user->date_recruiting)->format('d/m/Y') : '---' }}</td>
+      <td>
+        {!! !is_null($user->date_recruiting) ? $user->date_recruiting : '---' !!}
+      </td>
     </tr>
   </tbody>
 </table>
@@ -428,7 +430,7 @@
     </tr>
     <tr>
       <td width="20%">Date de la revue :</td>
-      <td>{{ isset($comment->mentor_updated_at) ? Carbon\Carbon::parse($comment->mentor_updated_at)->format('d/m/Y') : '' }}</td>
+      <td>{{ isset($comment->mentor_updated_at) ? date('d/m/Y à H:i', strtotime($comment->mentor_updated_at)) : '---' }}</td>
     </tr>
     </tbody>
   </table>

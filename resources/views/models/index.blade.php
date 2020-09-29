@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Fonctions')
+@section('title', 'Modèles')
 @section('breadcrumb')
   <li>Paramétrage</li>
   <li>Modèles</li>
