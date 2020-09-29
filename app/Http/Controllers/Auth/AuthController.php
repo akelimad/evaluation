@@ -69,23 +69,5 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
-    
-    public function authenticated($request , $user){
-        $userRoles = [];
-        dd(\Auth::user()->roles);
-        foreach (\Auth::user()->roles as $key => $role) {
-            $userRoles[] = $role->name;
-        }
-        if ( in_array("ROOT", $userRoles) ) {
-            dd('ok');
-            return redirect()->route('companies');
-        }
-        session()->set('popup', '1');
-        return redirect('/');
-    }
-
-    public function logout() {
-
-    }
 
 }
