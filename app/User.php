@@ -5,10 +5,10 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Auth;
-
+use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
-  use EntrustUserTrait;
+  use EntrustUserTrait, Notifiable;
 
   const SENIORITY = [
     '<2'  => '0 - 2 ans',
