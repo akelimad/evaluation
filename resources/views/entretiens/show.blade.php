@@ -19,7 +19,7 @@
 	<section class="content">
 		<div class="row mb-20">
 			<div class="col-md-12">
-				<h2 class="pageName m-0">Suivi de la campagne : {{ $e->titre }}
+				<h2 class="pageName m-0"><a href="{{ route('entretiens') }}"><i class="fa fa-chevron-left"></i></a> Suivi de la campagne : {{ $e->titre }}
 					<a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{ $e->id }} }, {width: 450})" class="btn btn-danger pull-right"><i class="fa fa-trash"></i> Supprimer</a>
 
 					<a href="javascript:void(0)" onclick="return chmEntretien.form({{{$e->id}}})" class="btn btn-success pull-right mr-10"><i class="fa fa-pencil"></i> Modifier</a>

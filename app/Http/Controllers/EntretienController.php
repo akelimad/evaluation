@@ -703,4 +703,36 @@ class EntretienController extends Controller
     ];
   }
 
+  public function copier($id) {
+    $e = Entretien::findOrFail($id);
+    if ($e->user_id != User::getOwner()->id) {
+      abort(403);
+    }
+    try {
+      // clone model
+      $new_entretien = $e->replicate();
+      $new_entretien->titre = 'Copie - ' . $e->titre;
+      $new_entretien->push();
+
+      // clone participants
+      foreach ($e->users as $user) {
+        $new_entretien->users()->attach([$user->id => ['mentor_id' => $user->parent->id]]);
+      }
+
+      // clone sections
+      $e_evaluations = Entretien_evaluation::where('entretien_id', $id)->get();
+      foreach ($e_evaluations as $e_evaluation) {
+        $new_e_evaluation = new Entretien_evaluation();
+        $new_e_evaluation->entretien_id = $new_entretien->id;
+        $new_e_evaluation->evaluation_id = $e_evaluation->evaluation_id;
+        $new_e_evaluation->survey_id = $e_evaluation->survey_id;
+        $new_e_evaluation->push();
+      }
+    } catch (\Exception $e) {
+      return back()->with("danger", $e->getMessage());
+    }
+
+    return back()->with("success", __("La campagne a bien été copiée"));
+  }
+
 }

@@ -59,7 +59,7 @@
           <div class="col-sm-4">
             <div class="box box-default box-hover pt-5">
               <div class="box-header with-border">
-                <h3 class="box-title" title="{{ $e->titre }}" data-toggle="tooltip">{{ str_limit($e->titre, 20) }}</h3>
+                <h3 class="box-title" title="{{ $e->titre }}" data-toggle="tooltip"><a href="{{ route('entretien.show', ['id' => $e->id]) }}">{{ str_limit($e->titre, 20) }}</a></h3>
                 <span class="label label-{{ $e->isCurrent() ? 'success':'danger' }} pull-right pl-10 pr-10 p-5 font-14">{{ $e->getStatus() }}</span>
               </div>
               <div class="box-body">
@@ -67,8 +67,16 @@
                 <p><b>Date limite pour l'évaluation {{ $e->model == "Feedback 360" ? " des collègues":"manager" }} :</b> <span class="pull-right">{{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}</span></p>
                 <p><b>Nombre de collaborateurs impliqués :</b> <span class="badge pull-right">{{ $e->users->count() }}</span></p>
               </div>
-              <div class="box-footer text-center">
-                <a href="{{ route('entretien.show', ['id' => $e->id]) }}" class="btn btn-primary"><i class="fa fa-gear"></i> Gérer la campagne</a>
+              <div class="box-footer">
+                <div class="dropdown">
+                  <button class="btn btn-info dropdown-toggle m-0" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Actions <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="questionTypes">
+                    <li><a href="{{ route('entretien.show', ['id' => $e->id]) }}"><i class="fa fa-eye"></i> {{ __("Consulter") }}</a></li>
+                    <li><a href="{{ route('entretien.clone', ['id' => $e->id]) }}"><i class="fa fa-clone"></i> {{ __("Copier") }}</a></li>
+                    <li><a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{ $e->id }} }, {width: 450})" class="delete"><i class="fa fa-trash"></i> {{ __("Supprimer") }}</a></li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

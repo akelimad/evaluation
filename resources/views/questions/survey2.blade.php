@@ -219,8 +219,7 @@
             @if(count($g->questions)>0)
               @php($evalModel = App\Evaluation::find($g->survey->evaluation_id))
               <div class="panel panel-info mb-20">
-                <div class="panel-heading">
-                  {{ $g->name }}
+                <div class="panel-heading clearfix">{{ $g->name }}
                   @if ($g->ponderation > 0)
                     <span class="pull-right">Note : {{ \App\Answer::getGrpNote($g->id, $user->id, $e->id) }}</span>
                   @endif

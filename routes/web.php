@@ -130,6 +130,7 @@ Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf')->name('entretien.download-pdf');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 Route::post('entretiens/change-status', 'EntretienController@changeStatus')->name('entretien.change-status');
+Route::get('entretiens/{id}/clone', 'EntretienController@copier')->name('entretien.clone');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluation-annuelle', 'EvaluationController@index')->name('anglets.evaluation-annuelle');
 
