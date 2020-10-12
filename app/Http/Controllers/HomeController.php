@@ -44,11 +44,17 @@ class HomeController extends Controller
             $mentor = $user->parent;
         }
 
+        $nMoins2Entretiens = [];
+        $authUserChildrensId = $user->children->pluck('id')->toArray();
+        if (!empty($authUserChildrensId)) {
+            $nMoins2Entretiens = Entretien_user::whereIn('mentor_id', $authUserChildrensId)->get();
+        }
+
         $entretiens = $user->entretiens;
         $formations = Formation::where('user_id', Auth::user()->id)->get();
         $collaborateurs = Auth::user()->children;
         if (in_array('ROOT', Auth::user()->getRoles())) return redirect('crm');
-        return view('index', compact('user', 'mentor', 'entretiens', 'formations', 'collaborateurs'));
+        return view('index', compact('user', 'mentor', 'entretiens', 'formations', 'collaborateurs', 'nMoins2Entretiens'));
     }
 
 

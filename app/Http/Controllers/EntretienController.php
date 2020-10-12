@@ -460,6 +460,7 @@ class EntretienController extends Controller
     $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
     $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->get();
     $skill = Skill::where('function_id', $user->function)->first();
+    if (!$skill) $skill = new Skill();
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $entreEvalsTitle = [];
     foreach ($evaluations as $eval) {

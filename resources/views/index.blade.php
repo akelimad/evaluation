@@ -41,7 +41,7 @@
       </div>
 
       <div class="col-md-9">
-        <div class="card portlet box box-primary">
+        <div class="card portlet box box-primary mb-20">
           <div class="nav-tabs-custom portlet-title">
             <div class="caption caption-red mb-10">{{ __("Mes entretiens") }}</div>
           </div>
@@ -100,7 +100,7 @@
           </div>
         </div>
         @if(count($collaborateurs)>0)
-          <div class="card portlet box box-primary">
+          <div class="card portlet box box-primary mb-20">
             <div class="nav-tabs-custom portlet-title">
               <div class="caption caption-red mb-10">{{ __("Mes collaborateurs") }}</div>
             </div>
@@ -168,6 +168,42 @@
               </div>
             </div>
           </div>
+        @endif
+
+        @if (count($nMoins2Entretiens) > 0)
+          <div class="card portlet box box-primary mb-20">
+          <div class="nav-tabs-custom portlet-title">
+            <div class=" caption caption-red mb-10">{{ __("Mes entretiens N-2") }}</div>
+          </div>
+          <div class="portlet-body table-responsive">
+            <table>
+              <table class="table table-hover table-striped">
+                <thead>
+                  <tr>
+                    <th>{{ __("Titre") }}</th>
+                    <th>{{ __("Coll.") }}</th>
+                    <th>{{ __("Manager") }}</th>
+                    <th>{{ __("Actions") }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($nMoins2Entretiens as $en_user)
+                    @php($title = App\Entretien::find($en_user->entretien_id) ? App\Entretien::find($en_user->entretien_id)->titre : '')
+                    @php($userFname = App\User::find($en_user->user_id) ? App\User::find($en_user->user_id)->fullname() : '')
+                    @php($managerFname = App\User::find($en_user->mentor_id) ? App\User::find($en_user->mentor_id)->fullname() : '')
+                    <tr>
+                      <td>{{ $title }}</td>
+                      <td>{{ $userFname }}</td>
+                      <td>{{ $managerFname }}</td>
+                      <td>
+                        <a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="return chmEntretien.apercu({eid: {{$en_user->entretien_id}}, uid: {{$en_user->user_id}} })"><i class="fa fa-search"></i> {{ __("Aperçu") }}</a>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+            </table>
+          </div>
+        </div>
         @endif
       </div>
       <div class="clearfix"></div>
