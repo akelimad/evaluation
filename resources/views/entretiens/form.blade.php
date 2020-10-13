@@ -296,6 +296,19 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="" class="control-label">{{ __("Fréquence des relances auto") }}</label>
+                <select name="" id="" class="form-control">
+                  <option value=""></option>
+                  <option value="">{{ __("1 fois par 7j") }}</option>
+                  <option value="">{{ __("1 fois par 15j") }}</option>
+                  <option value="">{{ __("1 fois par mois") }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <div class="actions">
             <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
             <button type="button" class="btn btn-primary next pull-right">Continuer <i class="fa fa-long-arrow-right"></i></button>
