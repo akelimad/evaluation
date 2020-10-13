@@ -379,6 +379,24 @@
     }
   }
 
+  function ArrayDiff (a1, a2) {
+    var a = [], diff = [];
+    for (var i = 0; i < a1.length; i++) {
+      a[a1[i]] = true;
+    }
+    for (var i = 0; i < a2.length; i++) {
+      if (a[a2[i]]) {
+        delete a[a2[i]];
+      } else {
+        a[a2[i]] = true;
+      }
+    }
+    for (var k in a) {
+      diff.push(k);
+    }
+    return diff;
+  }
+
   var usersId = []
   $(document).ready(function () {
     $('.datepicker').datepicker({
@@ -575,24 +593,18 @@
     })
     $('select#teams_id_to_evaluate').on('select2:selecting', function (event) {
       var selectedTeamId = event.params.args.data.id
+      var alreadySelected = $('#users_id_to_evaluate').val()
       var teamUsersId = $('select#teams_id_to_evaluate option[value="'+ selectedTeamId +'"]').data('usersid')
-      $.each(teamUsersId, function (key, value) {
-        usersId.push(value)
-      })
-      $('select#users_id_to_evaluate').val(usersId).trigger('change')
+      var newAllUsersId = alreadySelected.concat(teamUsersId)
+      $('select#users_id_to_evaluate').val(newAllUsersId).trigger('change')
     })
 
     $('select#teams_id_to_evaluate').on('select2:unselecting', function(event) {
       var teamIdToRemove = event.params.args.data.id
-      var allUsersId = usersId
+      var allUsersId = $('#users_id_to_evaluate').val()
       var usersIdToRemove = $('select#teams_id_to_evaluate option[value="'+ teamIdToRemove +'"]').data('usersid')
-      $.each(usersIdToRemove, function (key, idToRemove) {
-        const index = allUsersId.indexOf(idToRemove);
-        if (index > -1) {
-          allUsersId.splice(index, 1);
-        }
-      })
-      $('select#users_id_to_evaluate').val(allUsersId).trigger('change')
+      var diff = ArrayDiff(usersIdToRemove, allUsersId)
+      $('select#users_id_to_evaluate').val(diff).trigger('change')
     })
 
     $('select#shedule_type').on('change', function () {
