@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Mail\MailerController;
 use Auth;
 use Illuminate\Support\Facades\Input;
+use Liebig\Cron\Cron;
 use Session;
 use DB;
 use App\User;
@@ -290,6 +291,9 @@ class EntretienController extends Controller
     }
 
     $entretien->save();
+
+    // save cron job
+
 
     // attach evaluations ID
     if (!empty($request->items)) {

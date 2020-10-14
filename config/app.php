@@ -162,7 +162,6 @@ return [
     Maatwebsite\Excel\ExcelServiceProvider::class,
     Barryvdh\DomPDF\ServiceProvider::class,
     Barryvdh\TranslationManager\ManagerServiceProvider::class,
-    Liebig\Cron\Laravel5ServiceProvider::class
 
 
   ],
