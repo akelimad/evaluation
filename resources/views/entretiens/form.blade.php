@@ -299,12 +299,15 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="" class="control-label">{{ __("Fréquence des relances auto") }}</label>
-                <select name="" id="" class="form-control">
+                <label for="" class="control-label required">{{ __("Fréquence des relances auto") }}</label>
+                <select name="freq_reminder" id="freq_reminder" class="form-control" chm-validate="required" >
                   <option value=""></option>
-                  <option value="">{{ __("1 fois par 7j") }}</option>
-                  <option value="">{{ __("1 fois par 15j") }}</option>
-                  <option value="">{{ __("1 fois par mois") }}</option>
+                  <option value="every_day" {{ $entretien->freq_reminder == 'every_day' ? 'selected':'' }}>{{ __("Chaque jour") }}</option>
+                  <option value="every_2days" {{ $entretien->freq_reminder == 'every_2days' ? 'selected':'' }}>{{ __("Chaque 2 jours") }}</option>
+                  <option value="every_3days" {{ $entretien->freq_reminder == 'every_3days' ? 'selected':'' }}>{{ __("Chaque 3 jours") }}</option>
+                  <option value="every_week" {{ $entretien->freq_reminder == 'every_week' ? 'selected':'' }}>{{ __("Chaque semaine") }}</option>
+                  <option value="every_2weeks" {{ $entretien->freq_reminder == 'every_2weeks' ? 'selected':'' }}>{{ __("Chaque 2 semaines") }}</option>
+                  <option value="every_month" {{ $entretien->freq_reminder == 'every_month' ? 'selected':'' }}>{{ __("Chaque mois") }}</option>
                 </select>
               </div>
             </div>

@@ -281,6 +281,7 @@ class EntretienController extends Controller
     $entretien->model_id = $request->model;
     $entretien->options = json_encode($request->options);
     $entretien->user_id = User::getOwner()->id;
+    $entretien->freq_reminder = $request->freq_reminder;
     $entretien->enabled = true;
 
     // update status
