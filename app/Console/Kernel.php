@@ -27,6 +27,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('email:mentor')->hourly();
 
-        $schedule->command('campaign')->everyMinute();
+        $schedule->command('campaign')->cron('* * * * *');
     }
 }
