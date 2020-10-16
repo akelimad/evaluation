@@ -18,7 +18,7 @@
 <form method="POST" action="" id="e-entretien-table-wraper">
   @if ($items->count() > 0)
     <div class="row">
-      <div class="col-md-12 table-responsive pl-5 pr-5">
+      <div class="col-md-12 table-responsive">
         <div id="table-overlay" style="display: none"><i class="fa fa-refresh fa-3x fa-spin"></i></div>
         @php($callableActions = [])
         <table class="table table-hover table-sm table-striped table-inversed-blue" data-count="{{ $items->count() }}">

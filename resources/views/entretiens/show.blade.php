@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('title', 'Entretiens')
+@section('style')
+	@parent
+	<style>
+		.table-inversed-blue th {
+			background: none !important;
+			color: black;
+			font-weight: bold;
+		}
+		.table-striped>tbody>tr:nth-of-type(odd) {
+			background: none !important;
+		}
+	</style>
+@endsection
 @section('breadcrumb')
 	<li><a href="{{ route('entretiens') }}" class="text-blue">Campagnes</a></li>
 	<li>{{ $e->titre }}</li>
@@ -81,18 +94,36 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row mb-20">
 			<div class="col-md-12">
-				<div class="box box-default">
-					<div class="box-body">
-
+				<div class="card">
+					<div class="card-header text-center">
+						<h3 class="card-title text-muted font-22">Les évalués et leurs évaluateurs</h3>
+					</div>
+					<div class="card-body pt-0">
 						{{ request()->query->set('eid', $e->id) }}
 						<div chm-table="{{ route('entretien_user.table') }}"
 								 chm-table-options='{"with_ajax": true}'
 								 chm-table-params='{{ json_encode(request()->query->all()) }}'
 								 id="EntretienUserTableContainer"
 						></div>
-
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card p-0">
+					<div class="card-header text-center">
+						<h3 class="card-title text-muted font-22">Notes obtenues par les collaborateurs</h3>
+					</div>
+					<div class="card-body pt-0">
+						{{ request()->query->set('eid', $e->id) }}
+						<div chm-table="{{ route('entretien_user.notes.table') }}"
+								 chm-table-options='{"with_ajax": true}'
+								 chm-table-params='{{ json_encode(request()->query->all()) }}'
+								 id="EntretienUserNotesTableContainer"
+						></div>
 					</div>
 				</div>
 			</div>

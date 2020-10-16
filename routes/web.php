@@ -117,7 +117,6 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() 
 Route::get('entretiens/list', 'EntretienController@entretiensList');
 Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif');
 
-Route::get('entretiens/users/table', 'EntretienController@getTable')->name('entretien_user.table');
 Route::get('entretiens/form', 'EntretienController@form');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
@@ -190,6 +189,8 @@ Route::any('configs/teams/form', 'TeamController@form')->name('team.form');
 Route::post('configs/teams/store', 'TeamController@store')->name('team.store');
 Route::delete('team/delete', 'TeamController@delete')->name('team.delete');
 
+Route::get('entretiens/users/table', 'EntretienUserController@getTable')->name('entretien_user.table');
+Route::get('entretiens/users/notes/table', 'EntretienUserController@getTableNotes')->name('entretien_user.notes.table');
 Route::post('entretien/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
 Route::delete('entretien/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
 Route::post('entretiens/answers/export', 'EntretienUserController@export')->name('entretien.users.export');

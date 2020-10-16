@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Answer;
 use App\Comment;
 use App\Email;
 use App\Entretien;
@@ -10,6 +11,7 @@ use App\Entretien_user;
 use App\EntretienObjectif;
 use App\Formation;
 use App\Http\Mail\MailerController;
+use App\Http\Service\Table;
 use App\Salary;
 use App\Skill;
 use App\Survey;
@@ -23,6 +25,136 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EntretienUserController extends Controller
 {
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $e = Entretien::find($request->get('eid', 0));
+    $query = Entretien_user::where('entretien_id', $e->id);
+
+    $table->setPrimaryKey('id');
+    $table->setBulkActions(true);
+    $table->addColumn('coll', 'Evalué', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      return $e->isFeedback360() ? $e->users[0]->fullname() : $user->fullname();
+    });
+    $table->addColumn('coll_answer_status', 'Statut', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      $userParentId = $user->parent ? $user->parent->id : 0;
+      $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId, $e->id, 'user');
+      return '<span class="badge '.$statusInfo['labelClass'].'">'.$statusInfo['name'].'</span>';
+    });
+    $table->addColumn('manager', 'Evaluateur', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      $userParentFullname = $user->parent ? $user->parent->fullname() : 'introuvable';
+      return $e->isFeedback360() ? $user->fullname() : $userParentFullname;
+    });
+    $table->addColumn('manager_answer_status', 'Statut', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      $userParentId = $user->parent ? $user->parent->id : 0;
+      $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId , $e->id, 'mentor');
+      return '<span class="badge '.$statusInfo['labelClass'].'">'.$statusInfo['name'].'</span>';
+    });
+    // define table actions
+    $table->addAction('apercu', [
+      'icon' => 'fa fa-search',
+      'label' => 'Aperçu',
+      'route' => ['name' => 'entretien.apercu', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"width": "1000px"}',
+      ],
+      'bulk_action' => false,
+    ]);
+    $table->addAction('reminder_coll', [
+      'icon' => 'fa fa-bell',
+      'label' => "Rappeler à l'évalué de remplir son entretien",
+      'callback' => 'chmEntretien.reminder',
+      'callback_params'=> ['role' => 'coll'],
+      'bulk_action' => true,
+    ]);
+    $table->addAction('reminder_manager', [
+      'icon' => 'fa fa-bell',
+      'label' => "Rappeler à l'évaluateur de remplir son entretien",
+      'callback' => 'chmEntretien.reminder',
+      'callback_params'=> ['role' => 'mentor'],
+      'bulk_action' => true,
+    ]);
+    $table->addAction('reopen', [
+      'icon' => 'fa fa-refresh',
+      'label' => 'Réouvrir',
+      'callback' => 'chmEntretien.reOpen',
+      'bulk_action' => true,
+    ]);
+    $table->addAction('export', [
+      'icon' => 'fa fa-file-excel-o',
+      'label' => 'Exporter au format Excel',
+      'callback' => 'chmEntretien.export',
+      'bulk_action' => true,
+    ]);
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'chmEntretien.deleteUsers',
+      'bulk_action' => true,
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
+  public function getTableNotes(Request $request) {
+    $table = new Table($request);
+    $e = Entretien::find($request->get('eid', 0));
+    $query = Entretien_user::where('entretien_id', $e->id);
+
+    $table->setPrimaryKey('id');
+    $table->addColumn('coll', 'Evalué', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      return $e->isFeedback360() ? $e->users[0]->fullname() : $user->fullname();
+    });
+    $table->addColumn('manager', 'Evaluateur', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      $userParentFullname = $user->parent ? $user->parent->fullname() : 'introuvable';
+      return $e->isFeedback360() ? $user->fullname() : $userParentFullname;
+    });
+    $table->addColumn('eval_note', 'Evaluation Note / 100', function ($row) use($e) {
+      $sid = Entretien_evaluation::getItemsId($e->id, 1);
+      $sid = isset($sid[0]) ? $sid[0] : 0;
+      $survey = Survey::find($sid);
+      $totalNote = Answer::getTotalNote($survey->id, $row->user_id, $e->id);
+      return $totalNote;
+    });
+    $table->addColumn('carrer_note', 'Carrière Note / 100', function ($row) use($e) {
+      $sid = Entretien_evaluation::getItemsId($e->id, 2);
+      $sid = isset($sid[0]) ? $sid[0] : 0;
+      $survey = Survey::find($sid);
+      $totalNote = Answer::getTotalNote($survey->id, $row->user_id, $e->id);
+      return $totalNote;
+    });
+    $table->addColumn('avg', 'Moyenne / 100', function ($row) use($e) {
+      $eval_sid = Entretien_evaluation::getItemsId($e->id, 1);
+      $eval_sid = isset($eval_sid[0]) ? $eval_sid[0] : 0;
+      $eval_survey = Survey::find($eval_sid);
+      $totalEvalNote = Answer::getTotalNote($eval_survey->id, $row->user_id, $e->id);
+
+      $career_sid = Entretien_evaluation::getItemsId($e->id, 2);
+      $career_sid = isset($career_sid[0]) ? $career_sid[0] : 0;
+      $carrer_survey = Survey::find($career_sid);
+      $totalCareerNote = Answer::getTotalNote($carrer_survey->id, $row->user_id, $e->id);
+
+      $avg = ($totalEvalNote + $totalCareerNote) / 2;
+      return number_format($avg, 2) + 0;
+    });
+
+    // render the table
+    return $table->render($query);
+  }
+
   public function reminder(Request $request) {
 
     $ids = $request->get('ids', []);
@@ -197,7 +329,7 @@ class EntretienUserController extends Controller
 
       return [
         'status' => 'success',
-        'message' => 'Les réponses ont bien été exportées <a href="'.$file_link.'" class="btn btn-success btn-sm">Télecharger</a>'
+        'message' => '<a class="btn btn-primary btn-xs" href="'. $file_link .'"><i class="fa fa-download"></i>&nbsp;'. trans("Télécharger") .'</a>&nbsp;<b style="color:#F44336;margin-left: 5px;">* Vous pouvez utiliser ce lien pendant 24h</b>'
       ];
     } catch (\Exception $e) {
       return [
