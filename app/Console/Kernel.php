@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Entretien;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\SendMentorEmail::class,
         Commands\CampaignEmailing::class,
+        Commands\ClearExportExcelCommand::class,
     ];
 
     /**
@@ -25,8 +27,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('export:clear')->cron('0 1 * * *');
         // $schedule->command('email:mentor')->hourly();
-
-        $schedule->command('campaign')->cron('* * * * *');
+        $entretiens = Entretien::all();
+        foreach ($entretiens as $e) {
+            $schedule->command('campaign')->cron($e->getCronTabExpression());
+        }
     }
 }

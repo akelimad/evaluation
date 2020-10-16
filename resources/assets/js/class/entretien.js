@@ -137,12 +137,12 @@ export default class chmEntretien {
     })
   }
 
-  static reminder (params) {
+  static reminder (event, ids, params) {
     var token = $('input[name="_token"]').val()
     window.chmModal.show({
       type: 'POST',
-      url: window.chmSite.url('entretien/' + params.eid + '/users/reminder'),
-      data: {'_token': token, '_method': 'POST', params: params},
+      url: window.chmSite.url('entretien/users/reminder'),
+      data: {'_token': token, '_method': 'POST', ids: ids, params: params},
     }, {
       message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Relance en cours...',
       onSuccess: function (response) {
@@ -157,15 +157,19 @@ export default class chmEntretien {
     })
   }
 
-  static reOpen (params) {
+  static reOpen (event, ids) {
+    ids = (typeof event[0] !== 'undefined') ? event : ids
     window.chmModal.show({
       type: 'GET',
-      url: window.chmSite.url('entretiens/' + params.eid + '/reopen'),
-      data: {params},
+      url: window.chmSite.url('entretiens/users/reopen'),
+      data: {ids: ids},
     }, {
       form: {
         class: 'allInputsFormValidation form-horizontal',
-        callback: ''
+        callback: '',
+        attributes: {
+          "target-table": "[chm-table]"
+        }
       },
       footer: {
         label: 'Sauvegarder'
@@ -173,19 +177,40 @@ export default class chmEntretien {
     })
   }
 
-  static deleteUsers (params) {
+  static export (event, ids) {
+    ids = (typeof event[0] !== 'undefined') ? event : ids
     var token = $('input[name="_token"]').val()
     window.chmModal.show({
       type: 'POST',
-      url: window.chmSite.url('entretien/' + params.eid + '/users/delete'),
-      data: {'_token': token, '_method': 'DELETE', params: params},
+      url: window.chmSite.url('entretiens/answers/export'),
+      data: {'_token': token, ids: ids},
+    }, {
+      message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Traitement en cours...',
+      onSuccess: function (response) {
+        if (response.status !== 'success') {
+          window.chmModal.showAlertMessage(response.status, response.message)
+        } else {
+          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'chmModal.destroy()'})
+        }
+      }
+    })
+  }
+
+  static deleteUsers (event, ids) {
+    ids = (typeof event[0] !== 'undefined') ? event : ids
+    var token = $('input[name="_token"]').val()
+    window.chmModal.show({
+      type: 'POST',
+      url: window.chmSite.url('entretien/users/delete'),
+      data: {'_token': token, '_method': 'DELETE', ids: ids},
     }, {
       message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Suppression en cours...',
       onSuccess: function (response) {
         if (response.status !== 'success') {
           window.chmModal.showAlertMessage(response.status, response.message)
         } else {
-          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'location.reload()'})
+          window.chmTable.refresh('[chm-table]')
+          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'chmModal.destroy()'})
         }
       }
     })

@@ -293,7 +293,8 @@
                       </div>
                     @endif
                   </div>
-                  @if(!App\Entretien::answered($e->id, Auth::user()->id))
+                  @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id ||
+                    !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
                     <div class="row">
                       <div class="col-md-12">
                         <div class="save-action mt-20">

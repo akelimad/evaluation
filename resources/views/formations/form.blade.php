@@ -30,6 +30,19 @@
       <textarea name="coll_comment" id="coll_comment" class="form-control">{{isset($f->coll_comment) ? $f->coll_comment :''}}</textarea>
     </div>
   </div>
+  @if ($user && Auth::user()->id != $user->id)
+  <div class="row">
+    <div class="col-md-12">
+      <label for="status" class="control-label">Status</label>
+      <select name="status" id="status" class="form-control">
+        <option value=""></option>
+        @foreach(\App\Formation::STATUS as $key => $value)
+          <option value="{{ $key }}" {{ $f->status == $key ? 'selected':'' }}>{{ $value }}</option>
+        @endforeach
+      </select>
+    </div>
+  </div>
+  @endif
 </div>
 <script>
   $(function () {

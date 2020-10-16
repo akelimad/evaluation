@@ -71,6 +71,7 @@ class Answer extends Model
                 $sum += $answer->note * ($question->ponderation / 100);
             }
         }
+        $sum = number_format($sum, '2') + 0;
         return $sum . ' %';
     }
 

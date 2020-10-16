@@ -4,7 +4,7 @@
     <p>Réouvrir pour :</p>
   </div>
   <div class="col-md-12">
-    <input type="hidden" name="params" value="{{ json_encode($params) }}">
+    <input type="hidden" name="ids" value="{{ json_encode($ids) }}">
     <div class="form-check mb-15">
       <input type="checkbox" id="user_submitted" name="fields[]" value="user" checked> <label for="user_submitted" class="font-14 mb-0"><b>Collaborateur</b></label>
     </div>

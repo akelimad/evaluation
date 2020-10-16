@@ -48,12 +48,20 @@ class SalarieController extends Controller
         'chm-modal-options' => '{"form":{"attributes":{"id":"primeForm", "target-table":"[chm-table]"}}}',
       ],
       'bulk_action' => false,
+      'display' => function ($row) {
+        $user = User::find($row->user_id);
+        return !Entretien::answeredMentor($row->entretien_id, $user->id, $user->parent->id);
+      }
     ]);
     $table->addAction('delete', [
       'icon' => 'fa fa-trash',
       'label' => 'Supprimer',
       'callback' => 'chmSalary.delete',
       'bulk_action' => true,
+      'display' => function ($row) {
+        $user = User::find($row->user_id);
+        return !Entretien::answeredMentor($row->entretien_id, $user->id, $user->parent->id);
+      }
     ]);
 
     // render the table

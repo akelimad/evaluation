@@ -22,6 +22,7 @@ class FormationController extends Controller
   public function getTable(Request $request)
   {
     $eid = $request->get('eid');
+    $uid = $request->get('uid');
     $table = new Table($request);
     $query = Formation::where('user_id', $request->get('uid'))->where('entretien_id', $eid)->orderBy('date', 'DESC');
 
@@ -29,24 +30,39 @@ class FormationController extends Controller
     $table->addColumn('date', 'Date');
     $table->addColumn('exercice', 'Exercice');
     $table->addColumn('title', 'Exercice');
+    $table->addColumn('status', 'Statut', function ($entity) {
+      return $entity->getStatus();
+    });
     $table->setBulkActions(true);
 
     // define table actions
     $table->addAction('edit', [
       'icon' => 'fa fa-pencil',
       'label' => 'Modifier',
-      'route' => ['name' => 'formation.edit', 'args' => ['e_id' => $eid, 'id' => '[id]']],
+      'route' => ['name' => 'formation.edit', 'args' => ['e_id' => $eid, 'id' => '[id]', 'uid' => $uid]],
       'attrs' => [
         'chm-modal' => '',
         'chm-modal-options' => '{"form":{"attributes":{"id":"formationForm", "target-table":"[chm-table]"}}}',
       ],
       'bulk_action' => false,
+      'display' => function ($entity) use ($eid, $uid) {
+        $user = User::find($uid);
+        return
+          !Entretien::answered($eid, $uid) && $uid == Auth::user()->id ||
+          !Entretien::answeredMentor($eid, $uid, $user->parent->id) && $uid != Auth::user()->id;
+      }
     ]);
     $table->addAction('delete', [
       'icon' => 'fa fa-trash',
       'label' => 'Supprimer',
       'callback' => 'chmFormation.delete',
       'bulk_action' => true,
+      'display' => function ($entity) use ($eid, $uid) {
+        $user = User::find($uid);
+        return
+          !Entretien::answered($eid, $uid) && $uid == Auth::user()->id ||
+          !Entretien::answeredMentor($eid, $uid, $user->parent->id) && $uid != Auth::user()->id;
+      }
     ]);
 
     // render the table
@@ -106,16 +122,16 @@ class FormationController extends Controller
 
     if ($request->id == null) {
       $formation = new Formation();
+      $formation->user_id = Auth::user()->id;
     } else {
       $formation = Formation::findOrFail($request->id);
     }
     $formation->date = Carbon::createFromFormat('d-m-Y', $request->date);
     $formation->exercice = $request->exercice;
     $formation->title = $request->title;
-    $formation->status = 0;
+    $formation->status = $request->get('status', $formation->status);
     $formation->done = 0;
     $formation->entretien_id = $e_id;
-    $formation->user_id = Auth::user()->id;
     $formation->coll_comment = $request->coll_comment;
     $formation->save();
     if ($formation->save()) {
@@ -150,7 +166,8 @@ class FormationController extends Controller
     ob_start();
     $entretien = Entretien::findOrFail($e_id);
     $formation = Formation::findOrFail($id);
-    echo view('formations.form', ['f' => $formation, 'e' => $entretien]);
+    $user = User::find($request->get('uid'));
+    echo view('formations.form', ['f' => $formation, 'e' => $entretien, 'user' => $user]);
     $content = ob_get_clean();
     return ['title' => __('Modifier la formation'), 'content' => $content];
   }

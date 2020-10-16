@@ -237,5 +237,22 @@ class Entretien extends Model
     }
   }
 
+  public function getCronTabExpression() {
+    if (is_null($this->freq_reminder)) return '* 1 * * *';
+    if ($this->freq_reminder == 'every_day') {
+      return '0 1 * * *';
+    } elseif ($this->freq_reminder == 'every_2days') {
+      return '0 1 */2 * *';
+    } else if ($this->freq_reminder == 'every_3days') {
+      return '0 1 */3 * *';
+    } else if ($this->freq_reminder == 'every_week') {
+      return '0 1 * * 1'; // on monday at 1h:00
+    } else if ($this->freq_reminder == 'every_2weeks') {
+      return '0 1 1,15 * *'; // 1,15 = 1st day, middle of month at 1h:00
+    } else if ($this->freq_reminder == 'every_month') {
+      return '0 1 1 * *'; // 1st day of month at 1h:00
+    }
+  }
+
 
 }

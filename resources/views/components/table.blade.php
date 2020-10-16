@@ -74,17 +74,19 @@
                     <button aria-expanded="false" aria-haspopup="true" class="btn btn-info btn-sm py-1 dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-bars"></i></button>
                     <ul class="dropdown-menu dropdown-menu-right">
                       @foreach($table->getActions() as $key => $action)
-                        @if($action['bulk_action'])
-                          @php($callableActions = array_merge($callableActions, [$action['name'] => $action]))
-                        @endif
-                        @if($action['type'] == 'divider')
-                          <li class="dropdown-divider"></li>
-                        @else
-                          <li>
-                            <a href="{{ chm_table_action_url($action, $item) }}"
-                                {!! chm_table_action_attrs($action, $item, $table) !!}
-                            ><i class="{{ chm_table_exec($action['icon'], $item) }}"></i>&nbsp;{{ chm_table_exec($action['label'], $item) }}</a>
-                          </li>
+                        @if (chm_table_exec($action['display'], $item))
+                          @if($action['bulk_action'])
+                            @php($callableActions = array_merge($callableActions, [$action['name'] => $action]))
+                          @endif
+                          @if($action['type'] == 'divider')
+                            <li class="dropdown-divider"></li>
+                          @else
+                            <li>
+                              <a href="{{ chm_table_action_url($action, $item) }}"
+                                  {!! chm_table_action_attrs($action, $item, $table) !!}
+                              ><i class="{{ chm_table_exec($action['icon'], $item) }}"></i>&nbsp;{{ chm_table_exec($action['label'], $item) }}</a>
+                            </li>
+                          @endif
                         @endif
                       @endforeach
                     </ul>

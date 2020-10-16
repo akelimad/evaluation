@@ -5,12 +5,12 @@ ini_set('max_execution_time', 300); //5 minutes
 
 use App\Campaign;
 use App\Fonction;
+use App\Http\Service\Table;
 use App\Team;
 use Illuminate\Http\Request;
 use App\Http\Mail\MailerController;
 use Auth;
 use Illuminate\Support\Facades\Input;
-use Liebig\Cron\Cron;
 use Session;
 use DB;
 use App\User;
@@ -38,6 +38,86 @@ class EntretienController extends Controller
   public function __construct()
   {
     $this->middleware('auth');
+  }
+
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $e = Entretien::find($request->get('eid', 0));
+    $query = Entretien_user::where('entretien_id', $e->id);
+
+    $table->setPrimaryKey('id');
+    $table->setBulkActions(true);
+    $table->addColumn('coll', 'Evalué', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      return $e->isFeedback360() ? $e->users[0]->fullname() : $user->fullname();
+    });
+    $table->addColumn('coll_answer_status', 'Statut', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      $userParentId = $user->parent ? $user->parent->id : 0;
+      $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId, $e->id, 'user');
+      return '<span class="badge '.$statusInfo['labelClass'].'">'.$statusInfo['name'].'</span>';
+    });
+    $table->addColumn('manager', 'Evaluateur', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      $userParentFullname = $user->parent ? $user->parent->fullname() : 'introuvable';
+      return $e->isFeedback360() ? $user->fullname() : $userParentFullname;
+    });
+    $table->addColumn('manager_answer_status', 'Statut', function ($row) {
+      $user = User::find($row->user_id);
+      $e = Entretien::find($row->entretien_id);
+      $userParentId = $user->parent ? $user->parent->id : 0;
+      $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId , $e->id, 'mentor');
+      return '<span class="badge '.$statusInfo['labelClass'].'">'.$statusInfo['name'].'</span>';
+    });
+    // define table actions
+    $table->addAction('apercu', [
+      'icon' => 'fa fa-search',
+      'label' => 'Aperçu',
+      'route' => ['name' => 'entretien.apercu', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"width": "1000px"}',
+      ],
+      'bulk_action' => false,
+    ]);
+    $table->addAction('reminder_coll', [
+      'icon' => 'fa fa-bell',
+      'label' => "Rappeler à l'évalué de remplir son entretien",
+      'callback' => 'chmEntretien.reminder',
+      'callback_params'=> ['role' => 'coll'],
+      'bulk_action' => true,
+    ]);
+    $table->addAction('reminder_manager', [
+      'icon' => 'fa fa-bell',
+      'label' => "Rappeler à l'évaluateur de remplir son entretien",
+      'callback' => 'chmEntretien.reminder',
+      'callback_params'=> ['role' => 'mentor'],
+      'bulk_action' => true,
+    ]);
+    $table->addAction('reopen', [
+      'icon' => 'fa fa-refresh',
+      'label' => 'Réouvrir',
+      'callback' => 'chmEntretien.reOpen',
+      'bulk_action' => true,
+    ]);
+    $table->addAction('export', [
+      'icon' => 'fa fa-file-excel-o',
+      'label' => 'Exporter au format Excel',
+      'callback' => 'chmEntretien.export',
+      'bulk_action' => true,
+    ]);
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'chmEntretien.deleteUsers',
+      'bulk_action' => true,
+    ]);
+
+    // render the table
+    return $table->render($query);
   }
 
   /**
@@ -448,10 +528,13 @@ class EntretienController extends Controller
     return redirect('entretiens/evaluations');
   }
 
-  public function apercu($eid, $uid)
+  public function apercu($id)
   {
     ob_start();
-    $e = Entretien::findOrFail($eid);
+    $entretien_user = Entretien_user::find($id);
+    $eid = $entretien_user->entretien_id;
+    $uid = $entretien_user->user_id;
+    $e = Entretien::findOrFail($entretien_user->entretien_id);
     if ($e->user_id != User::getOwner()->id) {
       abort(403);
     }
@@ -658,36 +741,6 @@ class EntretienController extends Controller
     })->export('xlsx');
   }
 
-  public function reopen(Request $request)
-  {
-    if ($request->method() == 'POST') {
-      $fields = $request->fields;
-      $params = json_decode($request->params, true);
-      $fieldsToUpdate = [];
-      $row = Entretien_user::where('user_id', $params['uid'])->where('mentor_id', $params['parent_id'])
-        ->where('entretien_id', $params['eid'])->first();
-      if (in_array('user', $fields)) {
-        $fieldsToUpdate['user_submitted'] = $row->user_submitted == 2 ? 1 : $row->user_submitted;
-      }
-      if (in_array('mentor', $fields)) {
-        $fieldsToUpdate['mentor_submitted'] = $row->mentor_submitted == 2 ? 1 : $row->mentor_submitted;
-      }
-      Entretien_user::where('user_id', $params['uid'])->where('mentor_id', $params['parent_id'])
-        ->where('entretien_id', $params['eid'])
-        ->update($fieldsToUpdate);
-      return [
-        'status' => "success",
-        'message' => __("L'opération a été effectué avec succès"),
-        'redirectUrl' => route('home')
-      ];
-    }
-    ob_start();
-    $params = $request['params'];
-    $e = Entretien::find($params['eid']);
-    echo view('entretiens.reopen', compact('e', 'params'));
-    $content = ob_get_clean();
-    return ['title' => __("Réouvrir"), 'content' => $content];
-  }
 
   public function changeStatus(Request $request) {
     $ids = $request->ids;
@@ -740,5 +793,6 @@ class EntretienController extends Controller
 
     return back()->with("success", __("La campagne a bien été copiée"));
   }
+
 
 }

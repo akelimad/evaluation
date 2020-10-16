@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Email;
 use App\Entretien;
+use App\Entretien_evaluation;
 use App\Entretien_user;
+use App\EntretienObjectif;
+use App\Formation;
 use App\Http\Mail\MailerController;
+use App\Salary;
+use App\Skill;
+use App\Survey;
 use App\User;
 use Auth;
+use Illuminate\Filesystem\Filesystem;
 use Session;
 use DB;
 use Excel;
@@ -16,8 +24,17 @@ use Symfony\Component\HttpFoundation\Request;
 class EntretienUserController extends Controller
 {
   public function reminder(Request $request) {
-    $usersId = $request->params['usersId'];
-    $eid = $request->params['eid'];
+
+    $ids = $request->get('ids', []);
+    if (empty($ids)) return;
+    $usersId = [];
+    $eid = 0;
+    foreach ($ids as $id) {
+      $e_u = Entretien_user::find($id);
+      $usersId[] = $e_u->user_id;
+      $eid = $e_u->entretien_id;
+    }
+
     $role = $request->params['role'];
 
     if (empty($usersId) || !is_numeric($eid)) {
@@ -55,10 +72,141 @@ class EntretienUserController extends Controller
   }
 
   public function delete(Request $request) {
-    $eid = $request->params['eid'];
-    $usersId = $request->params['usersId'];
-    \DB::table('entretien_user')->where('entretien_id', $eid)->whereIn('user_id', $usersId)->delete();
+    $ids = $request->get('ids', []);
+    if (empty($ids)) return;
+    \DB::table('entretien_user')->whereIn('id', $ids)->delete();
 
     return ['status' => 'success', 'message' => __("La suppression a bien été effectutée")];
   }
+
+  public function reopen(Request $request)
+  {
+    if ($request->method() == 'POST') {
+      $fields = $request->fields;
+      $ids = json_decode($request->get('ids', []), true);
+      if (empty($ids)) return;
+      $fieldsToUpdate = [];
+      foreach ($ids as $id) {
+        $row = Entretien_user::find($id);
+        if (in_array('user', $fields)) {
+          $fieldsToUpdate['user_submitted'] = $row->user_submitted == 2 ? 1 : $row->user_submitted;
+        }
+        if (in_array('mentor', $fields)) {
+          $fieldsToUpdate['mentor_submitted'] = $row->mentor_submitted == 2 ? 1 : $row->mentor_submitted;
+        }
+        Entretien_user::where('user_id', $row->user_id)->where('mentor_id', $row->mentor_id)
+          ->where('entretien_id', $row->entretien_id)->update($fieldsToUpdate);;
+      }
+      return [
+        'status' => "success",
+        'message' => __("L'opération a été effectué avec succès"),
+        'redirectUrl' => route('home')
+      ];
+    }
+    ob_start();
+    $ids = $request->get('ids', []);
+    echo view('entretiens.reopen', compact('ids'));
+    $content = ob_get_clean();
+    return ['title' => __("Réouvrir"), 'content' => $content];
+  }
+
+  public function export(Request $request) {
+    try {
+      $filesys = new Filesystem();
+      $filesys->deleteDirectory(public_path('/excel'));
+      $ids = $request->get('ids', []);
+      if (empty($ids)) return;
+      $filename = '';
+
+      $time = time();
+      foreach ($ids as $id) {
+        $e_u = Entretien_user::find($id);
+        $eid = $e_u->entretien_id;
+        $uid = $e_u->user_id;
+
+        $filename = 'Réponses-'.$eid.'-'.$uid;
+        $export = Excel::create($filename, function($excel) use ($e_u, $eid, $uid) {
+
+          $excel->sheet('Evaluations', function($sheet) use ($e_u, $eid, $uid) {
+            $sid = Entretien_evaluation::getItemsId($e_u->entretien_id, 1);
+            $sid = isset($sid[0]) ? $sid[0] : 0;
+            $survey = Survey::find($sid);
+            $sheet->loadView('entretiens.xls.evaluations', compact('survey', 'eid', 'uid'));
+          });
+
+          $excel->sheet('Carrières', function($sheet) use ($e_u, $eid, $uid) {
+            $sid = Entretien_evaluation::getItemsId($e_u->entretien_id, 2);
+            $sid = isset($sid[0]) ? $sid[0] : 0;
+            $survey = Survey::find($sid);
+            $sheet->loadView('entretiens.xls.careers', compact('survey', 'eid', 'uid'));
+          });
+
+          $excel->sheet('Formations', function($sheet) use ($e_u, $eid, $uid) {
+            $formations = Formation::where('user_id', $uid)
+              ->where('entretien_id', $eid)
+              ->orderBy('date', 'DESC')
+              ->get();
+            $sheet->loadView('entretiens.xls.formations', compact('formations', 'eid', 'uid'));
+          });
+
+          $excel->sheet('Primes', function($sheet) use ($e_u, $eid, $uid) {
+            $primes = Salary::where('user_id', $uid)
+              ->where('entretien_id', $eid)
+              ->orderBy('created_at', 'DESC')
+              ->get();
+            $sheet->loadView('entretiens.xls.primes', compact('primes', 'eid', 'uid'));
+          });
+
+          $excel->sheet('Commentaires', function($sheet) use ($e_u, $eid, $uid) {
+            $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
+            if (!$comment) $comment = new Comment();
+            $sheet->loadView('entretiens.xls.comments', compact('comment', 'eid', 'uid'));
+          });
+
+          $excel->sheet('Compétences', function($sheet) use ($e_u, $eid, $uid) {
+            $user = User::find($uid);
+            $parent_id = $user->parent ? $user->parent->id : 0;
+            $skill = Skill::where('function_id', $user->function)->first();
+            if (!$skill) $skill = new Skill();
+            $sheet->loadView('entretiens.xls.skills', compact('skill', 'eid', 'uid', 'parent_id'));
+          });
+
+          $excel->sheet('Objectifs', function($sheet) use ($e_u, $eid, $uid) {
+            $itemsId = Entretien_evaluation::getItemsId($eid, 9);
+            $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
+            $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
+            $sheet->loadView('entretiens.xls.objectifs', compact('objectifsPersonnal', 'objectifsTeam', 'eid', 'uid'));
+          });
+
+        })->store('xlsx', public_path('/excel/exports/'.$time));
+      }
+
+      $zip = new \ZipArchive();
+      if ($zip->open('excel/RéponsesArchive.zip', \ZipArchive::CREATE)) {
+        $files = array_diff(scandir(public_path('/excel/exports/'.$time)), array('.', '..'));
+        foreach ($files as $key => $filename) {
+          $zip->addFile(public_path('/excel/exports/'.$time.'/'.$filename), $filename);
+        }
+        $zip->close();
+      } else {
+        return ['status' => 'danger', 'message' => "Impossible de créer le zip"];
+      }
+
+      $file_link = $_ENV['APP_URL'] . '/excel/RéponsesArchive.zip';
+      $filesys->deleteDirectory(public_path('/excel/exports/'));
+
+      return [
+        'status' => 'success',
+        'message' => 'Les réponses ont bien été exportées <a href="'.$file_link.'" class="btn btn-success btn-sm">Télecharger</a>'
+      ];
+    } catch (\Exception $e) {
+      return [
+        'status' => 'alert',
+        'title' => __("Erreur survenue"),
+        'content' => __("Une erreur est survenue lors de l'exportation, réessayez plus tard !: :error", ['error' => $e->getMessage()])
+      ];
+    }
+
+  }
+
 }

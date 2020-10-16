@@ -31,7 +31,6 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
   Route::post('users/import_process', 'UserController@processImport');
   Route::get('entretiens/index', 'EntretienController@indexEntretien')->name('entretiens');
   Route::get('entretiens/{id}/show', 'EntretienController@show')->name('entretien.show');
-  Route::any('entretiens/{id}/reopen', 'EntretienController@reopen')->name('entretien.reopen');
   Route::get('entretiens/evaluations', 'EntretienController@entretiensEval');
   Route::get('entretiens/calendar', 'EntretienController@calendar');
 });
@@ -118,6 +117,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() 
 Route::get('entretiens/list', 'EntretienController@entretiensList');
 Route::put('entretiens/{eid}/u/{uid}/updateMotif', 'EntretienController@updateMotif');
 
+Route::get('entretiens/users/table', 'EntretienController@getTable')->name('entretien_user.table');
 Route::get('entretiens/form', 'EntretienController@form');
 Route::post('entretiens/store', 'EntretienController@store');
 Route::post('entretiens/storeCheckedUsers', 'EntretienController@storeCheckedUsers');
@@ -125,7 +125,7 @@ Route::get('entretiens/{e_id}/u/{uid}/synthese', 'EntretienController@synthese')
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
-Route::get('entretiens/{eid}/u/{uid}/appercu', 'EntretienController@apercu')->name('entretien.apercu');
+Route::get('entretiens/{id}/appercu', 'EntretienController@apercu')->name('entretien.apercu');
 Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
 Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf')->name('entretien.download-pdf');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
@@ -133,6 +133,7 @@ Route::post('entretiens/change-status', 'EntretienController@changeStatus')->nam
 Route::get('entretiens/{id}/clone', 'EntretienController@copier')->name('entretien.clone');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluation-annuelle', 'EvaluationController@index')->name('anglets.evaluation-annuelle');
+
 
 
 Route::get('entretiens/{e_id}/u/{uid}/competences', 'SkillController@index')->name('anglets.competences');
@@ -189,8 +190,11 @@ Route::any('configs/teams/form', 'TeamController@form')->name('team.form');
 Route::post('configs/teams/store', 'TeamController@store')->name('team.store');
 Route::delete('team/delete', 'TeamController@delete')->name('team.delete');
 
-Route::post('entretien/{id}/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
-Route::delete('entretien/{id}/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
+Route::post('entretien/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
+Route::delete('entretien/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
+Route::post('entretiens/answers/export', 'EntretienUserController@export')->name('entretien.users.export');
+Route::any('entretiens/users/reopen', 'EntretienUserController@reopen')->name('entretien.users.reopen');
+
 
 Route::get('table/translations', 'TranslationController@getTable')->name('interface.translations.table');
 Route::get('interface/translations', 'TranslationController@index')->name('interface.translations');
