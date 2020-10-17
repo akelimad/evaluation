@@ -9,6 +9,7 @@ use App\Entretien;
 use App\Entretien_evaluation;
 use App\Entretien_user;
 use App\EntretienObjectif;
+use App\Evaluation;
 use App\Formation;
 use App\Http\Mail\MailerController;
 use App\Http\Service\Table;
@@ -92,6 +93,7 @@ class EntretienUserController extends Controller
       'icon' => 'fa fa-file-excel-o',
       'label' => 'Exporter au format Excel',
       'callback' => 'chmEntretien.export',
+      'callback_params' => ['eid' => $e->id],
       'bulk_action' => true,
     ]);
     $table->addAction('delete', [
@@ -126,6 +128,7 @@ class EntretienUserController extends Controller
       $sid = Entretien_evaluation::getItemsId($e->id, 1);
       $sid = isset($sid[0]) ? $sid[0] : 0;
       $survey = Survey::find($sid);
+      if (!$survey) return 0;
       $totalNote = Answer::getTotalNote($survey->id, $row->user_id, $e->id);
       return $totalNote;
     });
@@ -133,6 +136,7 @@ class EntretienUserController extends Controller
       $sid = Entretien_evaluation::getItemsId($e->id, 2);
       $sid = isset($sid[0]) ? $sid[0] : 0;
       $survey = Survey::find($sid);
+      if (!$survey) return 0;
       $totalNote = Answer::getTotalNote($survey->id, $row->user_id, $e->id);
       return $totalNote;
     });
@@ -140,12 +144,20 @@ class EntretienUserController extends Controller
       $eval_sid = Entretien_evaluation::getItemsId($e->id, 1);
       $eval_sid = isset($eval_sid[0]) ? $eval_sid[0] : 0;
       $eval_survey = Survey::find($eval_sid);
-      $totalEvalNote = Answer::getTotalNote($eval_survey->id, $row->user_id, $e->id);
+      if (!$eval_survey) {
+        $totalEvalNote = 0;
+      } else {
+        $totalEvalNote = Answer::getTotalNote($eval_survey->id, $row->user_id, $e->id);
+      }
 
       $career_sid = Entretien_evaluation::getItemsId($e->id, 2);
       $career_sid = isset($career_sid[0]) ? $career_sid[0] : 0;
       $carrer_survey = Survey::find($career_sid);
-      $totalCareerNote = Answer::getTotalNote($carrer_survey->id, $row->user_id, $e->id);
+      if (!$carrer_survey)  {
+        $totalCareerNote = 0;
+      } else {
+        $totalCareerNote = Answer::getTotalNote($carrer_survey->id, $row->user_id, $e->id);
+      }
 
       $avg = ($totalEvalNote + $totalCareerNote) / 2;
       return number_format($avg, 2) + 0;
@@ -153,6 +165,125 @@ class EntretienUserController extends Controller
 
     // render the table
     return $table->render($query);
+  }
+
+  public function apercu($id)
+  {
+    ob_start();
+    $entretien_user = Entretien_user::find($id);
+    $eid = $entretien_user->entretien_id;
+    $uid = $entretien_user->user_id;
+    $e = Entretien::findOrFail($entretien_user->entretien_id);
+    if ($e->user_id != User::getOwner()->id) {
+      abort(403);
+    }
+    $user = User::findOrFail($uid);
+    $evaluations = Entretien::findEvaluations($e);
+
+    $itemsId = Entretien_evaluation::getItemsId($eid, 9);
+    $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
+    $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
+
+    $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
+    $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->get();
+    $skill = Skill::where('function_id', $user->function)->first();
+    if (!$skill) $skill = new Skill();
+    $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
+    $entreEvalsTitle = [];
+    foreach ($evaluations as $eval) {
+      $entreEvalsTitle[] = $eval->title;
+    }
+    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifsPersonnal', 'objectifsTeam', 'formations', 'skill', 'comment', 'evaluations'));
+    $content = ob_get_clean();
+    return ['title' => "Aperçu de l'entretien", 'content' => $content];
+  }
+
+  public function printPdf($eid, $uid)
+  {
+    $e = Entretien::findOrFail($eid);
+    if ($e->user_id != User::getOwner()->id) {
+      abort(403);
+    }
+    $user = User::findOrFail($uid);
+    $surveyId = Evaluation::surveyId($e->id, 1);
+    $survey = Survey::find($surveyId);
+    $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
+    $entreEvalsTitle = $e->evaluations->pluck('title')->toArray();
+    $itemsId = Entretien_evaluation::getItemsId($eid, 9); // Objectifs = 9
+    $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
+    $primes = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->get();
+    $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
+    $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
+    $skill = Skill::where('function_id', $user->function)->first();
+
+    // skills charts
+    $chartData = [];
+    foreach($skill->getSkillsTypes() as $key => $type) {
+      $field = 'skill_type_'.$type['id'];
+      $data = [
+        'type' => 'radar',
+        'data' => [
+          'labels' => $skill->getDataAsArray($key),
+          'datasets' => [
+            [
+              'label' => __('Collaborateur'),
+              'data' => array_values(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'user'))
+            ],
+            [
+              'label' => __('Manager'),
+              'data' => array_values(\App\Skill::getFieldNotes($e->id, $user->id, $user->parent->id, $field, 'mentor'))
+            ],
+          ]
+        ]
+      ];
+      $chartData['skill_type_'.$key] = urlencode(json_encode($data));
+    }
+
+    // objectifs personnal charts
+    foreach($objectifsPersonnal as $objectif) {
+      $collValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['collValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['collValues'] : [];
+      $mentorValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['mentorValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['mentorValues'] : [];
+      $data = [
+        'type' => 'radar',
+        'data' => [
+          'labels' => $objectif->getIndicatorsTitle(),
+          'datasets' => [
+            [
+              'label' => __('Collaborateur'),
+              'data' => array_values($collValues)
+            ],
+            [
+              'label' => __('Manager'),
+              'data' => array_values($mentorValues)
+            ],
+          ]
+        ]
+      ];
+      $chartData[$objectif->id] = urlencode(json_encode($data));
+    }
+
+    // objectifs team chart
+    foreach($objectifsTeam as $objectif) {
+      $teamValues = isset(\App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['teamValues']) ? \App\Objectif_user::getValues($e->id, $user->id, $objectif->id)['teamValues'] : [];
+      $data = [
+        'type' => 'radar',
+        'data' => [
+          'labels' => $objectif->getIndicatorsTitle(),
+          'datasets' => [
+            [
+              'label' => __('Manager'),
+              'data' => array_values($teamValues)
+            ],
+          ]
+        ]
+      ];
+      $chartData[$objectif->id] = urlencode(json_encode($data));
+    }
+
+    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'comment', 'skill', 'entreEvalsTitle', 'formations', 'primes', 'chartData', 'objectifsPersonnal', 'objectifsTeam'));
+
+    return $pdf->download('synthese-entretien-evaluation.pdf');
+
   }
 
   public function reminder(Request $request) {
@@ -247,74 +378,96 @@ class EntretienUserController extends Controller
       $filesys = new Filesystem();
       $filesys->deleteDirectory(public_path('/excel'));
       $ids = $request->get('ids', []);
-      if (empty($ids)) return;
+      $params = $request->get('params', []);
+      $eid = isset($params['eid']) ? $params['eid'] : 0;
+      if (empty($ids) || $eid == 0) return;
       $filename = '';
-
+      $entretien = Entretien::find($eid);
+      $evaluationsTitle = $entretien->evaluations->pluck('title')->toArray();
       $time = time();
+      $eid = 0;
       foreach ($ids as $id) {
         $e_u = Entretien_user::find($id);
         $eid = $e_u->entretien_id;
         $uid = $e_u->user_id;
+        $user = User::find($uid);
 
-        $filename = 'Réponses-'.$eid.'-'.$uid;
-        $export = Excel::create($filename, function($excel) use ($e_u, $eid, $uid) {
+        $filename = 'Réponses-'.$user->fullname().'-'.$user->parent->fullname();
+        $export = Excel::create($filename, function($excel) use ($e_u, $eid, $uid, $evaluationsTitle) {
 
-          $excel->sheet('Evaluations', function($sheet) use ($e_u, $eid, $uid) {
-            $sid = Entretien_evaluation::getItemsId($e_u->entretien_id, 1);
-            $sid = isset($sid[0]) ? $sid[0] : 0;
-            $survey = Survey::find($sid);
-            $sheet->loadView('entretiens.xls.evaluations', compact('survey', 'eid', 'uid'));
-          });
+          if (in_array('Evaluation annuelle', $evaluationsTitle)) {
+            $excel->sheet('Evaluation annuelle', function($sheet) use ($e_u, $eid, $uid) {
+              $sid = Entretien_evaluation::getItemsId($e_u->entretien_id, 1);
+              $sid = isset($sid[0]) ? $sid[0] : 0;
+              $survey = Survey::find($sid);
+              if (!$survey) $survey = new Survey();
+              $sheet->loadView('entretiens.xls.evaluations', compact('survey', 'eid', 'uid'));
+            });
+          }
 
-          $excel->sheet('Carrières', function($sheet) use ($e_u, $eid, $uid) {
-            $sid = Entretien_evaluation::getItemsId($e_u->entretien_id, 2);
-            $sid = isset($sid[0]) ? $sid[0] : 0;
-            $survey = Survey::find($sid);
-            $sheet->loadView('entretiens.xls.careers', compact('survey', 'eid', 'uid'));
-          });
+          if (in_array('Carrières', $evaluationsTitle)) {
+            $excel->sheet('Carrières', function ($sheet) use ($e_u, $eid, $uid) {
+              $sid = Entretien_evaluation::getItemsId($e_u->entretien_id, 2);
+              $sid = isset($sid[0]) ? $sid[0] : 0;
+              $survey = Survey::find($sid);
+              if (!$survey) $survey = new Survey();
+              $sheet->loadView('entretiens.xls.careers', compact('survey', 'eid', 'uid'));
+            });
+          }
 
-          $excel->sheet('Formations', function($sheet) use ($e_u, $eid, $uid) {
-            $formations = Formation::where('user_id', $uid)
-              ->where('entretien_id', $eid)
-              ->orderBy('date', 'DESC')
-              ->get();
-            $sheet->loadView('entretiens.xls.formations', compact('formations', 'eid', 'uid'));
-          });
+          if (in_array('Formations', $evaluationsTitle)) {
+            $excel->sheet('Formations', function ($sheet) use ($e_u, $eid, $uid) {
+              $formations = Formation::where('user_id', $uid)
+                ->where('entretien_id', $eid)
+                ->orderBy('date', 'DESC')
+                ->get();
+              $sheet->loadView('entretiens.xls.formations', compact('formations', 'eid', 'uid'));
+            });
+          }
 
-          $excel->sheet('Primes', function($sheet) use ($e_u, $eid, $uid) {
-            $primes = Salary::where('user_id', $uid)
-              ->where('entretien_id', $eid)
-              ->orderBy('created_at', 'DESC')
-              ->get();
-            $sheet->loadView('entretiens.xls.primes', compact('primes', 'eid', 'uid'));
-          });
+          if (in_array('Primes', $evaluationsTitle)) {
+            $excel->sheet('Primes', function ($sheet) use ($e_u, $eid, $uid) {
+              $primes = Salary::where('user_id', $uid)
+                ->where('entretien_id', $eid)
+                ->orderBy('created_at', 'DESC')
+                ->get();
+              $sheet->loadView('entretiens.xls.primes', compact('primes', 'eid', 'uid'));
+            });
+          }
 
-          $excel->sheet('Commentaires', function($sheet) use ($e_u, $eid, $uid) {
-            $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
-            if (!$comment) $comment = new Comment();
-            $sheet->loadView('entretiens.xls.comments', compact('comment', 'eid', 'uid'));
-          });
+          if (in_array('Commentaires', $evaluationsTitle)) {
+            $excel->sheet('Commentaires', function ($sheet) use ($e_u, $eid, $uid) {
+              $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
+              if (!$comment) $comment = new Comment();
+              $sheet->loadView('entretiens.xls.comments', compact('comment', 'eid', 'uid'));
+            });
+          }
 
-          $excel->sheet('Compétences', function($sheet) use ($e_u, $eid, $uid) {
-            $user = User::find($uid);
-            $parent_id = $user->parent ? $user->parent->id : 0;
-            $skill = Skill::where('function_id', $user->function)->first();
-            if (!$skill) $skill = new Skill();
-            $sheet->loadView('entretiens.xls.skills', compact('skill', 'eid', 'uid', 'parent_id'));
-          });
+          if (in_array('Compétences', $evaluationsTitle)) {
+            $excel->sheet('Compétences', function ($sheet) use ($e_u, $eid, $uid) {
+              $user = User::find($uid);
+              $parent_id = $user->parent ? $user->parent->id : 0;
+              $skill = Skill::where('function_id', $user->function)->first();
+              if (!$skill) $skill = new Skill();
+              $sheet->loadView('entretiens.xls.skills', compact('skill', 'eid', 'uid', 'parent_id'));
+            });
+          }
 
-          $excel->sheet('Objectifs', function($sheet) use ($e_u, $eid, $uid) {
-            $itemsId = Entretien_evaluation::getItemsId($eid, 9);
-            $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
-            $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
-            $sheet->loadView('entretiens.xls.objectifs', compact('objectifsPersonnal', 'objectifsTeam', 'eid', 'uid'));
-          });
+          if (in_array('Objectifs', $evaluationsTitle)) {
+            $excel->sheet('Objectifs', function ($sheet) use ($e_u, $eid, $uid) {
+              $itemsId = Entretien_evaluation::getItemsId($eid, 9);
+              $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
+              $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
+              $sheet->loadView('entretiens.xls.objectifs', compact('objectifsPersonnal', 'objectifsTeam', 'eid', 'uid'));
+            });
+          }
 
         })->store('xlsx', public_path('/excel/exports/'.$time));
       }
 
+      $tmpZipUrl = "excel/Réponses-campagne-".strtolower($entretien->titre)."-".date('dmYHi').".zip";
       $zip = new \ZipArchive();
-      if ($zip->open('excel/RéponsesArchive.zip', \ZipArchive::CREATE)) {
+      if ($zip->open($tmpZipUrl, \ZipArchive::CREATE)) {
         $files = array_diff(scandir(public_path('/excel/exports/'.$time)), array('.', '..'));
         foreach ($files as $key => $filename) {
           $zip->addFile(public_path('/excel/exports/'.$time.'/'.$filename), $filename);
@@ -324,12 +477,12 @@ class EntretienUserController extends Controller
         return ['status' => 'danger', 'message' => "Impossible de créer le zip"];
       }
 
-      $file_link = $_ENV['APP_URL'] . '/excel/RéponsesArchive.zip';
+      $file_link = $_ENV['APP_URL'] . "/".$tmpZipUrl;
       $filesys->deleteDirectory(public_path('/excel/exports/'));
 
       return [
-        'status' => 'success',
-        'message' => '<a class="btn btn-primary btn-xs" href="'. $file_link .'"><i class="fa fa-download"></i>&nbsp;'. trans("Télécharger") .'</a>&nbsp;<b style="color:#F44336;margin-left: 5px;">* Vous pouvez utiliser ce lien pendant 24h</b>'
+        'status' => 'file_success',
+        'file_link' => $file_link
       ];
     } catch (\Exception $e) {
       return [

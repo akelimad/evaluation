@@ -169,10 +169,6 @@ export default class chmTable {
     })
   }
 
-  static tableResponsive() {
-    
-  }
-
 }
 
 
@@ -253,8 +249,6 @@ $(document).ready(function () {
     }
   })
 
-  tableResponsive()
-
   $(window).on('resize',function () {
     if ($('[chm-table]').length > 0) tableResponsive()
   })
@@ -262,18 +256,11 @@ $(document).ready(function () {
 })
 
 function tableResponsive() {
-  $.fn.hasScrollBar = function(direction) {
-    if (this.get(0) != undefined) {
-      if (direction == 'vertical') {
-        return this.get(0).scrollHeight > this.innerHeight()
-      } else if (direction == 'horizontal') {
-        return this.get(0).scrollWidth > this.innerWidth()
-      }
-    }
-    return false
+  $.fn.hasHorizontalScrollBar = function () {
+    return this[0].clientWidth < this[0].scrollWidth;
   }
-  var hasHorizScrollBar = $('.table-responsive').hasScrollBar('horizontal');
-  if (hasHorizScrollBar) {
+  var hasHorizontalScrollBar = $('.table-responsive').hasHorizontalScrollBar();
+  if (hasHorizontalScrollBar) {
     $('.table-responsive').css("overflow", "auto")
   } else {
     $('.table-responsive').css("overflow", "inherit")

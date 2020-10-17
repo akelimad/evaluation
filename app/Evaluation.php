@@ -42,7 +42,8 @@ class Evaluation extends Model
     {
         $result =  Entretien_evaluation::select('survey_id')
         ->where('entretien_id', $eid)->where('evaluation_id', $evalId)->first();
-        $itemsData = json_decode($result->survey_id) ?: [];
+        $itemsData = $result ? json_decode($result->survey_id) : [];
+        if (empty($itemsData)) return 0;
         return count($itemsData) > 1 ? $itemsData : $itemsData[0];
     }
 

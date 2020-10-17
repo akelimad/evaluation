@@ -124,9 +124,7 @@ Route::get('entretiens/{e_id}/u/{uid}/synthese', 'EntretienController@synthese')
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
-Route::get('entretiens/{id}/appercu', 'EntretienController@apercu')->name('entretien.apercu');
 Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
-Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienController@printPdf')->name('entretien.download-pdf');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 Route::post('entretiens/change-status', 'EntretienController@changeStatus')->name('entretien.change-status');
 Route::get('entretiens/{id}/clone', 'EntretienController@copier')->name('entretien.clone');
@@ -191,6 +189,8 @@ Route::delete('team/delete', 'TeamController@delete')->name('team.delete');
 
 Route::get('entretiens/users/table', 'EntretienUserController@getTable')->name('entretien_user.table');
 Route::get('entretiens/users/notes/table', 'EntretienUserController@getTableNotes')->name('entretien_user.notes.table');
+Route::get('entretiens/{id}/appercu', 'EntretienUserController@apercu')->name('entretien.apercu');
+Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienUserController@printPdf')->name('entretien.download-pdf');
 Route::post('entretien/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
 Route::delete('entretien/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
 Route::post('entretiens/answers/export', 'EntretienUserController@export')->name('entretien.users.export');

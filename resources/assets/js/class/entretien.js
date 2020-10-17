@@ -177,20 +177,18 @@ export default class chmEntretien {
     })
   }
 
-  static export (event, ids) {
+  static export (event, ids, params) {
     ids = (typeof event[0] !== 'undefined') ? event : ids
     var token = $('input[name="_token"]').val()
     window.chmModal.show({
       type: 'POST',
       url: window.chmSite.url('entretiens/answers/export'),
-      data: {'_token': token, ids: ids},
+      data: {'_token': token, ids: ids, params: params},
     }, {
       message: '<i class="fa fa-spinner fa-spin"></i>&nbsp;Traitement en cours...',
       onSuccess: function (response) {
-        if (response.status !== 'success') {
-          window.chmModal.showAlertMessage(response.status, response.message)
-        } else {
-          window.chmModal.alert('<i class="fa fa-check-circle"></i>&nbsp;Opération effectuée', response.message, {width: 415, callback: 'chmModal.destroy()'})
+        if (response.status == 'file_success') {
+          window.location.href = response.file_link
         }
       }
     })

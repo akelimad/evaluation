@@ -479,7 +479,9 @@
         }
       })
       if (stepNbr == 2) {
-        showHideFeedback360ErrorBlock()
+        if ($('select#model option:selected').data('ref') == 'FB360') {
+          showHideFeedback360ErrorBlock()
+        }
         $('.form-check-input').each(function (index, element) {
           var itemLabel = $(element).closest('.form-check').find('label').text()
           var labelText = ""
@@ -515,7 +517,7 @@
           isValid = false;
         }
         // check if selected surveyid in evaluation != carreer
-        if ($('#entretien').val() == $('#carreer').val()) {
+        if ($('#entretien').val() != '' && $('#entretien').val() == $('#carreer').val()) {
           chmForm.showErrorBlock('#carreer', "Vous ne pouvez séléctionner le même questionnaire pour 2 sections")
           isValid = false;
         }
