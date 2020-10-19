@@ -170,40 +170,56 @@
           </div>
         @endif
 
-        @if (count($nMoins2Entretiens) > 0)
+        @if (Auth::user()->getUserFeedfackEvaluations()->count() > 0)
           <div class="card portlet box box-primary mb-20">
-          <div class="nav-tabs-custom portlet-title">
-            <div class=" caption caption-red mb-10">{{ __("Mes entretiens N-2") }}</div>
-          </div>
-          <div class="portlet-body table-responsive">
-            <table>
+            <div class="nav-tabs-custom portlet-title">
+              <div class=" caption caption-red mb-10">{{ __("Mes Feedback 360") }}</div>
+            </div>
+            <div class="portlet-body table-responsive">
               <table class="table table-hover table-striped">
                 <thead>
                   <tr>
-                    <th>{{ __("Titre") }}</th>
-                    <th>{{ __("Coll.") }}</th>
-                    <th>{{ __("Manager") }}</th>
-                    <th>{{ __("Actions") }}</th>
+                    <th>{{ __("Evalué") }}</th>
+                    <th>{{ __("Campagne") }}</th>
+                    <th>{{ __("Date de lancement") }}</th>
+                    <th>{{ __("Date limite") }}</th>
+                    <th class="text-center">{{ __("Evaluateur (Vous)") }}</th>
+                    <th class="text-center">{{ __("Actions") }}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @foreach($nMoins2Entretiens as $en_user)
-                    @php($title = App\Entretien::find($en_user->entretien_id) ? App\Entretien::find($en_user->entretien_id)->titre : '')
-                    @php($userFname = App\User::find($en_user->user_id) ? App\User::find($en_user->user_id)->fullname() : '')
-                    @php($managerFname = App\User::find($en_user->mentor_id) ? App\User::find($en_user->mentor_id)->fullname() : '')
+                  @forelse(Auth::user()->getUserFeedfackEvaluations() as $eu)
+                    @php($user = \App\User::find($eu->user_id))
+                    @php($e = \App\Entretien::find($eu->entretien_id))
+                    @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, Auth::user()->id))
                     <tr>
-                      <td>{{ $title }}</td>
-                      <td>{{ $userFname }}</td>
-                      <td>{{ $managerFname }}</td>
                       <td>
-                        <a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="return chmEntretien.apercu({eid: {{$en_user->entretien_id}}, uid: {{$en_user->user_id}} })"><i class="fa fa-search"></i> {{ __("Aperçu") }}</a>
+                        {{ $user ? $user->fullname() : '---' }}
+                      </td>
+                      <td>
+                        {{ $e ? $e->titre : '---' }}
+                      </td>
+                      <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
+                      <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
+                      <td class="text-center">
+                        <span class="label label-danger empty"></span>
+                      </td>
+                      <td>
+                        @if($mentorAnswered)
+                          <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                        @else
+                          <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                        @endif
                       </td>
                     </tr>
-                  @endforeach
+                  @empty
+                    <tr>
+                      <td colspan="7">@include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])</td>
+                    </tr>
+                  @endforelse
                 </tbody>
-            </table>
+              </table>
           </div>
-        </div>
         @endif
       </div>
       <div class="clearfix"></div>

@@ -203,7 +203,11 @@ class Entretien extends Model
   }
 
   public function isFeedback360() {
-    return $this->model == "Feedback 360";
+    $entretienModel = Entretien::select('models.ref')
+      ->join('models', 'entretiens.model_id', 'models.id')
+      ->where('entretiens.id', $this->id)
+      ->first();
+    return $entretienModel && $entretienModel->ref == 'FB360';
   }
 
   public function canBeFilledByUser($user_id) {
@@ -253,6 +257,19 @@ class Entretien extends Model
     } else {
       return '0 1 * * *';
     }
+  }
+
+  public function getUsersEvaluators() {
+    $ids = [];
+    if ($this->isFeedback360()) {
+      $ids = Entretien_user::where('entretien_id', $this->id)->pluck('mentor_id')->toArray();
+    } else {
+      foreach ($this->users as $user) {
+        $ids[] = $user->id;
+      }
+    }
+
+    return $ids;
   }
 
 

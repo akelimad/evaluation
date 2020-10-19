@@ -153,16 +153,10 @@
               <select name="model" id="model" class="form-control" chm-validate="required">
                 <option value=""></option>
                 @foreach(\App\Modele::all() as $model)
-                  <option value="{{ $model->id }}" data-ref="{{ $model->ref }}" {{ $entretien->model_id == $model->id ? 'selected':'' }} {{ $model->ref == 'FB360' ? 'disabled':'' }}>{{ $model->title }}</option>
+                  <option value="{{ $model->id }}" data-ref="{{ $model->ref }}" {{ $entretien->model_id == $model->id ? 'selected':'' }}>{{ $model->title }}</option>
                 @endforeach
               </select>
               <div class="feedback-360-options mt-15">
-
-                <div class="form-check mb-15">
-                  <input type="checkbox" class="feedback360-options-cb" id="auto-eval" name="options[]" value="auto_eval" chm-validate="required" {{ in_array('auto_eval', $entretien->getOptions()) ? 'checked':'' }}> <label for="auto-eval" class="font-14 mb-0"><b>Auto-évaluation</b></label>
-                  <span class="text-muted font-12 d-block">Si cette option est activée, l'évalué va pouvoir faire l'auto-évaluation</span>
-                </div>
-
                 <div class="form-check mb-15">
                   <input type="checkbox" class="feedback360-options-cb" id="anonym" name="options[]" value="anonym" chm-validate="required" {{ in_array('anonym', $entretien->getOptions()) ? 'checked':'' }}> <label for="anonym" class="font-14 mb-0"><b>Réponses anonymes</b></label>
                   <span class="text-muted font-12 d-block">Si cette option est activée, le nom des collègues n'est pas affiché sur l'écran des résultats</span>
@@ -172,7 +166,6 @@
                   <input type="checkbox" class="feedback360-options-cb" id="block" name="options[]" value="hide_results" chm-validate="required" {{ in_array('hide_results', $entretien->getOptions()) ? 'checked':'' }}> <label for="block" class="font-14 mb-0"><b>Bloquer le partage</b></label>
                   <span class="text-muted font-12 d-block">Si cette option est activée, il ne sera pas possible aux évalués de voir les résultats. seuls le responsable de l'évaluation et les admins auront accès aux résultats</span>
                 </div>
-
               </div>
             </div>
           </div>
@@ -240,8 +233,16 @@
         <div class="step-content" data-step="4" style="display: none;">
           <div class="row">
             <div class="col-md-12 mb-15">
-              <label for="users_id" class="control-label required">Personne(s) à évaluer</label>
+              <div class="mb-20" id="fb360-user-to-evaluate">
+                <label for="fb30_userid_to_evaluate" class="control-label required">{{ __("Choisissez l'évalué") }}</label>
+                <select name="fb30_userid_to_evaluate" id="fb30_userid_to_evaluate" class="form-control select2" data-placeholder="select" style="width: 100%;" chm-validate="required">
+                  @foreach($users as $user)
+                    <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
+                  @endforeach
+                </select>
+              </div>
               <div class="entretien-annuel-users">
+                <label for="" class="control-label required" style="position: relative">{{ __("Choisissez les évaluateurs") }}</label>
                 <div class="separator mb-10">
                   <label for="" class="">Sélectionnez les équipes :</label>
                   <select name="teamsIdToEvaluate[]" id="teams_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;">
@@ -251,7 +252,7 @@
                   </select>
                 </div>
                 <div class="separator">
-                  <label for="" class="mb-0">Evalués : <input type="checkbox" id="selectAllUsers"> <label for="selectAllUsers" class="d-inline-block">Tout sélectionner</label></label>
+                  <label for="" class="mb-0">{{ __("Ou des utilisateurs :") }} <input type="checkbox" id="selectAllUsers"> <label for="selectAllUsers" class="d-inline-block">Tout sélectionner</label></label>
                   <select name="usersIdToEvaluates[]" id="users_id_to_evaluate" class="form-control select2" multiple data-placeholder="select" style="width: 100%;" chm-validate="required">
                     @foreach($users as $user)
                       <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
@@ -486,7 +487,7 @@
           var itemLabel = $(element).closest('.form-check').find('label').text()
           var labelText = ""
           if ($('select#model').find(':selected').data('ref') == "FB360") {
-            labelText = "Date limite pour les collègues"
+            labelText = "Date limite pour les évaluateurs"
             if (itemLabel != 'Feedback 360') {
               $(element).closest('.form-check').hide()
             } else {
@@ -557,11 +558,11 @@
       var val = $(this).val()
       var ref = $(this).find(':selected').data('ref')
       if (ref == "FB360") {
-        $('.entretien-annuel-users').hide()
         $('.feedback').show()
+        $('.entretien-annuel-users > label').text('{{ __("Choisissez les évaluateurs") }}')
         $('#eval-1-label').html('Feedback 360')
         $('.feedback-360-options').show()
-
+        $('#fb360-user-to-evaluate').show()
         $('select#entretien option, select#carreer option').filter(function () {
           return $(this).data('model-ref') == "FB360"
         }).show()
@@ -569,12 +570,12 @@
         $('.carreers-wrapper').hide()
         $('.objectifs-wrapper').hide()
       } else {
-        $('.entretien-annuel-users').show()
         $('.feedback').hide()
+        $('.entretien-annuel-users > label').text('{{ __("Choisissez les évalués") }}')
         $('#eval-1-label').html('Evaluation annuelle')
         $('.feedback-360-options').hide()
         $('.feedback-360-options').find(':checkbox').prop('checked', false)
-
+        $('#fb360-user-to-evaluate').hide()
         $('select#entretien option, select#carreer option').filter(function () {
           return $(this).data('model-ref') == "ENT"
         }).show()

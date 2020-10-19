@@ -53,7 +53,7 @@ class HomeController extends Controller
         $entretiens = $user->entretiens;
         $formations = Formation::where('user_id', Auth::user()->id)->get();
         $collaborateurs = Auth::user()->children;
-        if (in_array('ROOT', Auth::user()->getRoles())) return redirect('crm');
+        if (in_array('ROOT', Auth::user()->getRoles())) return redirect('companies');
         return view('index', compact('user', 'mentor', 'entretiens', 'formations', 'collaborateurs', 'nMoins2Entretiens'));
     }
 

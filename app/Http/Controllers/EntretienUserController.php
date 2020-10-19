@@ -39,15 +39,19 @@ class EntretienUserController extends Controller
       return $e->isFeedback360() ? $e->users[0]->fullname() : $user->fullname();
     });
     $table->addColumn('coll_answer_status', 'Statut', function ($row) {
-      $user = User::find($row->user_id);
       $e = Entretien::find($row->entretien_id);
+      $user = User::find($row->user_id);
       $userParentId = $user->parent ? $user->parent->id : 0;
       $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId, $e->id, 'user');
       return '<span class="badge '.$statusInfo['labelClass'].'">'.$statusInfo['name'].'</span>';
     });
     $table->addColumn('manager', 'Evaluateur', function ($row) {
-      $user = User::find($row->user_id);
       $e = Entretien::find($row->entretien_id);
+      if ($e->isFeedback360()) {
+        $user = User::find($row->mentor_id);
+      } else {
+        $user = User::find($row->user_id);
+      }
       $userParentFullname = $user->parent ? $user->parent->fullname() : 'introuvable';
       return $e->isFeedback360() ? $user->fullname() : $userParentFullname;
     });
@@ -119,8 +123,12 @@ class EntretienUserController extends Controller
       return $e->isFeedback360() ? $e->users[0]->fullname() : $user->fullname();
     });
     $table->addColumn('manager', 'Evaluateur', function ($row) {
-      $user = User::find($row->user_id);
       $e = Entretien::find($row->entretien_id);
+      if ($e->isFeedback360()) {
+        $user = User::find($row->mentor_id);
+      } else {
+        $user = User::find($row->user_id);
+      }
       $userParentFullname = $user->parent ? $user->parent->fullname() : 'introuvable';
       return $e->isFeedback360() ? $user->fullname() : $userParentFullname;
     });

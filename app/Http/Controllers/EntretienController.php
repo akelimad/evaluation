@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 ini_set('max_execution_time', 300); //5 minutes
 
 use App\Campaign;
+use App\Console\Commands\CampaignEmailing;
 use App\Fonction;
 use App\Http\Service\Table;
 use App\Team;
@@ -187,10 +188,8 @@ class EntretienController extends Controller
       $entretien = new Entretien();
       $title = __("Ajouter une campagne");
     }
-    $e_users = [];
-    foreach ($entretien->users as $user) {
-      $e_users[] = $user->id;
-    }
+    $e_users = $entretien->getUsersEvaluators();
+
     $users = User::getUsers()->where('user_id', '<>', 0)->get(); // get just users having their managers
     $entretienEvalIds = $entretien->evaluations()->pluck('evaluation_id')->toArray();
     $objectifs = EntretienObjectif::getAll()->get();
@@ -276,7 +275,6 @@ class EntretienController extends Controller
     $date = date('Y-m-d', strtotime($request->date));
     $date_limit = date('Y-m-d', strtotime($request->date_limit));
 
-    $evaluations = Evaluation::where('title', '<>', 'Compétences')->pluck('id')->toArray(); //to get ids of all object in one array
     $entretien->date = $date;
     $entretien->date_limit = $date_limit;
     $entretien->titre = $request->titre;
@@ -317,12 +315,20 @@ class EntretienController extends Controller
     $already_sent = [];
 
     foreach ($selectedUsers as $uid) {
+      $fb360_user_id = $request->get('fb30_userid_to_evaluate', 0);
+      if ($uid <= 0 || $fb360_user_id <= 0) continue;
       $user = User::findOrFail($uid);
-      if ($entretien->model == "Feedback 360") {
-        $userTeamsMembers = $user->getTeamsMembers();
-        foreach ($userTeamsMembers as $member) {
-          $entretien->users()->attach([$uid => ['mentor_id' => $member->id]]);
-        }
+
+      if ($entretien->isFeedback360()) {
+        $entretien->users()->attach([$fb360_user_id => ['mentor_id' =>$uid]]);
+        $campaignData = [
+          'entretien_id' => $entretien->id,
+          'email_id' => $collEmail->id,
+          'receiver' => $user->email,
+          'shedule_type' =>  $request->shedule_type,
+          'sheduled_at' => $request->shedule_type == 'now' ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime($request->sheduled_at)),
+        ];
+        Campaign::create($campaignData);
       } else {
         $campaignData = [
           'entretien_id' => $entretien->id,
@@ -473,6 +479,7 @@ class EntretienController extends Controller
       \DB::table('skill_user')->where('entretien_id', $eid)->delete();
       \DB::table('answers')->where('entretien_id', $eid)->delete();
       \DB::table('objectif_user')->where('entretien_id', $eid)->delete();
+      \DB::table('campaigns')->where('entretien_id', $eid)->delete();
       $entretien->formations()->delete();
       $entretien->salaries()->delete();
       $entretien->comments()->delete();
