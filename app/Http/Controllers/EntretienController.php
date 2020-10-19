@@ -222,7 +222,7 @@ class EntretienController extends Controller
     
     if (isset($id) && is_numeric($id)) {
       $entretien = Entretien::findOrFail($id);
-      $entretienUsers = $entretien->users()->pluck('id')->toArray();
+      $entretienUsers = $entretien->users()->pluck('users.id')->toArray();
       $removedUsers = array_diff($entretienUsers, $selectedUsers);
       $selectedUsers = array_diff($selectedUsers, $entretienUsers);
     } else {

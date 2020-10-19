@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\SendMentorEmail::class,
         Commands\CampaignEmailing::class,
+        Commands\CampaignReminder::class,
         Commands\ClearExportExcelCommand::class,
     ];
 
@@ -27,11 +28,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('export:clear')->cron('0 1 * * *');
+        $schedule->command('export:clear')->cron('0 1 * * *'); // daily at 01h
         // $schedule->command('email:mentor')->hourly();
+
+        $schedule->command('campaign')->cron('* * * * *'); // every minute
+
         $entretiens = Entretien::all();
         foreach ($entretiens as $e) {
-            $schedule->command('campaign')->cron($e->getCronTabExpression());
+            $schedule->command('campaign:reminder')->cron($e->getCronTabExpression());
         }
     }
 }
