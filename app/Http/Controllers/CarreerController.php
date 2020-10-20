@@ -47,7 +47,8 @@ class CarreerController extends Controller
             'survey' => $survey, 
             'e'=> $entretien,  
             'groupes' => $groupes, 
-            'user' => $user
+            'user' => $user,
+            'evaluator_id' => $user->parent->id,
         ]);
     }
 

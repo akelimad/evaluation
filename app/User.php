@@ -275,13 +275,18 @@ class User extends Authenticatable
     });
   }
 
-  public function getUserFeedfackEvaluations() {
+  public function getUserEvaluationsByModel($modelRef) {
     $entretiens_user = Entretien_user::select('entretien_user.*')
       ->join('entretiens as e', 'e.id', '=', 'entretien_user.entretien_id')
       ->join('models as m', 'm.id', '=', 'e.model_id')
-      ->where('m.ref', 'FB360')->where('mentor_id', $this->id)->get();
+      ->where('m.ref', $modelRef);
+    if ($modelRef == 'FB360') {
+      $entretiens_user->where('entretien_user.mentor_id', $this->id);
+    } else {
+      $entretiens_user->where('entretien_user.user_id', $this->id);
+    }
 
-    return $entretiens_user;
+    return $entretiens_user->get();
   }
 
 

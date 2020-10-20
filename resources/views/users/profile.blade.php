@@ -110,20 +110,34 @@
               <div class="tab-pane" id="entretiens">
                 <div class="p-30">
                   <div class="table-responsive">
-                    <table class="table table-hover">
-                      <tbody>
-                      @forelse($user->entretiens as $entretien)
+                    <table class="table table-hover table-striped">
+                      <thead>
                         <tr>
-                          <td>
-                            <span><i class="fa fa-search fa-1x fa-fw"></i> <a href="javascript:void(0)" onclick="return chmEntretien.apercu({eid: {{$entretien->id}}, uid: {{$user->id}} })">{{ $entretien->titre }} </a></span>
-                            <span class="label label-{{ $entretien->isCurrent() ? 'success':'danger' }} pl-10 pr-10 ml-30 font-14">{{ $entretien->status }}</span></td>
+                          <th>{{ __("Campagne") }}</th>
+                          <th>{{ __("Evalué") }}</th>
+                          <th>{{ __("Evaluateur") }}</th>
+                          <th>{{ __("Date de lancement") }}</th>
+                          <th>{{ __("Date limite") }}</th>
+                          <th class="text-center">{{ __("Actions") }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      @forelse($user->getUserEvaluationsByModel('ENT') as $eu)
+                        @php($user = \App\User::find($eu->user_id))
+                        @php($entretien = \App\Entretien::find($eu->entretien_id))
+                        <tr>
+                          <td>{{ $entretien->titre }}</td>
+                          <td>{{ Auth::user()->id == $user->id ? __("Vous") : $user->fullname() }}</td>
+                          <td>{{ $user->parent->fullname() }}</td>
+                          <td>{{ date('d/m/Y', strtotime($entretien->date)) }}</td>
                           <td>{{ date('d/m/Y', strtotime($entretien->date_limit)) }}</td>
+                          <td class="text-center">
+                            <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu"><i class="fa fa-search"></i></a>
+                          </td>
                         </tr>
                       @empty
                         <tr>
-                          <td colspan="2">
-                            <div class="alert alert-info font-14">Aucun résultat trouvé</div>
-                          </td>
+                          <td colspan="4"><div class="font-14 text-center">Aucun résultat trouvé</div></td>
                         </tr>
                       @endforelse
                       </tbody>
@@ -133,7 +147,39 @@
               </div>
               <div class="tab-pane" id="feedback">
                 <div class="p-30">
-                  En construction
+                  <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                      <th>{{ __("Campagne") }}</th>
+                      <th>{{ __("Evalué") }}</th>
+                      <th>{{ __("Evaluateur") }}</th>
+                      <th>{{ __("Date de lancement") }}</th>
+                      <th>{{ __("Date limite") }}</th>
+                      <th class="text-center">{{ __("Actions") }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($user->getUserEvaluationsByModel('FB360') as $eu)
+                      @php($user = \App\User::find($eu->user_id))
+                      @php($e = \App\Entretien::find($eu->entretien_id))
+                      @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, $eu->mentor_id))
+                      <tr>
+                        <td>{{ $e ? $e->titre : '---' }}</td>
+                        <td>{{ $user ? $user->fullname() : '---' }}</td>
+                        <td>{{ __("Vous") }}</td>
+                        <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
+                        <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
+                        <td class="text-center">
+                          <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu"><i class="fa fa-search"></i></a>
+                        </td>
+                      </tr>
+                    @empty
+                      <tr>
+                        <td colspan="6"><div class="font-14 text-center">Aucun résultat trouvé</div></td>
+                      </tr>
+                    @endforelse
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div class="tab-pane" id="preferences">

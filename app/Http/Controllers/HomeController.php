@@ -52,9 +52,15 @@ class HomeController extends Controller
 
         $entretiens = $user->entretiens;
         $formations = Formation::where('user_id', Auth::user()->id)->get();
-        $collaborateurs = Auth::user()->children;
+
+        $managerCollsEntretiens = Entretien_user::select('entretien_user.*')
+          ->join('entretiens as e', 'e.id', '=', 'entretien_user.entretien_id')
+          ->join('models as m', 'm.id', '=', 'e.model_id')
+          ->where('m.ref', 'ENT')
+          ->where('mentor_id', Auth::user()->id)->paginate(10);
+
         if (in_array('ROOT', Auth::user()->getRoles())) return redirect('companies');
-        return view('index', compact('user', 'mentor', 'entretiens', 'formations', 'collaborateurs', 'nMoins2Entretiens'));
+        return view('index', compact('user', 'mentor', 'entretiens', 'formations', 'managerCollsEntretiens', 'nMoins2Entretiens'));
     }
 
 

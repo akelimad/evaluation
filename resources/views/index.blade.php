@@ -62,7 +62,9 @@
                       </tr>
                       </thead>
                       <tbody>
-                      @foreach($entretiens as $e)
+                      @foreach($user->getUserEvaluationsByModel('ENT') as $eu)
+                        @php($user = \App\User::find($eu->user_id))
+                        @php($e = \App\Entretien::find($eu->entretien_id))
                         @php($userAnswered = App\Entretien::answered($e->id, Auth::user()->id))
                         <tr>
                           <td>
@@ -99,7 +101,7 @@
             </div>
           </div>
         </div>
-        @if(count($collaborateurs)>0)
+        @if(count($managerCollsEntretiens)>0)
           <div class="card portlet box box-primary mb-20">
             <div class="nav-tabs-custom portlet-title">
               <div class="caption caption-red mb-10">{{ __("Mes collaborateurs") }}</div>
@@ -107,7 +109,7 @@
             <div class="portlet-body">
               <div class="tab-content">
                 <div class="tab-pane active" id="aa">
-                  @if(count($collaborateurs) > 0)
+                  @if(count($managerCollsEntretiens) > 0)
                     <div class="box-body table-responsive no-padding">
                       <table class="table table-hover table-striped">
                         <thead>
@@ -122,44 +124,44 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($collaborateurs as $user)
-                          @foreach($user->entretiens as $e)
-                            @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $user->id, Auth::user()->id))
-                            <tr>
-                              <td>
-                                <a href="{{url('user/'.$user->id)}}">{{ $user->fullname() }}</a>
-                              </td>
-                              <td>
-                                <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{ $e->titre }}</a>
-                              </td>
-                              <td>
-                                {{ $e->getStartDate() }}
-                              </td>
-                              <td>
-                                {{ date('d/m/Y', strtotime($e->date_limit)) }}
-                              </td>
-                              <td class="text-center">
-                                <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, $user->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $user->id)->user_updated_at)->format('d/m/Y à H:i') :'Pas encore rempli par '.$user->name }}"> </span>
-                              </td>
-                              <td class="text-center">
-                                <span class="label label-{{$mentorAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$mentorAnswered ? 'Validée par manager le '.Carbon\Carbon::parse($mentorAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$user->name}}"> </span>
-                              </td>
-                              <td class="text-center">
-                                @if($mentorAnswered)
-                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
-                                @else
-                                  <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
-                                @endif
-                              </td>
-                            </tr>
-                          @endforeach
+                        @foreach($managerCollsEntretiens as $eu)
+                          @php($e = App\Entretien::find($eu->entretien_id))
+                          @php($user = App\User::find($eu->user_id))
+                          @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $user->id, Auth::user()->id))
+                          <tr>
+                            <td>
+                              <a href="{{ url('user/'.$user->id) }}">{{ $user->fullname() }}</a>
+                            </td>
+                            <td>
+                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{ $e->titre }}</a>
+                            </td>
+                            <td>
+                              {{ $e->getStartDate() }}
+                            </td>
+                            <td>
+                              {{ date('d/m/Y', strtotime($e->date_limit)) }}
+                            </td>
+                            <td class="text-center">
+                              <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, $user->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $user->id)->user_updated_at)->format('d/m/Y à H:i') :'Pas encore rempli par '.$user->name }}"> </span>
+                            </td>
+                            <td class="text-center">
+                              <span class="label label-{{$mentorAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$mentorAnswered ? 'Validée par manager le '.Carbon\Carbon::parse($mentorAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$user->name}}"> </span>
+                            </td>
+                            <td class="text-center">
+                              @if($mentorAnswered)
+                                <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                              @else
+                                <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                              @endif
+                            </td>
+                          </tr>
                         @endforeach
                         </tbody>
                       </table>
                     </div>
 
-                    <div class="box-pagination">
-                      {{--{{ $collaborateurs->links() }}--}}
+                    <div class="box-pagination mt-20">
+                      {{ $managerCollsEntretiens->links() }}
                     </div>
                   @else
                     @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
@@ -170,7 +172,7 @@
           </div>
         @endif
 
-        @if (Auth::user()->getUserFeedfackEvaluations()->count() > 0)
+        @if (Auth::user()->getUserEvaluationsByModel('FB360')->count() > 0)
           <div class="card portlet box box-primary mb-20">
             <div class="nav-tabs-custom portlet-title">
               <div class=" caption caption-red mb-10">{{ __("Mes Feedback 360") }}</div>
@@ -188,7 +190,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @forelse(Auth::user()->getUserFeedfackEvaluations() as $eu)
+                  @forelse(Auth::user()->getUserEvaluationsByModel('FB360') as $eu)
                     @php($user = \App\User::find($eu->user_id))
                     @php($e = \App\Entretien::find($eu->entretien_id))
                     @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, $eu->mentor_id))

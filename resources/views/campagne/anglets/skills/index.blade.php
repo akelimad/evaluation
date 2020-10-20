@@ -14,7 +14,7 @@
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')
-            <div class="tab-content">
+            <div class="tab-content p-20">
               @if ($skill)
                 <form action="{{ url('skills/updateUserSkills') }}" method="post">
                   {{ csrf_field() }}
@@ -23,7 +23,7 @@
                   <input type="hidden" name="user_id" value="{{ $user->id }}">
                   <input type="hidden" name="mentor_id" value="{{ $user->parent->id }}">
                   <div class="row">
-                    <div class="col-md-12 mt-20">
+                    <div class="col-md-12 mt-5">
                       <h3 class="m-0">Fiche métier : {{ $skill->title }}</h3>
                     </div>
                   </div>
@@ -120,14 +120,16 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
-                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Enregistrer
-                        </button>
-                      @endif
-                      @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
-                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Enregistrer
-                        </button>
-                      @endif
+                      <div class="p-20 bg-gray clearfix">
+                        @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
+                          <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Enregistrer
+                          </button>
+                        @endif
+                        @if(!App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
+                          <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Enregistrer
+                          </button>
+                        @endif
+                      </div>
                     </div>
                   </div>
                 </form>

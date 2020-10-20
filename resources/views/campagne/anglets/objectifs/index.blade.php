@@ -27,7 +27,7 @@
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
-              <div class="box-body no-padding mb40">
+              <div class="box-body">
                 <form action="{{ route('updateNoteObjectifs') }}" method="post">
                   <input type="hidden" name="entretien_id" value="{{$e->id}}">
                   <input type="hidden" name="user_id" value="{{$user->id}}">
@@ -297,8 +297,8 @@
                     !App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id) && Auth::user()->id != $user->id)
                     <div class="row">
                       <div class="col-md-12">
-                        <div class="save-action mt-20">
-                          <button type="submit" class="btn btn-success" > <i class="fa fa-check"></i> Enregistrer tout</button>
+                        <div class="save-action bg-gray p-20">
+                          <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-save"></i> Enregistrer tout</button>
                           <div class="clearfix"></div>
                         </div>
                       </div>

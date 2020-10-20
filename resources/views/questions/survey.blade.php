@@ -168,11 +168,13 @@
             @endif
           @endforeach
         </div>
-        <a href="{{ route('anglets.synthese') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
-        @if(!App\Entretien::answered($e->id, Auth::user()->id))
-          <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Enregistrer
-          </button>
-        @endif
+        <div class="actions p-20 bg-gray">
+          <a href="{{ route('anglets.synthese', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
+          @if(!App\Entretien::answered($e->id, Auth::user()->id))
+            <button type="submit" class="btn btn-success pull-right" id="submitAnswers"><i class="fa fa-save"></i> Enregistrer
+            </button>
+          @endif
+        </div>
       </form>
     @else
       <p class="alert alert-default">Aucune donnée disponible !</p>

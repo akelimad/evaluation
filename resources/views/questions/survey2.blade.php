@@ -391,11 +391,13 @@
           @endforeach
         </div>
         @if (Route::current()->getName() != 'entretien.apercu')
-        <a href="{{ route('anglets.synthese', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
-        @endif
-        @if(!App\Entretien::answeredMentor($e->id, $user->id, App\User::getMentor($user->id)->id) && Route::current()->getName() != 'entretien.apercu')
-          <button type="submit" class="btn btn-success pull-right" id="submitAnswers"><i class="fa fa-save"></i> Enregistrer
-          </button>
+        <div class="actions bg-gray p-20">
+          <a href="{{ route('anglets.synthese', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
+          @endif
+          @if(!App\Entretien::answeredMentor($e->id, $user->id, App\User::getMentor($user->id)->id) && Route::current()->getName() != 'entretien.apercu')
+            <button type="submit" class="btn btn-success pull-right" id="submitAnswers"><i class="fa fa-save"></i> Enregistrer
+            </button>
+        </div>
         @endif
       </form>
     </div>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Carrière')
+@section('title', 'Carrières')
 @section('content')
   <section class="content evaluations">
     <div class="row">
@@ -11,10 +11,10 @@
             <div class="tab-content">
               <div class="box-body">
                 @if(count(Auth::user()->children)>0 && $user->id != Auth::user()->id)
-                  @include('questions/survey2')
+                  @include('questions/survey2', ['evaluator_id' => $evaluator_id])
                 @endif
                 @if($user->id == Auth::user()->id)
-                  @include('questions/survey')
+                  @include('questions/survey', ['evaluator_id' => $evaluator_id])
                 @endif
               </div>
             </div>

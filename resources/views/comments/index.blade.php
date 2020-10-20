@@ -4,27 +4,22 @@
   <section class="content comments">
     <div class="row">
       <div class="col-md-12">
-        <div class="mb-20">
-          @if(Session::has('mentor_comment'))
-            @include('partials.alerts.success', ['messages' => Session::get('mentor_comment') ])
-          @endif
-        </div>
         <div class="box box-primary direct-chat direct-chat-warning card">
           <h3 class="mt-0 mb40">Commentaire pour: {{ $e->titre }} - {{ $user->fullname() }} </h3>
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')
-            <div class="tab-content">
+            <div class="tab-content p-20">
               @if($comment)
                 <div class="box-body">
-                  <div class="direct-chat-messages" style="height: auto;">
-                    <div class="col-md-6">
+                  <div class="direct-chat-messages p-0" style="height: auto;">
+                    <div class="col-md-6 pl-0">
                       <h4 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du collaborateur : {{ $user->name." ".$user->last_name }}</h4>
                       <div class="direct-chat-msg mb20">
                         <div class="direct-chat-info clearfix">
                           <span class="direct-chat-name pull-left">{{ $user->fullname() }}</span>
                           <span
-                              class="direct-chat-timestamp pull-right">{{ date('d/m/Y à H:i', strtotime($comment->created_at)) }}</span>
+                              class="direct-chat-timestamp pull-right">{{ $comment->userComment != '' ? date('d/m/Y à H:i', strtotime($comment->created_at)) : '---' }}</span>
                         </div>
                         <img class="direct-chat-img" src="{{ App\User::avatar($user->id) }}" alt="message user image">
 
@@ -43,7 +38,7 @@
                       </div>
                     </div>
                     @if(($user->id == Auth::user()->id && App\Entretien::answeredMentor($e->id, $user->id, $user->parent->id)) or ($user->id != Auth::user()->id))
-                      <div class="col-md-6">
+                      <div class="col-md-6 pr-0">
                         <h4 class="alert alert-info" style="padding: 5px;margin-top: 0 !important;">Commentaire du
                           manager : {{ $user->parent->fullname() }}</h4>
 
@@ -87,7 +82,7 @@
                       href="javascript:void(0)"
                       chm-modal="{{ route('comment.add', ['eid' => $e->id, 'uid' => $user->id]) }}"
                       chm-modal-options='{"form":{"attributes":{"id":"commentForm"}}}'
-                      class="btn btn-primary"
+                      class="btn btn-success"
                   ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter un commentaire" }}</a>
               @endif
             </div>

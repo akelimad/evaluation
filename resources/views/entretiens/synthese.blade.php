@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card box box-primary">
-          <h3 class="mt-0 mb40"> Détails de l'entretien annuel d'évaluation: {{$e->titre}} - {{ $user->fullname() }} </h3>
+          <h3 class="mt-0 mb40">Détails de l'entretien annuel d'évaluation: {{$e->titre}} - {{ $user->fullname() }} </h3>
           <div class="nav-tabs-custom">
             @include('partials.tabs')
             <div class="tab-content">
@@ -41,7 +41,7 @@
                   </div>
 
                   <div class="row">
-                    <label class="control-label col-md-4">{{ __("Validation du mentor :") }}</label>
+                    <label class="control-label col-md-4">{{ __("Validation du manager :") }}</label>
                     <div class="col-md-8"><span class="label label-{{App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span>
                     </div>
                     <div class="clearfix"></div>
@@ -93,8 +93,10 @@
 
                 <div class="row">
                   <div class="col-md-12">
-                    <a href="{{ route('home') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
-                    <a href="{{ route($e->isFeedback360() ? 'anglets.feedback360':'anglets.evaluation-annuelle', ['e_id' => $e->id, 'uid' => $user->id, 'mid' => Auth::user()->id]) }}" class="btn btn-primary pull-right">Suivant <i class="fa fa-long-arrow-right"></i></a>
+                    <div class="bg-gray p-20">
+                      <a href="{{ route('home') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
+                      <a href="{{ route($e->isFeedback360() ? 'anglets.feedback360':'anglets.evaluation-annuelle', ['e_id' => $e->id, 'uid' => $user->id, 'mid' => Auth::user()->id]) }}" class="btn btn-primary pull-right">Suivant <i class="fa fa-long-arrow-right"></i></a>
+                    </div>
                   </div>
                 </div>
               </div>

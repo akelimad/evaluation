@@ -100,7 +100,7 @@
       </div>
     </div>
     <div class="row mb-0">
-      <div class="col-md-7 pt-10 pl-10" id="bulk-wrap">
+      <div class="col-md-7 pt-10" id="bulk-wrap">
         @if($isBulkActions && $hasBulkActions && count($callableActions) > 0)
           <select name="" id="table-bulk-action-select" class="d-inline-block">
             <option value="">{{ "Actions groupées" }}</option>

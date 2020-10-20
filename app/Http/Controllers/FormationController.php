@@ -129,7 +129,7 @@ class FormationController extends Controller
     $formation->date = Carbon::createFromFormat('d-m-Y', $request->date);
     $formation->exercice = $request->exercice;
     $formation->title = $request->title;
-    $formation->status = $request->get('status', $formation->status);
+    $formation->status = $request->get('status', $formation->staus > 1 ? $formation->status : 1);
     $formation->done = 0;
     $formation->entretien_id = $e_id;
     $formation->coll_comment = $request->coll_comment;
