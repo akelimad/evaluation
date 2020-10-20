@@ -57,7 +57,8 @@
     {{--<div class="col-md-12">--}}
       {{--@include('partials.alerts.info', ['messages' => "1 : Insuffisant (I) | 2 : En dessous des attentes (ED) | 3 : En ligne avec les attentes (EL) | 4: Au-dessus des attentes (AD) | 5 : Remarquable (R)" ])--}}
     {{--</div>--}}
-    <div class="col-md-6">
+    @if(!$e->isFeedback360())
+      <div class="col-md-6">
       <h4 class="alert alert-info">Auto-évaluation de : {{ $user->name." ".$user->last_name }} </h4>
 
       <div class="panel-group">
@@ -199,13 +200,20 @@
         @endforeach
       </div>
     </div>
-    <div class="col-md-6 mentor-item">
+    @endif
+    <div class="col-md-{{ $e->isFeedback360() ? '12':'6' }} mentor-item">
       <span id="max_note" class="hidden">{{ App\Setting::get('max_note') }}</span>
-      <h4 class="alert alert-info"> {{ App\User::getMentor($user->id)->name." ".App\User::getMentor($user->id)->last_name }} </h4>
+      @php($evaluator = App\User::find($evaluator_id))
+      @php($userFname = $evaluator ? $evaluator->fullname() : '---')
+      @if (!$e->isFeedback360())
+        @php($mentor_id = App\User::getMentor($user->id) ? App\User::getMentor($user->id)->id : Auth::user()->id)
+      @else
+        @php($mentor_id = $evaluator_id)
+      @endif
+      <h4 class="alert alert-info"> {{ $e->isFeedback360() ? $userFname : App\User::getMentor($user->id)->fullname() }} </h4>
       <form action="{{url('answers/store')}}" method="post" id="surveyForm">
         <input type="hidden" name="entretien_id" value="{{$e->id}}">
-        <input type="hidden" name="mentor_id"
-               value="{{App\User::getMentor($user->id) ? App\User::getMentor($user->id)->id : Auth::user()->id }}">
+        <input type="hidden" name="mentor_id" value="{{ $mentor_id }}">
         <input type="hidden" name="user_id" value="{{$user->id}}">
         <input type="hidden" name="is_mentor" value="1">
 
@@ -237,7 +245,7 @@
                                 </label>
                               </div>
                               @if($q->ponderation > 0)
-                                @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $e->id))
+                                @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
                                 <div class="col-md-6">
                                   @if(Route::currentRouteName() == 'entretien.apercu')
                                     <span>Note : {{ $mentorAnswer ? $mentorAnswer->note : ''}}/{{ App\Setting::get('max_note') }}</span>
@@ -257,19 +265,19 @@
 
                           @if($q->type == 'text')
                             <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" class="form-control" required
-                                   value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                   value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer : ''}}" {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
                           @elseif($q->type == 'textarea')
                             <textarea name="answers[{{$q->id}}][ansr]" class="form-control"
-                                      required {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}</textarea>
+                                      required {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>{{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer : ''}}</textarea>
                           @elseif($q->type == "checkbox")
                             <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"
                                    class="notation" min="1" max="{{ $maxNote }}"
-                                   value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->note : ''}}"
+                                   value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->note : ''}}"
                                    style="display: {{$g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle' ? 'block':'none'}}">
                             <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                             @foreach($q->children as $child)
                               <div class="survey-checkbox">
-                                <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer)) ? 'checked' : '' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) && in_array($child->id, json_decode(App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer)) ? 'checked' : '' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
                                 <label for="{{$child->titre}}">{{ $child->titre }}</label>
                               </div>
                             @endforeach
@@ -277,7 +285,7 @@
                           @elseif($q->type == "radio")
                             @foreach($q->children as $child)
                               <div class="choice-item">
-                                <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
                                 <label for="{{$child->id}}" class="d-inline-block">{{ $child->titre }}</label>
                               </div>
                             @endforeach
@@ -287,7 +295,7 @@
                                      data-slider-min="1"
                                      data-slider-max="5"
                                      data-slider-step="1"
-                                     data-slider-value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer : ''}}"
+                                     data-slider-value="{{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) ? App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer : ''}}"
                                      data-slider-ticks="[1, 2, 3, 4, 5]"
                                      data-slider-ticks-labels='["1", "2", "3", "4", "5"]'
                                      data-slider-tooltip="always"
@@ -297,7 +305,7 @@
                             @foreach($q->children as $child)
                               <div class="row margin-bottom">
                                 <div class="col-md-2">
-                                  <input type="radio" name="answers[{{$q->id}}][ansr]" value="{{ $child->id }}" id="mentor-{{ $child->id }}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer == $child->id ? 'checked' : '' }}> {{ $child->titre }}
+                                  <input type="radio" name="answers[{{$q->id}}][ansr]" value="{{ $child->id }}" id="mentor-{{ $child->id }}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) && App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer == $child->id ? 'checked' : '' }}> {{ $child->titre }}
                                 </div>
                                 <div class="col-md-10">
                                   <label class="pull-right pointer" for="mentor-{{ $child->id }}">{{ json_decode($child->options)->label }}</label>
@@ -310,7 +318,7 @@
                                 <select name="answers[{{$q->id}}][ansr]" id="" class="form-control" required>
                                   <option value=""></option>
                                   @foreach($q->children as $child)
-                                    <option value="{{ $child->id }}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $e->id) && App\Answer::getMentorAnswers($q->id, $user->id, $e->id)->mentor_answer == $child->id ? 'selected' : '' }}>{{ $child->titre }}</option>
+                                    <option value="{{ $child->id }}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) && App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer == $child->id ? 'selected' : '' }}>{{ $child->titre }}</option>
                                   @endforeach
                                 </select>
                               </div>
@@ -383,15 +391,16 @@
           @endforeach
         </div>
         @if (Route::current()->getName() != 'entretien.apercu')
-        <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
+        <a href="{{ route('anglets.synthese', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour </a>
         @endif
-        @if(!App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) && Route::current()->getName() != 'entretien.apercu')
-          <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Enregistrer
+        @if(!App\Entretien::answeredMentor($e->id, $user->id, App\User::getMentor($user->id)->id) && Route::current()->getName() != 'entretien.apercu')
+          <button type="submit" class="btn btn-success pull-right" id="submitAnswers"><i class="fa fa-save"></i> Enregistrer
           </button>
         @endif
       </form>
     </div>
 
+    @if (!$e->isFeedback360())
     <div class="col-md-12 mt-30">
       <div class="alert alert-info">
         @php($totalNote = \App\Answer::getTotalNote($survey->id, $user->id, $e->id))
@@ -411,6 +420,7 @@
         </div>
       </div>
     </div>
+    @endif
   @else
     <p class="alert alert-default">Aucune donnée disponible !</p>
   @endif

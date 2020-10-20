@@ -191,7 +191,7 @@
                   @forelse(Auth::user()->getUserFeedfackEvaluations() as $eu)
                     @php($user = \App\User::find($eu->user_id))
                     @php($e = \App\Entretien::find($eu->entretien_id))
-                    @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, Auth::user()->id))
+                    @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, $eu->mentor_id))
                     <tr>
                       <td>
                         {{ $user ? $user->fullname() : '---' }}
@@ -202,7 +202,7 @@
                       <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
                       <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
                       <td class="text-center">
-                        <span class="label label-danger empty"></span>
+                        <span class="label label-{{ $mentorAnswered ? 'success':'danger' }} empty"></span>
                       </td>
                       <td>
                         @if($mentorAnswered)

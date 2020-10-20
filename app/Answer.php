@@ -38,12 +38,12 @@ class Answer extends Model
         return false;
     }
 
-    public static function getMentorAnswers($qid, $uid, $eid)
+    public static function getMentorAnswers($qid, $uid, $evaluator_id = 0, $eid)
     {
         $user = User::findOrFail($uid);
         $answer = Answer::where('question_id', $qid)
             ->where('user_id', $user->id)
-            ->where('mentor_id', $user->parent->id)
+            ->where('mentor_id', $evaluator_id)
             ->where('entretien_id', $eid)
             ->first();
         if($answer && $answer->mentor_answer != null){

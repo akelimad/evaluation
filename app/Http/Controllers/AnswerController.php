@@ -55,6 +55,7 @@ class AnswerController extends Controller
     try {
       $uid = $request->user_id;
       $eid = $request->entretien_id;
+      $entretien = Entretien::find($eid);
       foreach ($request->answers as $key => $value) {
         $a = Answer::getCollAnswers($key, $uid, $eid);
         if (!$a) {
@@ -102,15 +103,17 @@ class AnswerController extends Controller
       } else {
         $proporty = 'mentor_submitted';
       }
-      Entretien_user::where('user_id', $uid)
-        ->where('entretien_id', $eid)
-        ->update([
-          'note' => Answer::cutNum($note),
-          $proporty => 1 // means coll or mentor start responding
-        ]);
+      $query = Entretien_user::where('user_id', $uid)->where('entretien_id', $eid);
+      if ($entretien->isFeedback360()) {
+        $query->where('mentor_id', $request->mentor_id);
+      }
+      $query->update([
+        'note' => Answer::cutNum($note),
+        $proporty => 1 // means coll or mentor start responding
+      ]);
       return redirect()->back()->with('success', __("Les informations ont été sauvegardées avec succès"));
     } catch (\Exception $e) {
-      return redirect()->back()->with('success', __("Une erreur est survenue, réessayez plus tard"));
+      return redirect()->back()->with('danger', __("Une erreur est survenue, réessayez plus tard. :error", ['error' => $e->getMessage()]));
     }
 
     return redirect()->back();

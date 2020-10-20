@@ -237,7 +237,7 @@
                 <label for="fb30_userid_to_evaluate" class="control-label required">{{ __("Choisissez l'évalué") }}</label>
                 <select name="fb30_userid_to_evaluate" id="fb30_userid_to_evaluate" class="form-control select2" data-placeholder="select" style="width: 100%;" chm-validate="required">
                   @foreach($users as $user)
-                    <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $e_users) ? 'selected':null}}>{{ $user->fullname() }}</option>
+                    <option title="{{ $user->email }}" value="{{ $user->id }}" {{ in_array($user->id, $entretien->users->pluck('id')->toArray()) ? 'selected':''}}>{{ $user->fullname() }}</option>
                   @endforeach
                 </select>
               </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Answer;
+use App\Campaign;
 use App\Comment;
 use App\Email;
 use App\Entretien;
@@ -26,7 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EntretienUserController extends Controller
 {
-  public function getTable(Request $request) {
+  public function getTable(Request $request)
+  {
     $table = new Table($request);
     $e = Entretien::find($request->get('eid', 0));
     $query = Entretien_user::where('entretien_id', $e->id);
@@ -43,7 +45,7 @@ class EntretienUserController extends Controller
       $user = User::find($row->user_id);
       $userParentId = $user->parent ? $user->parent->id : 0;
       $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId, $e->id, 'user');
-      return '<span class="badge '.$statusInfo['labelClass'].'">'.$statusInfo['name'].'</span>';
+      return '<span class="badge ' . $statusInfo['labelClass'] . '">' . $statusInfo['name'] . '</span>';
     });
     $table->addColumn('manager', 'Evaluateur', function ($row) {
       $e = Entretien::find($row->entretien_id);
@@ -59,8 +61,11 @@ class EntretienUserController extends Controller
       $user = User::find($row->user_id);
       $e = Entretien::find($row->entretien_id);
       $userParentId = $user->parent ? $user->parent->id : 0;
-      $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId , $e->id, 'mentor');
-      return '<span class="badge '.$statusInfo['labelClass'].'">'.$statusInfo['name'].'</span>';
+      if ($e->isFeedback360()) {
+        $userParentId = $row->mentor_id;
+      }
+      $statusInfo = \App\Entretien_user::getStatus($user->id, $userParentId, $e->id, 'mentor');
+      return '<span class="badge ' . $statusInfo['labelClass'] . '">' . $statusInfo['name'] . '</span>';
     });
     // define table actions
     $table->addAction('apercu', [
@@ -68,18 +73,20 @@ class EntretienUserController extends Controller
       'label' => 'Aperçu',
       'route' => ['name' => 'entretien.apercu', 'args' => ['id' => '[id]']],
       'attrs' => [
-        'chm-modal'=> '',
-        'chm-modal-options'=> '{"width": "1000px"}',
+        'chm-modal' => '',
+        'chm-modal-options' => '{"width": "1000px"}',
       ],
       'bulk_action' => false,
     ]);
-    $table->addAction('reminder_coll', [
-      'icon' => 'fa fa-bell',
-      'label' => "Rappeler à l'évalué de remplir son entretien",
-      'callback' => 'chmEntretien.reminder',
-      'callback_params'=> ['role' => 'coll'],
-      'bulk_action' => true,
-    ]);
+    if (!$e->isFeedback360()) {
+      $table->addAction('reminder_coll', [
+        'icon' => 'fa fa-bell',
+        'label' => "Rappeler à l'évalué de remplir son entretien",
+        'callback' => 'chmEntretien.reminder',
+        'callback_params' => ['role' => 'coll'],
+        'bulk_action' => true,
+      ]);
+    }
     $table->addAction('reminder_manager', [
       'icon' => 'fa fa-bell',
       'label' => "Rappeler à l'évaluateur de remplir son entretien",
@@ -178,10 +185,10 @@ class EntretienUserController extends Controller
   public function apercu($id)
   {
     ob_start();
-    $entretien_user = Entretien_user::find($id);
-    $eid = $entretien_user->entretien_id;
-    $uid = $entretien_user->user_id;
-    $e = Entretien::findOrFail($entretien_user->entretien_id);
+    $eu = Entretien_user::find($id);
+    $eid = $eu->entretien_id;
+    $uid = $eu->user_id;
+    $e = Entretien::findOrFail($eu->entretien_id);
     if ($e->user_id != User::getOwner()->id) {
       abort(403);
     }
@@ -201,7 +208,7 @@ class EntretienUserController extends Controller
     foreach ($evaluations as $eval) {
       $entreEvalsTitle[] = $eval->title;
     }
-    echo view('entretiens.apercu', compact('entreEvalsTitle', 'e', 'user', 'salaries', 'objectifsPersonnal', 'objectifsTeam', 'formations', 'skill', 'comment', 'evaluations'));
+    echo view('entretiens.apercu', compact('eu', 'entreEvalsTitle', 'e', 'user', 'salaries', 'objectifsPersonnal', 'objectifsTeam', 'formations', 'skill', 'comment', 'evaluations'));
     $content = ob_get_clean();
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }
@@ -300,10 +307,15 @@ class EntretienUserController extends Controller
     if (empty($ids)) return;
     $usersId = [];
     $eid = 0;
+    $entretien = null;
     foreach ($ids as $id) {
       $e_u = Entretien_user::find($id);
-      $usersId[] = $e_u->user_id;
       $eid = $e_u->entretien_id;
+      $entretien = Entretien::find($eid);
+      $usersId[] = [
+        'user_id' => $e_u->user_id,
+        'mentor_id' => $entretien->isFeedback360() ? $e_u->mentor_id : $e_u->user_id,
+      ];
     }
 
     $role = $request->params['role'];
@@ -318,21 +330,21 @@ class EntretienUserController extends Controller
       $template = Email::getAll()->where('ref', 'mentor_eval')->first();
     }
 
-    $entretien = Entretien::find($eid);
+
     $i = 0;
-    foreach ($usersId as $uid) {
+    foreach ($usersId as $item) {
       $canReceive = true;
-      $user = User::findOrFail($uid);
       if ($role == 'mentor') {
-        $user = $user->parent;
-        $mentorHasSubmitted = Entretien_user::mentorHasSubmitedEval($eid, $uid, $user->id);
+        $reciever = User::findOrFail($item['mentor_id']);
+        $mentorHasSubmitted = Entretien_user::mentorHasSubmitedEval($eid, $item['user_id'], $item['mentor_id']);
         if ($mentorHasSubmitted) $canReceive = false;
       } else {
+        $reciever = User::findOrFail($item['user_id']);
         $userHasSubmitted = Entretien_user::userHasSubmitedEval($eid, $uid);
         if ($userHasSubmitted) $canReceive = false;
       }
       if (!$canReceive) continue;
-      MailerController::send($user, $entretien, $template);
+      MailerController::send($reciever, $entretien, $template);
       $i++;
     }
 
@@ -345,9 +357,27 @@ class EntretienUserController extends Controller
   public function delete(Request $request) {
     $ids = $request->get('ids', []);
     if (empty($ids)) return;
-    \DB::table('entretien_user')->whereIn('id', $ids)->delete();
+    $deleteEvalEmail = Email::getAll()->where('ref', 'delete_eval')->first();
+    foreach ($ids as $id) {
+      $e_u = Entretien_user::find($id);
+      $entretien = Entretien::find($e_u->entretien_id);
+      \DB::table('entretien_user')->where('id', $id)->delete();
+      if ($entretien->isFeedback360()) {
+        $reciever = User::find($e_u->mentor_id);
+      } else {
+        $reciever = User::find($e_u->user_id);
+      }
+      $campaignData = [
+        'entretien_id' => $entretien->id,
+        'email_id' => $deleteEvalEmail->id,
+        'receiver' => $reciever->email,
+        'shedule_type' => 'now',
+        'sheduled_at' => date('Y-m-d H:i'),
+      ];
+      Campaign::create($campaignData);
+    }
 
-    return ['status' => 'success', 'message' => __("La suppression a bien été effectutée")];
+    return ['status' => 'success', 'message' => __("La suppression a bien été effectuée, un email de suppression de l'évaluation sera envoyé pour les utilisateurs selectionnées")];
   }
 
   public function reopen(Request $request)
@@ -397,10 +427,12 @@ class EntretienUserController extends Controller
       foreach ($ids as $id) {
         $e_u = Entretien_user::find($id);
         $eid = $e_u->entretien_id;
+        $e = Entretien::find($eid);
         $uid = $e_u->user_id;
         $user = User::find($uid);
+        $evaluator = $e->isFeedback360() ? User::find($e_u->mentor_id) : $user->parent;
 
-        $filename = 'Réponses-'.$user->fullname().'-'.$user->parent->fullname();
+        $filename = 'Réponses-'.$user->fullname().'-'.$evaluator->fullname();
         $export = Excel::create($filename, function($excel) use ($e_u, $eid, $uid, $evaluationsTitle) {
 
           if (in_array('Evaluation annuelle', $evaluationsTitle)) {
@@ -409,7 +441,8 @@ class EntretienUserController extends Controller
               $sid = isset($sid[0]) ? $sid[0] : 0;
               $survey = Survey::find($sid);
               if (!$survey) $survey = new Survey();
-              $sheet->loadView('entretiens.xls.evaluations', compact('survey', 'eid', 'uid'));
+              $evaluator_id = $e_u->mentor_id;
+              $sheet->loadView('entretiens.xls.evaluations', compact('survey', 'eid', 'uid', 'evaluator_id'));
             });
           }
 

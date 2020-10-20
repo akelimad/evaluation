@@ -27,7 +27,7 @@
       <form action="{{url('answers/store')}}" method="post" class="surveyForm">
         <input type="hidden" name="entretien_id" value="{{$e->id}}">
         <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
-        <input type="hidden" name="mentor_id" value="{{ Auth::user()->parent->id }}">
+        <input type="hidden" name="mentor_id" value="{{ $e->isFeedback360() ? $evaluator_id : Auth::user()->parent->id }}">
         {{ csrf_field() }}
         <div class="panel-group">
           @foreach($groupes as $g)
@@ -168,7 +168,7 @@
             @endif
           @endforeach
         </div>
-        <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
+        <a href="{{ route('anglets.synthese') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
         @if(!App\Entretien::answered($e->id, Auth::user()->id))
           <button type="submit" class="btn btn-success" id="submitAnswers"><i class="fa fa-check"></i> Enregistrer
           </button>

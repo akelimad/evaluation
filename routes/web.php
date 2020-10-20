@@ -14,6 +14,7 @@
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/dashboard', 'HomeController@dashboard');
 Route::get('profile', 'UserController@profile');
@@ -130,6 +131,7 @@ Route::post('entretiens/change-status', 'EntretienController@changeStatus')->nam
 Route::get('entretiens/{id}/clone', 'EntretienController@copier')->name('entretien.clone');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluation-annuelle', 'EvaluationController@index')->name('anglets.evaluation-annuelle');
+Route::get('entretiens/{e_id}/u/{uid}/m/{mid}/feedback360', 'Feedback360Controller@index')->name('anglets.feedback360');
 
 
 
@@ -201,6 +203,3 @@ Route::get('table/translations', 'TranslationController@getTable')->name('interf
 Route::get('interface/translations', 'TranslationController@index')->name('interface.translations');
 Route::post('interface/translations/store', 'TranslationController@store')->name('translations.store');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

@@ -10,37 +10,48 @@
             @include('partials.tabs')
             <div class="tab-content">
               <div class="active tab-pane">
-                <div class="row">
-                  <label class="control-label col-md-4">Date limite pour l'auto-évaluation :</label>
-                  <div class="col-md-8"> {{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}} </div>
-                  <div class="clearfix"></div>
-                </div>
-
-                <div class="row">
-                  <label class="control-label col-md-4">Date limite pour l'évaluation manager :</label>
-                  <div class="col-md-8"> {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}} </div>
-                  <div class="clearfix"></div>
-                </div>
-
-                <div class="row">
-                  <label class="control-label col-md-4">Validation du collaborateur :</label>
-                  <div class="col-md-8"><span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty"> </span>
+                @if ($e->isFeedback360())
+                  <div class="row">
+                    <label class="control-label col-md-4">{{ __("Date limite :") }}</label>
+                    <div class="col-md-8"> {{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}} </div>
+                    <div class="clearfix"></div>
                   </div>
-                  <div class="clearfix"></div>
-                </div>
-
-                <div class="row">
-                  <label class="control-label col-md-4">Validation du mentor :</label>
-                  <div class="col-md-8"><span class="label label-{{App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span>
+                  <div class="row">
+                    <label class="control-label col-md-4">{{ __("Validation de l'évaluateur (vous) :") }}</label>
+                    <div class="col-md-8"><span class="label label-{{App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span>
+                    </div>
+                    <div class="clearfix"></div>
                   </div>
-                  <div class="clearfix"></div>
-                </div>
+                @else
+                  <div class="row">
+                    <label class="control-label col-md-4">{{ __("Date limite pour l'auto-évaluation :") }}</label>
+                    <div class="col-md-8"> {{ Carbon\Carbon::parse($e->date)->format('d/m/Y')}} </div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="row">
+                    <label class="control-label col-md-4">{{ __("Date limite pour l'évaluation manager :") }}</label>
+                    <div class="col-md-8"> {{ Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}} </div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="row">
+                    <label class="control-label col-md-4">{{ __("Validation du collaborateur :") }}</label>
+                    <div class="col-md-8"><span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty"> </span>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
 
-                <div class="row">
-                  <label class="control-label col-md-4">Manager :</label>
-                  <div class="col-md-8"> {{$user->parent ? $user->parent->name." ".$user->parent->last_name : $user->name." ".$user->last_name}} </div>
-                  <div class="clearfix"></div>
-                </div>
+                  <div class="row">
+                    <label class="control-label col-md-4">{{ __("Validation du mentor :") }}</label>
+                    <div class="col-md-8"><span class="label label-{{App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id) ? 'success':'danger'}} empty"> </span>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="row">
+                    <label class="control-label col-md-4">Manager :</label>
+                    <div class="col-md-8"> {{$user->parent ? $user->parent->name." ".$user->parent->last_name : $user->name." ".$user->last_name}} </div>
+                    <div class="clearfix"></div>
+                  </div>
+                @endif
 
                 <div class="row">
                   <label class="control-label col-md-4">Titre :</label>
@@ -83,7 +94,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <a href="{{ route('home') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
-                    <a href="{{ route('anglets.evaluation-annuelle', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary pull-right">Suivant <i class="fa fa-long-arrow-right"></i></a>
+                    <a href="{{ route($e->isFeedback360() ? 'anglets.feedback360':'anglets.evaluation-annuelle', ['e_id' => $e->id, 'uid' => $user->id, 'mid' => Auth::user()->id]) }}" class="btn btn-primary pull-right">Suivant <i class="fa fa-long-arrow-right"></i></a>
                   </div>
                 </div>
               </div>

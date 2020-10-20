@@ -147,7 +147,7 @@
 
         @role(["MENTOR", "COLLABORATEUR"])
         <li class="{{ Request::is('/') ? 'active' : '' }}">
-          <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>{{ __("Mes entretiens") }}</span></a>
+          <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>{{ __("Mes évaluations") }}</span></a>
         </li>
         @endrole
 

@@ -2,10 +2,16 @@
   <li class="{{ Request::segment(5) == 'synthese' ? 'active':'' }}">
     <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">Synthèse</a>
   </li>
-  @foreach($evaluations as $evaluation)
-    @php($anglet = App\Evaluation::unaccented($evaluation->title))
-    <li class="{{ Request::segment(5) == App\Evaluation::unaccented($evaluation->title) ? 'active':'' }}">
-      <a href="{{ route('anglets.'.$anglet, ['eid' => $e->id, 'uid' => $user->id]) }}">{{ $evaluation->title }}</a>
+  @if ($e->isFeedback360())
+    <li class="{{ Request::segment(7) == 'feedback360' ? 'active':'' }}">
+      <a href="{{ route('anglets.feedback360', ['e_id' => $e->id, 'uid' => $user->id, 'mid' => Auth::user()->id]) }}">Feedback 360</a>
     </li>
-  @endforeach
+  @else
+    @foreach($evaluations as $evaluation)
+      @php($anglet = App\Evaluation::unaccented($evaluation->title))
+      <li class="{{ Request::segment(5) == App\Evaluation::unaccented($evaluation->title) ? 'active':'' }}">
+        <a href="{{ route('anglets.'.$anglet, ['eid' => $e->id, 'uid' => $user->id]) }}">{{ $evaluation->title }}</a>
+      </li>
+    @endforeach
+  @endif
 </ul>

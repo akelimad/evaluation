@@ -221,7 +221,12 @@ class EntretienController extends Controller
     
     if (isset($id) && is_numeric($id)) {
       $entretien = Entretien::findOrFail($id);
-      $entretienUsers = $entretien->users()->pluck('users.id')->toArray();
+      if ($entretien->isFeedback360()) {
+        $entretienUsers = $entretien->users()->pluck('mentor_id')->toArray();
+      } else {
+        $entretienUsers = $entretien->users()->pluck('users.id')->toArray();
+      }
+
       $removedUsers = array_diff($entretienUsers, $selectedUsers);
       $selectedUsers = array_diff($selectedUsers, $entretienUsers);
     } else {
@@ -314,21 +319,24 @@ class EntretienController extends Controller
 
     $already_sent = [];
 
+    $fb360_user_id = $request->get('fb30_userid_to_evaluate', 0);
     foreach ($selectedUsers as $uid) {
-      $fb360_user_id = $request->get('fb30_userid_to_evaluate', 0);
       if ($uid <= 0 || $fb360_user_id <= 0) continue;
       $user = User::findOrFail($uid);
 
       if ($entretien->isFeedback360()) {
-        $entretien->users()->attach([$fb360_user_id => ['mentor_id' =>$uid]]);
-        $campaignData = [
-          'entretien_id' => $entretien->id,
-          'email_id' => $collEmail->id,
-          'receiver' => $user->email,
-          'shedule_type' =>  $request->shedule_type,
-          'sheduled_at' => $request->shedule_type == 'now' ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime($request->sheduled_at)),
-        ];
-        Campaign::create($campaignData);
+        $euExist = Entretien_user::where('entretien_id', $entretien->id)->where('user_id', $fb360_user_id)->where('mentor_id', $uid)->count() > 0;
+        if (!$euExist) {
+          $entretien->users()->attach([$fb360_user_id => ['mentor_id' =>$uid]]);
+          $campaignData = [
+            'entretien_id' => $entretien->id,
+            'email_id' => $collEmail->id,
+            'receiver' => $user->email,
+            'shedule_type' =>  $request->shedule_type,
+            'sheduled_at' => $request->shedule_type == 'now' ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime($request->sheduled_at)),
+          ];
+          Campaign::create($campaignData);
+        }
       } else {
         $campaignData = [
           'entretien_id' => $entretien->id,
@@ -352,11 +360,23 @@ class EntretienController extends Controller
 
     // handle removed colls in edit action
     $deleteEvalEmail = Email::getAll()->where('ref', 'delete_eval')->first();
+
     if($deleteEvalEmail) {
       foreach ($removedUsers as $uid) {
         $user = User::findOrFail($uid);
-        $entretien->users()->detach($user);
-        MailerController::send($user, $entretien, $deleteEvalEmail);
+        if ($entretien->isFeedback360()) {
+          Entretien_user::where('entretien_id', $entretien->id)->where('user_id', $fb360_user_id)->where('mentor_id', $uid)->delete();
+        } else {
+          $entretien->users()->detach($user);
+        }
+        $campaignData = [
+          'entretien_id' => $entretien->id,
+          'email_id' => $deleteEvalEmail->id,
+          'receiver' => $user->email,
+          'shedule_type' => 'now',
+          'sheduled_at' => date('Y-m-d H:i'),
+        ];
+        Campaign::create($campaignData);
       }
     }
 
@@ -507,12 +527,14 @@ class EntretienController extends Controller
           'user_updated_at' => date('Y-m-d H:i:s'),
         ]);
     } else { // this is a mentor
-      \DB::table('entretien_user')
-        ->where('entretien_id', $request->eid)->where('user_id', $request->user)
-        ->update([
-          'mentor_submitted' => 2,
-          'mentor_updated_at' => date('Y-m-d H:i:s'),
-        ]);
+      $query = \DB::table('entretien_user')->where('entretien_id', $request->eid)->where('user_id', $request->user);
+      if ($entretien->isFeedback360()) {
+        $query->where('mentor_id', Auth::user()->id);
+      }
+      $query->update([
+        'mentor_submitted' => 2,
+        'mentor_updated_at' => date('Y-m-d H:i:s'),
+      ]);
       $rh_validate = Email::getAll()->where('ref', 'rh_val')->first();
       $rhs = User::getUsers()->with('roles')->whereHas('roles', function ($query) {
         $query->where('name', '=', 'RH');

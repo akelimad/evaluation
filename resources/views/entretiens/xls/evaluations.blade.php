@@ -27,10 +27,10 @@
 
           <td>
             @if (in_array($q->type, ['text', 'textarea']))
-              {{ App\Answer::getMentorAnswers($q->id, $uid, $eid) ? App\Answer::getMentorAnswers($q->id, $uid, $eid)->mentor_answer : ''}}
+              {{ App\Answer::getMentorAnswers($q->id, $uid, $evaluator_id, $eid) ? App\Answer::getMentorAnswers($q->id, $uid, $evaluator_id, $eid)->mentor_answer : ''}}
             @elseif ($q->type == 'select')
               @foreach($q->children as $child)
-                {{ App\Answer::getMentorAnswers($q->id, $uid, $eid) && App\Answer::getMentorAnswers($q->id, $uid, $eid)->mentor_answer == $child->id ? $child->titre : ''}}
+                {{ App\Answer::getMentorAnswers($q->id, $uid, $evaluator_id, $eid) && App\Answer::getMentorAnswers($q->id, $uid, $evaluator_id, $eid)->mentor_answer == $child->id ? $child->titre : ''}}
               @endforeach
             @endif
           </td>
