@@ -212,11 +212,7 @@ class UserController extends Controller
     $user->date_recruiting = $request->date_recruiting;
     $user->mle = $request->mle;
     $user->status = 1;
-    if ($request->user_id != null) {
-      $user->user_id = $request->user_id;
-    } else {
-      $user->user_id = 0;
-    }
+    $user->user_id = $request->get('user_id', $user->user_id > 0 ? $user->user_id : 0);
     $user->society_id = User::getOwner()->id;
     $user->save();
     if ($file = $request->hasFile('avatar')) {
