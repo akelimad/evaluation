@@ -17,7 +17,7 @@ class CampaignReminder extends Command
    *
    * @var string
    */
-  protected $signature = 'campaign:reminder';
+  protected $signature = 'campaign:reminder {--eid=}';
 
   /**
    * The console command description.
@@ -43,12 +43,14 @@ class CampaignReminder extends Command
    */
   public function handle()
   {
+    $eid = $this->option('eid');
     $now = date("Y-m-d H:i", strtotime(Carbon::now()->addHour()));
     $campaignEmails = \DB::table('campaigns')
       ->select('campaigns.*', 'entretiens.date_limit')
       ->join('entretiens', 'entretiens.id', '=', 'campaigns.entretien_id')
       ->where('campaigns.sheduled_at', '<=', $now)
       ->where('entretiens.date_limit', '>=', $now)
+      ->where('campaigns.entretien_id', $eid)
       ->get();
 
     if ($campaignEmails->count() <= 0) {
@@ -57,10 +59,10 @@ class CampaignReminder extends Command
     }
 
     $i = 0;
+    $entretien = Entretien::find($eid);
     foreach ($campaignEmails as $campaignEmail) {
       $user = User::where('email', $campaignEmail->receiver)->first();
       $isManager = $user->children != null && $user->children->count() > 0;
-      $entretien = Entretien::find($campaignEmail->entretien_id);
       // check deadlie
       if (!$isManager && $entretien->date > $now) continue;
 
@@ -73,7 +75,13 @@ class CampaignReminder extends Command
           ->get();
         if ($managersEntretiens->count() == 0) $userAnswered = true;
       } else {
-        $answered = Entretien::answered($entretien->id, $user->id);
+        if ($entretien->isFeedback360()) {
+          $users_id = $entretien->users->pluck('id')->toArray();
+          $user_id = isset($users_id[0]) ? $users_id[0] : 0;
+          $answered = Entretien::answeredMentor($eid, $user_id, $user->id);
+        } else {
+          $answered = Entretien::answered($entretien->id, $user->id);
+        }
         if ($answered) $userAnswered = true;
       }
       if ($userAnswered) continue;

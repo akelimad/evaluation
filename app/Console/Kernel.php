@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
 
         $entretiens = Entretien::all();
         foreach ($entretiens as $e) {
-            $schedule->command('campaign:reminder')->cron($e->getCronTabExpression());
+            $schedule->command('campaign:reminder --eid=' . $e->id)->cron($e->getCronTabExpression());
         }
     }
 }

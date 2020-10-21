@@ -252,25 +252,6 @@ class EntretienController extends Controller
     if (empty($selectedUsers) && $id <= 0) {
       $validator->getMessageBag()->add('users_empty', __("Aucun utilisateur trouvé, veuillez sélectionner les personnes à évaluer"));
     }
-    if ($model == "Feedback 360") {
-      if (count($selectedUsers) > 1) {
-        $validator->getMessageBag()->add('user', __("Vous ne pouvez pas sélectionner plus que 1 participant pour le feedback 360"));
-      }
-      foreach ($selectedUsers as $key => $uid) {
-        $user = User::find($uid);
-        $userTeams = $user->teams;
-        if ($userTeams->count() <= 0) {
-          $validator->getMessageBag()->add('teams_'.$uid, __("Le collaborateur (trice) (:user_flname) n'est affecté(e) à aucune équipe", ['user_flname' => $user->fullname()]));
-        }
-        $countCollaboratorInTeams = 0;
-        foreach ($userTeams as $team) {
-          $countCollaboratorInTeams += $team->users->count();
-        }
-        if ($countCollaboratorInTeams < 2) {
-          $validator->getMessageBag()->add('team_coll'.$uid, __("Le collaborateur (trice) (:user_flname) n'a pas des collègues dans ses équipes", [':user_flname' => $user->fullname()]));
-        }
-      }
-    }
 
     $messages = $validator->errors();
 
@@ -321,7 +302,7 @@ class EntretienController extends Controller
 
     $fb360_user_id = $request->get('fb30_userid_to_evaluate', 0);
     foreach ($selectedUsers as $uid) {
-      if ($uid <= 0 || $fb360_user_id <= 0) continue;
+      if ($uid <= 0 || $fb360_user_id <= 0 || $fb360_user_id == $uid) continue;
       $user = User::findOrFail($uid);
 
       if ($entretien->isFeedback360()) {
