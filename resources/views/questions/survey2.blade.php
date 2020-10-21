@@ -133,60 +133,28 @@
                             </div>
                           </div>
                         @elseif($q->type == "array")
-                          @php($answersColumns = json_decode($q->options, true))
-                          @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
-                          @php($positivesAnswers = 0)
-                          @php($options = json_decode($q->options, true))
-                          @php($showNote = isset($options['show_global_note']) ? 1 : 0)
-                          @if (!empty($answersColumns))
-                            <div class="table-responsive">
-                              <table class="table table-hover array-table">
-                                <thead>
+                            @php($qAnswer = App\Answer::getCollAnswers($q->id, $user->id, $e->id))
+                            @php($qAnswer = $qAnswer ? json_decode($qAnswer->answer, true) : [])
+                            <table class="table table-hover">
+                              <thead>
+                              <tr>
+                                <th></th>
+                                @foreach($q->getOptions('answers') as $ansrKey => $answer)
+                                  <th>{{ $answer['title'] }}</th>
+                                @endforeach
+                              </tr>
+                              </thead>
+                              <tbody>
+                              @foreach($q->getOptions('subquestions') as $subKey => $subquestion)
                                 <tr>
-                                  <th width="20%"></th>
-                                  @foreach($answersColumns as $key => $answer)
-                                    @if ($answer['id'] > 0)
-                                      @php($positivesAnswers ++)
-                                    @endif
-                                    <th class="text-center">
-                                      <label for="">{{ $answer['id'] != 'n/a' && $showNote ? $answer['id'] . ' = ' : ''  }} {{ $answer['value'] }}</label>
-                                    </th>
+                                  <td>{{ $subquestion['title'] }}</td>
+                                  @foreach($q->getOptions('answers') as $key => $answer)
+                                    <td><input type="radio" name="answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }} disabled></td>
                                   @endforeach
                                 </tr>
-                                </thead>
-                                <tbody>
-                                @php($sum = $countItems =0)
-                                @foreach($q->children as $child)
-                                  @php($answerObj = App\Answer::getCollAnswers($child->id, $user->id, $e->id))
-                                  @if ($answerObj && $answerObj->answer > 0)
-                                    @php($countItems ++)
-                                    @php($sum = $sum + $answerObj->answer)
-                                  @endif
-                                  <tr>
-                                    <td>{{ $child->titre }}</td>
-                                    @foreach($answersColumns as $key => $answer)
-                                      <td class="text-center" title="{{ $answer['value'] }}">
-                                        <label for="item_{{ $child->id }}_{{ $answer['id'] }}" class="table-radio-item">
-                                          <input type="radio" name="answers[{{ $child->id }}][ansr]" id="item_{{ $child->id }}_{{ $answer['id'] }}" value="{{ $answer['id'] }}" {{ $answerObj && $answerObj->answer == $answer['id'] ? 'checked' : '' }} disabled>
-                                        </label>
-                                      </td>
-                                    @endforeach
-                                  </tr>
-                                @endforeach
-                                @php($options = json_decode($q->options, true))
-                                @php($showNote = isset($options['show_global_note']) ? 1 : 0)
-                                @if ($showNote == 1)
-                                  <tr class="array-qst-note">
-                                    <td colspan="2">Note globale obtenue par le collaborateur</td>
-                                    <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{  $countItems > 0 ? round($sum/$countItems) : 0 }} / {{ $positivesAnswers }}</span></td>
-                                  </tr>
-                                @endif
-                                </tbody>
-                              </table>
-                            </div>
-                          @else
-                            <p class="help-block">Impossible de trouver les réponses de cette question</p>
-                          @endif
+                              @endforeach
+                              </tbody>
+                            </table>
                         @endif
                       </div>
                     </div>
@@ -324,60 +292,28 @@
                               </div>
                             </div>
                           @elseif ($q->type == "array")
-                            @php($answersColumns = json_decode($q->options, true))
-                            @php($answersColumns = isset($answersColumns['answers']) ? $answersColumns['answers'] : [])
-                            @php($positivesAnswers = 0)
-                            @php($options = json_decode($q->options, true))
-                            @php($showNote = isset($options['show_global_note']) ? 1 : 0)
-                            @if (!empty($answersColumns))
-                              <div class="table-responsive">
-                                <table class="table table-hover array-table">
-                                  <thead>
-                                  <tr>
-                                    <th width="20%"></th>
-                                    @foreach($answersColumns as $key => $answer)
-                                      @if ($answer['id'] > 0)
-                                        @php($positivesAnswers ++)
-                                      @endif
-                                      <th class="text-center">
-                                        <label for="">{{ $answer['id'] != 'n/a' && $showNote ? $answer['id'] . ' = ' : ''  }} {{ $answer['value'] }}</label>
-                                      </th>
-                                    @endforeach
-                                  </tr>
-                                  </thead>
-                                  <tbody>
-                                  @php($sum = $countItems =0)
-                                  @foreach($q->children as $child)
-                                    @php($answerObj = App\Answer::getMentorAnswers($child->id, $user->id, $e->id))
-                                    @if ($answerObj && $answerObj->mentor_answer > 0)
-                                      @php($countItems ++)
-                                      @php($sum = $sum + $answerObj->mentor_answer)
-                                    @endif
-                                    <tr>
-                                      <td>{{ $child->titre }}</td>
-                                      @foreach($answersColumns as $key => $answer)
-                                        <td class="text-center" title="{{ $answer['value'] }}">
-                                          <label for="m_item_{{ $child->id }}_{{ $answer['id'] }}" class="table-radio-item">
-                                            <input type="radio" name="answers[{{ $child->id }}][ansr]" id="m_item_{{ $child->id }}_{{ $answer['id'] }}" value="{{ $answer['id'] }}" {{ $answerObj && $answerObj->mentor_answer == $answer['id'] ? 'checked' : '' }} required>
-                                          </label>
-                                        </td>
-                                      @endforeach
-                                    </tr>
+                            @php($qAnswer = App\Answer::getCollAnswers($q->id, $user->id, $e->id))
+                            @php($qAnswer = $qAnswer ? json_decode($qAnswer->mentor_answer, true) : [])
+                            <table class="table table-hover">
+                              <thead>
+                              <tr>
+                                <th></th>
+                                @foreach($q->getOptions('answers') as $ansrKey => $answer)
+                                  <th>{{ $answer['title'] }}</th>
+                                @endforeach
+                              </tr>
+                              </thead>
+                              <tbody>
+                              @foreach($q->getOptions('subquestions') as $subKey => $subquestion)
+                                <tr>
+                                  <td>{{ $subquestion['title'] }}</td>
+                                  @foreach($q->getOptions('answers') as $key => $answer)
+                                    <td><input type="radio" name="answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }}></td>
                                   @endforeach
-                                  @php($options = json_decode($q->options, true))
-                                  @php($showNote = isset($options['show_global_note']) ? 1 : 0)
-                                  @if ($showNote == 1)
-                                    <tr class="array-qst-note">
-                                      <td colspan="2">Note globale :</td>
-                                      <td colspan="{{ count($answersColumns) }}"><span class="pull-right">{{  $countItems > 0 ? round($sum/$countItems) : 0 }} / {{ $positivesAnswers }}</span></td>
-                                    </tr>
-                                  @endif
-                                  </tbody>
-                                </table>
-                              </div>
-                            @else
-                              <p class="help-block">Impossible de trouver les réponses de cette question</p>
-                            @endif
+                                </tr>
+                              @endforeach
+                              </tbody>
+                            </table>
                           @endif
                         </div>
                       </div>

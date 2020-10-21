@@ -39,7 +39,11 @@ class SurveyController extends Controller
     $table->addAction('show', [
       'icon' => 'fa fa-eye',
       'label' => 'Visualiser',
-      'callback' => 'chmSurvey.show({id: [id]})',
+      'route' => ['name' => 'survey.show', 'args' => ['id' => '[id]']],
+      'attrs' => [
+        'chm-modal'=> '',
+        'chm-modal-options'=> '{"width": "1000px"}',
+      ],
       'bulk_action' => false,
     ]);
     $table->addAction('edit', [
@@ -108,6 +112,12 @@ class SurveyController extends Controller
                 "message" => __("Veuillez ajouter des choix de réponse pour la question (:qst)", ['qst' => $question['title']])
               ];
             }
+            if ($question['type'] == 'array' and (empty($question['options']['answers']) || empty($question['options']['subquestions']))) {
+              return [
+                "status" => "error",
+                "message" => __("Veuillez ajouter des options de réponse et les sous questions pour la question (:qst)", ['qst' => $question['title']])
+              ];
+            }
           }
           if ($sumpQstsPonderations != 100 && $selectedModelRef == 'ENT') {
             return [
@@ -160,6 +170,7 @@ class SurveyController extends Controller
             $questionModel->type = $question['type'];
             $questionModel->parent_id =  0;
             $questionModel->groupe_id = $groupModel->id;
+            $questionModel->options = json_encode($this->constructOptions($question['options']));
             $questionModel->save();
 
             // save choices if exists
@@ -231,4 +242,25 @@ class SurveyController extends Controller
       'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
+
+  public function constructOptions($options) {
+    if (empty($options)) return [];
+    if (!isset($options['answers']) || empty($options['answers']) || !isset($options['subquestions']) || empty($options['subquestions'])) return [];
+    $array = [];
+    foreach ($options['answers'] as $key => $answer) {
+      $array['answers'][] = [
+        'id' => $key+1,
+        'title' => $answer['title']
+      ];
+    }
+    foreach ($options['subquestions'] as $key => $subquestion) {
+      $array['subquestions'][] = [
+        'id' => $key+1,
+        'title' => $subquestion['title']
+      ];
+    }
+
+    return $array;
+  }
+
 }

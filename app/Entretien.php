@@ -237,9 +237,9 @@ class Entretien extends Model
     $campaign = Campaign::where('entretien_id', $this->id)->first();
     if (!$campaign) return '---';
     if ($campaign->shedule_type == "sheduled") {
-      return date('d/m/Y à H:i', strtotime($campaign->sheduled_at));
+      return date('d/m/Y', strtotime($campaign->sheduled_at));
     } else {
-      return date('d/m/Y à H:i');
+      return date('d/m/Y');
     }
   }
 

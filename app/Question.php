@@ -30,4 +30,11 @@ class Question extends Model
   {
 
   }
+
+  public function getOptions($key) {
+    $options = json_decode($this->options, true) ?: [];
+    $options = isset($options[$key]) ? $options[$key] : [];
+
+    return $options;
+  }
 }

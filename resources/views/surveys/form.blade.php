@@ -5,6 +5,21 @@
   <li>{{ $survey->id > 0 ? $survey->title : 'Ajouter' }}</li>
 @endsection
 
+<style>
+  #nprogress .bar {
+    background: orange !important;
+  }
+
+  #nprogress .peg {
+    box-shadow: 0 0 10px orange, 0 0 5px orange !important;
+  }
+
+  #nprogress .spinner-icon {
+    border-top-color: orange !important;
+    border-left-color: orange !important;
+  }
+</style>
+
 @section('content')
   <div class="content" id="content">
     <form @submit.prevent="handleSubmit()" action="" method="post" novalidate>
@@ -129,6 +144,10 @@
                             <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'radio')">Un seul choix</a></li>
                             <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">Choix multiple</a></li>
                             <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'select')">Liste déroulante</a></li>
+                            <li>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'array')" data-toggle="popover" title="Apperçu" data-content="" data-placement="left">Tableau</a>
+                              <div class="popper-content hide"><img src="{{ asset('/img/array.jpg') }}" class="img-responsive" alt=""/></div>
+                            </li>
                           </ul>
                         </div>
                       </div>
@@ -145,7 +164,7 @@
                   </div>
                   <div class="clearfix"></div>
                 </div>
-                <div v-if="question.type != 'text' && question.type !='textarea'" class="card-body">
+                <div v-if="question.type != 'text' && question.type !='textarea' && question.type !='array'" class="card-body">
                   <ul class="list-unstyled">
                     <li v-for="(choice, cIndex) in group.questions[qIndex].choices" class="mb-10">
                       <div v-if="choice.edit" class="form-group">
@@ -158,8 +177,45 @@
                         <div class="clearfix"></div>
                       </div>
                     </li>
-                    <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
                   </ul>
+                  <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
+                </div>
+                <div v-if="question.type == 'array'" class="card-body">
+                  <div class="answers-container mb-20">
+                    <p class="border-bottom" style="border-bottom: 1px dashed #e2dddd;">{{ __("Options de réponses") }}</p>
+                    <ul class="list-unstyled">
+                      <li v-for="(answer, aIndex) in group.questions[qIndex].options.answers" class="mb-10">
+                        <div v-if="answer.edit" class="form-group">
+                          <input name="answer" v-model="answer.title" class="form-control" @blur="updateArrayAnswer(grpIndex, qIndex, aIndex, answer)" @keyup.enter="updateArrayAnswer(grpIndex, qIndex, aIndex, answer)" v-focus placeholder="Entrez l'option de réponse" v-validate="'required'" @keypress.enter.prevent>
+                        </div>
+                        <div v-else class="m-0 text-muted">
+                          <label @click="answer.edit = true;" class="mb-0 d-inline-block">@{{ aIndex + 1 }} | @{{ answer.title }}</label>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeArrayAnswer(grpIndex, qIndex, aIndex)"><i class="fa fa-trash"></i></button>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editArrayAnswer(answer)"><i class="fa fa-pencil"></i></button>
+                          <div class="clearfix"></div>
+                        </div>
+                      </li>
+                    </ul>
+                    <a href="javascript:void(0)" @click="addNewArrayAnswer(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
+                  </div>
+
+                  <div class="subquestions-container">
+                    <p class="border-bottom" style="border-bottom: 1px dashed #e2dddd;">{{ __("Sous questions") }}</p>
+                    <ul class="list-unstyled">
+                      <li v-for="(subquestion, subIndex) in group.questions[qIndex].options.subquestions" class="mb-10">
+                        <div v-if="subquestion.edit" class="form-group">
+                          <input name="subquestion" v-model="subquestion.title" class="form-control" @blur="updateArraySubquestion(grpIndex, qIndex, subIndex, subquestion)" @keyup.enter="updateArraySubquestion(grpIndex, qIndex, subIndex, subquestion)" v-focus placeholder="Entrez la sous question" v-validate="'required'" @keypress.enter.prevent>
+                        </div>
+                        <div v-else class="m-0 text-muted">
+                          <label @click="subquestion.edit = true;" class="mb-0 d-inline-block">@{{ subIndex + 1 }} | @{{ subquestion.title }}</label>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeArraySubquestion(grpIndex, qIndex, subIndex)"><i class="fa fa-trash"></i></button>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editArraySubquestion(subquestion)"><i class="fa fa-pencil"></i></button>
+                          <div class="clearfix"></div>
+                        </div>
+                      </li>
+                    </ul>
+                    <a href="javascript:void(0)" @click="addNewArraySubquestion(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une sous question</a>
+                  </div>
                 </div>
               </div>
               <div class="add-new-question-btn">
@@ -182,6 +238,10 @@
                     <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'radio')">Un seul choix</a></li>
                     <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'checkbox')">Choix multiple</a></li>
                     <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'select')">Liste déroulante</a></li>
+                    <li>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'array')" data-toggle="popover" title="Tableau" data-content="" data-placement="left">Tableau</a>
+                      <div class="popper-content hide"><img src="{{ asset('/img/array.jpg') }}" class="img-responsive" alt=""/></div>
+                    </li>
                   </ul>
                 </div>
                 <div class="clearfix"></div>
@@ -207,6 +267,7 @@
 @endsection
 
 @section('javascript')
+  @parent()
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
@@ -215,6 +276,19 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
 
   <script>
+    $('document').ready(function () {
+      $(function () {
+        $('[data-toggle="popover"]').popover()
+      })
+      $(".popoverData").popover({
+        container: 'body',
+        trigger: 'hover',
+        html: true,
+        content: function () {
+          return $(this).next('.popper-content').html();
+        }
+      });
+    })
     loadProgressBar()
     Vue.use(VeeValidate);
     new Vue({
@@ -249,6 +323,26 @@
                     },
                     @endforeach
                   ],
+                  options: {
+                    answers: [
+                      @foreach($question->getOptions('answers') as $answer)
+                      {
+                        id: "{{ isset($answer['id']) ? $answer['id'] : '' }}",
+                        title: "{!! isset($answer['title']) ? $answer['title'] : '' !!}",
+                        edit: false
+                      },
+                      @endforeach
+                    ],
+                    subquestions: [
+                      @foreach($question->getOptions('subquestions') as $subquestion)
+                      {
+                        id: "{{ isset($subquestion['id']) ? $subquestion['id'] : '' }}",
+                        title: "{!! $subquestion['title'] !!}",
+                        edit: false
+                      },
+                      @endforeach
+                    ]
+                  },
                   edit: false,
                   active: false
                 },
@@ -266,7 +360,7 @@
       methods: {
         turnOnEditMode: function (grpIndex) {
           var group = this.groups[grpIndex]
-          this.groups[grpIndex].questions.forEach(function (question) {
+          this.groups[grpIndex].questions.forEach(function (question, qIndex) {
             question.edit = group.editAllQuestion
           })
         },
@@ -303,6 +397,9 @@
               break;
             case 'select':
               return "Liste déroulante"
+              break;
+            case 'array':
+              return "Tableau"
               break;
             default: return 'Text'
           }
@@ -394,7 +491,11 @@
               }
             })
           }
-
+          var options = {}
+          if (qType == 'array') {
+            options.answers = [];
+            options.subquestions = [];
+          }
           this.groups[groupIndex].questions.push(
               {
                 id: null,
@@ -403,7 +504,8 @@
                 type: qType,
                 edit: true,
                 active: false,
-                choices: []
+                choices: [],
+                options: options
               }
           )
         },
@@ -447,7 +549,6 @@
           } else {
             this.groups[grpIndex].questions[qIndex].choices.splice(cIndex, 1)
           }
-          this.submit = false
         },
         removeChoice: function (grpIndex, qIndex, cIndex) {
           if (this.groups[grpIndex].questions[qIndex].choices.length > 2) {
@@ -460,6 +561,50 @@
               type: 'warning',
               text: "Cette question doit avoir au moins 2 options, vous ne pouvez pas supprimer !"
             })
+          }
+        },
+        addNewArrayAnswer: function (grpIndex, qIndex) {
+          this.groups[grpIndex].questions[qIndex].options.answers.push({
+            'title': '',
+            'edit': true
+          })
+        },
+        editArrayAnswer: function (answer) {
+          answer.edit = true
+        },
+        updateArrayAnswer: function (grpIndex, qIndex, aIndex, answer) {
+          if (answer.title.trim() != '') {
+            answer.edit = false
+          } else {
+            this.groups[grpIndex].questions[qIndex].options.answers.splice(aIndex, 1)
+          }
+        },
+        removeArrayAnswer: function (grpIndex, qIndex, aIndex) {
+          var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+          if (confirmation) {
+            this.groups[grpIndex].questions[qIndex].options.answers.splice(aIndex, 1)
+          }
+        },
+        addNewArraySubquestion: function (grpIndex, qIndex) {
+          this.groups[grpIndex].questions[qIndex].options.subquestions.push({
+            'title': '',
+            'edit': true
+          })
+        },
+        editArraySubquestion: function (subquestion) {
+          subquestion.edit = true
+        },
+        updateArraySubquestion: function (grpIndex, qIndex, subIndex, subquestion) {
+          if (subquestion.title.trim() != '') {
+            subquestion.edit = false
+          } else {
+            this.groups[grpIndex].questions[qIndex].options.subquestions.splice(subIndex, 1)
+          }
+        },
+        removeArraySubquestion: function (grpIndex, qIndex, subIndex) {
+          var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
+          if (confirmation) {
+            this.groups[grpIndex].questions[qIndex].options.subquestions.splice(subIndex, 1)
           }
         },
         changeQuestionType: function (grpIndex, qIndex, newType) {

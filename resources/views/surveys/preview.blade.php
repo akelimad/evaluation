@@ -12,7 +12,7 @@
                   <div class="col-md-12 mb-20">
                     <div class="form-group">
                       @if($q->parent == null)
-                        <label for="" class="questionTitle help-block"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                        <label for="" class="questionTitle help-block font-14"><b><i class="fa fa-caret-right"></i> {{$q->titre}}</b></label>
                       @endif
                       @if($q->type == 'text')
                         <input type="{{$q->type}}" class="form-control" readonly="">
@@ -56,22 +56,22 @@
                         <div class="table-responsive">
                           <table class="table table-hover">
                             <thead>
-                            <tr>
-                              <th></th>
-                              @foreach(json_decode($q->options)->answers as $key => $answer)
-                                <th>{{ $answer->value }}</th>
-                              @endforeach
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($q->children as $child)
                               <tr>
-                                <td>{{ $child->titre }}</td>
-                                @foreach(json_decode($q->options)->answers as $key => $answer)
-                                  <td><input type="radio" disabled></td>
+                                <th></th>
+                                @foreach($q->getOptions('answers') as $key => $answer)
+                                  <th class="text-center">{{ $answer['title'] }}</th>
                                 @endforeach
                               </tr>
-                            @endforeach
+                            </thead>
+                            <tbody>
+                              @foreach($q->getOptions('subquestions') as $key => $subquestion)
+                                <tr>
+                                  <td>{{ $subquestion['title'] }}</td>
+                                  @foreach($q->getOptions('answers') as $key => $subquestion)
+                                    <td class="text-center"><input type="radio" disabled></td>
+                                  @endforeach
+                                </tr>
+                              @endforeach
                             </tbody>
                           </table>
                         </div>

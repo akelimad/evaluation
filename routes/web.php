@@ -42,7 +42,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
   Route::get('config/surveys/form', 'SurveyController@form')->name('survey.form');
   Route::post('surveys/store', 'SurveyController@store')->name('survey.store');
   Route::delete('survey/delete', 'SurveyController@delete')->name('survey.delete');
-  Route::get('surveys/{id}', 'SurveyController@show');
+  Route::get('surveys/{id}/show', 'SurveyController@show')->name('survey.show');
 
   Route::get('surveys/{sid}/groupes', 'GroupeController@index');
   Route::get('surveys/{sid}/groupes/create', 'GroupeController@create');
