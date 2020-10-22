@@ -275,18 +275,27 @@ class User extends Authenticatable
     });
   }
 
-  public function getUserEvaluationsByModel($modelRef) {
+  public function getUserEvaluationsByModel($modelRef, $authIsUserToEvalute = false) {
     $entretiens_user = Entretien_user::select('entretien_user.*')
       ->join('entretiens as e', 'e.id', '=', 'entretien_user.entretien_id')
       ->join('models as m', 'm.id', '=', 'e.model_id')
       ->where('m.ref', $modelRef);
-    if ($modelRef == 'FB360') {
+    if ($modelRef == 'FB360' && !$authIsUserToEvalute) {
       $entretiens_user->where('entretien_user.mentor_id', $this->id);
+    } else if ($modelRef == 'FB360' && $authIsUserToEvalute) {
+      $entretiens_user->where('entretien_user.user_id', $this->id);
+      $entretiens_user->where('entretien_user.mentor_submitted', 2);
+      $entretiens_user->where('e.options', 'NOT LIKE', '%hide_results%');
     } else {
       $entretiens_user->where('entretien_user.user_id', $this->id);
     }
 
     return $entretiens_user->get();
+  }
+
+  public function hasSharedEntretienFb360() {
+    $list = $this->getUserEvaluationsByModel('FB360', true);
+    return $list->count() > 0 ? $list : false;
   }
 
 

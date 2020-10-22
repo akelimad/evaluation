@@ -158,12 +158,12 @@
               </select>
               <div class="feedback-360-options mt-15">
                 <div class="form-check mb-15">
-                  <input type="checkbox" class="feedback360-options-cb" id="anonym" name="options[]" value="anonym" chm-validate="required" {{ in_array('anonym', $entretien->getOptions()) ? 'checked':'' }}> <label for="anonym" class="font-14 mb-0"><b>Réponses anonymes</b></label>
+                  <input type="checkbox" class="feedback360-options-cb" id="anonym" name="options[anonym]" value="1" chm-validate="required" {{ isset($entretien->getOptions()['anonym']) ? 'checked':'' }}> <label for="anonym" class="font-14 mb-0"><b>Réponses anonymes</b></label>
                   <span class="text-muted font-12 d-block">Si cette option est activée, le nom des collègues n'est pas affiché sur l'écran des résultats</span>
                 </div>
 
                 <div class="form-check">
-                  <input type="checkbox" class="feedback360-options-cb" id="block" name="options[]" value="hide_results" chm-validate="required" {{ in_array('hide_results', $entretien->getOptions()) ? 'checked':'' }}> <label for="block" class="font-14 mb-0"><b>Bloquer le partage</b></label>
+                  <input type="checkbox" class="feedback360-options-cb" id="block" name="options[hide_results]" value="1" chm-validate="required" {{ isset($entretien->getOptions()['hide_results']) ? 'checked':'' }}> <label for="block" class="font-14 mb-0"><b>Bloquer le partage</b></label>
                   <span class="text-muted font-12 d-block">Si cette option est activée, il ne sera pas possible aux évalués de voir les résultats. seuls le responsable de l'évaluation et les admins auront accès aux résultats</span>
                 </div>
               </div>
@@ -387,15 +387,6 @@
     }
   }
 
-  function showHideFeedback360ErrorBlock () {
-    var countChecked = $('.feedback360-options-cb:checked').length
-    if (countChecked == 0) {
-      chmForm.showErrorBlock('.feedback-360-options', "Veuillez choisir au moins un élément")
-    } else {
-      $('.feedback-360-options').removeClass('chm-has-error').next('.chm-error-block').remove()
-    }
-  }
-
   function ArrayDiff (a1, a2) {
     var a = [], diff = [];
     for (var i = 0; i < a1.length; i++) {
@@ -435,11 +426,8 @@
 
     $('.eval-item-checkbox').on('change', function() {
       showHideEvalsErrorBlock()
-
       var labelText = $(this).next('label').text()
-
       if ($.inArray(labelText, ['Evaluation annuelle', 'Feedback 360']) !== -1 && $(this).is(':checked')) {
-        $('.evals-wrapper').show()
         chmForm.setRule($('select#entretien'), 'required')
       } else if ($.inArray(labelText, ['Evaluation annuelle', 'Feedback 360']) !== -1 && !$(this).is(':checked')) {
         $('.evals-wrapper').hide()
@@ -462,11 +450,8 @@
     })
     @if($entretien->id > 0)
       $('.eval-item-checkbox').trigger('change')
+      console.log('change fired')
     @endif
-
-    $('.feedback360-options-cb').on('change', function() {
-      showHideFeedback360ErrorBlock()
-    })
 
     $(document).on('click', 'button.next', function (e) {
       var $container = $(this).closest('.step-content')
@@ -480,9 +465,6 @@
         }
       })
       if (stepNbr == 2) {
-        if ($('select#model option:selected').data('ref') == 'FB360') {
-          showHideFeedback360ErrorBlock()
-        }
         $('.form-check-input').each(function (index, element) {
           var itemLabel = $(element).closest('.form-check').find('label').text()
           var labelText = ""

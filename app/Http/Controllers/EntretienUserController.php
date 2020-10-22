@@ -54,8 +54,15 @@ class EntretienUserController extends Controller
       } else {
         $user = User::find($row->user_id);
       }
-      $userParentFullname = $user->parent ? $user->parent->fullname() : 'introuvable';
-      return $e->isFeedback360() ? $user->fullname() : $userParentFullname;
+      $hideName = isset($e->getOptions()['anonym']);
+      if ($e->isFeedback360() && $hideName) {
+        $fullname = '**** ****';
+      } else if ($e->isFeedback360() && !$hideName) {
+        $fullname = $user->fullname();
+      } else {
+        $fullname = $user->parent ? $user->parent->fullname() : 'introuvable';
+      }
+      return $fullname;
     });
     $table->addColumn('manager_answer_status', 'Statut', function ($row) {
       $user = User::find($row->user_id);

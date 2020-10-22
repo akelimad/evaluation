@@ -48,180 +48,224 @@
           <div class="portlet-body">
             <div class="tab-content">
               <div class="tab-pane active" id="entretiens">
-                @if(App\User::getMentor(Auth::user()->id) && count($entretiens)>0)
-                  <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover table-striped">
-                      <thead>
+                <div class="box-body table-responsive no-padding">
+                  <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                      <th>{{ __("Titre") }}</th>
+                      <th>{{ __("Date de lancement") }}</th>
+                      <th>{{ __("Date limite") }}</th>
+                      <th class="text-center">{{ __("Collaborateur") }}</th>
+                      <th class="text-center">{{ __("Manager") }}</th>
+                      <th class="text-center">{{ __("Actions") }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($user->getUserEvaluationsByModel('ENT') as $eu)
+                      @php($user = \App\User::find($eu->user_id))
+                      @php($e = \App\Entretien::find($eu->entretien_id))
+                      @php($userAnswered = App\Entretien::answered($e->id, Auth::user()->id))
                       <tr>
-                        <th>{{ __("Titre") }}</th>
-                        <th>{{ __("Date de lancement") }}</th>
-                        <th>{{ __("Date limite") }}</th>
-                        <th class="text-center">{{ __("Collaborateur") }}</th>
-                        <th class="text-center">{{ __("Manager") }}</th>
-                        <th class="text-center">{{ __("Actions") }}</th>
+                        <td>
+                          <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{$e->titre}}</a>
+                        </td>
+                        <td>
+                          {{ $e->getStartDate() }}
+                        </td>
+                        <td>
+                          {{ Carbon\Carbon::parse($e->date)->format('d/m/Y') }}
+                        </td>
+                        <td class="text-center">
+                          <span class="label label-{{$userAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$userAnswered ? 'Remplie le '.Carbon\Carbon::parse($userAnswered->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
+                        </td>
+                        <td class="text-center">
+                          <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par manager le '.Carbon\Carbon::parse($userAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Pas encore validée par votre mentor'}}"> </span>
+                        </td>
+                        <td class="text-center">
+                          @if($userAnswered)
+                            <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                          @else
+                            <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                          @endif
+                        </td>
                       </tr>
-                      </thead>
-                      <tbody>
-                      @foreach($user->getUserEvaluationsByModel('ENT') as $eu)
-                        @php($user = \App\User::find($eu->user_id))
-                        @php($e = \App\Entretien::find($eu->entretien_id))
-                        @php($userAnswered = App\Entretien::answered($e->id, Auth::user()->id))
-                        <tr>
-                          <td>
-                            <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{$e->titre}}</a>
-                          </td>
-                          <td>
-                            {{ $e->getStartDate() }}
-                          </td>
-                          <td>
-                            {{ Carbon\Carbon::parse($e->date)->format('d/m/Y') }}
-                          </td>
-                          <td class="text-center">
-                            <span class="label label-{{$userAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$userAnswered ? 'Remplie le '.Carbon\Carbon::parse($userAnswered->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
-                          </td>
-                          <td class="text-center">
-                            <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par manager le '.Carbon\Carbon::parse($userAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Pas encore validée par votre mentor'}}"> </span>
-                          </td>
-                          <td class="text-center">
-                            @if($userAnswered)
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
-                            @else
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
-                            @endif
-                          </td>
-                        </tr>
-                      @endforeach
-                      </tbody>
-                    </table>
-                  </div>
-                @else
-                  @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
-                @endif
-              </div>
-            </div>
-          </div>
-        </div>
-        @if(count($managerCollsEntretiens)>0)
-          <div class="card portlet box box-primary mb-20">
-            <div class="nav-tabs-custom portlet-title">
-              <div class="caption caption-red mb-10">{{ __("Mes collaborateurs") }}</div>
-            </div>
-            <div class="portlet-body">
-              <div class="tab-content">
-                <div class="tab-pane active" id="aa">
-                  @if(count($managerCollsEntretiens) > 0)
-                    <div class="box-body table-responsive no-padding">
-                      <table class="table table-hover table-striped">
-                        <thead>
-                        <tr>
-                          <th>{{ __("Nom et prénom") }}</th>
-                          <th>{{ __("Campagne") }}</th>
-                          <th>{{ __("Date de lancement") }}</th>
-                          <th>{{ __("Date limite") }}</th>
-                          <th class="text-center">{{ __("Collaborateur") }}</th>
-                          <th class="text-center">{{ __("Manager") }}</th>
-                          <th class="text-center">{{ __("Actions") }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($managerCollsEntretiens as $eu)
-                          @php($e = App\Entretien::find($eu->entretien_id))
-                          @php($user = App\User::find($eu->user_id))
-                          @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $user->id, Auth::user()->id))
-                          <tr>
-                            <td>
-                              <a href="{{ url('user/'.$user->id) }}">{{ $user->fullname() }}</a>
-                            </td>
-                            <td>
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{ $e->titre }}</a>
-                            </td>
-                            <td>
-                              {{ $e->getStartDate() }}
-                            </td>
-                            <td>
-                              {{ date('d/m/Y', strtotime($e->date_limit)) }}
-                            </td>
-                            <td class="text-center">
-                              <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, $user->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $user->id)->user_updated_at)->format('d/m/Y à H:i') :'Pas encore rempli par '.$user->name }}"> </span>
-                            </td>
-                            <td class="text-center">
-                              <span class="label label-{{$mentorAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$mentorAnswered ? 'Validée par manager le '.Carbon\Carbon::parse($mentorAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$user->name}}"> </span>
-                            </td>
-                            <td class="text-center">
-                              @if($mentorAnswered)
-                                <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
-                              @else
-                                <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
-                              @endif
-                            </td>
-                          </tr>
-                        @endforeach
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <div class="box-pagination mt-20">
-                      {{ $managerCollsEntretiens->links() }}
-                    </div>
-                  @else
-                    @include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])
-                  @endif
+                    @empty
+                      <tr>
+                        <td colspan="6" class="text-center"><p class="m-0">{{ __("Aucune donnée trouvée ... !!") }}</p></td>
+                      </tr>
+                    @endforelse
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-        @endif
-
-        @if (Auth::user()->getUserEvaluationsByModel('FB360')->count() > 0)
-          <div class="card portlet box box-primary mb-20">
-            <div class="nav-tabs-custom portlet-title">
-              <div class=" caption caption-red mb-10">{{ __("Mes Feedback 360") }}</div>
-            </div>
-            <div class="portlet-body table-responsive">
-              <table class="table table-hover table-striped">
-                <thead>
-                  <tr>
-                    <th>{{ __("Evalué") }}</th>
-                    <th>{{ __("Campagne") }}</th>
-                    <th>{{ __("Date de lancement") }}</th>
-                    <th>{{ __("Date limite") }}</th>
-                    <th class="text-center">{{ __("Evaluateur (Vous)") }}</th>
-                    <th class="text-center">{{ __("Actions") }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @forelse(Auth::user()->getUserEvaluationsByModel('FB360') as $eu)
-                    @php($user = \App\User::find($eu->user_id))
-                    @php($e = \App\Entretien::find($eu->entretien_id))
-                    @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, $eu->mentor_id))
-                    <tr>
-                      <td>
-                        {{ $user ? $user->fullname() : '---' }}
-                      </td>
-                      <td>
-                        {{ $e ? $e->titre : '---' }}
-                      </td>
-                      <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
-                      <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
-                      <td class="text-center">
-                        <span class="label label-{{ $mentorAnswered ? 'success':'danger' }} empty"></span>
-                      </td>
-                      <td>
-                        @if($mentorAnswered)
-                          <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
-                        @else
-                          <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
-                        @endif
-                      </td>
-                    </tr>
-                  @empty
-                    <tr>
-                      <td colspan="7">@include('partials.alerts.info', ['messages' => "Aucune donnée trouvée ... !!" ])</td>
-                    </tr>
-                  @endforelse
-                </tbody>
-              </table>
+        </div>
+        <div class="card portlet box box-primary mb-20">
+          <div class="nav-tabs-custom portlet-title">
+            <div class="caption caption-red mb-10">{{ __("Mes collaborateurs") }}</div>
           </div>
+          <div class="portlet-body">
+            <div class="tab-content">
+              <div class="tab-pane active" id="aa">
+                <div class="box-body table-responsive no-padding">
+                  <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                      <th>{{ __("Nom et prénom") }}</th>
+                      <th>{{ __("Campagne") }}</th>
+                      <th>{{ __("Date de lancement") }}</th>
+                      <th>{{ __("Date limite") }}</th>
+                      <th class="text-center">{{ __("Collaborateur") }}</th>
+                      <th class="text-center">{{ __("Manager") }}</th>
+                      <th class="text-center">{{ __("Actions") }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($managerCollsEntretiens as $eu)
+                      @php($e = App\Entretien::find($eu->entretien_id))
+                      @php($user = App\User::find($eu->user_id))
+                      @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $user->id, Auth::user()->id))
+                      <tr>
+                        <td>
+                          <a href="{{ url('user/'.$user->id) }}">{{ $user->fullname() }}</a>
+                        </td>
+                        <td>
+                          <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}">{{ $e->titre }}</a>
+                        </td>
+                        <td>
+                          {{ $e->getStartDate() }}
+                        </td>
+                        <td>
+                          {{ date('d/m/Y', strtotime($e->date_limit)) }}
+                        </td>
+                        <td class="text-center">
+                          <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, $user->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $user->id)->user_updated_at)->format('d/m/Y à H:i') :'Pas encore rempli par '.$user->name }}"> </span>
+                        </td>
+                        <td class="text-center">
+                          <span class="label label-{{$mentorAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$mentorAnswered ? 'Validée par manager le '.Carbon\Carbon::parse($mentorAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$user->name}}"> </span>
+                        </td>
+                        <td class="text-center">
+                          @if($mentorAnswered)
+                            <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                          @else
+                            <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                          @endif
+                        </td>
+                      </tr>
+                    @empty
+                      <tr>
+                        <td colspan="7" class="text-center"><p class="m-0">{{ __("Aucune donnée trouvée ... !!") }}</p></td>
+                      </tr>
+                    @endforelse
+                    </tbody>
+                  </table>
+                </div>
+                <div class="box-pagination mt-20">
+                  {{ $managerCollsEntretiens->links() }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card portlet box box-primary mb-20">
+          <div class="nav-tabs-custom portlet-title">
+            <div class=" caption caption-red mb-10">{{ __("Mes Feedback 360 dont je suis l'évaluateur") }}</div>
+          </div>
+          <div class="portlet-body table-responsive">
+            <table class="table table-hover table-striped">
+              <thead>
+              <tr>
+                <th>{{ __("Evalué") }}</th>
+                <th>{{ __("Campagne") }}</th>
+                <th>{{ __("Date de lancement") }}</th>
+                <th>{{ __("Date limite") }}</th>
+                <th class="text-center">{{ __("Evaluateur (Vous)") }}</th>
+                <th class="text-center">{{ __("Actions") }}</th>
+              </tr>
+              </thead>
+              <tbody>
+              @forelse(Auth::user()->getUserEvaluationsByModel('FB360') as $eu)
+                @php($user = \App\User::find($eu->user_id))
+                @php($e = \App\Entretien::find($eu->entretien_id))
+                @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, $eu->mentor_id))
+                <tr>
+                  <td>
+                    {{ $user ? $user->fullname() : '---' }}
+                  </td>
+                  <td>
+                    {{ $e ? $e->titre : '---' }}
+                  </td>
+                  <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
+                  <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
+                  <td class="text-center">
+                    <span class="label label-{{ $mentorAnswered ? 'success':'danger' }} empty"></span>
+                  </td>
+                  <td>
+                    @if($mentorAnswered)
+                      <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                    @else
+                      <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
+                    @endif
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="7" class="text-center">{{ __("Aucune donnée trouvée ... !!") }}</td>
+                </tr>
+              @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
+        @if ($user->hassharedEntretienFb360())
+          <div class="card portlet box box-primary">
+          <div class="nav-tabs-custom portlet-title">
+            <div class=" caption caption-red mb-10">{{ __("Mes Feedback 360 dont je suis l'évalué") }}</div>
+          </div>
+          <div class="portlet-body table-responsive">
+            <table class="table table-hover table-striped">
+              <thead>
+              <tr>
+                <th>{{ __("Evalué") }}</th>
+                <th>{{ __("Campagne") }}</th>
+                <th>{{ __("Date de lancement") }}</th>
+                <th>{{ __("Date limite") }}</th>
+                <th>{{ __("Evaluateur") }}</th>
+                <th class="text-center">{{ __("Actions") }}</th>
+              </tr>
+              </thead>
+              <tbody>
+              @forelse($user->hassharedEntretienFb360() as $eu)
+                @php($user = \App\User::find($eu->user_id))
+                @php($evaluator = \App\User::find($eu->mentor_id))
+                @php($e = \App\Entretien::find($eu->entretien_id))
+                @php($mentorAnswered = App\Entretien::answeredMentor($e->id, $eu->user_id, $eu->mentor_id))
+                <tr>
+                  <td>
+                    {{ __("Vous") }}
+                  </td>
+                  <td>
+                    {{ $e ? $e->titre : '---' }}
+                  </td>
+                  <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
+                  <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
+                  <td class="text-center">
+                    {{ $evaluator ? $evaluator->fullname() : 'N/A' }}
+                  </td>
+                  <td class="text-center">
+                    <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu"><i class="fa fa-search"></i></a>
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="7" class="text-center">{{ __("Aucune donnée trouvée ... !!") }}</td>
+                </tr>
+              @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
         @endif
       </div>
       <div class="clearfix"></div>
