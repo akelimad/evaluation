@@ -48,7 +48,7 @@
 								<div class="custom-switch-btn">
 									<label class="switch" for="change_status" title="Activer / Désactiver la campagne" data-toggle="tooltip">
 										<input type="checkbox" id="change_status" value="0" class="hidden" onchange="chmEntretien.changeStatus(event, [{{ $e->id }}])" {{ $e->isEnabled() ? 'checked':'' }}>
-										<div class="slider round">
+										<div class="slider-toggle round">
 											<span class="on">ON</span><span class="off">OFF</span>
 										</div>
 									</label>

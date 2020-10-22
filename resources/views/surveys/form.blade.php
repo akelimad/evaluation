@@ -223,7 +223,7 @@
                   <div class="custom-switch-btn">
                     <label class="switch" :for="grpIndex+'_editMode'">
                       <input type="checkbox" :id="grpIndex+'_editMode'" class="hidden" v-model="group.editAllQuestion" @change="turnOnEditMode(grpIndex)">
-                      <div class="slider round">
+                      <div class="slider-toggle round">
                         <span class="on">ON</span><span class="off">OFF</span>
                       </div>
                     </label>

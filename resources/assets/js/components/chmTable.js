@@ -33,7 +33,7 @@ export default class chmTable {
 
     // Decrease Table opacity while loading
     if ($(target).find('table').length === 0) {
-      self.fill(target, '<div class="pt-10"><i class="' + params.lodingIcon + '"></i>&nbsp;' + trans("Chargement de la table ...") + '</div>', params.scrollTo)
+      self.fill(target, '<div class="p-10"><i class="' + params.lodingIcon + '"></i>&nbsp;' + trans("Chargement de la table ...") + '</div>', params.scrollTo)
     } else {
       // $(target).css('opacity', '0.3')
       $(target).find('#table-overlay').show()

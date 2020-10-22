@@ -140,7 +140,7 @@
                               <tr>
                                 <th></th>
                                 @foreach($q->getOptions('answers') as $ansrKey => $answer)
-                                  <th>{{ $answer['title'] }}</th>
+                                  <th class="text-center">{{ $answer['title'] }}</th>
                                 @endforeach
                               </tr>
                               </thead>
@@ -149,7 +149,9 @@
                                 <tr>
                                   <td>{{ $subquestion['title'] }}</td>
                                   @foreach($q->getOptions('answers') as $key => $answer)
-                                    <td><input type="radio" name="answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }} disabled></td>
+                                    <td class="text-center">
+                                      <input type="radio" name="answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }} disabled>
+                                    </td>
                                   @endforeach
                                 </tr>
                               @endforeach
@@ -299,7 +301,7 @@
                               <tr>
                                 <th></th>
                                 @foreach($q->getOptions('answers') as $ansrKey => $answer)
-                                  <th>{{ $answer['title'] }}</th>
+                                  <th class="text-center">{{ $answer['title'] }}</th>
                                 @endforeach
                               </tr>
                               </thead>
@@ -308,7 +310,9 @@
                                 <tr>
                                   <td>{{ $subquestion['title'] }}</td>
                                   @foreach($q->getOptions('answers') as $key => $answer)
-                                    <td><input type="radio" name="answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }}></td>
+                                    <td class="text-center">
+                                      <input type="radio" name="answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }} required>
+                                    </td>
                                   @endforeach
                                 </tr>
                               @endforeach
