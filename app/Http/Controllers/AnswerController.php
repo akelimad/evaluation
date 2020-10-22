@@ -51,13 +51,16 @@ class AnswerController extends Controller
    */
   public function store(Request $request)
   {
-    //dd($request->all());
     try {
       $uid = $request->user_id;
       $eid = $request->entretien_id;
       $entretien = Entretien::find($eid);
       foreach ($request->answers as $key => $value) {
-        $a = Answer::getCollAnswers($key, $uid, $eid);
+        if ($entretien->isFeedback360()) {
+          $a = Answer::getMentorAnswers($key, $uid, $request->mentor_id, $eid);
+        } else {
+          $a = Answer::getCollAnswers($key, $uid, $eid);
+        }
         if (!$a) {
           $a = new Answer();
         }
