@@ -293,8 +293,8 @@ class User extends Authenticatable
     return $entretiens_user->get();
   }
 
-  public function hasSharedEntretienFb360() {
-    $list = $this->getUserEvaluationsByModel('FB360', true);
+  public function hasSharedEntretienFb360($modelRef, $authIsUserToEvalute) {
+    $list = $this->getUserEvaluationsByModel($modelRef, $authIsUserToEvalute);
     return $list->count() > 0 ? $list : false;
   }
 

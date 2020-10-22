@@ -429,6 +429,7 @@
       var labelText = $(this).next('label').text()
       if ($.inArray(labelText, ['Evaluation annuelle', 'Feedback 360']) !== -1 && $(this).is(':checked')) {
         chmForm.setRule($('select#entretien'), 'required')
+        $('.evals-wrapper').show()
       } else if ($.inArray(labelText, ['Evaluation annuelle', 'Feedback 360']) !== -1 && !$(this).is(':checked')) {
         $('.evals-wrapper').hide()
         chmForm.setRule($('select#entretien'), 'required', false)
@@ -450,7 +451,6 @@
     })
     @if($entretien->id > 0)
       $('.eval-item-checkbox').trigger('change')
-      console.log('change fired')
     @endif
 
     $(document).on('click', 'button.next', function (e) {
@@ -548,7 +548,6 @@
         $('select#entretien option, select#carreer option').filter(function () {
           return $(this).data('model-ref') == "FB360"
         }).show()
-        $('.evals-wrapper').hide()
         $('.carreers-wrapper').hide()
         $('.objectifs-wrapper').hide()
       } else {

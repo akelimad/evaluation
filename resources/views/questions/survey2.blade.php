@@ -294,7 +294,7 @@
                               </div>
                             </div>
                           @elseif ($q->type == "array")
-                            @php($qAnswer = App\Answer::getCollAnswers($q->id, $user->id, $e->id))
+                            @php($qAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
                             @php($qAnswer = $qAnswer ? json_decode($qAnswer->mentor_answer, true) : [])
                             <table class="table table-hover">
                               <thead>
@@ -334,7 +334,7 @@
         <div class="actions bg-gray p-20">
           <a href="{{ route('anglets.synthese', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
           @endif
-          @if(!App\Entretien::answeredMentor($e->id, $user->id, App\User::getMentor($user->id)->id) && Route::current()->getName() != 'entretien.apercu')
+          @if(!App\Entretien::answeredMentor($e->id, $user->id, $evaluator_id) && Route::current()->getName() != 'entretien.apercu')
             <button type="submit" class="btn btn-success pull-right" id="submitAnswers"><i class="fa fa-save"></i> Enregistrer
             </button>
         </div>

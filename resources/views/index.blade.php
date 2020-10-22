@@ -218,7 +218,7 @@
             </table>
           </div>
         </div>
-        @if ($user->hassharedEntretienFb360())
+        @if (Auth::user()->hasSharedEntretienFb360('FB360', true))
           <div class="card portlet box box-primary">
           <div class="nav-tabs-custom portlet-title">
             <div class=" caption caption-red mb-10">{{ __("Mes Feedback 360 dont je suis l'évalué") }}</div>
@@ -236,7 +236,7 @@
               </tr>
               </thead>
               <tbody>
-              @forelse($user->hassharedEntretienFb360() as $eu)
+              @forelse(Auth::user()->hasSharedEntretienFb360('FB360', true) as $eu)
                 @php($user = \App\User::find($eu->user_id))
                 @php($evaluator = \App\User::find($eu->mentor_id))
                 @php($e = \App\Entretien::find($eu->entretien_id))
@@ -250,7 +250,7 @@
                   </td>
                   <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
                   <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
-                  <td class="text-center">
+                  <td>
                     {{ $evaluator ? $evaluator->fullname() : 'N/A' }}
                   </td>
                   <td class="text-center">
