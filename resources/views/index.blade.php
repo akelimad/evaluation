@@ -251,7 +251,11 @@
                   <td>{{ date('d/m/Y', strtotime($e->date)) }}</td>
                   <td>{{ date('d/m/Y', strtotime($e->date_limit)) }}</td>
                   <td>
-                    {{ $evaluator ? $evaluator->fullname() : 'N/A' }}
+                    @if (isset($e->getOptions()['anonym']))
+                      {{ __("Anonyme") }}
+                    @else
+                      {{ $evaluator ? $evaluator->fullname() : 'N/A' }}
+                    @endif
                   </td>
                   <td class="text-center">
                     <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu"><i class="fa fa-search"></i></a>

@@ -140,19 +140,19 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         @role(["ADMIN", "RH"])
-        <li class="{{ Request::is('dashboard') ? 'active' : '' }}">
-          <a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> <span>{{ __("Tableau de board") }}</span></a>
+        <li class="{{ Route::current()->getName() == 'dashboard' ? 'active' : '' }}">
+          <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ __("Tableau de board") }}</span></a>
         </li>
         @endrole
 
         @role(["MENTOR", "COLLABORATEUR"])
         <li class="{{ Request::is('/') ? 'active' : '' }}">
-          <a href="{{ url('/') }}"><i class="fa fa-comments"></i> <span>{{ __("Mes évaluations") }}</span></a>
+          <a href="{{ route('home') }}"><i class="fa fa-comments"></i> <span>{{ __("Mes évaluations") }}</span></a>
         </li>
         @endrole
 
         @role(["ADMIN", "RH"])
-        <li class="{{ Request::is('entretiens/index') ? 'active' : '' }}"><a href="{{ url('entretiens/index') }}"><i class="fa fa-comments"></i> <span>{{ __("Campagnes") }}</span></a></li>
+        <li class="{{ Route::current()->getName() == 'entretiens' ? 'active' : '' }}"><a href="{{ route('entretiens') }}"><i class="fa fa-comments"></i> <span>{{ __("Campagnes") }}</span></a></li>
         <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>{{ __("Calendrier des campagnes") }}</span></a></li>
         @endrole
 

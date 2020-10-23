@@ -16,8 +16,8 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/dashboard', 'HomeController@dashboard');
-Route::get('profile', 'UserController@profile');
+Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
+Route::get('profile', 'UserController@profile')->name('profile');
 
 Route::get('user/{id}', 'UserController@show')->name('user.profile');
 Route::any('users/form', 'UserController@form')->name('user.form');
@@ -30,7 +30,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
   Route::get('users/import', 'UserController@import');
   Route::post('users/import_parse', 'UserController@parseImport');
   Route::post('users/import_process', 'UserController@processImport');
-  Route::get('entretiens/index', 'EntretienController@indexEntretien')->name('entretiens');
+  Route::get('campagnes', 'EntretienController@indexEntretien')->name('entretiens');
   Route::get('entretiens/{id}/show', 'EntretienController@show')->name('entretien.show');
   Route::get('entretiens/evaluations', 'EntretienController@entretiensEval');
   Route::get('entretiens/calendar', 'EntretienController@calendar');
