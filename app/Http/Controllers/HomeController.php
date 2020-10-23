@@ -72,7 +72,7 @@ class HomeController extends Controller
     $finished = count($entretien_user_query->get());
 
     $nbMentors = User::whereHas('roles', function ($query) use ($society) {
-      $query->where('name', 'MENTOR');
+      $query->where('name', 'MANAGER');
     })->where('society_id', $society->id)->count();
 
     $nbColls = User::whereHas('roles', function ($query) use ($society) {

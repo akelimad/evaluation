@@ -181,25 +181,7 @@
                   <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
                 </div>
                 <div v-if="question.type == 'array'" class="card-body">
-                  <div class="answers-container mb-20">
-                    <p class="border-bottom" style="border-bottom: 1px dashed #e2dddd;">{{ __("Options de réponses") }}</p>
-                    <ul class="list-unstyled">
-                      <li v-for="(answer, aIndex) in group.questions[qIndex].options.answers" class="mb-10">
-                        <div v-if="answer.edit" class="form-group">
-                          <input name="answer" v-model="answer.title" class="form-control" @blur="updateArrayAnswer(grpIndex, qIndex, aIndex, answer)" @keyup.enter="updateArrayAnswer(grpIndex, qIndex, aIndex, answer)" v-focus placeholder="Entrez l'option de réponse" v-validate="'required'" @keypress.enter.prevent>
-                        </div>
-                        <div v-else class="m-0 text-muted">
-                          <label @click="answer.edit = true;" class="mb-0 d-inline-block">@{{ aIndex + 1 }} | @{{ answer.title }}</label>
-                          <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeArrayAnswer(grpIndex, qIndex, aIndex)"><i class="fa fa-trash"></i></button>
-                          <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editArrayAnswer(answer)"><i class="fa fa-pencil"></i></button>
-                          <div class="clearfix"></div>
-                        </div>
-                      </li>
-                    </ul>
-                    <a href="javascript:void(0)" @click="addNewArrayAnswer(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
-                  </div>
-
-                  <div class="subquestions-container">
+                  <div class="subquestions-container mb-20">
                     <p class="border-bottom" style="border-bottom: 1px dashed #e2dddd;">{{ __("Sous questions") }}</p>
                     <ul class="list-unstyled">
                       <li v-for="(subquestion, subIndex) in group.questions[qIndex].options.subquestions" class="mb-10">
@@ -215,6 +197,23 @@
                       </li>
                     </ul>
                     <a href="javascript:void(0)" @click="addNewArraySubquestion(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une sous question</a>
+                  </div>
+                  <div class="answers-container">
+                    <p class="border-bottom" style="border-bottom: 1px dashed #e2dddd;">{{ __("Options de réponses") }}</p>
+                    <ul class="list-unstyled">
+                      <li v-for="(answer, aIndex) in group.questions[qIndex].options.answers" class="mb-10">
+                        <div v-if="answer.edit" class="form-group">
+                          <input name="answer" v-model="answer.title" class="form-control" @blur="updateArrayAnswer(grpIndex, qIndex, aIndex, answer)" @keyup.enter="updateArrayAnswer(grpIndex, qIndex, aIndex, answer)" v-focus placeholder="Entrez l'option de réponse" v-validate="'required'" @keypress.enter.prevent>
+                        </div>
+                        <div v-else class="m-0 text-muted">
+                          <label @click="answer.edit = true;" class="mb-0 d-inline-block">@{{ aIndex + 1 }} | @{{ answer.title }}</label>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-danger" @click="removeArrayAnswer(grpIndex, qIndex, aIndex)"><i class="fa fa-trash"></i></button>
+                          <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editArrayAnswer(answer)"><i class="fa fa-pencil"></i></button>
+                          <div class="clearfix"></div>
+                        </div>
+                      </li>
+                    </ul>
+                    <a href="javascript:void(0)" @click="addNewArrayAnswer(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
                   </div>
                 </div>
               </div>

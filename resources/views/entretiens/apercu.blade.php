@@ -1,7 +1,7 @@
 
 <div class="apercu">
   <div class="useful-actions mb-20">
-    <a href="{{ route('entretien.download-pdf', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Télécharger en PDF</a>
+    <a href="{{ route('entretien.download-pdf', ['id' => $eu->id]) }}" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Télécharger en PDF</a>
     <a href="javascript:void(0)" id="openAll" class="pull-right ml-20">Tout dérouler</a>
     <a href="javascript:void(0)" id="closeAll" class="pull-right">Tout enrouler</a>
     <div class="clearfix"></div>

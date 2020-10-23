@@ -7,11 +7,11 @@
       <input type="text" name="ref" class="form-control" value="{{$email->ref}}" {{ $email->ref != '' ? 'readonly':'' }}>
     </div>
     <div class="col-md-4">
-      <label for="date" class="control-label required">Emetteur</label>
+      <label for="date" class="control-label required">Email de l'émetteur</label>
       <input type="text" class="form-control" name="sender" placeholder="contact@exemple.com" required="" value="{{ App\User::getOwner()->email ? App\User::getOwner()->email : '' }}">
     </div>
     <div class="col-md-4">
-      <label for="name" class="control-label required">Nom</label>
+      <label for="name" class="control-label required">Nom de l'émetteur</label>
       <input type="text" class="form-control" name="name" placeholder="Name" required="" value="{{ App\User::getOwner()->name ? App\User::getOwner()->name : '' }}">
     </div>
   </div>

@@ -63,7 +63,7 @@
                     </div>
                     <div class="col-md-3 pl-0">
                       <label>
-                        <input type="number" :name="'types['+tIndex+'][skills]['+sIndex+'][ponderation]'" :id="'t-'+tIndex+'-skill-'+sIndex+'-ponderation'" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder=" " v-model="skill.ponderation" chm-validate="required|min_len,1|max_len,2">
+                        <input type="number" :name="'types['+tIndex+'][skills]['+sIndex+'][ponderation]'" :id="'t-'+tIndex+'-skill-'+sIndex+'-ponderation'" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder=" " v-model="skill.ponderation" chm-validate="required|min_len,1|max_len,3">
                         <span>Pondération (%)</span>
                       </label>
                     </div>

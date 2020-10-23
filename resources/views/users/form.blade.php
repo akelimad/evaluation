@@ -94,7 +94,7 @@
     <div class="row">
       <div class="col-md-6">
         <label for="role" class="control-label required">Rôle</label>
-        <select name="roles[]" id="role" class="form-control select2" chm-validate="required"  multiple required @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
+        <select name="roles[]" id="role" class="form-control select2" chm-validate="required"  multiple required @role(['COLLABORATEUR', 'MANAGER']) disabled @endrole>
           @foreach($roles as $role)
             <option value="{{$role->id}}" {{isset($roles_ids) && in_array($role->id, $roles_ids) ? 'selected':''}}> {{$role->name}} </option>
           @endforeach
@@ -102,7 +102,7 @@
       </div>
       <div class="col-md-6">
         <label for="user_id" class="control-label">Manager</label>
-        <select name="user_id" id="user_id" class="form-control select2" @role(['COLLABORATEUR', 'MENTOR']) disabled @endrole>
+        <select name="user_id" id="user_id" class="form-control select2" @role(['COLLABORATEUR', 'MANAGER']) disabled @endrole>
           <option value=""></option>
           @foreach($users as $u)
             <option value="{{$u->id}}" {{isset($user) && $u->id == $user->user_id ? 'selected':''}}> {{$u->name. " ".$u->last_name}} </option>

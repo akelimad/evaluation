@@ -62,7 +62,7 @@
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="description" class="required control-label">Echéance</label>
+                    <label for="description" class="control-label">Echéance</label>
                     <date-picker name="deadline" v-model="objectif.deadline" :config="{format: 'DD-MM-YYYY', locale: 'fr', minDate: new Date(), ignoreReadonly: true}" readonly></date-picker>
                   </div>
                 </div>
@@ -77,12 +77,12 @@
                       <div class="row mb-10">
                         <div class="col-md-5">
                           <label>
-                            <input type="text" class="form-control" placeholder="Titre de l'indicateur" v-model="indicator.title">
+                            <input type="text" class="form-control" placeholder="Titre de l'indicateur" v-model="indicator.title" maxlength="64">
                           </label>
                         </div>
                         <div class="col-md-2">
                           <label>
-                            <input type="number" min="1" max="100" class="form-control" placeholder="Objectif" v-model="indicator.fixed">
+                            <input type="number" min="1" max="100" class="form-control" placeholder="Objectif" v-model="indicator.fixed" maxlength="3">
                           </label>
                         </div>
                         <div class="col-md-2">
@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-md-2">
                           <label>
-                            <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder="Pondération (%)" v-model="indicator.ponderation">
+                            <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder="Pondération (%)" v-model="indicator.ponderation" maxlength="3">
                           </label>
                         </div>
                         <div class="col-md-1">

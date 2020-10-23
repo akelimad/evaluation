@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Service\Table;
+use App\Language;
 use App\Translation;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,7 @@ class TranslationController extends Controller
   public function getTable(Request $request) {
     $table = new Table($request);
     $query = Translation::groupBy('key');
+    $locales = Language::pluck('iso_code')->toArray();
 
     if ($q = $request->get('q', false)) {
       $query->where('key', 'LIKE', "%$q%")->orWhere('value', 'LIKE', "%$q%");
@@ -23,7 +25,7 @@ class TranslationController extends Controller
     $table->addColumn('key', 'Clé', function ($entity) {
       return $entity->key;
     });
-    foreach (['fr', 'en'] as $locale) {
+    foreach ($locales as $locale) {
       $table->addColumn($locale, ucfirst($locale), function ($entity) use ($locale) {
         $localTrans = Translation::where('key', $entity->key)->where('locale', $locale)->first();
 

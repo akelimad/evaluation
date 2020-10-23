@@ -158,13 +158,16 @@
   <table class="table">
     <thead>
       <tr>
+        @if(!$e->isFeedback360())
         <th width="50%">Auto-évaluation de {{ $user->fullname() }}</th>
+        @endif
         <th width="50%">{{ $user->parent->fullname() }}</th>
       </tr>
     </thead>
     <tbody>
       @foreach($survey->groupes as $groupe)
         <tr>
+          @if(!$e->isFeedback360())
           <td>
             <div class="panel-group">
               <div class="panel panel-info mb-20">
@@ -188,6 +191,31 @@
                             <p class="{{ $collAnswer && in_array($child->id, json_decode($collAnswer->answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
                           @endforeach
                         @endif
+                      @elseif ($q->type == "array")
+                        @php($qAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
+                        @php($qAnswer = $qAnswer ? json_decode($qAnswer->mentor_answer, true) : [])
+                        <table class="table table-hover">
+                          <thead>
+                          <tr>
+                            <th></th>
+                            @foreach($q->getOptions('answers') as $ansrKey => $answer)
+                              <th class="text-center">{{ $answer['title'] }}</th>
+                            @endforeach
+                          </tr>
+                          </thead>
+                          <tbody>
+                          @foreach($q->getOptions('subquestions') as $subKey => $subquestion)
+                            <tr>
+                              <td>{{ $subquestion['title'] }}</td>
+                              @foreach($q->getOptions('answers') as $key => $answer)
+                                <td class="text-center">
+                                  {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'X':'' }}
+                                </td>
+                              @endforeach
+                            </tr>
+                          @endforeach
+                          </tbody>
+                        </table>
                       @endif
                     </div>
                   @endforeach
@@ -195,13 +223,14 @@
               </div>
             </div>
           </td>
+          @endif
           <td>
             <div class="panel-group">
               <div class="panel panel-info mb-20">
                 <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
                 <div class="panel-body">
                   @foreach($groupe->questions as $q)
-                    @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $e->id))
+                    @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
                     <div class="question-box">
                       <p><b>{{ $q->titre }} :</b></p>
                       @if (in_array($q->type, ['text', 'textarea']))
@@ -218,6 +247,31 @@
                             <p class="{{ $mentorAnswer &&  in_array($child->id, json_decode($mentorAnswer->mentor_answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
                           @endforeach
                         @endif
+                      @elseif ($q->type == "array")
+                        @php($qAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
+                        @php($qAnswer = $qAnswer ? json_decode($qAnswer->mentor_answer, true) : [])
+                        <table class="table table-hover">
+                          <thead>
+                          <tr>
+                            <th></th>
+                            @foreach($q->getOptions('answers') as $ansrKey => $answer)
+                              <th class="text-center">{{ $answer['title'] }}</th>
+                            @endforeach
+                          </tr>
+                          </thead>
+                          <tbody>
+                          @foreach($q->getOptions('subquestions') as $subKey => $subquestion)
+                            <tr>
+                              <td>{{ $subquestion['title'] }}</td>
+                              @foreach($q->getOptions('answers') as $key => $answer)
+                                <td class="text-center">
+                                  {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'X':'' }}
+                                </td>
+                              @endforeach
+                            </tr>
+                          @endforeach
+                          </tbody>
+                        </table>
                       @endif
                     </div>
                   @endforeach
@@ -238,13 +292,16 @@
   <table class="table">
     <thead>
     <tr>
+      @if(!$e->isFeedback360())
       <th width="50%">Auto-évaluation de {{ $user->fullname() }}</th>
+      @endif
       <th width="50%">{{ $user->parent->fullname() }}</th>
     </tr>
     </thead>
     <tbody>
     @foreach($survey->groupes as $groupe)
       <tr>
+        @if(!$e->isFeedback360())
         <td>
           <div class="panel-group">
             <div class="panel panel-info mb-20">
@@ -268,6 +325,31 @@
                           <p class="{{ $collAnswer &&  in_array($child->id, json_decode($collAnswer->answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
                         @endforeach
                       @endif
+                    @elseif ($q->type == "array")
+                      @php($qAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
+                      @php($qAnswer = $qAnswer ? json_decode($qAnswer->mentor_answer, true) : [])
+                      <table class="table table-hover">
+                        <thead>
+                        <tr>
+                          <th></th>
+                          @foreach($q->getOptions('answers') as $ansrKey => $answer)
+                            <th class="text-center">{{ $answer['title'] }}</th>
+                          @endforeach
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($q->getOptions('subquestions') as $subKey => $subquestion)
+                          <tr>
+                            <td>{{ $subquestion['title'] }}</td>
+                            @foreach($q->getOptions('answers') as $key => $answer)
+                              <td class="text-center">
+                                {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'X':'' }}
+                              </td>
+                            @endforeach
+                          </tr>
+                        @endforeach
+                        </tbody>
+                      </table>
                     @endif
                   </div>
                 @endforeach
@@ -275,13 +357,14 @@
             </div>
           </div>
         </td>
+        @endif
         <td>
           <div class="panel-group">
             <div class="panel panel-info mb-20">
               <div class="panel-heading text-blue underline">{{ $groupe->name }}</div>
               <div class="panel-body">
                 @foreach($groupe->questions as $q)
-                  @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $e->id))
+                  @php($mentorAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
                   <div class="question-box">
                     <p><b>{{ $q->titre }} :</b></p>
                     @if (in_array($q->type, ['text', 'textarea']))
@@ -295,9 +378,34 @@
                     @elseif($q->type == 'checkbox')
                       @if (!empty($q->children))
                         @foreach($q->children as $child)
-                          <p class="{{ $mentorAnswer &&  in_array($child->id, json_decode($mentorAnswer->mentor_answer)) ? 'text-blue':''  }}">{{ $child->titre }}</p>
+                          <p class="{{ $mentorAnswer &&  in_array($child->id, json_decode($mentorAnswer->mentor_answer)) ? 'text-blue':'' }}">{{ $child->titre }}</p>
                         @endforeach
                       @endif
+                    @elseif ($q->type == "array")
+                      @php($qAnswer = App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id))
+                      @php($qAnswer = $qAnswer ? json_decode($qAnswer->mentor_answer, true) : [])
+                      <table class="table table-hover">
+                        <thead>
+                        <tr>
+                          <th></th>
+                          @foreach($q->getOptions('answers') as $ansrKey => $answer)
+                            <th class="text-center">{{ $answer['title'] }}</th>
+                          @endforeach
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($q->getOptions('subquestions') as $subKey => $subquestion)
+                          <tr>
+                            <td>{{ $subquestion['title'] }}</td>
+                            @foreach($q->getOptions('answers') as $key => $answer)
+                              <td class="text-center">
+                                {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'X':'' }}
+                              </td>
+                            @endforeach
+                          </tr>
+                        @endforeach
+                        </tbody>
+                      </table>
                     @endif
                   </div>
                 @endforeach

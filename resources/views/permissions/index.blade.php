@@ -7,15 +7,15 @@
   <section class="content">
     <div class="row">
       <div class="col-md-12">
-        <div class="box box-primary">
-          <div class="box-header">
-            <h3 class="box-title"><i class="fa fa-lock"></i> Liste des permissions <span class="badge badge-count">0</span></h3>
-
-            <div class="box-tools mb40">
-
-            </div>
-          </div>
-          <div class="box-body">
+        <div class="title-section mb-20">
+          <h3 class="mt-0">
+            <i class="fa fa-list"></i> {{ __("Permissions") }} <span class="badge badge-count">0</span>
+          </h3>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="box p-10">
+          <div class="box-body p-10">
             <form action="" method="post" chm-form>
               {{ csrf_field() }}
               <table class="table table-hover table-striped">

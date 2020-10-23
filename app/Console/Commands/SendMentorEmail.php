@@ -40,7 +40,7 @@ class SendMentorEmail extends Command
     public function handle()
     {
         $mentors = User::with('roles')->whereHas('roles', function ($query) {
-            $query->where('name', '=', 'MENTOR');
+            $query->where('name', '=', 'MANAGER');
         })->get();
 
         foreach ($mentors as $mentor) {

@@ -8,22 +8,34 @@
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
 @endsection
 @section('content')
-  <section class="content users">
+  <section class="content setting">
     <div class="row">
-      <div class="col-md-12">
-        <div class="box box-primary">
-          <div class="box-header">
-            <h3 class="box-title"><i class="glyphicon glyphicon-envelope"></i> Liste des emails <span class="badge badge-count">0</span></h3>
-            <div class="box-tools mb40">
+      <div class="col-md-3">
+        <div class="card">
+          <ul class="list-group mb-0">
+            @foreach(App\Setting::$models as $model)
+              <li class="list-group-item {{ $model['active'] == $active ? 'active':'' }}"><a href="{{ url($model['route']) }}"><i class="{{ $model['icon'] }}"></i> {{ $model['label'] }}</a>
+              </li>
+            @endforeach
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="title-section mb-20">
+          <h3 class="mt-0">
+            {{ __("Courriers automatiques") }} <span class="badge badge-count">0</span>
+            <div class="pull-right">
               <a
                   href="javascript:void(0)"
                   chm-modal="{{ route('email.form') }}"
                   chm-modal-options='{"form":{"attributes":{"id":"emailForm","target-table":"[chm-table]"}}}'
                   class="btn bg-maroon"
-              ><i class="fa fa-user-plus"></i>&nbsp;{{ "Ajouter" }}</a>
+              ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter" }}</a>
             </div>
-          </div>
-          <div class="box-body">
+          </h3>
+        </div>
+        <div class="box p-0">
+          <div class="box-body p-0">
             <div chm-table="{{ route('emails.table') }}"
                  chm-table-options='{"with_ajax": true}'
                  chm-table-params='{{ json_encode(request()->query->all()) }}'

@@ -52,7 +52,7 @@ class EmailController extends Controller
 
   public function index()
   {
-    return view('emails.index');
+    return view('emails.index', ['active' => 'emails']);
   }
 
   public function form(Request $request)

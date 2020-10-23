@@ -30,10 +30,11 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
   Route::get('users/import', 'UserController@import');
   Route::post('users/import_parse', 'UserController@parseImport');
   Route::post('users/import_process', 'UserController@processImport');
-  Route::get('campagnes', 'EntretienController@indexEntretien')->name('entretiens');
+  Route::get('campagnes/table', 'EntretienController@getTable')->name('entretiens.table');
+  Route::get('campagnes', 'EntretienController@index')->name('entretiens');
   Route::get('entretiens/{id}/show', 'EntretienController@show')->name('entretien.show');
   Route::get('entretiens/evaluations', 'EntretienController@entretiensEval');
-  Route::get('entretiens/calendar', 'EntretienController@calendar');
+  Route::get('entretiens/calendar', 'EntretienController@calendar')->name('entretiens.calendar');
 });
 
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
@@ -70,7 +71,9 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
   Route::post('emails/store', 'EmailController@store')->name('email.store');
   Route::delete('emails/delete', 'EmailController@delete')->name('email.delete');
 
+  Route::get('config/settings/general/table', 'SettingController@getTable')->name('general.settings.table');
   Route::get('config/settings/general', 'SettingController@general')->name('general.settings');
+  Route::any('config/settings/general/form', 'SettingController@form')->name('general.settings.form');
 
   Route::get('departments/table', 'DepartmentController@getTable')->name('departments.table');
   Route::get('config/settings/departments', 'DepartmentController@index')->name('departments');
@@ -83,18 +86,6 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
   Route::any('function/form', 'FonctionController@form')->name('function.form');
   Route::post('function/store', 'FonctionController@store')->name('function.store');
   Route::delete('function/delete', 'FonctionController@delete')->name('function.delete');
-
-  Route::get('roles/table', 'RoleController@getTable')->name('roles.table');
-  Route::get('config/roles', 'RoleController@index')->name('config.roles');
-  Route::any('role/form', 'RoleController@form')->name('role.form');
-  Route::post('role/store', 'RoleController@store')->name('role.store');
-  Route::delete('role/delete', 'RoleController@delete')->name('role.delete');
-
-  Route::get('permissions/table', 'PermissionController@getTable')->name('permissions.table');
-  Route::any('config/permissions', 'PermissionController@index')->name('permissions');
-  Route::any('permission/form', 'PermissionController@form')->name('permission.form');
-  Route::post('permission/store', 'PermissionController@store')->name('permission.store');
-  Route::get('permission/delete', 'PermissionController@delete')->name('permission.delete');
 
 });
 
@@ -109,8 +100,20 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
   Route::any('model/form', 'ModeleController@form')->name('model.form');
   Route::post('model/store', 'ModeleController@store')->name('model.store');
   Route::delete('model/delete', 'ModeleController@delete')->name('model.delete');
+
+  Route::get('roles/table', 'RoleController@getTable')->name('roles.table');
+  Route::get('config/roles', 'RoleController@index')->name('config.roles');
+  Route::any('role/form', 'RoleController@form')->name('role.form');
+  Route::post('role/store', 'RoleController@store')->name('role.store');
+  Route::delete('role/delete', 'RoleController@delete')->name('role.delete');
+
+  Route::get('permissions/table', 'PermissionController@getTable')->name('permissions.table');
+  Route::any('config/permissions', 'PermissionController@index')->name('permissions');
+  Route::any('permission/form', 'PermissionController@form')->name('permission.form');
+  Route::post('permission/store', 'PermissionController@store')->name('permission.store');
+  Route::get('permission/delete', 'PermissionController@delete')->name('permission.delete');
 });
-Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() {
+Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
   Route::any('companies/form', 'CompanyController@form')->name('company.form');
   Route::post('companies/store', 'CompanyController@store')->name('company.store');
 });
@@ -192,7 +195,7 @@ Route::delete('team/delete', 'TeamController@delete')->name('team.delete');
 Route::get('entretiens/users/table', 'EntretienUserController@getTable')->name('entretien_user.table');
 Route::get('entretiens/users/notes/table', 'EntretienUserController@getTableNotes')->name('entretien_user.notes.table');
 Route::get('entretiens/{id}/appercu', 'EntretienUserController@apercu')->name('entretien.apercu');
-Route::get('entretiens/{eid}/u/{uid}/printPdf', 'EntretienUserController@printPdf')->name('entretien.download-pdf');
+Route::get('entretiens/{id}/printPdf', 'EntretienUserController@printPdf')->name('entretien.download-pdf');
 Route::post('entretien/users/reminder', 'EntretienUserController@reminder')->name('entretien.users.reminder');
 Route::delete('entretien/users/delete', 'EntretienUserController@delete')->name('entretien.users.delete');
 Route::post('entretiens/answers/export', 'EntretienUserController@export')->name('entretien.users.export');
@@ -202,4 +205,7 @@ Route::any('entretiens/users/reopen', 'EntretienUserController@reopen')->name('e
 Route::get('table/translations', 'TranslationController@getTable')->name('interface.translations.table');
 Route::get('interface/translations', 'TranslationController@index')->name('interface.translations');
 Route::post('interface/translations/store', 'TranslationController@store')->name('translations.store');
+Route::get('languages/table', 'LanguageController@getTable')->name('languages.table');
+Route::get('languages', 'LanguageController@index')->name('languages');
+Route::any('languages/form', 'LanguageController@form')->name('languages.form');
 

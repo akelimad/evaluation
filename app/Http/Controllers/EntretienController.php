@@ -7,6 +7,7 @@ use App\Campaign;
 use App\Console\Commands\CampaignEmailing;
 use App\Fonction;
 use App\Http\Service\Table;
+use App\Modele;
 use App\Team;
 use Illuminate\Http\Request;
 use App\Http\Mail\MailerController;
@@ -41,24 +42,10 @@ class EntretienController extends Controller
     $this->middleware('auth');
   }
 
-
   /**
    * Display a listing of the resource.
    */
-  public function entretiensList(Request $request)
-  {
-    ob_start();
-    $ids = json_encode($request->ids);
-    $entretiens = Entretien::getAll()->get();
-    echo view('entretiens.list', compact('entretiens', 'ids'));
-    $content = ob_get_clean();
-    return ['title' => __("Liste des entretiens"), 'content' => $content];
-  }
-
-  /**
-   * Display a listing of the resource.
-   */
-  public function indexEntretien(Request $request)
+  public function index(Request $request)
   {
     $per_page = $selected = 6;
     if (isset($request->per_page) && $request->per_page != "all") {
@@ -84,7 +71,73 @@ class EntretienController extends Controller
     $objectifs = EntretienObjectif::getAll()->get();
     $results = $query->paginate($per_page);
     $results->appends(Input::except('page'));
-    return view('entretiens.index', compact('results', 'selected', 'evaluations', 'objectifs'));
+    return view('entretiens.index');
+  }
+
+  public function getTable(Request $request) {
+    $table = new Table($request);
+    $query = Entretien::getAll()->orderBy('id', 'DESC');
+
+    if ($q = $request->get('q', false)) {
+      $query->where('titre', 'LIKE', "%".$q."%");
+    }
+
+    $table->setPrimaryKey('id');
+    $table->setBulkActions(true);
+    $table->addColumn('titre', 'Titre');
+    $table->addColumn('modele', 'Modèle', function ($row) {
+      $modele = Modele::find($row->model_id);
+      return $modele ? $modele->title : 'N/A';
+    });
+    $table->addColumn('nbr_participants', 'Nbr. participants', function ($row) {
+      return $row->users->count();
+    });
+    $table->addColumn('date', 'Date de début', function ($row) {
+      return date('d.m.Y', strtotime($row->date));
+    });
+    $table->addColumn('date_limit', 'Date de fin', function ($row) {
+      return date('d.m.Y', strtotime($row->date_limit));
+    });
+    $table->addColumn('update_at', 'Créée/modifiée le', function ($row) {
+      return date('d.m.Y H:i', strtotime($row->updated_at));
+    });
+
+    // define table actions
+    $table->addAction('show', [
+      'icon' => 'fa fa-eye',
+      'label' => 'Visualiser',
+      'route' => ['name' => 'entretien.show', 'args' => ['id' => '[id]']],
+      'bulk_action' => false,
+    ]);
+    $table->addAction('edit', [
+      'icon' => 'fa fa-pencil',
+      'label' => 'Modifier',
+      'callback' => 'chmEntretien.form([id])',
+      'bulk_action' => false,
+    ]);
+    $table->addAction('delete', [
+      'icon' => 'fa fa-trash',
+      'label' => 'Supprimer',
+      'callback' => 'chmEntretien.delete({eid: [id]})',
+      'bulk_action' => true,
+    ]);
+
+    // render the table
+    return $table->render($query);
+  }
+
+
+  /**
+   * Display a listing of the resource.
+   */
+  public function entretiensList(Request $request)
+  {
+    ob_start();
+    $ids = json_encode($request->ids);
+    $entretiens = Entretien::getAll()->get();
+    echo view('entretiens.list', compact('entretiens', 'ids'));
+    $content = ob_get_clean();
+    return ['title' => __("Liste des entretiens"), 'content' => $content];
   }
 
   public function show($id)
@@ -340,7 +393,7 @@ class EntretienController extends Controller
     }
 
     // handle removed colls in edit action
-    $deleteEvalEmail = Email::getAll()->where('ref', 'delete_eval')->first();
+    /*$deleteEvalEmail = Email::getAll()->where('ref', 'delete_eval')->first();
 
     if($deleteEvalEmail) {
       foreach ($removedUsers as $uid) {
@@ -359,7 +412,7 @@ class EntretienController extends Controller
         ];
         Campaign::create($campaignData);
       }
-    }
+    }*/
 
     return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
   }

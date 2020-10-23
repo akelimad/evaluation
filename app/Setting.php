@@ -11,23 +11,37 @@ class Setting extends Model
     [
       'label' => 'Générales',
       'route' => 'config/settings/general',
-      'icon'  => 'fa fa-long-arrow-right',
+      'icon'  => 'fa fa-cog',
       'model' => 'App\Setting',
       'active' => 'gen',
     ],
     [
       'label' => 'Départements',
       'route' => 'config/settings/departments',
-      'icon'  => 'fa fa-long-arrow-right',
+      'icon'  => 'fa fa-pie-chart',
       'model' => 'App\Department',
       'active' => 'dep',
     ],
     [
       'label' => 'Fonctions',
       'route' => 'config/settings/functions',
-      'icon'  => 'fa fa-long-arrow-right',
+      'icon'  => 'fa fa-briefcase',
       'model' => 'App\Service',
       'active' => 'func',
+    ],
+    [
+      'label' => 'Equipes',
+      'route' => 'config/teams',
+      'icon'  => 'fa fa-users',
+      'model' => 'App\Service',
+      'active' => 'teams',
+    ],
+    [
+      'label' => 'Courriers automatiques',
+      'route' => 'config/emails',
+      'icon'  => 'fa fa-envelope',
+      'model' => 'App\Service',
+      'active' => 'emails',
     ],
   ];
 

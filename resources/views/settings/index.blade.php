@@ -1,8 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Départements')
+@section('title', 'Paramètres')
 @section('breadcrumb')
-  <li>Paramétrage</li>
-  <li>Départements</li>
+  <li>Paramètres</li>
 @endsection
 @section('content')
   <section class="content setting">
@@ -19,24 +18,14 @@
       </div>
       <div class="col-md-9">
         <div class="title-section mb-20">
-          <h3 class="mt-0">
-            {{ __("Départements") }} <span class="badge badge-count">0</span>
-            <div class="pull-right">
-              <a
-                  href="javascript:void(0)"
-                  chm-modal="{{ route('department.form') }}"
-                  chm-modal-options='{"form":{"attributes":{"id":"departmentForm","target-table":"[chm-table]"}}}'
-                  class="btn bg-maroon"
-              ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter" }}</a>
-            </div>
-          </h3>
+          <h3 class="mt-0">{{ __("Générales") }} <span class="badge badge-count">0</span></h3>
         </div>
         <div class="box p-0">
           <div class="box-body p-0">
-            <div chm-table="{{ route('departments.table') }}"
+            <div chm-table="{{ route('general.settings.table') }}"
                  chm-table-options='{"with_ajax": true}'
                  chm-table-params='{{ json_encode(request()->query->all()) }}'
-                 id="DepartmentsTableContainer"
+                 id="SettingsTableContainer"
             ></div>
           </div>
         </div>
@@ -44,3 +33,5 @@
     </div>
   </section>
 @endsection
+
+  

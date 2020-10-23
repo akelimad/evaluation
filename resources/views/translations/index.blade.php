@@ -29,7 +29,7 @@
     <div class="row mb-0">
       <div class="col-md-12">
         <div class="box p-0">
-          <div class="box-body pt-0">
+          <div class="box-body p-0">
             <div chm-table="{{ route('interface.translations.table') }}"
                  chm-table-options='{"with_ajax": true}'
                  chm-table-params='{{ json_encode(request()->query->all()) }}'

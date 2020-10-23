@@ -213,9 +213,12 @@ class EntretienUserController extends Controller
     return ['title' => "Aperçu de l'entretien", 'content' => $content];
   }
 
-  public function printPdf($eid, $uid)
+  public function printPdf($id)
   {
-    $e = Entretien::findOrFail($eid);
+    $eu = Entretien_user::find($id);
+    $eid = $eu->entretien_id;
+    $uid = $eu->user_id;
+    $e = Entretien::findOrFail($eu->entretien_id);
     if ($e->user_id != User::getOwner()->id) {
       abort(403);
     }
@@ -230,6 +233,8 @@ class EntretienUserController extends Controller
     $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
     $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
     $skill = Skill::where('function_id', $user->function)->first();
+    if (!$skill) $skill = new Skill();
+    $evaluator_id = $eu->mentor_id;
 
     // skills charts
     $chartData = [];
@@ -295,7 +300,7 @@ class EntretienUserController extends Controller
       $chartData[$objectif->id] = urlencode(json_encode($data));
     }
 
-    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'comment', 'skill', 'entreEvalsTitle', 'formations', 'primes', 'chartData', 'objectifsPersonnal', 'objectifsTeam'));
+    $pdf = \PDF::loadView('entretiens.print-pdf', compact('e', 'user', 'survey', 'comment', 'skill', 'entreEvalsTitle', 'formations', 'primes', 'chartData', 'objectifsPersonnal', 'objectifsTeam', 'evaluator_id'));
 
     return $pdf->download('synthese-entretien-evaluation.pdf');
 
@@ -362,7 +367,7 @@ class EntretienUserController extends Controller
       $e_u = Entretien_user::find($id);
       $entretien = Entretien::find($e_u->entretien_id);
       \DB::table('entretien_user')->where('id', $id)->delete();
-      if ($entretien->isFeedback360()) {
+      /*if ($entretien->isFeedback360()) {
         $reciever = User::find($e_u->mentor_id);
       } else {
         $reciever = User::find($e_u->user_id);
@@ -374,7 +379,7 @@ class EntretienUserController extends Controller
         'shedule_type' => 'now',
         'sheduled_at' => date('Y-m-d H:i'),
       ];
-      Campaign::create($campaignData);
+      Campaign::create($campaignData);*/
     }
 
     return ['status' => 'success', 'message' => __("La suppression a bien été effectuée, un email de suppression de l'évaluation sera envoyé pour les utilisateurs selectionnées")];

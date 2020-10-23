@@ -276,24 +276,3 @@
     </div>
   </section>
 @endsection
-
-@section('javascript')
-  <script>
-    // this to show popup message for ADMIN only after authentication
-    $(window).on('load', function () {
-      @if(\Auth::user()->hasRole('ADMIN') && session('popup'))
-          setTimeout(function () {
-        swal({
-          title: "Bienvenue",
-          text: "Bienvenue {{Auth::user()->name}} à votre espace d'administration",
-          type: "success",
-          allowOutsideClick: false
-        }, {
-          @php(session()->forget('popup'))
-        });
-      }, 1000)
-      @endif
-
-    });
-  </script>
-@endsection

@@ -12,11 +12,13 @@
   <section class="content entretiens-list">
     <div class="row">
       <div class="col-md-12">
-        <div class="box box-primary">
-          <div class="box-header">
-            <h3 class="box-title">Calendrier des campagnes</h3>
-          </div>
-          <div class="box-body table-responsive no-padding mb40">
+        <div class="title-section mb-20">
+          <h3 class="mt-0"><i class="fa fa-calendar"></i> {{ __("Calendrier des campagnes") }}</h3>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="box p-0">
+          <div class="box-body p-0">
             @if( count($entretiens)>0 )
               <div id="fullCalendar"></div>
             @else

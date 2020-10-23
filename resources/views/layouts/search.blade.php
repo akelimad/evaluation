@@ -1,7 +1,7 @@
 @php($is_visible = isset($_COOKIE['chm_filter']) && $_COOKIE['chm_filter'] == 1)
 
 <div class="search-container mb-10" chm-search chm-search-table="#{{ $tableId }}">
-  <div class="box-header mb-0 pb-0">
+  <div class="box-header mb-0 p-0">
     <h4 class="help-block showFormBtn m-0 chm-title {{ $is_visible ? "uncollapsed":"collapsed" }}" data-toggle="collapse" data-target="#{{ $tableId }}Collapse" onclick="return chmFilter.collapse(this)"><span class="fa fa-search"></span> Rechercher <button class="btn btn-info btn-sm pull-right pt-0 pb-0"><i class="fa fa-chevron-down"></i></button>
     </h4>
   </div>

@@ -58,7 +58,7 @@ class SkillController extends Controller
     $table->addColumn('description', 'Description', function ($entity) {
       return str_limit($entity->description, 30);
     });
-    $table->addColumn('created_at', 'Créée le');
+    $table->addColumn('updated_at', 'Créée/modifié le');
 
     // define table actions
     $table->addAction('edit', [

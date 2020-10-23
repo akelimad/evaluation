@@ -39,10 +39,13 @@ class LoginController extends Controller
 
   public function authenticated($request , $user){
     $userRoles = \Auth::user()->roles->pluck('name')->toArray();
-    if ( in_array("ROOT", $userRoles) ) {
+    $request->session()->put('popup', '1');
+    if (in_array("ROOT", $userRoles)) {
       return redirect()->route('companies');
     }
-    $request->session()->put('popup', '1');
+    if (in_array("ADMIN", $userRoles)) {
+      return redirect()->route('dashboard');
+    }
     return redirect('/');
   }
 

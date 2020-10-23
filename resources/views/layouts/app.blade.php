@@ -145,15 +145,24 @@
         </li>
         @endrole
 
-        @role(["MENTOR", "COLLABORATEUR"])
+        @role(["MANAGER", "COLLABORATEUR"])
         <li class="{{ Request::is('/') ? 'active' : '' }}">
           <a href="{{ route('home') }}"><i class="fa fa-comments"></i> <span>{{ __("Mes évaluations") }}</span></a>
         </li>
         @endrole
 
         @role(["ADMIN", "RH"])
-        <li class="{{ Route::current()->getName() == 'entretiens' ? 'active' : '' }}"><a href="{{ route('entretiens') }}"><i class="fa fa-comments"></i> <span>{{ __("Campagnes") }}</span></a></li>
-        <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>{{ __("Calendrier des campagnes") }}</span></a></li>
+        @php($isCampaign = in_array(Request::route()->getName(), ['entretiens', 'entretiens.calendar']))
+        <li class="treeview {{ $isCampaign ? 'active menu-open' : '' }}">
+          <a href="#">
+            <i class="fa fa-comments"></i> <span>{{ __("Campagnes") }}</span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+          <ul class="treeview-menu" style="{{ $isCampaign ? 'display: block;' : '' }}">
+            <li class="{{ Route::current()->getName() == 'entretiens' ? 'active' : '' }}"><a href="{{ route('entretiens') }}"><i class="fa fa-list"></i> <span>{{ __("Liste") }}</span></a></li>
+            <li class="{{ Request::is('entretiens/calendar') ? 'active' : '' }}"><a href="{{ url('entretiens/calendar') }}"><i class="fa fa-calendar"></i> <span>{{ __("Calendrier") }}</span></a></li>
+          </ul>
+        </li>
         @endrole
 
         @role(["ADMIN"])
@@ -179,31 +188,37 @@
             <li class="{{ Request::is('config/skills') ? 'active' : '' }}">
               <a href="{{ url('config/skills') }}"><i class="fa fa-graduation-cap"></i> {{ __("Fiches métiers") }}</a>
             </li>
-            <li class="{{ Request::is('config/emails') ? 'active' : '' }}">
-              <a href="{{ url('config/emails') }}"><i class="fa fa-envelope"></i> {{ __("Courriers automatiques") }}</a>
-            </li>
-            <li class="{{ Request::is('config/teams') ? 'active' : '' }}">
-              <a href="{{ route('teams') }}"><i class="fa fa-users"></i> {{ __("Equipes") }}</a>
-            </li>
-            <li class="{{ Request::is('config/roles') ? 'active' : '' }}">
-              <a href="{{ url('config/roles') }}"><i class="fa fa-user"></i> {{ __("Rôles") }}</a>
-            </li>
-            <li class="{{ Request::is('config/permissions') ? 'active' : '' }}">
-              <a href="{{ url('config/permissions') }}"><i class="fa fa-lock"></i> {{ __("Permissions") }}</a>
-            </li>
           </ul>
         </li>
         @endrole
 
         @role(["ROOT"])
-        <li class="{{ \Request::route()->getName() == 'companies' ? 'active' : '' }}">
+        @php($isRootConfig = in_array(Request::route()->getName(), ['languages', 'interface.translations', 'models', 'config.roles', 'permissions']))
+        <li class="{{ Request::route()->getName() == 'companies' ? 'active' : '' }}">
           <a href="{{ route('companies') }}"><i class="fa fa-industry"></i> <span>{{ __("Comptes des sociétés") }}</span></a>
         </li>
-        <li class="{{ \Request::route()->getName() == 'interface.translations' ? 'active' : '' }}">
-          <a href="{{ route('interface.translations') }}"><i class="fa fa-language"></i> <span>{{ __("Traductions") }}</span></a>
-        </li>
-        <li class="{{ \Request::route()->getName() == 'models' ? 'active' : '' }}">
-          <a href="{{ route('models') }}"><i class="fa fa-cog"></i> <span>{{ __("Modèles des campagnes") }}</span></a>
+        <li class="treeview {{ $isRootConfig ? 'active menu-open' : '' }}">
+          <a href="#">
+            <i class="fa fa-gears"></i> <span>{{ __("Configurations") }}</span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+          <ul class="treeview-menu" style="{{ $isRootConfig ? 'display: block;' : '' }}">
+            <li class="{{ Request::route()->getName() == 'languages' ? 'active' : '' }}">
+              <a href="{{ route('languages') }}"><i class="fa fa-flag"></i> <span>{{ __("Langues") }}</span></a>
+            </li>
+            <li class="{{ Request::route()->getName() == 'interface.translations' ? 'active' : '' }}">
+              <a href="{{ route('interface.translations') }}"><i class="fa fa-language"></i> <span>{{ __("Messages") }}</span></a>
+            </li>
+            <li class="{{ Request::route()->getName() == 'models' ? 'active' : '' }}">
+              <a href="{{ route('models') }}"><i class="fa fa-list"></i> <span>{{ __("Modèles d'évaluations") }}</span></a>
+            </li>
+            <li class="{{ Request::route()->getName() == 'config.roles' ? 'active' : '' }}">
+              <a href="{{ route('config.roles') }}"><i class="fa fa-user-secret"></i> {{ __("Rôles") }}</a>
+            </li>
+            <li class="{{ Request::route()->getName() == 'permissions' ? 'active' : '' }}">
+              <a href="{{ route('permissions') }}"><i class="fa fa-lock"></i> {{ __("Permissions") }}</a>
+            </li>
+          </ul>
         </li>
         @endrole
 

@@ -52,7 +52,7 @@ class TeamController extends Controller
 
   public function index()
   {
-    return view('teams.index');
+    return view('teams.index', ['active' => 'teams']);
   }
 
   public function form(Request $request)
