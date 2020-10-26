@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', $objectif->id > 0 ? "Modifier l'objectif" : "Ajouter un objectif")
 @section('breadcrumb')
-  <li><a href="{{ route('objectifs') }}" class="text-blue">Objectifs</a></li>
+  <li><a href="{{ route('objectifs') }}" class="text-blue">{{ __("Objectifs") }}</a></li>
   <li>{{ $objectif->id > 0 ? $objectif->title : 'Ajouter' }}</li>
 @endsection
 
@@ -20,18 +20,18 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group" :class="{'has-error': errors.has('type')}">
-                    <label for="description" class="control-label required">Choisissez le type d'objectif</label>
+                    <label for="description" class="control-label required">{{ __("Choisissez le type d'objectif") }}</label>
                     <select name="type" id="" class="form-control" v-model="objectif.type" v-validate="'required'">
                       <option value=""></option>
-                      <option value="Personnel">Individuel</option>
-                      <option value="Equipe">Collectif</option>
+                      <option value="Personnel">{{ __("Individuel") }}</option>
+                      <option value="Equipe">{{ __("Collectif") }}</option>
                     </select>
                     <span v-show="errors.has('type')" class="help-block">@{{ errors.first('type') }}</span>
                   </div>
                 </div>
                 <div class="col-md-6" v-show="objectif.type == 'Equipe'">
                   <div class="form-group" :class="{'has-error': errors.has('team')}">
-                    <label for="description" class="control-label">Choisissez l'équipe</label>
+                    <label for="description" class="control-label">{{ __("Choisissez l'équipe") }}</label>
                     <select name="team" id="team" class="form-control" v-model="objectif.team" v-validate="objectif.type == 'Equipe' ? 'required' : ''">
                       <option value=""></option>
                       @foreach($teams as $team)
@@ -45,7 +45,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group" :class="{'has-error': errors.has('titre')}">
-                    <label for="title" class="control-label required">Titre</label>
+                    <label for="title" class="control-label required">{{ __("Titre") }}</label>
                     <input type="text" name="titre" id="title" class="form-control" value="{{ isset($o->title) ? $o->title :''}}" v-model="objectif.title" v-validate="'required'" data-vv-as="">
                     <span v-show="errors.has('titre')" class="help-block">@{{ errors.first('titre') }}</span>
                   </div>
@@ -54,7 +54,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label for="description" class="control-label">Description</label>
+                    <label for="description" class="control-label">{{ __("Description") }}</label>
                     <textarea name="description" id="description" class="form-control" v-model="objectif.description">{{ isset($o->description) ? $o->description :''}}</textarea>
                   </div>
                 </div>
@@ -62,40 +62,38 @@
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="description" class="control-label">Echéance</label>
+                    <label for="description" class="control-label">{{ __("Echéance") }}</label>
                     <date-picker name="deadline" v-model="objectif.deadline" :config="{format: 'DD-MM-YYYY', locale: 'fr', minDate: new Date(), ignoreReadonly: true}" readonly></date-picker>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-12 mb-20">
-                  <label class="control-label font-16"><i class="fa fa-list"></i> Indicateurs</label>
+                  <label class="control-label font-16"><i class="fa fa-list"></i> {{ __("Indicateurs") }} <i class="fa fa-info-circle text-primary" data-toggle="tooltip" title="Total de la pondération des indicateurs de cet objectif doit être égale à 100"></i></label>
                 </div>
                 <div class="col-md-12">
-                  <div class="indicators-container-obj">
+                  <div class="indicators-container">
                     <div class="indicator-item" v-for="(indicator, indexIndicator) in objectif.indicators">
-                      <div class="row mb-10">
-                        <div class="col-md-5">
+                      <div class="row mb-20">
+                        <div class="col-md-5 mb-sm-30">
                           <label>
-                            <input type="text" class="form-control" placeholder="Titre de l'indicateur" v-model="indicator.title" maxlength="64">
+                            <input type="text" class="form-control" placeholder=" " v-model="indicator.title" maxlength="64">
+                            <span>{{ __("Titre de l'indicateur") }}</span>
                           </label>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3 mb-sm-30">
                           <label>
-                            <input type="number" min="1" max="100" class="form-control" placeholder="Objectif" v-model="indicator.fixed" maxlength="3">
+                            <input type="number" min="1" max="100" class="form-control" placeholder=" " v-model="indicator.fixed" maxlength="3">
+                            <span>{{ __("Objectif fixé") }}</span>
                           </label>
                         </div>
-                        <div class="col-md-2">
-                          <label for="">
-                            <input type="number" min="1" max="200" class="form-control" placeholder="Réalisé" title="Sera rempli par l'évalué(e)" disabled v-model="indicator.realized">
-                          </label>
-                        </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3 mb-sm-30">
                           <label>
-                            <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder="Pondération (%)" v-model="indicator.ponderation" maxlength="3">
+                            <input type="number" min="1" max="100" class="form-control" title="Pendération en % ex: 10%" placeholder=" " v-model="indicator.ponderation" maxlength="3">
+                            <span>{{ __("Pondération (%)") }}</span>
                           </label>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1 mb-sm-30">
                           <button v-if="indexIndicator + 1 == objectif.indicators.length" type="button" class="btn btn-success pull-right text-success" @click="addIndicator(oIndex)"><i class="fa fa-plus"></i></button>
 
                           <button v-if="indexIndicator + 1 < objectif.indicators.length" type="button" class="btn btn-danger pull-right text-danger" @click="removeIndicator(oIndex, indexIndicator)"><i class="fa fa-minus"></i></button>
@@ -108,11 +106,11 @@
             </div>
           </div>
           <div v-if="mode == 'add'" class="addObjContainer mb-20">
-            <button type="button" class="btn btn-primary" @click="addObjectf()"><i class="fa fa-plus"></i> Créer un nouvel objectif</button>
+            <button type="button" class="btn btn-primary" @click="addObjectf()"><i class="fa fa-plus"></i> {{ __("Ajouter un nouvel objectif") }}</button>
           </div>
           <div v-if="objectifs.length > 0" class="card" >
             <div class="card-body">
-              <button class="btn btn-primary pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
+              <button class="btn btn-success pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> {{ __("Enregistrer") }}</button>
             </div>
           </div>
         </div>
@@ -157,7 +155,6 @@
                   id: "{{ isset($indicator['id']) ? $indicator['id'] : 0 }}",
                   title: "{!! isset($indicator['title']) ? $indicator['title'] : '' !!}",
                   fixed: "{{ isset($indicator['fixed']) ? $indicator['fixed'] : '' }}",
-                  realized: "{{ isset($indicator['realized']) ? $indicator['realized'] : '' }}",
                   ponderation: "{{ isset($indicator['ponderation']) ? $indicator['ponderation'] : '' }}",
                 },
                 @endforeach
@@ -185,6 +182,9 @@
                 }
               ]
             })
+            setTimeout(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            }, 500)
           },
           removeObjectif: function (oIndex) {
             var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")

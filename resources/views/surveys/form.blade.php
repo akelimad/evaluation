@@ -66,7 +66,7 @@
 
               <div v-if="groups.length <= 0" class="row mb-30">
                 <div class="col-md-6">
-                  <label for="" class="control-label">Entrer le nombre des thèmes pour ce questionnaire</label>
+                  <label for="" class="control-label">{{ __("Entrer le nombre des thèmes pour ce questionnaire") }} <i class="fa fa-info-circle text-primary" title="{{ __("Cela représente les blocks, sections, ou groupes de questions") }}" data-toggle="tooltip"></i></label>
                   <div class="input-group" :class="{'has-error': errors.has('number')}">
                     <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes" maxlength="3">
                     <span class="input-group-btn">
@@ -77,13 +77,15 @@
                   <span v-show="errors.has('number')" class="help-block text-red">@{{ errors.first('number') }}</span>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </div>
 
       <div class="row mb-30">
+        <div v-if="groups.length > 0 && selectedModelRef == 'ENT'" class="col-md-8 col-md-offset-2">
+          <p class="help-block"><i class="fa fa-info-circle text-primary"></i> {{ __("Total de la pondération des groupes doit être égale à 100") }}</p>
+        </div>
         <div class="col-md-8 col-md-offset-2">
           <div class="panel panel-primary mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
             <div class="panel-heading" style="border-radius: 0;">
@@ -103,7 +105,7 @@
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
-                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">Thème @{{ grpIndex + 1 }} : @{{ group.title }}</label>
+                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">Thème @{{ grpIndex + 1 }} : @{{ group.title }} <i class="fa fa-info-circle text-white ml-10" data-toggle="tooltip" title="{{ __("Total de la pondération des questions de ce thème doit être égale à 100") }}"></i></label>
                 <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
@@ -139,14 +141,41 @@
                         <div class="dropdown" style="display: inline-block;">
                           <button class="btn btn-default btn-xs dropdown-toggle" type="button" :id="'aa' + grpIndex + qIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">@{{ getQuestionType(question.type) }} <span class="caret"></span></button>
                           <ul class="dropdown-menu" :aria-labelledby="'aa' + grpIndex + qIndex">
-                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'text')">Text (court)</a></li>
-                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'textarea')">Text (long)</a></li>
-                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'radio')">Un seul choix</a></li>
-                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">Choix multiple</a></li>
-                            <li><a href="javascript:void(0)" @click="changeQuestionType(grpIndex, qIndex, 'select')">Liste déroulante</a></li>
                             <li>
-                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'array')" data-toggle="popover" title="Apperçu" data-content="" data-placement="left">Tableau</a>
-                              <div class="popper-content hide"><img src="{{ asset('/img/array.jpg') }}" class="img-responsive" alt=""/></div>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'text')">Text (court)</a>
+                              <div class="popper-content hide">
+                                <img src="{{ asset('/img/text.png') }}" class="img-responsive" alt=""/>
+                              </div>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'textarea')">Text (long)</a>
+                              <div class="popper-content hide">
+                                <img src="{{ asset('/img/textarea.png') }}" class="img-responsive" alt=""/>
+                              </div>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'radio')">Un seul choix</a>
+                              <div class="popper-content hide">
+                                <img src="{{ asset('/img/radio.png') }}" class="img-responsive" alt=""/>
+                              </div>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">Choix multiple</a>
+                              <div class="popper-content hide">
+                                <img src="{{ asset('/img/checkbox.png') }}" class="img-responsive" alt=""/>
+                              </div>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'select')">Liste déroulante</a>
+                              <div class="popper-content hide">
+                                <img src="{{ asset('/img/select.png') }}" class="img-responsive" alt=""/>
+                              </div>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'array')">Tableau</a>
+                              <div class="popper-content hide">
+                                <img src="{{ asset('/img/array.png') }}" class="img-responsive" alt=""/>
+                              </div>
                             </li>
                           </ul>
                         </div>
@@ -232,14 +261,41 @@
                 <div class="dropdown pull-right">
                   <button class="btn btn-info dropdown-toggle" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-plus"></i> Ajouter une question <span class="caret"></span></button>
                   <ul class="dropdown-menu" aria-labelledby="questionTypes">
-                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'text')">Text (court)</a></li>
-                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'textarea')">Text (long)</a></li>
-                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'radio')">Un seul choix</a></li>
-                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'checkbox')">Choix multiple</a></li>
-                    <li><a href="javascript:void(0)" @click="addQuestion(grpIndex, 'select')">Liste déroulante</a></li>
                     <li>
-                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'array')" data-toggle="popover" title="Tableau" data-content="" data-placement="left">Tableau</a>
-                      <div class="popper-content hide"><img src="{{ asset('/img/array.jpg') }}" class="img-responsive" alt=""/></div>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'text')">Text (court)</a>
+                      <div class="popper-content hide">
+                        <img src="{{ asset('/img/text.png') }}" class="img-responsive" alt=""/>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'textarea')">Text (long)</a>
+                      <div class="popper-content hide">
+                        <img src="{{ asset('/img/textarea.png') }}" class="img-responsive" alt=""/>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'radio')">Un seul choix</a>
+                      <div class="popper-content hide">
+                        <img src="{{ asset('/img/radio.png') }}" class="img-responsive" alt=""/>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'checkbox')">Choix multiple</a>
+                      <div class="popper-content hide">
+                        <img src="{{ asset('/img/checkbox.png') }}" class="img-responsive" alt=""/>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'select')">Liste déroulante</a>
+                      <div class="popper-content hide">
+                        <img src="{{ asset('/img/select.png') }}" class="img-responsive" alt=""/>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'array')">Tableau</a>
+                      <div class="popper-content hide">
+                        <img src="{{ asset('/img/array.png') }}" class="img-responsive" alt=""/>
+                      </div>
                     </li>
                   </ul>
                 </div>
@@ -275,19 +331,19 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
 
   <script>
-    $('document').ready(function () {
-      $(function () {
-        $('[data-toggle="popover"]').popover()
-      })
+    function initPopover() {
       $(".popoverData").popover({
         container: 'body',
         trigger: 'hover',
+        placement: 'left',
         html: true,
         content: function () {
           return $(this).next('.popper-content').html();
         }
       });
-    })
+      $('[data-toggle="tooltip"]').tooltip()
+    }
+    initPopover()
     loadProgressBar()
     Vue.use(VeeValidate);
     new Vue({
@@ -379,6 +435,9 @@
               questions: []
             })
           }
+          setTimeout(function () {
+            initPopover()
+          }, 500)
         },
         getQuestionType: function (type) {
           switch (type) {
@@ -422,6 +481,9 @@
             group.edit = false
             group.ponderation = group.ponderation > 0 ? group.ponderation : 0
           }
+          setTimeout(function () {
+            initPopover()
+          }, 500)
         },
         addNewGroup: function () {
           this.groups.push({
@@ -431,6 +493,9 @@
             active: false,
             questions: []
           })
+          setTimeout(function () {
+            initPopover()
+          }, 500)
         },
         removeGroup: function (index, group) {
           this.groups[index].active = true
@@ -479,6 +544,9 @@
             if (qstObject.edit == true) existQstInEditMode = true
           })
           if (!existQstInEditMode) this.groups[grpIndex].editAllQuestion = false
+          setTimeout(function () {
+            initPopover()
+          }, 500)
         },
         addQuestion: function (groupIndex, qType) {
           var newPonderation = 100
@@ -492,6 +560,7 @@
           }
           var options = {}
           if (qType == 'array') {
+
             options.answers = [];
             options.subquestions = [];
           }
