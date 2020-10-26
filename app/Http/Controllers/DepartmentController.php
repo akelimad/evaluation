@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use App\Http\Service\Table;
+use App\User;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Routing\Route;
 
 class DepartmentController extends Controller
 {
@@ -25,6 +27,10 @@ class DepartmentController extends Controller
 
     $table->setPrimaryKey('id');
     $table->addColumn('title', 'Titre');
+    $table->addColumn('count_users', "Nbr. des utilisateurs", function ($row) {
+      $count = User::getUsers()->where('service', $row->id)->count();
+      return '<a href="/users?department='.$row->id.'" class="label bg-gray-active">'.$count.'</a>';
+    });
     $table->setBulkActions(true);
 
     // define table actions

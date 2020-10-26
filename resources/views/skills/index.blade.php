@@ -1,8 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Fiches métiers')
 @section('breadcrumb')
-  <li>{{ __("Paramétrages") }}</li>
-  <li>{{ __("Fiches métiers") }}</li>
+  <li>Fiches métiers</li>
 @endsection
 @section('content')
   <section class="content users" id="content">
@@ -42,7 +41,7 @@
   <script>
     $(document).ready(function () {
       $(window).on('chmModalLoaded', function () {
-        alert('loaded')
+
       })
     })
   </script>

@@ -49,7 +49,7 @@
           </div>
           <div class="row mb-0">
             <div class="col-md-12 mb-20">
-              <label class="control-label font-16"><i class="fa fa-list"></i> Compétences</label>
+              <label class="control-label font-16"><i class="fa fa-list"></i> Compétences <i class="fa fa-info-circle text-blue" title="Total des pondérations doit être égal à 100" data-toggle="tooltip"></i></label>
             </div>
             <div class="col-md-12">
               <div class="indicators-container">
@@ -131,6 +131,9 @@
                 }
               ]
             })
+            setTimeout(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            }, 500)
           },
           removeType: function (tIndex) {
             var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")
@@ -150,6 +153,9 @@
               this.types[tIndex].skills.splice(sIndex, 1)
             }
           }
+        },
+        mounted () {
+          $('[data-toggle="tooltip"]').tooltip()
         }
       })
     }, 500)

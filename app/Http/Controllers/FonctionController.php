@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Fonction;
 use App\Http\Service\Table;
+use App\User;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -25,6 +26,10 @@ class FonctionController extends Controller
 
     $table->setPrimaryKey('id');
     $table->addColumn('title', 'Titre');
+    $table->addColumn('count_users', "Nbr. des utilisateurs", function ($row) {
+      $count = User::getUsers()->where('function', $row->id)->count();
+      return '<a href="/users?function='.$row->id.'" class="label bg-gray-active">'.$count.'</a>';
+    });
     $table->setBulkActions(true);
 
     // define table actions
