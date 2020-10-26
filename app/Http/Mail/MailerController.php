@@ -30,11 +30,11 @@ class MailerController extends Controller
     }
     $body = Email::renderMessage($template->message, [
       'user_fname'      => $user->name ? $user->name : 'coll_fname',
-      'coll_fullname'   => $user ? $user->name .' '. $user->last_name : '',
-      'mentor_fullname' => $user->parent ? $user->parent->name .' '. $user->parent->last_name : '',
+      'coll_fullname'   => $user ? $user->fullname() : '',
+      'mentor_fullname' => $user->parent != null ? $user->parent->fullname() : '',
       'title'           => isset($entretien->titre) ? $entretien->titre : '---',
       'date'            => Carbon::parse($entretien->date)->format('d-m-Y'),
-      'date_limit'    => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
+      'date_limit'      => Carbon::parse($entretien->date_limit)->format('d-m-Y'),
       'site_url'        => url('/'),
       'email'           => $user->email,
       'password'        => $password,

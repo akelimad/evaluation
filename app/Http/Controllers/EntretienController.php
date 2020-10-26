@@ -359,12 +359,13 @@ class EntretienController extends Controller
       $user = User::findOrFail($uid);
 
       if ($entretien->isFeedback360()) {
+        $fb_eval = Email::getAll()->where('ref', 'fb_eval')->first();
         $euExist = Entretien_user::where('entretien_id', $entretien->id)->where('user_id', $fb360_user_id)->where('mentor_id', $uid)->count() > 0;
         if (!$euExist) {
           $entretien->users()->attach([$fb360_user_id => ['mentor_id' =>$uid]]);
           $campaignData = [
             'entretien_id' => $entretien->id,
-            'email_id' => $collEmail->id,
+            'email_id' => $fb_eval->id,
             'receiver' => $user->email,
             'shedule_type' =>  $request->shedule_type,
             'sheduled_at' => $request->shedule_type == 'now' ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime($request->sheduled_at)),
@@ -570,17 +571,25 @@ class EntretienController extends Controller
         'mentor_updated_at' => date('Y-m-d H:i:s'),
       ]);
       $rh_validate = Email::getAll()->where('ref', 'rh_val')->first();
+      $cmp_finished = Email::getAll()->where('ref', 'cmp_finished')->first();
       $rhs = User::getUsers()->with('roles')->whereHas('roles', function ($query) {
         $query->where('name', '=', 'RH');
       })->get();
       if($rhs->count() > 0) {
+        $campaignIsFinished = Entretien_user::isFinished($entretien);
         foreach ($rhs as $rh) {
           MailerController::send($rh, $entretien, $rh_validate);
           $alertmsg = __(", Un email a bien été envoyé aux responsables RH");
+          if (!$campaignIsFinished) continue;
+          MailerController::send($rh, $entretien, $cmp_finished);
         }
       }
     }
-    $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
+    if ($entretien->isFeedback360()) {
+      $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
+    } else {
+      $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
+    }
     MailerController::send(Auth::user(), $entretien, $submit_email);
 
     \Session::flash('success', __("Les informations ont bien été soumises") . $alertmsg);
