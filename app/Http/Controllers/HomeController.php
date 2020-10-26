@@ -71,16 +71,13 @@ class HomeController extends Controller
     $entretien_user_query->where('mentor_submitted', 2)->where('user_submitted', 2);
     $finished = count($entretien_user_query->get());
 
-    $nbMentors = User::whereHas('roles', function ($query) use ($society) {
-      $query->where('name', 'MANAGER');
-    })->where('society_id', $society->id)->count();
-
-    $nbColls = User::whereHas('roles', function ($query) use ($society) {
-      $query->where('name', 'COLLABORATEUR');
-    })->where('society_id', $society->id)->count();
+    $nbMentors = User::countUsersByRole('MANAGER');
+    $nbRHs = User::countUsersByRole('RH');
+    $nbColls = User::countUsersByRole('COLLABORATEUR');
+    $nbrAdmins = User::countUsersByRole('ADMIN');
 
     if ($inProgress > 0) $taux = $this->cutNum(($finished / $inProgress) * 100);
 
-    return view('dashboard', compact('nbColls', 'nbMentors', 'finished', 'inProgress', 'taux'));
+    return view('dashboard', compact('nbColls', 'nbMentors', 'nbRHs', 'nbrAdmins', 'finished', 'inProgress', 'taux'));
   }
 }

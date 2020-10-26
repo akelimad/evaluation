@@ -32,7 +32,7 @@
           <div class="col-lg-3 col-xs-6 m-0">
             <div class="small-box bg-teal-gradient">
               <div class="inner">
-                <h3>0</h3>
+                <h3>{{ $nbRHs }}</h3>
                 <p>{{ __("RH") }}</p>
               </div>
               <div class="icon"><i class="fa fa-users"></i></div>
@@ -42,7 +42,7 @@
           <div class="col-lg-3 col-xs-6 m-0">
             <div class="small-box bg-maroon-active">
               <div class="inner">
-                <h3>0</h3>
+                <h3>{{ $nbrAdmins }}</h3>
                 <p>{{ __("Admins") }}</p>
               </div>
               <div class="icon"><i class="fa fa-users"></i></div>

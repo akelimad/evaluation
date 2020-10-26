@@ -298,5 +298,17 @@ class User extends Authenticatable
     return $list->count() > 0 ? $list : false;
   }
 
+  public static function countUsersByRole($roleName) {
+    $query = User::whereHas('roles', function ($query) use ($roleName) {
+      $query->where('name', $roleName);
+    })->where('society_id', self::getOwner()->id);
+
+    if ($roleName == 'ADMIN') {
+      $query->orWhere('id', Auth::user()->id);
+    }
+
+    return $query->count();
+  }
+
 
 }
