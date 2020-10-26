@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Equipes')
 @section('breadcrumb')
-  <li>Equipes</li>
+  <li>{{ __("Paramétrages") }}</li>
+  <li>{{ __("Champs éditables") }}</li>
 @endsection
 @section('content')
   <section class="content setting">

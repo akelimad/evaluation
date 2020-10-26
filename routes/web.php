@@ -113,7 +113,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
   Route::post('permission/store', 'PermissionController@store')->name('permission.store');
   Route::get('permission/delete', 'PermissionController@delete')->name('permission.delete');
 });
-Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
+Route::group(['prefix' => '/', 'middleware' => ['role:ROOT|ADMIN']], function() {
   Route::any('companies/form', 'CompanyController@form')->name('company.form');
   Route::post('companies/store', 'CompanyController@store')->name('company.store');
 });

@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Calendrier')
 @section('breadcrumb')
-  <li>Calendrier</li>
+  <li><a href="{{ route('entretiens') }}" class="text-blue">{{ __("Campagnes") }}</a></li>
+  <li>{{ __("Calendrier") }}</li>
 @endsection
 @section('style')
   @parent

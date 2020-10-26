@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Courriels')
 @section('breadcrumb')
-  <li>Courriels</li>
+  <li>{{ __("Paramétrages") }}</li>
+  <li>{{ __("Champs éditables") }}</li>
 @endsection
 @section('style')
   @parent

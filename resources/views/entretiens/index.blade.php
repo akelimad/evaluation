@@ -34,7 +34,7 @@
       </div>
       <div class="col-md-4 col-sm-4">
         <div class="pull-right">
-          <a href="javascript:void(0)" onclick="return chmEntretien.form({})" class="btn bg-aqua-active"><i class="fa fa-plus"></i> Nouvelle campagne</a>
+          <a href="javascript:void(0)" onclick="return chmEntretien.form({})" class="btn bg-maroon"><i class="fa fa-plus"></i> Ajouter</a>
         </div>
       </div>
     </div>

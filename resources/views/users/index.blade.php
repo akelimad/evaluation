@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Utilisateurs')
 @section('breadcrumb')
-  <li>Utilisateurs</li>
+  <li>{{ __("Paramétrages") }}</li>
+  <li>{{ __("Utilisateurs") }}</li>
 @endsection
 @section('content')
   <section class="content users">

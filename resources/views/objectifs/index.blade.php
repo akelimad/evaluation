@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('breadcrumb')
-  <li>Objectifs</li>
+  <li>{{ __("Paramétrages") }}</li>
+  <li>{{ __("Objectifs") }}</li>
 @endsection
 @section('content')
   <section class="content users">

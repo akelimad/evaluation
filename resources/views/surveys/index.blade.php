@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Questionnaires')
 @section('breadcrumb')
-  <li>Questionnaires</li>
+  <li>{{ __("Paramétrages") }}</li>
+  <li>{{ __("Questionnaires") }}</li>
 @endsection
 @section('content')
   <section class="content users">
