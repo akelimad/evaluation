@@ -339,7 +339,7 @@ class UserController extends Controller
         $user->roles()->sync($this->getRoleByName($roles));
         $count++;
       } else {
-        return redirect('users')->with("warning", __("Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(prénom, nom, email / ou email du manager n'existe pas, role, manager email) est vide!"));
+        return redirect('users')->with("danger", __("Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(prénom, nom, email / ou email du manager n'existe pas, role, manager email) est vide!"));
       }
     }
     return redirect('users')->with('success', __("Les utilisateurs ont été importés avec succès avec :count_added ajout(s) et :count_updated mis à jour !", ['count_added' => $added, 'count_updated' => $updated]));

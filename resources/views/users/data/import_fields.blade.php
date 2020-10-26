@@ -5,7 +5,7 @@
       <div class="col-md-12">
         <div class="title-section mb-20">
           <h3 class="mt-0">
-            <i class="fa fa-eye"></i> {{ __("Prévisualisation des informations des utilisateurs") }} <span class="badge badge-count">{{ count($csv_data) }}</span>
+            <i class="fa fa-eye"></i> {{ __("Prévisualisation des informations des utilisateurs qui seront importés dans la base") }} <span class="badge badge-count">{{ count($csv_data) }}</span>
           </h3>
         </div>
       </div>
