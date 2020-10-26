@@ -31,7 +31,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <button type="submit" class="btn btn-success"> Continuer <i class="fa fa-long-arrow-right"></i></button>
+                      <a href="{{ route('users') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> {{ __("Annuler") }}</a>
+                      <button type="submit" class="btn btn-success">{{ __("Continuer") }} <i class="fa fa-long-arrow-right"></i></button>
                     </div>
                   </div>
                 </form>

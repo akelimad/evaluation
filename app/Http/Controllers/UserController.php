@@ -342,7 +342,7 @@ class UserController extends Controller
         return redirect('users')->with("warning", __("Une erreur est survenu lors l'importation. il se peut que un des champs obligatoire(prénom, nom, email / ou email du manager n'existe pas, role, manager email) est vide!"));
       }
     }
-    return redirect('users')->with('success', __("Les utilisateurs ont été importés avec succès avec :count_added ajout et :count_updated mis à jour !", ['count_added' => $added, 'count_updated' => $updated]));
+    return redirect('users')->with('success', __("Les utilisateurs ont été importés avec succès avec :count_added ajout(s) et :count_updated mis à jour !", ['count_added' => $added, 'count_updated' => $updated]));
 
   }
 
@@ -375,6 +375,21 @@ class UserController extends Controller
       $d->save();
       return $d->id;
     }
+  }
+
+  public function export() {
+    try {
+      $users = User::getUsers()->get();
+      if ($users->count() <= 0) return redirect()->back()->with('danger', __("Aucun utilisateur trouvé à exporter !"));
+      Excel::create('Utilisateurs-'.date('dmYHi'),function($excel) use ($users) {
+        $excel->sheet('Utilisateurs',function($sheet) use ($users) {
+          $sheet->loadView('users.xls.export', compact('users'));
+        });
+      })->export('xlsx');
+    } catch (\Exception $e) {
+      return redirect()->back()->with('danger', __("Une erreur est survenue lors de l'exportation :error", ['error' => $e->getMessage()]));
+    }
+
   }
 
 

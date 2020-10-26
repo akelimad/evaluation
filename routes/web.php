@@ -27,7 +27,8 @@ Route::get('users', 'UserController@index')->name('users')->middleware('permissi
 Route::get('users/table', 'UserController@getTable')->name('users.table');
 Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
   Route::delete('user/delete', 'UserController@delete');
-  Route::get('users/import', 'UserController@import');
+  Route::get('users/import', 'UserController@import')->name('users.import');
+  Route::get('users/export', 'UserController@export')->name('users.export');
   Route::post('users/import_parse', 'UserController@parseImport');
   Route::post('users/import_process', 'UserController@processImport');
   Route::get('campagnes/table', 'EntretienController@getTable')->name('entretiens.table');

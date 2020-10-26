@@ -3,17 +3,14 @@
   <section class="content index">
     <div class="row">
       <div class="col-md-12">
-        @if(Session::has('exist_already'))
-          @include('partials.alerts.danger', ['messages' => Session::get('exist_already') ])
-        @endif
-        <div class="box box-primary">
-          <div class="box-header">
-            <h3 class="box-title"><i class="fa fa-upload"></i> Prévisualisation des informations des utilisateurs. </h3>
-
-            <div class="box-tools">
-
-            </div>
-          </div>
+        <div class="title-section mb-20">
+          <h3 class="mt-0">
+            <i class="fa fa-eye"></i> {{ __("Prévisualisation des informations des utilisateurs") }} <span class="badge badge-count">{{ count($csv_data) }}</span>
+          </h3>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="box">
           <form class="form-horizontal" method="POST" action="{{ url('users/import_process') }}">
             <div class="box-body table-responsive no-padding table-inversed-blue">
               {{ csrf_field() }}
@@ -35,9 +32,8 @@
               </table>
 
               <div class="actions mt-30">
-                <button type="submit" class="btn btn-success pull-right">
-                  Suivant <i class="fa fa-long-arrow-right"></i>
-                </button>
+                <button type="submit" class="btn btn-success pull-right ml-10"><i class="fa fa-save"></i> {{ __("Enregistrer") }}</button>
+                <a href="{{ route('users') }}" class="btn btn-default pull-right"><i class="fa fa-long-arrow-left"></i> {{ __("Annuler") }}</a>
               </div>
             </div>
           </form>

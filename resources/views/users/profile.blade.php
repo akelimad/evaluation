@@ -24,7 +24,7 @@
                 <div class="form-group">
                   <div class="col-md-4">
                     @if($user->hasRole('ADMIN'))
-                      <img src="{{ App\User::logo($user->id) }}" width="130" height="130" alt="" class="user-profile-img img-circle">
+                      <img src="{{ App\User::logo($user->id) }}" width="130" alt="" class="">
                     @else
                       <img src="{{ App\User::avatar($user->id) }}" width="130" alt="" class="user-profile-img img-circle">
                     @endif

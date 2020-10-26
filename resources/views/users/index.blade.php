@@ -20,7 +20,8 @@
               class="btn bg-maroon"
           ><i class="fa fa-user-plus"></i>&nbsp;{{ "Ajouter" }}</a>
 
-          <a href="{{ url('users/import') }}" class="btn btn-success"><i class="fa fa-upload"></i> Importer</a>
+          <a href="{{ url('users/import') }}" class="btn btn-success"><i class="fa fa-upload"></i> {{ __("Importer") }}</a>
+          <a href="{{ url('users/export') }}" class="btn bg-olive-active"><i class="fa fa-download"></i> {{ __("Exporter") }}</a>
         </div>
       </div>
     </div>
