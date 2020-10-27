@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Email;
 use App\Http\Service\Table;
+use App\Setting;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
@@ -161,7 +162,15 @@ class CompanyController extends Controller
           }
         }
       }
-
+      $setting = Setting::where('user_id', $user->id)->where('name', 'max_note')->first();
+      if (!$setting) $setting = new Setting();
+      $setting->name = 'max_note';
+      $setting->value = !empty($setting->value) ? $setting->value : 100;
+      $setting->editable = 1;
+      $setting->description = "Permet de définir la note maximale que le manager pourrait attribuer";
+      $setting->user_id = $user->id;
+      $setting->field_type = 'text';
+      $setting->save();
       return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
     } else {
       return ["status" => "warning", "message" => __("Une erreur est survenue, réessayez plus tard")];

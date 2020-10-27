@@ -31,14 +31,6 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="form-group mb-0">
-        <p class="mb-0"><label class="control-label">Les variables disponibles sont :</label></p>
-        @include('partials/alerts.info', ['messages' => '@{{user_fname}} - @{{coll_fullname}} - @{{mentor_fullname}} - @{{title}} - @{{date}} - @{{date_limit}} - @{{lien}} - @{{email}} - @{{password}}'])
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>

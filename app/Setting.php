@@ -45,6 +45,17 @@ class Setting extends Model
     ],
   ];
 
+  public static function getAll()
+  {
+    $user = \Auth::user();
+    if(!empty($user->society_id)){ // this user is not owner
+      $settings = $user->owner->settings();
+    } else {
+      $settings = $user->settings();
+    }
+    return $settings;
+  }
+
   /**
    * Get setting by name
    *
@@ -54,7 +65,7 @@ class Setting extends Model
    * @return string
    **/
   public static function get($name = null, $default = '') {
-    $setting = Setting::where('name', $name)->first();
+    $setting = Setting::getAll()->where('name', $name)->first();
 
     return $setting ? $setting->value : $default;
   }

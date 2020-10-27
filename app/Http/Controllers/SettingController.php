@@ -19,7 +19,7 @@ class SettingController extends Controller
 
   public function getTable(Request $request) {
     $table = new Table($request);
-    $query = Setting::where('editable', 1)->orderBy('updated_at', 'DESC');
+    $query = Setting::getAll()->where('editable', 1)->orderBy('updated_at', 'DESC');
 
     $table->setPrimaryKey('id');
     $table->setDateFormat('d/m/Y H:i');

@@ -132,6 +132,11 @@ class User extends Authenticatable
     return $this->hasMany('App\Team');
   }
 
+  public function settings()
+  {
+    return $this->hasMany('App\Setting');
+  }
+
   public function teams()
   {
     return $this->belongsToMany(Team::class);
