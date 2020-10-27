@@ -151,11 +151,14 @@ class User extends Authenticatable
     return null;
   }
 
-  public function getRoles()
+  public function getRoles($first = false)
   {
     $userRoles = [];
     foreach (Auth::user()->roles as $key => $role) {
       $userRoles[] = $role->name;
+    }
+    if ($first) {
+      return isset($userRoles[0]) ? $userRoles[0] : $userRoles;
     }
     return $userRoles;
   }

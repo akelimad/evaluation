@@ -129,7 +129,7 @@ Route::get('entretiens/{e_id}/u/{uid}/synthese', 'EntretienController@synthese')
 Route::get('notifyUserInterview/{eid}/{uid}', 'EntretienController@notifyUserInterview');
 Route::post('notifyMentorInterview/{eid}/{uid}', 'EntretienController@notifyMentorInterview');
 Route::post('notifyMentorsInterview', 'EntretienController@notifyMentorsInterview');
-Route::delete('entretiens/{eid}/delete', 'EntretienController@destroy');
+Route::delete('entretiens/delete', 'EntretienController@delete');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 Route::post('entretiens/change-status', 'EntretienController@changeStatus')->name('entretien.change-status');
 Route::get('entretiens/{id}/clone', 'EntretienController@copier')->name('entretien.clone');

@@ -104,19 +104,21 @@ export default class chmEntretien {
     })
   }
 
-  static delete (params) {
-    var token = $('input[name="_token"]').val()
+  static delete (event, ids) {
+    ids = (typeof event[0] !== 'undefined') ? event : ids
     window.chmModal.show({
-      type: 'POST',
-      url: window.chmSite.url('entretiens/' + params.eid + '/delete'),
-      data: {'_token': token, '_method': 'DELETE'}
+      type: 'DELETE',
+      url: '/entretiens/delete',
+      data: {
+        "ids": ids,
+        "_method": 'DELETE',
+        "_token": $('input[name="_token"]').val(),
+      }
     }, {
       message: '<i class="fa fa-trash"></i>&nbsp;Suppression en cours...',
       onSuccess: function (response) {
-        if (response.status !== 'success') {
-          window.chmModal.showAlertMessage(response.status, response.message)
-        } else {
-          window.location.href = response.redirectUrl
+        if ('status' in response && response.status === 'alert') {
+          window.chmTable.refresh('#EntretiensTableContainer')
         }
       }
     })

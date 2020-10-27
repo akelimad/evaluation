@@ -79,7 +79,7 @@
                           <span class="label label-{{$userAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$userAnswered ? 'Remplie le '.Carbon\Carbon::parse($userAnswered->user_updated_at)->format('d/m/Y à H:i') : 'Vous avez une évaluation à remplir'}}"> </span>
                         </td>
                         <td class="text-center">
-                          <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par manager le '.Carbon\Carbon::parse($userAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Pas encore validée par votre mentor'}}"> </span>
+                          <span class="label label-{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answeredMentor($e->id, Auth::user()->id, App\User::getMentor(Auth::user()->id)->id) ? 'Validée par manager le '.Carbon\Carbon::parse($eu->mentor_updated_at)->format('d/m/Y à H:i') :'Pas encore validée par votre mentor'}}"> </span>
                         </td>
                         <td class="text-center">
                           @if($userAnswered)
@@ -143,7 +143,7 @@
                           <span class="label label-{{App\Entretien::answered($e->id, $user->id) ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{App\Entretien::answered($e->id, $user->id) ? 'Remplie le '.Carbon\Carbon::parse(App\Entretien::answered($e->id, $user->id)->user_updated_at)->format('d/m/Y à H:i') :'Pas encore rempli par '.$user->name }}"> </span>
                         </td>
                         <td class="text-center">
-                          <span class="label label-{{$mentorAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$mentorAnswered ? 'Validée par manager le '.Carbon\Carbon::parse($mentorAnswered->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$user->name}}"> </span>
+                          <span class="label label-{{$mentorAnswered ? 'success':'danger'}} empty" data-toggle="tooltip" title="{{$mentorAnswered ? 'Validée par manager le '.Carbon\Carbon::parse($eu->mentor_updated_at)->format('d/m/Y à H:i') :'Veuillez valider l\'évaluation de '.$user->name}}"> </span>
                         </td>
                         <td class="text-center">
                           @if($mentorAnswered)

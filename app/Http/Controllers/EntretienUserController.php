@@ -382,7 +382,7 @@ class EntretienUserController extends Controller
       Campaign::create($campaignData);*/
     }
 
-    return ['status' => 'success', 'message' => __("La suppression a bien été effectuée, un email de suppression de l'évaluation sera envoyé pour les utilisateurs selectionnées")];
+    return ['status' => 'success', 'message' => __("La suppression a bien été effectuée")];
   }
 
   public function reopen(Request $request)

@@ -115,10 +115,16 @@ class EntretienController extends Controller
       'callback' => 'chmEntretien.form([id])',
       'bulk_action' => false,
     ]);
+    $table->addAction('clone', [
+      'icon' => 'fa fa-copy',
+      'label' => 'Dupliquer',
+      'route' => ['name' => 'entretien.clone', 'args' => ['id' => '[id]']],
+      'bulk_action' => false,
+    ]);
     $table->addAction('delete', [
       'icon' => 'fa fa-trash',
       'label' => 'Supprimer',
-      'callback' => 'chmEntretien.delete({eid: [id]})',
+      'callback' => 'chmEntretien.delete',
       'bulk_action' => true,
     ]);
 
@@ -521,32 +527,37 @@ class EntretienController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy($eid)
+  public function delete(Request $request)
   {
     $user = Auth::user();
-    if($user->hasRole('ADMIN') OR $user->hasRole('RH')) {
-      $entretien = Entretien::findOrFail($eid);
-      if ($entretien->user_id != User::getOwner()->id) {
-        abort(403);
-      }
-      $entretien->users()->detach();
-      $entretien->evaluations()->detach();
-      \DB::table('skill_user')->where('entretien_id', $eid)->delete();
-      \DB::table('answers')->where('entretien_id', $eid)->delete();
-      \DB::table('objectif_user')->where('entretien_id', $eid)->delete();
-      \DB::table('campaigns')->where('entretien_id', $eid)->delete();
-      $entretien->formations()->delete();
-      $entretien->salaries()->delete();
-      $entretien->comments()->delete();
-      $entretien->delete();
-      \Session::flash('success', __("Campagne a été supprimée avec succès !"));
+    if (empty($request->get('ids', [])) || !in_array($user->getRoles(true), ['ADMIN', 'RH'])) {
       return [
-        "status" => "success",
-        "message" => __("Campagne a été supprimée avec succès !"),
-        "redirectUrl" => route('entretiens', [])
+        'status' => 'alert',
+        'title' => 'Erreur',
+        'content' => __("Une erreur est survenue, réessayez plus tard")
       ];
-    } else {
-      return ["status" => "danger", "message" => __("Stop ! Vous n'avez pas la permission !")];
+    };
+    try {
+      foreach($request->ids as $id) {
+        $entretien = Entretien::findOrFail($id);
+        $entretien->users()->detach();
+        $entretien->evaluations()->detach();
+        \DB::table('skill_user')->where('entretien_id', $id)->delete();
+        \DB::table('answers')->where('entretien_id', $id)->delete();
+        \DB::table('objectif_user')->where('entretien_id', $id)->delete();
+        \DB::table('campaigns')->where('entretien_id', $id)->delete();
+        $entretien->formations()->delete();
+        $entretien->salaries()->delete();
+        $entretien->comments()->delete();
+        $entretien->delete();
+      }
+      return [
+        'status' => 'alert',
+        'title' => 'Confirmation',
+        'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
+      ];
+    } catch (\Exception $e) {
+      return ["status" => "danger", "message" => __("Une erreur est survenue, réessayez plus tard")];
     }
   }
 
@@ -554,6 +565,7 @@ class EntretienController extends Controller
   {
     $entretien = Entretien::findOrFail($request->eid);
     $alertmsg = "";
+    $coll = User::find($request->user);
     if (Auth::user()->id == $request->user) { // this a collaborator
       \DB::table('entretien_user')
         ->where('entretien_id', $request->eid)->where('user_id', $request->user)
@@ -561,7 +573,9 @@ class EntretienController extends Controller
           'user_submitted' => 2,
           'user_updated_at' => date('Y-m-d H:i:s'),
         ]);
-    } else { // this is a mentor
+      $submit_email = Email::getAll()->where('ref', 'coll_submit')->first();
+      MailerController::send(Auth::user(), $entretien, $submit_email);
+    } else { // this is a mentor or evaluator
       $query = \DB::table('entretien_user')->where('entretien_id', $request->eid)->where('user_id', $request->user);
       if ($entretien->isFeedback360()) {
         $query->where('mentor_id', Auth::user()->id);
@@ -570,27 +584,32 @@ class EntretienController extends Controller
         'mentor_submitted' => 2,
         'mentor_updated_at' => date('Y-m-d H:i:s'),
       ]);
-      $rh_validate = Email::getAll()->where('ref', 'rh_val')->first();
       $cmp_finished = Email::getAll()->where('ref', 'cmp_finished')->first();
       $rhs = User::getUsers()->with('roles')->whereHas('roles', function ($query) {
         $query->where('name', '=', 'RH');
       })->get();
+      if ($entretien->isFeedback360()) {
+        $rh_eval_submit = Email::getAll()->where('ref', 'rh_fb_submit')->first();
+
+        $submit_email = Email::getAll()->where('ref', 'fb_evltr_submit')->first();
+        MailerController::send(Auth::user(), $entretien, $submit_email);
+      } else {
+        $rh_eval_submit = Email::getAll()->where('ref', 'rh_eval_submit')->first();
+        $eval_mngr_submit = Email::getAll()->where('ref', 'eval_mngr_submit')->first();
+        MailerController::send(Auth::user(), $entretien, $eval_mngr_submit, [
+          'coll_evaluated_fullname' => $coll ? $coll->fullname() : 'coll_fullname'
+        ]);
+      }
       if($rhs->count() > 0) {
         $campaignIsFinished = Entretien_user::isFinished($entretien);
         foreach ($rhs as $rh) {
-          MailerController::send($rh, $entretien, $rh_validate);
+          MailerController::send($rh, $entretien, $rh_eval_submit);
           $alertmsg = __(", Un email a bien été envoyé aux responsables RH");
           if (!$campaignIsFinished) continue;
           MailerController::send($rh, $entretien, $cmp_finished);
         }
       }
     }
-    if ($entretien->isFeedback360()) {
-      $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
-    } else {
-      $submit_email = Email::getAll()->where('ref', 'submit_eval')->first();
-    }
-    MailerController::send(Auth::user(), $entretien, $submit_email);
 
     \Session::flash('success', __("Les informations ont bien été soumises") . $alertmsg);
 
@@ -662,7 +681,7 @@ class EntretienController extends Controller
       return back()->with("danger", $e->getMessage());
     }
 
-    return back()->with("success", __("La campagne a bien été copiée"));
+    return back()->with("success", __("La campagne a bien été dupliquée"));
   }
 
 

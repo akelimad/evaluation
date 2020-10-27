@@ -80,9 +80,9 @@
                           <textarea class="form-control" disabled>{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer :''}}</textarea>
                         @elseif($q->type == "checkbox")
                           @foreach($q->children as $child)
-                            <div class="survey-checkbox">
+                            <div class="">
                               <input type="{{$q->type}}" value="{{$child->id}}" {{App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }} disabled>
-                              <label>{{ $child->titre }}</label>
+                              <label class="d-inline-block">{{ $child->titre }}</label>
                             </div>
                           @endforeach
                           <div class="clearfix"></div>
@@ -191,7 +191,7 @@
         <div class="panel-group">
           @php($gNote = 0)
           @php($c = 0)
-          @php($maxNote = App\Setting::get('max_note'))
+          @php($maxNote = App\Setting::get('max_note', 10))
           @foreach($groupes as $g)
             @php($c += 1)
             @if(count($g->questions)>0)
@@ -246,17 +246,17 @@
                                    style="display: {{$g->notation_type == 'item' && App\Evaluation::find($g->survey->evaluation_id)->title == 'Evaluation annuelle' ? 'block':'none'}}">
                             <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                             @foreach($q->children as $child)
-                              <div class="survey-checkbox">
+                              <div class="">
                                 <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) && in_array($child->id, json_decode(App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer)) ? 'checked' : '' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
-                                <label for="{{$child->titre}}">{{ $child->titre }}</label>
+                                <label for="{{$child->titre}}" class="d-inline-block">{{ $child->titre }}</label>
                               </div>
                             @endforeach
                             <div class="clearfix"></div>
                           @elseif($q->type == "radio")
                             @foreach($q->children as $child)
                               <div class="choice-item">
-                                <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
-                                <label for="{{$child->id}}" class="d-inline-block">{{ $child->titre }}</label>
+                                <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" id="mentor_{{$child->id}}" value="{{$child->id}}" required="" {{ App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id) && $child->id == App\Answer::getMentorAnswers($q->id, $user->id, $evaluator_id, $e->id)->mentor_answer ? 'checked':'' }} {{ (App\Entretien::answeredMentor($e->id, $user->id,App\User::getMentor($user->id)->id)) == false ? '':'disabled' }}>
+                                <label for="mentor_{{$child->id}}" class="d-inline-block">{{ $child->titre }}</label>
                               </div>
                             @endforeach
                           @elseif($q->type == "slider")

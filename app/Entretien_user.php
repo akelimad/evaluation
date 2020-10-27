@@ -61,14 +61,16 @@ class Entretien_user extends Model
   }
 
   public static function isFinished($entretien) {
-    $eu_query = Entretien_user::where('entretien_id', $entretien->id);
-    $eu_query->where('mentor_submitted', '<>', 2);
-    if (!$entretien->isFeedback360()) {
-      $eu_query->where('user_submitted', '<>', 2);
-    }
-    $count = $eu_query->count();
+    $total = Entretien_user::where('entretien_id', $entretien->id)->count();
 
-    return $count == 0;
+    $submittedByCollAndManager = Entretien_user::where('entretien_id', $entretien->id);
+    $submittedByCollAndManager->where('mentor_submitted', 2);
+    if (!$entretien->isFeedback360()) {
+      $submittedByCollAndManager->where('user_submitted', 2);
+    }
+    $countSubmit = $submittedByCollAndManager->count();
+
+    return $countSubmit == $total;
   }
 
 }

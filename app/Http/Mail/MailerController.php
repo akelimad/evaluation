@@ -20,7 +20,7 @@ class MailerController extends Controller
     $this->middleware('auth');
   }
 
-  public  static function send($user, $entretien, $template)
+  public  static function send($user, $entretien, $template, $extra_var = [])
   {
     if(!$template) return;
     $password = self::rand_string(10);
@@ -28,9 +28,19 @@ class MailerController extends Controller
       $user->password = bcrypt($password);
       $user->save();
     }
-    $body = Email::renderMessage($template->message, [
+    $fullname = '***** *****';
+    if ($entretien->isFeedback360()) {
+      $id = $entretien->getUsersIdToEvaluate();
+      if ($id > 0) {
+        $userToEvaluate = User::find($id);
+        if ($userToEvaluate) $fullname = $userToEvaluate->fullname();
+      }
+    }
+    $coll_fullname = isset($extra_var['coll_evaluated_fullname']) ? $extra_var['coll_evaluated_fullname'] : '';
+    $variables = [
+      'userToEvaluatefullname'=> $fullname,
       'user_fname'      => $user->name ? $user->name : 'coll_fname',
-      'coll_fullname'   => $user ? $user->fullname() : '',
+      'coll_fullname'   => !empty($coll_fullname) ? $coll_fullname : $user->fullname(),
       'mentor_fullname' => $user->parent != null ? $user->parent->fullname() : '',
       'title'           => isset($entretien->titre) ? $entretien->titre : '---',
       'date'            => Carbon::parse($entretien->date)->format('d-m-Y'),
@@ -38,11 +48,13 @@ class MailerController extends Controller
       'site_url'        => url('/'),
       'email'           => $user->email,
       'password'        => $password,
-    ]);
-    return Mail::send([], [], function ($m) use ($user, $template, $body) {
+    ];
+    $body = Email::renderMessage($template->message, $variables);
+    $subject = Email::renderMessage($template->subject, $variables);
+    return Mail::send([], [], function ($m) use ($user, $template, $subject, $body) {
       $m->from($template->sender, $template->name);
       $m->to($user->email);
-      $m->subject($template->subject);
+      $m->subject($subject);
       $m->setBody($body, 'text/html');
     });
   }

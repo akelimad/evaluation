@@ -274,5 +274,14 @@ class Entretien extends Model
     return $ids;
   }
 
+  public function getUsersIdToEvaluate() {
+    $ids = Entretien_user::where('entretien_id', $this->id)->pluck('user_id')->toArray();
+    if ($this->isFeedback360()) {
+      $ids = isset($ids[0]) ? $ids[0] : [];
+    }
+
+    return $ids;
+  }
+
 
 }

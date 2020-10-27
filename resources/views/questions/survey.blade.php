@@ -53,7 +53,7 @@
                             <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]"  class="notation" min="1" max="{{App\Setting::get('max_note')}}" @if($g->notation_type == 'section')style="display:none;"@endif>
                             <p class="help-inline text-red checkboxError"><i class="fa fa-close"></i> Veuillez cocher au moins un élement</p>
                             @foreach($q->children as $child)
-                              <div class="survey-checkbox">
+                              <div class="">
                                 <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr][]" id="{{$child->titre}}" value="{{$child->id}}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && in_array($child->id, json_decode(App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer)) ? 'checked' : '' }}>
                                 <label for="{{$child->titre}}">{{ $child->titre }}</label>
                               </div>
