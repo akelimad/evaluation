@@ -306,9 +306,9 @@
                   <option value="every_day" {{ $entretien->freq_reminder == 'every_day' ? 'selected':'' }}>{{ __("Chaque jour") }}</option>
                   <option value="every_2days" {{ $entretien->freq_reminder == 'every_2days' ? 'selected':'' }}>{{ __("Chaque 2 jours") }}</option>
                   <option value="every_3days" {{ $entretien->freq_reminder == 'every_3days' ? 'selected':'' }}>{{ __("Chaque 3 jours") }}</option>
-                  <option value="every_week" {{ $entretien->freq_reminder == 'every_week' ? 'selected':'' }}>{{ __("Chaque semaine") }}</option>
-                  <option value="every_2weeks" {{ $entretien->freq_reminder == 'every_2weeks' ? 'selected':'' }}>{{ __("Chaque 2 semaines") }}</option>
-                  <option value="every_month" {{ $entretien->freq_reminder == 'every_month' ? 'selected':'' }}>{{ __("Chaque mois") }}</option>
+                  <option value="every_week" {{ $entretien->freq_reminder == 'every_week' ? 'selected':'' }}>{{ __("Lundi de chaque semaine") }}</option>
+                  <option value="every_2weeks" {{ $entretien->freq_reminder == 'every_2weeks' ? 'selected':'' }}>{{ __("1er jour et 15em jour de chaque mois") }}</option>
+                  <option value="every_month" {{ $entretien->freq_reminder == 'every_month' ? 'selected':'' }}>{{ __("1er jour de chaque mois") }}</option>
                 </select>
               </div>
             </div>

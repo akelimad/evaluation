@@ -10,6 +10,7 @@ class Entretien extends Model
 {
   const ENABLED_STATUS = "Actif";
   const DISABLED_STATUS = "Inactif";
+
   const CURRENT_STATUS = "En cours";
   const FINISHED_STATUS = "Fini";
   const EXPIRED_STATUS = "Expiré";
@@ -172,6 +173,9 @@ class Entretien extends Model
     if ($this::isExpired()) {
       return $this::EXPIRED_STATUS;
     }
+    if (Entretien_user::isFinished($this)) {
+      return $this::FINISHED_STATUS;
+    }
 
     return $status;
   }
@@ -189,7 +193,7 @@ class Entretien extends Model
   }
 
   public function isExpired() {
-    return date('Y-m-d', strtotime('now')) > $this->date_limit || $this->status == $this::EXPIRED_STATUS;
+    return date('Y-m-d H:i', strtotime('now')) > $this->date_limit || $this->status == $this::EXPIRED_STATUS;
   }
 
   public function isFinished() {

@@ -47,30 +47,6 @@ class EntretienController extends Controller
    */
   public function index(Request $request)
   {
-    $per_page = $selected = 6;
-    if (isset($request->per_page) && $request->per_page != "all") {
-      $per_page = $request->per_page;
-      $selected = $per_page;
-    } else if (isset($request->per_page) && $request->per_page == "all" || $request->status == 'all') {
-      $per_page = 500;
-      $selected = "all";
-    }
-    $query = Entretien::getAll();
-    if ($status = $request->get('status', Entretien::CURRENT_STATUS)) {
-      if ($status == Entretien::CURRENT_STATUS) {
-        $query->where('date_limit', '>=', date('Y-m-d'));
-      } else if ($status == Entretien::EXPIRED_STATUS) {
-        $query->where('date_limit', '<', date('Y-m-d'));
-      } else if ($status == Entretien::FINISHED_STATUS) {
-        $query->where('status', $status);
-      }
-    }
-    $query->orderBy('id', 'DESC');
-
-    $evaluations = Evaluation::all()->sortBy('sort_order');
-    $objectifs = EntretienObjectif::getAll()->get();
-    $results = $query->paginate($per_page);
-    $results->appends(Input::except('page'));
     return view('entretiens.index');
   }
 
@@ -80,6 +56,9 @@ class EntretienController extends Controller
 
     if ($q = $request->get('q', false)) {
       $query->where('titre', 'LIKE', "%".$q."%");
+    }
+    if ($status = $request->get('status', false)) {
+      $query->where('status', $status);
     }
 
     $table->setPrimaryKey('id');
@@ -97,6 +76,18 @@ class EntretienController extends Controller
     });
     $table->addColumn('date_limit', 'Date de fin', function ($row) {
       return date('d.m.Y', strtotime($row->date_limit));
+    });
+    $table->addColumn('status', 'Statut', function ($row) {
+      $completed = Entretien_user::isFinished($row);
+      $statusClass = 'secondary';
+      if ($row->isExpired()) {
+        $statusClass = 'danger';
+      } else if ($row->isCurrent() && !$completed) {
+        $statusClass = 'warning';
+      } else if (Entretien_user::isFinished($row)) {
+        $statusClass = 'success';
+      }
+      return '<span class="label label-'.$statusClass.'">'. $row->getStatus() .'</span>';
     });
     $table->addColumn('update_at', 'Créée/modifiée le', function ($row) {
       return date('d.m.Y H:i', strtotime($row->updated_at));
@@ -606,6 +597,8 @@ class EntretienController extends Controller
           MailerController::send($rh, $entretien, $rh_eval_submit);
           $alertmsg = __(", Un email a bien été envoyé aux responsables RH");
           if (!$campaignIsFinished) continue;
+          $entretien->status(Entretien::FINISHED_STATUS);
+          $entretien->save();
           MailerController::send($rh, $entretien, $cmp_finished);
         }
       }

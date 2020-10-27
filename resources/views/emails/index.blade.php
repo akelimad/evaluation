@@ -26,12 +26,14 @@
           <h3 class="mt-0">
             {{ __("Courriers automatiques") }} <span class="badge badge-count">0</span>
             <div class="pull-right">
+              @role(['ROOT'])
               <a
                   href="javascript:void(0)"
                   chm-modal="{{ route('email.form') }}"
                   chm-modal-options='{"form":{"attributes":{"id":"emailForm","target-table":"[chm-table]"}}}'
                   class="btn bg-maroon"
               ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter" }}</a>
+              @endrole
             </div>
           </h3>
         </div>
