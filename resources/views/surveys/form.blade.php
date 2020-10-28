@@ -84,7 +84,7 @@
 
       <div class="row mb-30">
         <div v-if="groups.length > 0 && selectedModelRef == 'ENT'" class="col-md-8 col-md-offset-2">
-          <p class="help-block"><i class="fa fa-info-circle text-primary"></i> {{ __("Total de la pondération des groupes doit être égale à 100") }}</p>
+          <p class="help-block"><i class="fa fa-info-circle text-primary"></i> {{ __("Total de la pondération des groupes doit être égal à 100") }}</p>
         </div>
         <div class="col-md-8 col-md-offset-2">
           <div class="panel panel-primary mb-40" v-for="(group, grpIndex) in groups" :class="{highlight:group.active}">
@@ -105,7 +105,7 @@
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
-                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">{{ __("Thème") }} @{{ grpIndex + 1 }} : @{{ group.title }} <i class="fa fa-info-circle text-white ml-10" data-toggle="tooltip" title="{{ __("Total de la pondération des questions de ce thème doit être égale à 100") }}"></i></label>
+                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">{{ __("Thème") }} @{{ grpIndex + 1 }} : @{{ group.title }} <i class="fa fa-info-circle text-white ml-10" data-toggle="tooltip" title="{{ __("Total de la pondération des questions de ce thème doit être égal à 100") }}"></i></label>
                 <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
@@ -148,31 +148,31 @@
                               </div>
                             </li>
                             <li>
-                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'textarea')">Text (long)</a>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'textarea')">{{ __("Text (long)") }}</a>
                               <div class="popper-content hide">
                                 <img src="{{ asset('/img/textarea.png') }}" class="img-responsive" alt=""/>
                               </div>
                             </li>
                             <li>
-                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'radio')">Un seul choix</a>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'radio')">{{ __("Un seul choix") }}</a>
                               <div class="popper-content hide">
                                 <img src="{{ asset('/img/radio.png') }}" class="img-responsive" alt=""/>
                               </div>
                             </li>
                             <li>
-                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">Choix multiple</a>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'checkbox')">{{ __("Choix multiple") }}</a>
                               <div class="popper-content hide">
                                 <img src="{{ asset('/img/checkbox.png') }}" class="img-responsive" alt=""/>
                               </div>
                             </li>
                             <li>
-                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'select')">Liste déroulante</a>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'select')">{{ __("Liste déroulante") }}</a>
                               <div class="popper-content hide">
                                 <img src="{{ asset('/img/select.png') }}" class="img-responsive" alt=""/>
                               </div>
                             </li>
                             <li>
-                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'array')">Tableau</a>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'array')">{{ __("Tableau") }}</a>
                               <div class="popper-content hide">
                                 <img src="{{ asset('/img/array.png') }}" class="img-responsive" alt=""/>
                               </div>
@@ -207,7 +207,7 @@
                       </div>
                     </li>
                   </ul>
-                  <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
+                  <a v-if="question.type == 'radio' || question.type == 'checkbox' || question.type == 'select'" href="javascript:void(0)" @click="addNewChoice(grpIndex, qIndex)"><i class="fa fa-plus"></i> {{ __("Ajouter une option de réponse") }}</a>
                 </div>
                 <div v-if="question.type == 'array'" class="card-body">
                   <div class="subquestions-container mb-20">
@@ -225,7 +225,7 @@
                         </div>
                       </li>
                     </ul>
-                    <a href="javascript:void(0)" @click="addNewArraySubquestion(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une sous question</a>
+                    <a href="javascript:void(0)" @click="addNewArraySubquestion(grpIndex, qIndex)"><i class="fa fa-plus"></i> {{ __("Ajouter une sous question") }}</a>
                   </div>
                   <div class="answers-container">
                     <p class="border-bottom" style="border-bottom: 1px dashed #e2dddd;">{{ __("Options de réponses") }}</p>
@@ -242,7 +242,7 @@
                         </div>
                       </li>
                     </ul>
-                    <a href="javascript:void(0)" @click="addNewArrayAnswer(grpIndex, qIndex)"><i class="fa fa-plus"></i> Ajouter une option de réponse</a>
+                    <a href="javascript:void(0)" @click="addNewArrayAnswer(grpIndex, qIndex)"><i class="fa fa-plus"></i> {{ __("Ajouter une option de réponse") }}</a>
                   </div>
                 </div>
               </div>
@@ -255,44 +255,44 @@
                         <span class="on">ON</span><span class="off">OFF</span>
                       </div>
                     </label>
-                    <label class="mb-0 ml-5" style="display: inline-block; position: absolute; height: 27px; line-height: 27px;">Mode édition</label>
+                    <label class="mb-0 ml-5" style="display: inline-block; position: absolute; height: 27px; line-height: 27px;">{{ __("Mode édition") }}</label>
                   </div>
                 </div>
                 <div class="dropdown pull-right">
-                  <button class="btn btn-info dropdown-toggle" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-plus"></i> Ajouter une question <span class="caret"></span></button>
+                  <button class="btn btn-info dropdown-toggle" type="button" id="questionTypes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-plus"></i> {{ __("Ajouter une question") }} <span class="caret"></span></button>
                   <ul class="dropdown-menu" aria-labelledby="questionTypes">
                     <li>
-                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'text')">Text (court)</a>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'text')">{{ __("Text (court)") }}</a>
                       <div class="popper-content hide">
                         <img src="{{ asset('/img/text.png') }}" class="img-responsive" alt=""/>
                       </div>
                     </li>
                     <li>
-                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'textarea')">Text (long)</a>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'textarea')">{{ __("Text (long)") }}</a>
                       <div class="popper-content hide">
                         <img src="{{ asset('/img/textarea.png') }}" class="img-responsive" alt=""/>
                       </div>
                     </li>
                     <li>
-                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'radio')">Un seul choix</a>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'radio')">{{ __("Un seul choix") }}</a>
                       <div class="popper-content hide">
                         <img src="{{ asset('/img/radio.png') }}" class="img-responsive" alt=""/>
                       </div>
                     </li>
                     <li>
-                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'checkbox')">Choix multiple</a>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'checkbox')">{{ __("Choix multiple") }}</a>
                       <div class="popper-content hide">
                         <img src="{{ asset('/img/checkbox.png') }}" class="img-responsive" alt=""/>
                       </div>
                     </li>
                     <li>
-                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'select')">Liste déroulante</a>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'select')">{{ __("Liste déroulante") }}</a>
                       <div class="popper-content hide">
                         <img src="{{ asset('/img/select.png') }}" class="img-responsive" alt=""/>
                       </div>
                     </li>
                     <li>
-                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'array')">Tableau</a>
+                      <a href="javascript:void(0)" class="popoverData" @click="addQuestion(grpIndex, 'array')">{{ __("Tableau") }}</a>
                       <div class="popper-content hide">
                         <img src="{{ asset('/img/array.png') }}" class="img-responsive" alt=""/>
                       </div>
@@ -304,7 +304,7 @@
             </div>
           </div>
           <div class="add-new-section-btn text-center">
-            <button v-if="groups.length > 0" type="button" class="btn btn-primary" @click="addNewGroup()"><i class="fa fa-plus"></i> Ajouter un thème</button>
+            <button v-if="groups.length > 0" type="button" class="btn btn-primary" @click="addNewGroup()"><i class="fa fa-plus"></i> {{ __("Ajouter un thème") }}</button>
           </div>
         </div>
       </div>
@@ -312,7 +312,7 @@
         <div class="col-md-8 col-md-offset-2" v-if="groups.length > 0">
           <div class="card">
             <div class="card-body">
-              <button class="btn btn-success pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> Enregistrer</button>
+              <button class="btn btn-success pull-right submit-btn" :disabled="submitted"><i class="fa fa-save"></i> {{ __("Enregistrer") }}</button>
             </div>
           </div>
         </div>
