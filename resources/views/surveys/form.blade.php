@@ -29,20 +29,20 @@
             <div class="card-body">
               <div class="row" :class="{'has-error': errors.has('title')}">
                 <div class="col-md-12">
-                  <label for="" class="control-label required">Titre du questionnaire</label>
+                  <label for="" class="control-label required">{{ __("Titre du questionnaire") }}</label>
                   <input type="text" name="title" v-model="title" class="form-control" v-validate="'required'" placeholder="" @keypress.enter.prevent>
                   <span v-show="errors.has('title')" class="help-block">@{{ errors.first('title') }}</span>
                 </div>
               </div>
               <div class="row mb-30">
                 <div class="col-md-12">
-                  <label for="" class="control-label">Description</label>
+                  <label for="" class="control-label">{{ __("Description") }}</label>
                   <textarea name="description" id="description" class="form-control" v-model="description"></textarea>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6" :class="{'has-error': errors.has('model')}">
-                  <label for="" class="control-label required">Type @{{ model.id }}</label>
+                  <label for="" class="control-label required">{{ __("Type") }} @{{ model.id }}</label>
                   <select name="model" id="model" class="form-control" v-model="model" v-validate="'required'" @change="showHideEvalSelect($event)">
                     <option value=""></option>
                     @foreach(\App\Modele::all() as $modele)
@@ -52,7 +52,7 @@
                   <span v-show="errors.has('model')" class="help-block">@{{ errors.first('model') }}</span>
                 </div>
                 <div class="col-md-6" v-if="selectedModelRef == 'ENT'">
-                  <label for="" class="control-label">Evaluations</label>
+                  <label for="" class="control-label">{{ __("Evaluations") }}</label>
                   <select name="section" id="" class="form-control" v-model="section">
                     <option value=""></option>
                     @foreach($evaluations as $eval)
@@ -70,7 +70,7 @@
                   <div class="input-group" :class="{'has-error': errors.has('number')}">
                     <input type="number" name="number" min="1" max="100" v-model="number" v-validate="'required'" class="form-control" placeholder="Entrer le nombre des groupes" maxlength="3">
                     <span class="input-group-btn">
-                      <button class="btn btn-success" @click="addGroups()" :disabled="validateGrpNbr" type="button">Continuez</button>
+                      <button class="btn btn-success" @click="addGroups()" :disabled="validateGrpNbr" type="button">{{ __("Continuez") }}</button>
                     </span>
                     <div class="clearfix"></div>
                   </div>
@@ -105,7 +105,7 @@
                 </div>
               </div>
               <h3 v-else class="mb-0 card-title w-100">
-                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">Thème @{{ grpIndex + 1 }} : @{{ group.title }} <i class="fa fa-info-circle text-white ml-10" data-toggle="tooltip" title="{{ __("Total de la pondération des questions de ce thème doit être égale à 100") }}"></i></label>
+                <label @click="group.edit = true;" class="control-label pull-left mb-0 font-16">{{ __("Thème") }} @{{ grpIndex + 1 }} : @{{ group.title }} <i class="fa fa-info-circle text-white ml-10" data-toggle="tooltip" title="{{ __("Total de la pondération des questions de ce thème doit être égale à 100") }}"></i></label>
                 <button type="button" class="btn btn-tool btn-xs pull-right text-danger" title="Supprimer" @click="removeGroup(grpIndex, group)"><i class="fa fa-trash"></i></button>
 
                 <button type="button" class="btn btn-tool btn-xs pull-right text-warning mr-5" @click="editGroup(group)"><i class="fa fa-pencil" title="Modifier"></i></button>
@@ -135,14 +135,14 @@
                   <div v-else class="m-0">
                     <div class="row mb-0">
                       <div class="col-md-7">
-                        <label @click="editQuestion(question, grpIndex)" class="pull-left control-label mb-0 mr-5">Question @{{ qIndex + 1 }} : @{{ question.title }}</label>
+                        <label @click="editQuestion(question, grpIndex)" class="pull-left control-label mb-0 mr-5">{{ __("Question") }} @{{ qIndex + 1 }} : @{{ question.title }}</label>
                       </div>
                       <div v-if="!question.edit" class="col-md-2">
                         <div class="dropdown" style="display: inline-block;">
                           <button class="btn btn-default btn-xs dropdown-toggle" type="button" :id="'aa' + grpIndex + qIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">@{{ getQuestionType(question.type) }} <span class="caret"></span></button>
                           <ul class="dropdown-menu" :aria-labelledby="'aa' + grpIndex + qIndex">
                             <li>
-                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'text')">Text (court)</a>
+                              <a href="javascript:void(0)" class="popoverData" @click="changeQuestionType(grpIndex, qIndex, 'text')">{{ __("Text (court)") }}</a>
                               <div class="popper-content hide">
                                 <img src="{{ asset('/img/text.png') }}" class="img-responsive" alt=""/>
                               </div>
