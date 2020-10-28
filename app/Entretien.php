@@ -223,8 +223,9 @@ class Entretien extends Model
     $campaign = Campaign::where('entretien_id', $this->id)->first();
     if (
       $this->isDisabled() || // is desabled
-      $isMentor && date('Y-m-d', strtotime($this->date_limit)) < date('Y-m-d') || // already expired for mentor
-      $isColl && date('Y-m-d', strtotime($this->date)) < date('Y-m-d') || // already expired for collaborator
+      !$this->isFeedback360() && $isMentor && date('Y-m-d', strtotime($this->date_limit)) < date('Y-m-d') || // already expired for manager
+      !$this->isFeedback360() && $isColl && date('Y-m-d', strtotime($this->date)) < date('Y-m-d') || // already expired for collaborator
+      $this->isFeedback360() && date('Y-m-d', strtotime($this->date_limit)) < date('Y-m-d') || // expired for evaluator
       $campaign && $campaign->shedule_type == "sheduled" && date('Y-m-d H:i', strtotime($campaign->sheduled_at)) > date('Y-m-d H:i') // not yet started
     ) {
       return false;

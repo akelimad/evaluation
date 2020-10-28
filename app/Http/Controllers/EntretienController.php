@@ -597,8 +597,6 @@ class EntretienController extends Controller
           MailerController::send($rh, $entretien, $rh_eval_submit);
           $alertmsg = __(", Un email a bien été envoyé aux responsables RH");
           if (!$campaignIsFinished) continue;
-          $entretien->status(Entretien::FINISHED_STATUS);
-          $entretien->save();
           MailerController::send($rh, $entretien, $cmp_finished);
         }
       }
@@ -606,7 +604,7 @@ class EntretienController extends Controller
 
     $campaignIsFinished = Entretien_user::isFinished($entretien);
     if ($campaignIsFinished) {
-      $entretien->status(Entretien::FINISHED_STATUS);
+      $entretien->status = Entretien::FINISHED_STATUS;
       $entretien->save();
     }
 

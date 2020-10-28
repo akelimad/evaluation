@@ -343,7 +343,9 @@
       });
       $('[data-toggle="tooltip"]').tooltip()
     }
-    initPopover()
+    setTimeout(function () {
+      initPopover()
+    }, 500)
     loadProgressBar()
     Vue.use(VeeValidate);
     new Vue({
