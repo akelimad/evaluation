@@ -11,6 +11,7 @@ use App\Formation;
 use App\User;
 use App\Entretien_user;
 use App\Survey;
+use App\Helpers\Base;
 
 class HomeController extends Controller
 {
@@ -58,26 +59,19 @@ class HomeController extends Controller
   {
     $society = User::getOwner();
     $taux = 0;
-    $entretien_user_query = \DB::table('entretiens as e')
-      ->join('entretien_user as eu', 'e.id', '=', 'eu.entretien_id')
-      ->select('e.*', 'e.id as entretienId')
-      ->where('e.user_id', $society->id);
-    $inProgress = $entretien_user_query
-      ->groupBy('id')
-      ->where('mentor_submitted', '<>', 2)->where('user_submitted', '<>', 2)
-      ->get();
-    $inProgress = count($inProgress);
-
-    $entretien_user_query->where('mentor_submitted', 2)->where('user_submitted', 2);
-    $finished = count($entretien_user_query->get());
+    $total = Entretien::getAll()->count();
 
     $nbMentors = User::countUsersByRole('MANAGER');
     $nbRHs = User::countUsersByRole('RH');
     $nbColls = User::countUsersByRole('COLLABORATEUR');
     $nbrAdmins = User::countUsersByRole('ADMIN');
 
-    if ($inProgress > 0) $taux = $this->cutNum(($finished / $inProgress) * 100);
+    $countCurrentCampaigns = Entretien::where('status', Entretien::CURRENT_STATUS)->where('user_id', $society->id)->count();
+    $countFinishedCampaigns = Entretien::where('status', Entretien::FINISHED_STATUS)->where('user_id', $society->id)->count();
+    $countExpiredCampaigns = Entretien::where('status', Entretien::EXPIRED_STATUS)->where('user_id', $society->id)->count();
 
-    return view('dashboard', compact('nbColls', 'nbMentors', 'nbRHs', 'nbrAdmins', 'finished', 'inProgress', 'taux'));
+    if ($total > 0) $taux = Base::cutNum((100 * $countFinishedCampaigns) / $total);
+
+    return view('dashboard', compact('nbColls', 'nbMentors', 'nbRHs', 'nbrAdmins', 'finished', 'inProgress', 'countCurrentCampaigns', 'countFinishedCampaigns', 'countExpiredCampaigns', 'taux'));
   }
 }

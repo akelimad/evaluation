@@ -59,7 +59,7 @@
           <div class="col-lg-3 col-xs-6">
             <div class="small-box bg-gray-active m-0">
               <div class="inner">
-                <h3> {{ $inProgress }} </h3>
+                <h3>{{ $countCurrentCampaigns }}</h3>
                 <p>{{ __("En cours") }}</p>
               </div>
               <div class="icon"><i class="fa fa-comments"></i></div>
@@ -69,7 +69,7 @@
           <div class="col-lg-3 col-xs-6">
             <div class="small-box bg-green-active m-0">
               <div class="inner">
-                <h3> {{ $finished }} </h3>
+                <h3>{{ $countFinishedCampaigns }}</h3>
                 <p>{{ __("Fini") }}</p>
               </div>
               <div class="icon"><i class="fa fa-comments"></i></div>
@@ -79,7 +79,7 @@
           <div class="col-lg-3 col-xs-6 m-0">
             <div class="small-box bg-red-active">
               <div class="inner">
-                <h3>0</h3>
+                <h3>{{ $countExpiredCampaigns }}</h3>
                 <p>{{ __("Expiré") }}</p>
               </div>
               <div class="icon"><i class="fa fa-comments"></i></div>
