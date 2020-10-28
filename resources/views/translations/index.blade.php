@@ -6,10 +6,21 @@
 @section('content')
 
   <section class="content translations users">
-
+    <div class="row">
+      <div class="col-md-12 mb-10">
+        @include('partials/alerts/info', [
+        'messages' => __("Le button 'Scanner' sert à scanner toutes les phrases trouvées dans le code et les insérer dans la BDD")
+        ])
+      </div>
+      <div class="col-md-12">
+        @include('partials/alerts/info', [
+        'messages' => __("Le button 'Publier' sert à exporter juste les phrases traduites dans des fichiers pour plus d'optimisation. Veuillez cliquer sur ce button pour que les traductions soient prises en compte")
+        ])
+      </div>
+    </div>
     <div class="row mb-0">
       <div class="col-md-6">
-        <h3 class="box-title"><i class="fa fa-language"></i> {{ __("Liste des phrases") }} <span class="badge badge-count">0</span></h3>
+        <h3 class="box-title"><i class="fa fa-language"></i> {{ __("Messages") }} <span class="badge badge-count">0</span></h3>
       </div>
       <div class="col-md-6">
         <div class="pull-right">

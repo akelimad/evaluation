@@ -13,6 +13,7 @@ export default class Translation {
         locales: {
           fr: $('tr[data-pkv="'+id+'"]').find('textarea[data-locale="fr"]').val(),
           en: $('tr[data-pkv="'+id+'"]').find('textarea[data-locale="en"]').val(),
+          ar: $('tr[data-pkv="'+id+'"]').find('textarea[data-locale="ar"]').val(),
         },
         key: $('tr[data-pkv="'+id+'"]').find('textarea[data-locale="fr"]').data('key')
       })

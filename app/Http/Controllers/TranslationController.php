@@ -28,12 +28,13 @@ class TranslationController extends Controller
     foreach ($locales as $locale) {
       $table->addColumn($locale, ucfirst($locale), function ($entity) use ($locale) {
         $localTrans = Translation::where('key', $entity->key)->where('locale', $locale)->first();
+        $lang = Language::where('iso_code', $locale)->first();
 
         $status = $localTrans ? $localTrans->status : 0;
         $id = $localTrans ? $localTrans->id : 0;
         $value = $localTrans ? $localTrans->value : '';
 
-        return '<textarea id="trans_'.$id.'_'.$locale.'" data-locale="'.$locale.'" data-key="'.$entity->key.'" style="min-height:40px; width:100%;" >'. $value .'</textarea>';
+        return '<textarea id="trans_'.$id.'_'.$locale.'" data-locale="'.$locale.'" data-key="'.$entity->key.'" style="min-height:40px; width:100%; direction:'.$lang->direction.'" >'. $value .'</textarea>';
       });
     }
 

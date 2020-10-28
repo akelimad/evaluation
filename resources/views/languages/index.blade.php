@@ -9,7 +9,7 @@
 
     <div class="row mb-0">
       <div class="col-md-6">
-        <h3 class="box-title"><i class="fa fa-flag"></i> {{ __("Liste des langues") }} <span class="badge badge-count">0</span></h3>
+        <h3 class="box-title"><i class="fa fa-flag"></i> {{ __("Langues") }} <span class="badge badge-count">0</span></h3>
       </div>
       <div class="col-md-6">
         <div class="pull-right">
