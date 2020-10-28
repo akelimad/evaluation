@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\CampaignEmailing::class,
         Commands\CampaignReminder::class,
         Commands\ClearExportExcelCommand::class,
+        Commands\ChangeEntretiensStatusCommand::class,
     ];
 
     /**
@@ -32,6 +33,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('email:mentor')->hourly();
 
         $schedule->command('campaign')->cron('* * * * *'); // every minute
+
+        $schedule->command('entretiens:change-status')->cron('0 1 * * *'); // every day at 01h00
 
         $entretiens = Entretien::all();
         foreach ($entretiens as $e) {

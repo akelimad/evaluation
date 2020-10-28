@@ -604,6 +604,12 @@ class EntretienController extends Controller
       }
     }
 
+    $campaignIsFinished = Entretien_user::isFinished($entretien);
+    if ($campaignIsFinished) {
+      $entretien->status(Entretien::FINISHED_STATUS);
+      $entretien->save();
+    }
+
     \Session::flash('success', __("Les informations ont bien été soumises") . $alertmsg);
 
     return [
