@@ -122,7 +122,7 @@
 @section('javascript')
   <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
   <script src="{{asset('js/moment.min.js')}}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
   <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/fr.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pc-bootstrap4-datetimepicker@4.17/build/js/bootstrap-datetimepicker.min.js"></script>

@@ -323,7 +323,7 @@
 
 @section('javascript')
   @parent()
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
   <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
