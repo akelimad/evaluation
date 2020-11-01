@@ -84,7 +84,7 @@
     <input type="hidden" name="id" value="{{ $entretien->id }}">
     {{ csrf_field() }}
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3 mb-sm-20">
         <div class="step active" data-step="1">
           <div>
             <div class="circle"><i class="fa fa-check"></i></div>

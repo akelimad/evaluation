@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
 @endsection
 @section('content')
-  <section class="content setting">
+  <section class="content p-sm-10 setting">
     <div class="row">
       <div class="col-md-3">
         <div class="card">
@@ -25,7 +25,7 @@
         <div class="title-section mb-20">
           <h3 class="mt-0">
             {{ __("Courriers automatiques") }} <span class="badge badge-count">0</span>
-            <div class="pull-right">
+            <div class="pull-md-right pull-sm-right">
               @role(['ROOT'])
               <a
                   href="javascript:void(0)"

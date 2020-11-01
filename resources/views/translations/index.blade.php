@@ -23,7 +23,7 @@
         <h3 class="box-title"><i class="fa fa-language"></i> {{ __("Messages") }} <span class="badge badge-count">0</span></h3>
       </div>
       <div class="col-md-6">
-        <div class="pull-right">
+        <div class="pull-md-right pull-sm-right">
           <form class="form-find d-inline-block" method="POST" action="" role="form">
             <button type="submit" class="btn btn-info"><i class="fa fa-search"></i> Scanner</button>
           </form>

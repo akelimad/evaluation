@@ -11,7 +11,7 @@
         <div class="title-section mb-20">
           <h3 class="mt-0">
             <i class="fa fa-upload"></i> {{ __("Importer les utilisateurs") }}
-            <div class="pull-right">
+            <div class="pull-md-right pull-sm-right">
               <a href="{{ asset('data/user_modele.csv') }}" class="btn btn-warning"> {{ __("Télécharger un modèle") }}</a>
             </div>
           </h3>

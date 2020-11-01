@@ -29,7 +29,7 @@
 @php($countMentorFinished = \App\Entretien_user::countResponse($e->id, 'mentor', 2))
 
 @section('content')
-	<section class="content">
+	<section class="content p-xxs-10">
 		<div class="row mb-20">
 			<div class="col-md-12">
 				<h2 class="pageName m-0"><a href="{{ route('entretiens') }}"><i class="fa fa-chevron-left"></i></a> Suivi de la campagne : {{ $e->titre }}
@@ -58,7 +58,7 @@
 							<div class="col-md-6 mb-30">
 								<div class="inner-content">
 									<b>Participants :</b> {{ $countInterviewUsers }}
-									<span class="pull-right"><b>Créée le</b> {{ date('d/m/Y à H:i', strtotime($e->created_at)) }}</span>
+									<span class="pull-md-right pull-sm-right"><b>Créée le</b> {{ date('d/m/Y à H:i', strtotime($e->created_at)) }}</span>
 								</div>
 							</div>
 							<div class="col-md-6 mb-sm-20">

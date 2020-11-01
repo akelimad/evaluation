@@ -1,5 +1,5 @@
 
-<div class="content">
+<div class="content p-xxs-10">
     {{ csrf_field() }}
     <div class="form-group">
         <div class="col-md-12">

@@ -72,6 +72,6 @@ class HomeController extends Controller
 
     if ($total > 0) $taux = Base::cutNum((100 * $countFinishedCampaigns) / $total);
 
-    return view('dashboard', compact('nbColls', 'nbMentors', 'nbRHs', 'nbrAdmins', 'finished', 'inProgress', 'countCurrentCampaigns', 'countFinishedCampaigns', 'countExpiredCampaigns', 'taux'));
+    return view('dashboard', compact('nbColls', 'nbMentors', 'nbRHs', 'nbrAdmins', 'countCurrentCampaigns', 'countFinishedCampaigns', 'countExpiredCampaigns', 'taux'));
   }
 }

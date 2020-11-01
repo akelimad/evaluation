@@ -1,4 +1,4 @@
-<div class="content" id="contentaa">
+<div class="content p-xxs-10" id="contentaa">
   <input type="hidden" name="id" value="{{ $skill->id > 0 ? $skill->id : null }}">
   {{ csrf_field() }}
   <div class="row">

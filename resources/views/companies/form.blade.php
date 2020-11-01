@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content p-xxs-10">
   @php($isEditMode = $user->id > 0)
   <input type="hidden" name="id" value="{{ isset($user->id) ? $user->id : null }}">
   {{ csrf_field() }}

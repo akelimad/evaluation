@@ -5,13 +5,13 @@
   <li>{{ __("Questionnaires") }}</li>
 @endsection
 @section('content')
-  <section class="content users">
+  <section class="content p-sm-10">
     <div class="row">
       <div class="col-md-12">
         <div class="title-section mb-20">
           <h3 class="mt-0">
             <i class="fa fa-pencil"></i> {{ __("Questionnaires") }} <span class="badge badge-count">0</span>
-            <div class="pull-right">
+            <div class="pull-md-right pull-sm-right">
               <a href="{{ route('survey.form') }}" class="btn bg-maroon" title="" data-toggle="tooltip"> <i class="fa fa-plus"></i> Ajouter </a>
             </div>
           </h3>

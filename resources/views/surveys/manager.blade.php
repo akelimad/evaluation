@@ -199,7 +199,7 @@
               <div class="panel panel-info mb-20">
                 <div class="panel-heading clearfix">{{ $g->name }}
                   @if ($g->ponderation > 0)
-                    <span class="pull-right">Note : {{ \App\Answer::getGrpNote($g->id, $user->id, $e->id) }}</span>
+                    <span class="pull-md-right pull-sm-right">Note : {{ \App\Answer::getGrpNote($g->id, $user->id, $e->id) }}</span>
                   @endif
                 </div>
                 <div class="panel-body">
@@ -226,7 +226,7 @@
                                            max="{{ $maxNote }}"
                                            step="0.5"
                                            value="{{ $mentorAnswer ? $mentorAnswer->note : ''}}" required>
-                                    <label class="pull-right">Note :</label>
+                                    <label class="pull-md-right pull-sm-right">Note :</label>
                                   @endif
                                 </div>
                               @endif

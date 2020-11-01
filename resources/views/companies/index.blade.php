@@ -11,7 +11,7 @@
         <h3 class="box-title"><i class="fa fa-industry"></i> Liste des sociétés <span class="badge badge-count">0</span></h3>
       </div>
       <div class="col-md-6">
-        <div class="pull-right">
+        <div class="pull-md-right pull-sm-right">
           <a
               href="javascript:void(0)"
               chm-modal="{{ route('company.form') }}"

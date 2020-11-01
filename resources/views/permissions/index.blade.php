@@ -4,7 +4,7 @@
   <li>Permissions</li>
 @endsection
 @section('content')
-  <section class="content">
+  <section class="content p-xxs-10">
     <div class="row">
       <div class="col-md-12">
         <div class="title-section mb-20">

@@ -4,7 +4,7 @@
   <li>Evaluations en cours</li>
 @endsection
 @section('content')
-  <section class="content">
+  <section class="content p-xxs-10">
     <div class="row">
       <div class="col-md-12">
         @if (Session::has('success_motif_save'))

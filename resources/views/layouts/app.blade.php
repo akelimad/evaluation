@@ -40,7 +40,6 @@
   <!-- <i class="fa fa-refresh fa-spin fa-5x" aria-hidden="true"></i> -->
   <div class="looding">
     <div class="reloadDouble"></div>
-    <p class="help-block">{{ __("Chargement ...") }}</p>
   </div>
 </div>
 <div class="wrapper">
@@ -90,7 +89,7 @@
                 <div class="pull-left">
                   <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> {{ __("Profil") }}</a>
                 </div>
-                <div class="pull-right">
+                <div class="pull-md-right pull-sm-right">
                   <a href="{{ route('logout') }}" class="btn btn-info" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> {{ __("Déconnexion") }}</a>
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
                 </div>
@@ -229,7 +228,7 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <section class="content-header">
+    <section class="content-header p-sm-10">
       <ol class="breadcrumb">
         <li><a href="{{ route('home') }}" class="text-blue"><i class="fa fa-home"></i> {{ __("Accueil") }}</a></li>
         @yield('breadcrumb')

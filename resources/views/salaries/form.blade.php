@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content p-xxs-10">
   <input type="hidden" name="id" value="{{ isset($s->id) ? $s->id : null }}">
   <input type="hidden" name="eid" value="{{ isset($e->id) ? $e->id : null }}">
   <input type="hidden" name="uid" value="{{ isset($user->id) ? $user->id : null }}">

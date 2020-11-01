@@ -441,6 +441,10 @@ i {
 .sidebar {
   /*border-top: 1px solid #fff;*/
 }
+.main-sidebar {
+  overflow: auto;
+  height: 100%;
+}
 
 .treeview-menu > li > a {
   padding: 12px 5px 5px 15px;
@@ -665,18 +669,6 @@ ul.user-data li {
 
 .sendInvitationBtn {
   display: none;
-}
-
-.entretiens-list {
-  .checkbox-item {
-    max-width: 23%;
-    display: inline-block;
-  }
-
-  .surveySelect {
-    max-width: 72%;
-    display: inline-block;
-  }
 }
 
 .tooltip-inner {
@@ -958,6 +950,14 @@ p.help-block {
 
   .reloadDouble {
     font-size: 50px;
+  }
+}
+@media (max-width: 576px) {
+  .looding {
+    left: 44%;
+  }
+  .reloadDouble {
+    font-size: 34px !important;
   }
 }
 

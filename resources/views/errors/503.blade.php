@@ -39,7 +39,7 @@
     </head>
     <body>
         <div class="container">
-            <div class="content">
+            <div class="content p-xxs-10">
                 <div class="title">Be right back.</div>
             </div>
         </div>

@@ -19,8 +19,8 @@
   <div id="table-overlay" style="display: none"><i class="fa fa-refresh fa-3x fa-spin"></i></div>
   <form method="POST" action="" id="e-entretien-table-wraper">
     @if ($items->count() > 0)
-      <div class="row">
-        <div class="col-md-12 table-responsive">
+      <div class="">
+        <div class="table-responsive">
           @php($callableActions = [])
           <table class="table table-hover table-sm table-striped table-inversed-blue" data-count="{{ $items->count() }}">
             <thead>
@@ -101,7 +101,7 @@
         </div>
       </div>
       <div class="row mb-0">
-        <div class="col-md-7 pt-10" id="bulk-wrap">
+        <div class="col-md-7 pt-10 mb-sm-20" id="bulk-wrap">
           @if($isBulkActions && $hasBulkActions && count($callableActions) > 0)
             <select name="" id="table-bulk-action-select" class="d-inline-block">
               <option value="">{{ "Actions groupées" }}</option>
@@ -127,7 +127,7 @@
           {{ __("Affichage de l'élément :from à :to sur :total éléments", ['from' => $from, 'to' => $to, 'total' => $total]) }}
         </div>
         <div class="col-md-5">
-          <div class="navigation float-right">
+          <div class="navigation pull-md-right pull-sm-right">
             {{ $items->links() }}
           </div>
         </div>

@@ -4,7 +4,7 @@ use App\Helpers\Base;
 
 function chm_table_column_attrs($column) {
   $collAttrs = [];
-  if (!is_null($column['attr']['attr']) && !empty($column['attr']['attr'])) {
+  if (isset($column['attr']['attr']) && !is_null($column['attr']['attr']) && !empty($column['attr']['attr'])) {
     foreach ($column['attr']['attr'] as $k => $v) {
       $collAttrs[] = (is_numeric($k)) ? $v : $k .'="'. $v .'"';;
     }

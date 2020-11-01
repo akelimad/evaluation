@@ -13,7 +13,7 @@
     </head>
     <body>
         <a href="{{url()->previous()}}">
-            <div class="content">
+            <div class="content p-xxs-10">
                 <img src="{{asset('img/error404.png')}}" class="img-responsive" alt="">
             </div>
         </a>

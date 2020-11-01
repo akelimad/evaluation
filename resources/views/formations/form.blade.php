@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content p-xxs-10">
   <input type="hidden" name="id" value="{{ isset($f->id) ? $f->id : null }}">
   <input type="hidden" name="e_id" value="{{ isset($e->e_id) ? $e->e_id : null }}">
   {{ csrf_field() }}

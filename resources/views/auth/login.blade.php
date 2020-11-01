@@ -41,7 +41,7 @@
               <div class="">
                 <input type="checkbox" id="remember" name="remember"/>
                 <label for="remember" class="d-inline-block">Se souvenir de moi</label>
-                <p class="mb-0"><a href="{{ url('password/reset') }}">Mot de passe oublié ?</a></p>
+                <p class="mb-10"><a href="{{ url('password/reset') }}">Mot de passe oublié ?</a></p>
               </div>
             </div>
             <div class="col-md-6">

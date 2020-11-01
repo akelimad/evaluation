@@ -21,7 +21,7 @@
 </style>
 
 @section('content')
-  <div class="content" id="content">
+  <div class="content p-xxs-10" id="content p-xxs-10">
     <form @submit.prevent="handleSubmit()" action="" method="post" novalidate>
       <div class="row mb-30">
         <div class="col-md-8 col-md-offset-2">

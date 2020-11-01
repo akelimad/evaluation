@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content p-xxs-10">
   <input type="hidden" name="id" value="{{ $permission->id }}">
   {{ csrf_field() }}
   <div class="row">

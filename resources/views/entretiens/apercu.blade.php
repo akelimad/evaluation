@@ -3,7 +3,7 @@
   <div class="useful-actions mb-20">
     <a href="{{ route('entretien.download-pdf', ['id' => $eu->id]) }}" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Télécharger en PDF</a>
     <a href="javascript:void(0)" id="openAll" class="pull-right ml-20">Tout dérouler</a>
-    <a href="javascript:void(0)" id="closeAll" class="pull-right">Tout enrouler</a>
+    <a href="javascript:void(0)" id="closeAll" class="pull-md-right pull-sm-right">Tout enrouler</a>
     <div class="clearfix"></div>
   </div>
   @if($user->parent)
@@ -159,7 +159,7 @@
               @forelse($skill->getSkillsTypes() as $type)
                 <div class="row">
                   <div class="col-md-12">
-                    <h3 style="border-bottom: 2px solid gray;">{{ $type['title'] }} <span class="pull-right">{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></h3>
+                    <h3 style="border-bottom: 2px solid gray;">{{ $type['title'] }} <span class="pull-md-right pull-sm-right">{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></h3>
                     <canvas class="chart" id="type_{{ $type['id'] }}_chart" style="max-height: 600px;"></canvas>
                   </div>
                 </div>

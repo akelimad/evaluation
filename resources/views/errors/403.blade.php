@@ -40,7 +40,7 @@
     </head>
     <body>
         <div class="container">
-            <div class="content">
+            <div class="content p-xxs-10">
                 <div class="title">Vous n'avez pas les permissions</div>
 
                 <a href="{{ route('home') }}" class="btn btn-primary">Revenir à la page d'accueil</a>

@@ -4,13 +4,13 @@
   <li>Fiches métiers</li>
 @endsection
 @section('content')
-  <section class="content users" id="content">
+  <section class="content p-sm-10" id="content">
     <div class="row">
       <div class="col-md-12">
         <div class="title-section mb-20">
           <h3 class="mt-0">
             <i class="fa fa-graduation-cap"></i> {{ __("Fiches métiers (REM/REC)") }} <span class="badge badge-count">0</span>
-            <div class="pull-right">
+            <div class="pull-md-right pull-sm-right">
               <a
                   href="javascript:void(0)"
                   chm-modal="{{ route('skill.form') }}"

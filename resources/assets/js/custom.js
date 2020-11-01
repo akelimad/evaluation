@@ -1,7 +1,7 @@
 import $ from 'jquery'
 
 $(window).on('load', function() {
-  jQuery('.spinner-wp').remove()
+  jQuery('.spinner-wp').hide()
 });
 
 $(document).ready(function () {

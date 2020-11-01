@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content p-xxs-10">
   <input type="hidden" name="id" value="{{ isset($user) ? $user->id : null }}">
   {{ csrf_field() }}
   <div class="row">
