@@ -29,43 +29,42 @@
 @php($countMentorFinished = \App\Entretien_user::countResponse($e->id, 'mentor', 2))
 
 @section('content')
-	<section class="content p-xxs-10">
+	<section class="content p-sm-10">
 		<div class="row mb-20">
 			<div class="col-md-12">
 				<h2 class="pageName m-0"><a href="{{ route('entretiens') }}"><i class="fa fa-chevron-left"></i></a> Suivi de la campagne : {{ $e->titre }}
+					<div class="custom-switch-btn d-inline-block">
+						<label class="switch" for="change_status" title="Activer / Désactiver la campagne" data-toggle="tooltip">
+							<input type="checkbox" id="change_status" value="0" class="hidden" onchange="chmEntretien.changeStatus(event, [{{ $e->id }}])" {{ $e->isEnabled() ? 'checked':'' }}>
+							<div class="slider-toggle round">
+								<span class="on">ON</span><span class="off">OFF</span>
+							</div>
+						</label>
+					</div>
 					<a href="javascript:void(0)" onclick="return chmModal.confirm('', 'Supprimer l\'entretien ?', 'Etes-vous sur de vouloir supprimer cet entretien ?','chmEntretien.delete', {eid: {{ $e->id }} }, {width: 450})" class="btn btn-danger pull-right"><i class="fa fa-trash"></i> Supprimer</a>
 
 					<a href="javascript:void(0)" onclick="return chmEntretien.form({{{$e->id}}})" class="btn btn-success pull-right mr-10"><i class="fa fa-pencil"></i> Modifier</a>
 				</h2>
 			</div>
 		</div>
-		<div class="row mb-15">
+		<div class="row mb-20">
 			<div class="col-md-12">
-				<div class="box box-default">
+				<div class="box box-default mb-0">
 					<div class="box-body">
 						<div class="row mb-0">
 							<div class="col-md-6 mb-sm-20">
-								<div class="custom-switch-btn">
-									<label class="switch" for="change_status" title="Activer / Désactiver la campagne" data-toggle="tooltip">
-										<input type="checkbox" id="change_status" value="0" class="hidden" onchange="chmEntretien.changeStatus(event, [{{ $e->id }}])" {{ $e->isEnabled() ? 'checked':'' }}>
-										<div class="slider-toggle round">
-											<span class="on">ON</span><span class="off">OFF</span>
-										</div>
-									</label>
-									<label class="mb-0 ml-5" style="display: inline-block; position: absolute; height: 27px; line-height: 27px;"><b>Activation</b></label>
-								</div>
+								<b>Date limite pour l'évaluation manager :</b> {{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
 							</div>
-							<div class="col-md-6 mb-30">
+							<div class="col-md-6 mb-20">
 								<div class="inner-content">
 									<b>Participants :</b> {{ $countInterviewUsers }}
-									<span class="pull-md-right pull-sm-right"><b>Créée le</b> {{ date('d/m/Y à H:i', strtotime($e->created_at)) }}</span>
 								</div>
 							</div>
 							<div class="col-md-6 mb-sm-20">
 								<b>Date limite pour l'auto-évaluation :</b> {{Carbon\Carbon::parse($e->date)->format('d/m/Y')}}
 							</div>
 							<div class="col-md-6 ">
-								<b>Date limite pour l'évaluation manager :</b> {{Carbon\Carbon::parse($e->date_limit)->format('d/m/Y')}}
+								<span class=""><b>Créée le</b> {{ date('d/m/Y à H:i', strtotime($e->created_at)) }}</span>
 							</div>
 						</div>
 					</div>
@@ -73,8 +72,8 @@
 			</div>
 		</div>
 		<div class="row mb-20">
-			<div class="col-md-6">
-				<div class="card card-danger p-0">
+			<div class="col-md-6 mb-sm-20">
+				<div class="card card-danger p-0 m-0">
 					<div class="card-header text-center">
 						<h3 class="card-title text-muted font-22">Auto-évalutions</h3>
 					</div>
@@ -84,7 +83,7 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="card card-danger p-0">
+				<div class="card card-danger p-0 m-0">
 					<div class="card-header text-center">
 						<h3 class="card-title text-muted font-22">Evaluations {{ $e->isFeedback360() ? "des collègues" : "Manager" }} </h3>
 					</div>
@@ -96,11 +95,11 @@
 		</div>
 		<div class="row mb-20">
 			<div class="col-md-12">
-				<div class="card">
+				<div class="card m-0">
 					<div class="card-header text-center">
 						<h3 class="card-title text-muted font-22">Les évalués et leurs évaluateurs</h3>
 					</div>
-					<div class="card-body pt-0">
+					<div class="card-body p-0">
 						{{ request()->query->set('eid', $e->id) }}
 						<div chm-table="{{ route('entretien_user.table') }}"
 								 chm-table-options='{"with_ajax": true}'
@@ -118,7 +117,7 @@
 					<div class="card-header text-center">
 						<h3 class="card-title text-muted font-22">Notes obtenues par les collaborateurs</h3>
 					</div>
-					<div class="card-body pt-0">
+					<div class="card-body p-0">
 						{{ request()->query->set('eid', $e->id) }}
 						<div chm-table="{{ route('entretien_user.notes.table') }}"
 								 chm-table-options='{"with_ajax": true}'
@@ -135,7 +134,6 @@
 
 @section('javascript')
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 	<script>
 		$(document).ready(function () {
 

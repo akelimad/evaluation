@@ -53,6 +53,24 @@
 .d-block {
     display: block;
 }
+@media (max-width: 768px) {
+    .btn-xs-block {
+        display: block;
+        width: 100%;
+    }
+    .nav-tabs-custom>.tab-content {
+        border: none !important;
+    }
+    ul.nav-tabs li.active {
+        border-top-color: transparent !important;
+        a {
+            border: transparent;
+            border-left: 3px solid #3c8dbc;
+            background: #3c8dbc17 !important;
+        }
+    }
+
+}
 @media (min-width: 768px) {
     .pull-sm-left {
         float: left !important;

@@ -1,10 +1,7 @@
 
 <div class="apercu">
   <div class="useful-actions mb-20">
-    <a href="{{ route('entretien.download-pdf', ['id' => $eu->id]) }}" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Télécharger en PDF</a>
-    <a href="javascript:void(0)" id="openAll" class="pull-right ml-20">Tout dérouler</a>
-    <a href="javascript:void(0)" id="closeAll" class="pull-md-right pull-sm-right">Tout enrouler</a>
-    <div class="clearfix"></div>
+    <a href="{{ route('entretien.download-pdf', ['id' => $eu->id]) }}" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> {{ __("Télécharger en PDF") }}</a>
   </div>
   @if($user->parent)
     <p class="help-block">Aperçu sur les informations partagées entre
@@ -12,6 +9,10 @@
       {{ $user->parent ? $user->parent->name : $user->name }} {{ $user->parent ? $user->parent->last_name : $user->last_name }}
       lors de l'entretien : <b>{{ $e->titre }}</b>
     </p>
+    <div class="collapse-actions mb-10">
+      <a href="javascript:void(0)" id="openAll" class="">{{ __("Tout dérouler") }}</a>
+      <a href="javascript:void(0)" id="closeAll" class="ml-20">{{ __("Tout enrouler") }}</a>
+    </div>
     <div class="panel-group" id="accordion">
       @if(in_array('Evaluation annuelle', $entreEvalsTitle))
         <div class="panel panel-default">

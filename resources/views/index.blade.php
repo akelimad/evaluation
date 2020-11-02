@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Accueil')
 @section('content')
-  <section class="content index">
+  <section class="content p-sm-10 index">
     <div class="row">
       <div class="col-md-3">
         <div class="box box-primary">
@@ -84,7 +84,7 @@
                           </td>
                           <td class="text-center">
                             @if($userAnswered)
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                              <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu btn btn-default btn-sm"><i class="fa fa-search"></i> Aperçu</a>
                             @else
                               <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
                             @endif
@@ -148,7 +148,7 @@
                           </td>
                           <td class="text-center">
                             @if($mentorAnswered)
-                              <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                              <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu btn btn-default btn-sm"><i class="fa fa-search"></i> Aperçu</a>
                             @else
                               <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
                             @endif
@@ -202,9 +202,9 @@
                     <td class="text-center">
                       <span class="label label-{{ $mentorAnswered ? 'success':'danger' }} empty"></span>
                     </td>
-                    <td>
+                    <td class="text-center">
                       @if($mentorAnswered)
-                        <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-block btn-sm"><i class="fa fa-eye"></i> Voir</a>
+                        <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu btn btn-default btn-sm"><i class="fa fa-search"></i> Aperçu</a>
                       @else
                         <a href="{{ route('anglets.synthese', ['e_id' => $e->id, 'uid' => $user->id]) }}" class="btn btn-primary btn-block btn-sm"><i class="fa fa-pencil"></i> Remplir</a>
                       @endif
@@ -259,7 +259,7 @@
                       @endif
                     </td>
                     <td class="text-center">
-                      <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu"><i class="fa fa-search"></i></a>
+                      <a href="{{ route('entretien.apercu', ['id' => $eu->id]) }}" chm-modal="" chm-modal-options='{"width": "1000px"}' class="apercu btn btn-default btn-sm"><i class="fa fa-search"></i> Aperçu</a>
                     </td>
                   </tr>
                 @empty
@@ -277,4 +277,14 @@
       <div class="clearfix"></div>
     </div>
   </section>
+@endsection
+
+@section('javascript')
+  @parent
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+    })
+  </script>
 @endsection

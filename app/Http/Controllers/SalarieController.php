@@ -82,12 +82,13 @@ class SalarieController extends Controller
     }
     $evaluations = Entretien::findEvaluations($e);
     $user = User::findOrFail($uid);
+    $evaluator_id = $user->parent->id;
     if ($user->id == Auth::user()->id) {
       $salaries = Salary::where('user_id', $uid)->where('entretien_id', $eid)->paginate(10);
     } else {
       $salaries = Salary::where('mentor_id', $user->parent->id)->where('entretien_id', $eid)->paginate(10);
     }
-    return view('salaries.index', compact('e', 'user', 'salaries', 'evaluations'));
+    return view('salaries.index', compact('e', 'user', 'salaries', 'evaluations', 'evaluator_id'));
   }
 
   /**

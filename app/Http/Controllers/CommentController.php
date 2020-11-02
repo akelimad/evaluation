@@ -35,9 +35,10 @@ class CommentController extends Controller
       return redirect()->route('home')->with("danger", Entretien::canBeFilledByUserMessage());
     }
     $user = User::findOrFail($uid);
+    $evaluator_id = $user->parent->id;
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
     $evaluations = Entretien::findEvaluations($e);
-    return view('comments.index', compact('comment', 'e', 'user', 'evaluations'));
+    return view('comments.index', compact('comment', 'e', 'user', 'evaluations', 'evaluator_id'));
   }
 
   /**

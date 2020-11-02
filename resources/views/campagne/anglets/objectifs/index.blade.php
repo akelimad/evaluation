@@ -18,7 +18,7 @@
 @endsection
 @php($isMentor = count(Auth::user()->children)>0 && $user->id != Auth::user()->id)
 @section('content')
-  <section class="content objectifs">
+  <section class="content objectifs p-sm-10">
     <div class="row">
       <div class="col-md-12">
         <div class="box box-primary card">
@@ -26,8 +26,8 @@
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')
-            <div class="tab-content">
-              <div class="box-body">
+            <div class="tab-content p-sm-0">
+              <div class="box-body p-sm-0">
                 <form action="{{ route('updateNoteObjectifs') }}" method="post">
                   <input type="hidden" name="entretien_id" value="{{$e->id}}">
                   <input type="hidden" name="user_id" value="{{$user->id}}">
@@ -298,7 +298,9 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="save-action bg-gray p-20">
-                          <button type="submit" class="btn btn-success pull-right" > <i class="fa fa-save"></i> Enregistrer tout</button>
+                          <a href="{{ route('anglets.carrieres', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-xs-block mb-sm-10"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
+
+                          <button type="submit" class="btn btn-success pull-sm-right pull-md-right btn-xs-block"> <i class="fa fa-save"></i> Enregistrer tout</button>
                           <div class="clearfix"></div>
                         </div>
                       </div>

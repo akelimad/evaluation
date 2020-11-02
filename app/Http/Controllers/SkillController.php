@@ -38,8 +38,9 @@ class SkillController extends Controller
     }
     $evaluations = Entretien::findEvaluations($e);
     $user = $e->users()->where('entretien_user.user_id', $uid)->first();
+    $evaluator_id = $user->parent->id;
     $skill = Skill::where('function_id', $user->function)->first();
-    return view('campagne.anglets.skills.index', compact('e', 'evaluations', 'skill', 'user'));
+    return view('campagne.anglets.skills.index', compact('e', 'evaluations', 'skill', 'user', 'evaluator_id'));
   }
 
   public function getTable(Request $request) {
@@ -194,7 +195,7 @@ class SkillController extends Controller
       $model->update($data);
     }
 
-    return redirect()->back()->with("note_update", __("Les informations ont été sauvegardées avec succès"));
+    return redirect()->back()->with("success", __("Les informations ont été sauvegardées avec succès"));
   }
 
   /**

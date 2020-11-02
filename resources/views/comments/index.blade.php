@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Commentaires')
 @section('content')
-  <section class="content comments">
+  <section class="content comments p-sm-10">
     <div class="row">
       <div class="col-md-12">
         <div class="box box-primary direct-chat direct-chat-warning card">
@@ -9,7 +9,7 @@
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')
-            <div class="tab-content p-20">
+            <div class="tab-content p-20 p-sm-0">
               @if($comment)
                 <div class="box-body">
                   <div class="direct-chat-messages p-0" style="height: auto;">
@@ -76,15 +76,24 @@
                   </div>
                 </div>
               @endif
-              <a href="{{url('/')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
               @if(!App\Entretien::answered($e->id, $user->id) && !$comment)
                   <a
                       href="javascript:void(0)"
                       chm-modal="{{ route('comment.add', ['eid' => $e->id, 'uid' => $user->id]) }}"
                       chm-modal-options='{"form":{"attributes":{"id":"commentForm"}}}'
-                      class="btn btn-success"
+                      class="btn btn-success mb-20"
                   ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter un commentaire" }}</a>
               @endif
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="save-action bg-gray p-20">
+                      <a href="{{ route('anglets.primes', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+
             </div>
           </div>
 

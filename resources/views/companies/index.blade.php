@@ -4,13 +4,13 @@
   <li>Utilisateurs</li>
 @endsection
 @section('content')
-  <section class="content users">
+  <section class="content p-sm-10 users">
 
     <div class="row mb-0">
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <h3 class="box-title"><i class="fa fa-industry"></i> Liste des sociétés <span class="badge badge-count">0</span></h3>
       </div>
-      <div class="col-md-6">
+      <div class="col-sm-6 mb-sm-20">
         <div class="pull-md-right pull-sm-right">
           <a
               href="javascript:void(0)"

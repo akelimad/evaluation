@@ -2,7 +2,7 @@
 @section('title', 'Compétences')
 @section('content')
   @php($isMentor = count(Auth::user()->children)>0 && $user->id != Auth::user()->id)
-  <section class="content skills">
+  <section class="content skills p-sm-10">
     <div class="row">
       <div class="col-md-12">
         @if(Session::has('success_update'))
@@ -14,7 +14,7 @@
 
           <div class="nav-tabs-custom">
             @include('partials.tabs')
-            <div class="tab-content p-20">
+            <div class="tab-content p-20 p-sm-0">
               @if ($skill)
                 <form action="{{ url('skills/updateUserSkills') }}" method="post">
                   {{ csrf_field() }}
@@ -39,8 +39,8 @@
                               <div class="panel-heading">{{ $type['title'] }}</div>
                               <div class="panel-body">
                                 @foreach($type['skills'] as $key => $skillItem)
-                                <div class="row">
-                                  <div class="col-md-6">
+                                <div class="row mb-sm-30">
+                                  <div class="col-md-6 mb-sm-30">
                                     <span class="">{{ $key + 1 }})</span>
                                     {{ $skillItem['title'] }}
                                   </div>
@@ -84,8 +84,8 @@
                               <div class="panel-heading">{{ $type['title'] }}</div>
                               <div class="panel-body">
                                 @foreach($type['skills'] as $key => $skillItem)
-                                  <div class="row">
-                                    <div class="col-md-6">
+                                  <div class="row mb-sm-30">
+                                    <div class="col-md-6 mb-sm-30">
                                       {{ $skillItem['title'] }}
                                     </div>
                                     <div class="col-md-6">
@@ -121,6 +121,7 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="p-20 bg-gray clearfix">
+                        <a href="{{ route('anglets.formations', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
                         @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
                           <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Enregistrer
                           </button>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Synthèse')
 @section('content')
-  <section class="content evaluations">
+  <section class="content evaluations p-sm-10">
     <div class="row">
       <div class="col-md-12">
         <div class="card box box-primary">
@@ -93,9 +93,9 @@
 
                 <div class="row">
                   <div class="col-md-12">
-                    <div class="bg-gray p-20">
-                      <a href="{{ route('home') }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
-                      <a href="{{ route($e->isFeedback360() ? 'anglets.feedback360':'anglets.evaluation-annuelle', ['e_id' => $e->id, 'uid' => $user->id, 'mid' => Auth::user()->id]) }}" class="btn btn-primary pull-right">Suivant <i class="fa fa-long-arrow-right"></i></a>
+                    <div class="bg-gray p-20 clearfix">
+                      <a href="{{ route('home') }}" class="btn btn-default btn-xs-block mb-10"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
+                      <a href="{{ route($e->isFeedback360() ? 'anglets.feedback360':'anglets.evaluation-annuelle', ['e_id' => $e->id, 'uid' => $user->id, 'mid' => Auth::user()->id]) }}" class="btn btn-primary pull-sm-right pull-md-right btn-xs-block">{{ __("Suivant") }} <i class="fa fa-long-arrow-right"></i></a>
                     </div>
                   </div>
                 </div>

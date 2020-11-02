@@ -15,7 +15,7 @@
                   @include('surveys.manager', ['evaluator_id' => $evaluator_id])
                 @endif
                 @if($user->id == Auth::user()->id )
-                  @include('surveys.colaborator', ['evaluator_id' => $evaluator_id])
+                  @include('surveys.collaborator', ['evaluator_id' => $evaluator_id])
                 @endif
               </div>
             </div>

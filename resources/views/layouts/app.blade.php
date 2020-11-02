@@ -86,7 +86,7 @@
               </li>
               <!-- Menu Footer-->
               <li class="user-footer">
-                <div class="pull-left">
+                <div class="pull-left mb-sm-10">
                   <a href="{{url('/profile')}}" class="btn btn-info"><i class="fa fa-user"></i> {{ __("Profil") }}</a>
                 </div>
                 <div class="pull-md-right pull-sm-right">
@@ -98,7 +98,7 @@
           </li>
           <li>
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> {{ __("Déconnexion") }}</a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
+            <form id="logout-form-main-menu" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
           </li>
           <!-- disable control sidebar skin -->
           <li style="display: none;">
@@ -234,28 +234,30 @@
         @yield('breadcrumb')
       </ol>
     </section>
-    <div class="flush-alerts-section">
-      <div class="container-fluid">
-        <div class="row flash-message mb-10">
-          <div class="col-md-12 pl-30 pr-30">
-            @foreach (['danger', 'warning', 'success', 'info'] as $msgType)
-              @if($msgType == 'success') @php($icon = "fa-check-circle")
-              @elseif($msgType == 'danger') @php($icon = "fa-times")
-              @elseif($msgType == 'warning') @php($icon = "fa-warning")
-              @else @php($icon = "fa-info-circle")
-              @endif
-              @if(Session::has($msgType))
-                <div class="chm-alerts alert alert-{{ $msgType }} alert-white rounded mt-30">
-                  <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
-                  <div class="icon"><i class="fa {{ $icon }}"></i></div>
-                  <span>{{ Session::get($msgType) }}</span>
-                </div>
-              @endif
-            @endforeach
+    @if(Session::has('danger') || Session::has('warning') || Session::has('success') || Session::has('info'))
+      <div class="flush-alerts-section">
+        <div class="container-fluid">
+          <div class="row flash-message mb-10">
+            <div class="col-md-12 pl-30 pr-30 p-sm-10">
+              @foreach (['danger', 'warning', 'success', 'info'] as $msgType)
+                @if($msgType == 'success') @php($icon = "fa-check-circle")
+                @elseif($msgType == 'danger') @php($icon = "fa-times")
+                @elseif($msgType == 'warning') @php($icon = "fa-warning")
+                @else @php($icon = "fa-info-circle")
+                @endif
+                @if(Session::has($msgType))
+                  <div class="chm-alerts alert alert-{{ $msgType }} alert-white rounded mt-20">
+                    <button type="button" data-dismiss="alert" aria-hidden="true" class="close">x</button>
+                    <div class="icon"><i class="fa {{ $icon }}"></i></div>
+                    <span>{{ Session::get($msgType) }}</span>
+                  </div>
+                @endif
+              @endforeach
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    @endif
     @yield('content')
   </div>
   <!-- /.content-wrapper -->

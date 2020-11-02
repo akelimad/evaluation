@@ -17,7 +17,7 @@
 </style>
 <div class="table-container">
   <div id="table-overlay" style="display: none"><i class="fa fa-refresh fa-3x fa-spin"></i></div>
-  <form method="POST" action="" id="e-entretien-table-wraper">
+  <form method="POST" action="">
     @if ($items->count() > 0)
       <div class="">
         <div class="table-responsive">

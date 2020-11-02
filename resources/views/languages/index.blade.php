@@ -5,13 +5,13 @@
 @endsection
 @section('content')
 
-  <section class="content languages">
+  <section class="content p-sm-10 languages">
 
     <div class="row mb-0">
       <div class="col-md-6">
         <h3 class="box-title"><i class="fa fa-flag"></i> {{ __("Langues") }} <span class="badge badge-count">0</span></h3>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 mb-sm-20">
         <div class="pull-md-right pull-sm-right">
           <a
               href="javascript:void(0)"

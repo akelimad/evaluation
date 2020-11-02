@@ -5,7 +5,7 @@
 @endsection
 @section('content')
 
-  <section class="content translations users">
+  <section class="content p-sm-10 translations">
     <div class="row">
       <div class="col-md-12 mb-10">
         @include('partials/alerts/info', [
@@ -22,7 +22,7 @@
       <div class="col-md-6">
         <h3 class="box-title"><i class="fa fa-language"></i> {{ __("Messages") }} <span class="badge badge-count">0</span></h3>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 mb-sm-20">
         <div class="pull-md-right pull-sm-right">
           <form class="form-find d-inline-block" method="POST" action="" role="form">
             <button type="submit" class="btn btn-info"><i class="fa fa-search"></i> Scanner</button>

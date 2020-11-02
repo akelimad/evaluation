@@ -35,7 +35,7 @@
               <div class="panel panel-info mb-20">
                 <div class="panel-heading">{{ $g->name }}</div>
                 <div class="panel-body">
-                  @forelse($g->questions as $q)
+                  @forelse($g->questions as $keyQst => $q)
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
@@ -43,7 +43,7 @@
                             <input type="text" data-group-target="{{$g->id}}" name="answers[{{$q->id}}][note]" class="notation" min="1" max="{{App\Setting::get('max_note')}}" style="display:none;">
                           @endif
                           @if($q->parent == null)
-                            <label for="" class="questionTitle"><i class="fa fa-caret-right"></i> {{$q->titre}}</label>
+                            <label for="" class="questionTitle">{{$q->titre}}</label>
                           @endif
                           @if($q->type == 'text')
                             <input type="{{$q->type}}" name="answers[{{$q->id}}][ansr]" class="form-control" value="{{App\Answer::getCollAnswers($q->id, $user->id, $e->id) ? App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer : '' }}" required {{ !App\Entretien::answered($e->id, Auth::user()->id) ? '':'readonly' }}>
@@ -140,16 +140,22 @@
             @endif
           @endforeach
         </div>
-        <div class="actions p-20 bg-gray">
-          <a href="{{ route('anglets.synthese', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Retour</a>
+        <div class="actions p-20 bg-gray clearfix">
           @if(!App\Entretien::answered($e->id, Auth::user()->id))
-            <button type="submit" class="btn btn-success pull-right" id="submitAnswers"><i class="fa fa-save"></i> Enregistrer
-            </button>
+            <button type="submit" class="btn btn-success pull-md-right pull-sm-right btn-xs-block mb-sm-10" id="submitAnswers"><i class="fa fa-save"></i> {{ __("Enregistrer") }}</button>
           @endif
+          @if(Request::route()->getName() == 'anglets.carrieres')
+            @php($route = 'anglets.evaluation-annuelle')
+          @elseif(Request::route()->getName() == 'anglets.evaluation-annuelle')
+            @php($route = 'anglets.synthese')
+          @else
+            @php($route = 'home')
+          @endif
+          <a href="{{ route($route, ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-xs-block"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
         </div>
       </form>
     @else
-      <p class="alert alert-default">Aucune donnée disponible !</p>
+      <p class="alert alert-default">{{ __("Aucune donnée disponible !") }}</p>
     @endif
   </div>
 </div>

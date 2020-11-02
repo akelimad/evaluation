@@ -45,6 +45,7 @@ class ObjectifController extends Controller
       'objectifsTeam' => $objectifsTeam,
       'e' => $entretien,
       'user' => $user,
+      'evaluator_id' => $user->parent->id
     ]);
   }
 
@@ -89,7 +90,7 @@ class ObjectifController extends Controller
       }
     }
 
-    return redirect()->back();
+    return redirect()->back()->with('success', "Les informations ont été sauvegardées avec succès");
   }
 
 }

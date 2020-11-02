@@ -82,8 +82,9 @@ class FormationController extends Controller
       return redirect()->route('home')->with("danger", Entretien::canBeFilledByUserMessage());
     }
     $user = User::findOrFail($uid);
+    $evaluator_id = $user->parent->id;
     $evaluations = Entretien::findEvaluations($e);
-    return view('formations.index', compact('e', 'user', 'evaluations'));
+    return view('formations.index', compact('e', 'user', 'evaluations', 'evaluator_id'));
   }
 
   /**
