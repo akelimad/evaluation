@@ -200,7 +200,7 @@ class EntretienUserController extends Controller
     $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
 
     $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
-    $salaries = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->get();
+    $salaries = Salary::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
     $skill = Skill::where('function_id', $user->function)->first();
     if (!$skill) $skill = new Skill();
     $comment = Comment::where('entretien_id', $eid)->where('user_id', $uid)->first();
@@ -229,7 +229,7 @@ class EntretienUserController extends Controller
     $entreEvalsTitle = $e->evaluations->pluck('title')->toArray();
     $itemsId = Entretien_evaluation::getItemsId($eid, 9); // Objectifs = 9
     $formations = Formation::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
-    $primes = Salary::where('mentor_id', $user->parent ? $user->parent->id : $user->id)->where('entretien_id', $e->id)->get();
+    $primes = Salary::where('user_id', $user->id)->where('entretien_id', $e->id)->get();
     $objectifsPersonnal = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Personnel')->get();
     $objectifsTeam = EntretienObjectif::whereIn('id', $itemsId)->where('type', 'Equipe')->get();
     $skill = Skill::where('function_id', $user->function)->first();
