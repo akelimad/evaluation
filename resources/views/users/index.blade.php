@@ -9,7 +9,7 @@
 
     <div class="row mb-0">
       <div class="col-md-6">
-        <h3 class="box-title"><i class="fa fa-user"></i> {{ __("Utilisateurs") }} <span class="badge badge-count">0</span></h3>
+        <h3 class="box-title"><i class="fa fa-users"></i> {{ __("Utilisateurs") }} <span class="badge badge-count">0</span></h3>
       </div>
       <div class="col-md-6 mb-sm-20">
         <div class="pull-md-right pull-sm-right">

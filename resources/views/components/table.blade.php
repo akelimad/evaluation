@@ -27,7 +27,7 @@
             <tr>
               @php($sortables = $table->getSortables())
               @if($isBulkActions && $hasBulkActions)
-                <th width="10" class="checkAll text-center">
+                <th width="10" class="checkAll">
                   <div class="custom-control custom-checkbox p-0">
                     <input type="checkbox" id="hunter_checkAll" class="custom-control-input hunter_checkAll m-auto">
                     <label class="custom-control-label d-none" for="hunter_checkAll">&nbsp;</label>

@@ -5,7 +5,7 @@
   <li>{{ __("Importer") }}</li>
 @endsection
 @section('content')
-  <section class="content index">
+  <section class="content p-sm-10">
     <div class="row">
       <div class="col-md-12">
         <div class="title-section mb-20">

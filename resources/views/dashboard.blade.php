@@ -8,7 +8,7 @@
     <div class="card mb-30">
       <div class="card-header"><h3 class="m-0 p-0">{{ __("Effectif") }}</h3></div>
       <div class="card-body">
-        <div class="row mb-0 mt-10">
+        <div class="row mb-0">
           <div class="col-lg-3 col-xs-6 mb-sm-20 mb-md-20">
             <div class="small-box bg-purple-active m-0">
               <div class="inner">
@@ -55,7 +55,7 @@
     <div class="card mb-30">
       <div class="card-header"><h3 class="m-0 p-0">{{ __("Campagnes") }}</h3></div>
       <div class="card-body">
-        <div class="row mb-0 mt-10">
+        <div class="row mb-0">
           <div class="col-lg-3 col-xs-6 mb-sm-20 mb-md-20">
             <div class="small-box bg-gray-active m-0">
               <div class="inner">

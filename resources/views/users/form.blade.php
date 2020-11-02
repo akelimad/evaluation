@@ -2,7 +2,7 @@
   <input type="hidden" name="id" value="{{ isset($user) ? $user->id : null }}">
   {{ csrf_field() }}
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-sm-20">
       <label for="name" class="control-label required">Prénom</label>
       <input type="text" name="name" class="form-control" id="name" placeholder="Prénom" chm-validate="required|valid_name" value="{{ isset($user) ? $user->name : '' }}">
     </div>
@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-sm-20">
       <label for="email" class="control-label required">Email</label>
       <input type="email" name="email" class="form-control" id="email" placeholder="info@email.com" chm-validate="required|valid_email" value="{{ isset($user) ? $user->email : ''  }}">
     </div>
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-sm-20">
       <label for="password" class="control-label">Mot de passe</label>
       <input id="password" type="password" class="form-control" name="password" {{ isset($user) ? '':'required' }}>
     </div>
@@ -45,7 +45,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-sm-20">
       <label for="tel" class="control-label">Téléphone mobile</label>
       <input type="text" name="tel" class="form-control" id="tel" placeholder="ex: 0606060606" value="{{ isset($user) ? $user->tel : ''  }}" pattern="^((06)|(07))\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$">
     </div>
@@ -60,7 +60,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-sm-20">
       <label for="function" class="control-label">Fonction</label>
       <select name="function" id="function" class="form-control">
         <option value=""></option>
@@ -80,7 +80,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-sm-20">
       <label for="password" class="control-label">Matricule</label>
       <input id="mle" type="text" class="form-control" name="mle" value="{{ isset($user) ? $user->mle : '' }}">
     </div>
@@ -92,7 +92,7 @@
   @role(['ROOT', 'ADMIN', 'RH'])
   @if(Auth::user()->hasRole('ADMIN') && Auth::user()->id != $user->id)
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 mb-sm-20">
         <label for="role" class="control-label required">Rôle</label>
         <select name="roles[]" id="role" class="form-control select2" chm-validate="required"  multiple required @role(['COLLABORATEUR', 'MANAGER']) disabled @endrole>
           @foreach($roles as $role)
