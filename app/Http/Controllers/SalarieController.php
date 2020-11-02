@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Base;
 use App\Http\Service\Table;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,9 @@ class SalarieController extends Controller
     $table->addColumn('created_at', 'Date');
     $table->addColumn('brut', 'Brut');
     $table->addColumn('prime', 'Prime');
-    $table->addColumn('comment', 'Commentaire');
+    $table->addColumn('comment', 'Commentaire', function ($row) {
+      return Base::lettersLimit($row->comment, 40);
+    });
     $table->setBulkActions(true);
 
     // define table actions

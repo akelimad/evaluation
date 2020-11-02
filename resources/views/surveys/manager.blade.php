@@ -149,7 +149,7 @@
                                     <td>{{ $subquestion['title'] }}</td>
                                     @foreach($q->getOptions('answers') as $key => $answer)
                                       <td class="text-center">
-                                        <input type="radio" name="answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }} disabled>
+                                        <input type="radio" name="coll-answers[{{$q->id}}][ansr][{{ $subquestion['id'] }}]" value="{{ $answer['id'] }}" {{ isset($qAnswer[$subquestion['id']]) && $qAnswer[$subquestion['id']] == $answer['id'] ? 'checked':'' }} disabled>
                                       </td>
                                     @endforeach
                                   </tr>

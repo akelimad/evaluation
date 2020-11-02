@@ -53,7 +53,7 @@
                     <table class="table table-hover table-striped">
                       <thead>
                       <tr>
-                        <th>{{ __("Titre") }}</th>
+                        <th>{{ __("Campagne") }}</th>
                         <th>{{ __("Date de lancement") }}</th>
                         <th>{{ __("Date limite") }}</th>
                         <th class="text-center">{{ __("Collaborateur") }}</th>
