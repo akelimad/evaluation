@@ -95,7 +95,7 @@
                           @elseif($q->type == "select")
                             <div class="row">
                               <div class="col-md-3">
-                                <select name="answers[{{$q->id}}][ansr]" id="" class="form-control">
+                                <select name="answers[{{$q->id}}][ansr]" id="" class="form-control" required>
                                   <option value=""></option>
                                   @foreach($q->children as $child)
                                     <option value="{{ $child->id }}" {{ App\Answer::getCollAnswers($q->id, $user->id, $e->id) && App\Answer::getCollAnswers($q->id, $user->id, $e->id)->answer == $child->id ? 'selected' : '' }}>{{ $child->titre }}</option>

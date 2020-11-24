@@ -156,26 +156,7 @@ class EntretienUserController extends Controller
       return $totalNote;
     });
     $table->addColumn('avg', 'Moyenne / 100', function ($row) use($e) {
-      $eval_sid = Entretien_evaluation::getItemsId($e->id, 1);
-      $eval_sid = isset($eval_sid[0]) ? $eval_sid[0] : 0;
-      $eval_survey = Survey::find($eval_sid);
-      if (!$eval_survey) {
-        $totalEvalNote = 0;
-      } else {
-        $totalEvalNote = Answer::getTotalNote($eval_survey->id, $row->user_id, $e->id);
-      }
-
-      $career_sid = Entretien_evaluation::getItemsId($e->id, 2);
-      $career_sid = isset($career_sid[0]) ? $career_sid[0] : 0;
-      $carrer_survey = Survey::find($career_sid);
-      if (!$carrer_survey)  {
-        $totalCareerNote = 0;
-      } else {
-        $totalCareerNote = Answer::getTotalNote($carrer_survey->id, $row->user_id, $e->id);
-      }
-
-      $avg = ($totalEvalNote + $totalCareerNote) / 2;
-      return number_format($avg, 2) + 0;
+      return Answer::getUserGlobaleNote($e->id, $row->user_id);
     });
 
     // render the table

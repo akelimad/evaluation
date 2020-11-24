@@ -26,10 +26,19 @@ class Entretien_user extends Model
       ->first();
   }
 
-  public static function countResponse($entretienId, $profile, $status)
+  public static function countResponse($entretienId, $profile, $status, $object_id = null, $modelName = null)
   {
-    $results = Entretien_user::where('entretien_id', $entretienId)
-      ->where($profile . '_submitted', $status)->get();
+    $query = Entretien_user::where('entretien_id', $entretienId)
+      ->where($profile . '_submitted', $status);
+    if ($modelName == 'Department') {
+      $query->join('users as u', 'u.id', '=', 'entretien_user.user_id');
+      $query->where('u.service', $object_id);
+    }
+    if ($modelName == 'Fonction') {
+      $query->join('users as u', 'u.id', '=', 'entretien_user.user_id');
+      $query->where('u.function', $object_id);
+    }
+    $results = $query->get();
 
     return count($results);
   }

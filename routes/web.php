@@ -133,6 +133,7 @@ Route::delete('entretiens/delete', 'EntretienController@delete');
 Route::get('entretiens/{id}/notation/download', 'EntretienController@downloadNotation');
 Route::post('entretiens/change-status', 'EntretienController@changeStatus')->name('entretien.change-status');
 Route::get('entretiens/{id}/clone', 'EntretienController@copier')->name('entretien.clone');
+Route::get('entretiens/{id}/stats', 'EntretienController@stats')->name('entretien.stats');
 
 Route::get('entretiens/{e_id}/u/{uid}/evaluation-annuelle', 'EvaluationController@index')->name('anglets.evaluation-annuelle');
 Route::get('entretiens/{e_id}/u/{uid}/m/{mid}/feedback360', 'Feedback360Controller@index')->name('anglets.feedback360');

@@ -106,6 +106,12 @@ class EntretienController extends Controller
       'callback' => 'chmEntretien.form([id])',
       'bulk_action' => false,
     ]);
+    $table->addAction('stats', [
+      'icon' => 'fa fa-bar-chart',
+      'label' => 'Statistiques',
+      'route' => ['name' => 'entretien.stats', 'args' => ['id' => '[id]']],
+      'bulk_action' => false,
+    ]);
     $table->addAction('clone', [
       'icon' => 'fa fa-copy',
       'label' => 'Dupliquer',
@@ -156,6 +162,19 @@ class EntretienController extends Controller
     }
 
     return view('entretiens.show', compact('e', 'entrentiensList'));
+  }
+
+  public function stats($id)
+  {
+    $e = Entretien::findOrFail($id);
+    if ($e->user_id != User::getOwner()->id) {
+      abort(403);
+    }
+
+    $entretienUsersDeptsId = $e->users->groupBy('service');
+    $entretienUsersFunctsId = $e->users->groupBy('function');
+
+    return view('entretiens.stats', compact('e', 'entretienUsersDeptsId', 'entretienUsersFunctsId'));
   }
 
   /**

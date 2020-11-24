@@ -244,7 +244,7 @@ class Entretien extends Model
     if ($campaign->shedule_type == "sheduled") {
       return date('d/m/Y', strtotime($campaign->sheduled_at));
     } else {
-      return date('d/m/Y');
+      return date('d/m/Y', strtotime($campaign->created_at));
     }
   }
 

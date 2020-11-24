@@ -30,11 +30,11 @@
   <section class="content p-sm-10">
     <div class="row">
       <div class="col-md-8 col-sm-8 mb-sm-10">
-        <h2 class="pageName m-0"><i class="fa fa-comments-o"></i> Campagnes <span class="badge badge-count">0</span></h2>
+        <h2 class="pageName m-0"><i class="fa fa-comments-o"></i> {{ __("Campagnes") }} <span class="badge badge-count">0</span></h2>
       </div>
       <div class="col-md-4 col-sm-4">
         <div class="pull-md-right pull-sm-right">
-          <a href="javascript:void(0)" onclick="return chmEntretien.form({})" class="btn bg-maroon"><i class="fa fa-plus"></i> Ajouter</a>
+          <a href="javascript:void(0)" onclick="return chmEntretien.form({})" class="btn bg-maroon"><i class="fa fa-plus"></i> {{ __("Ajouter") }}</a>
         </div>
       </div>
     </div>

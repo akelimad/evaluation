@@ -86,7 +86,7 @@ class Answer extends Model
             $sum += $grpNote * ($group->ponderation / 100);
         }
 
-        return $sum;
+        return number_format($sum) + 0;
     }
 
     public static function formated($number)
@@ -96,6 +96,70 @@ class Answer extends Model
 
     public static function  cutNum($num, $precision = 1){
         return floor($num).substr($num-floor($num),1,$precision+1);
+    }
+
+    public static function getUserGlobaleNote($eid, $uid) {
+        $evalSurveyId = Entretien_evaluation::getItemsId($eid, 1);
+        $carrerSurveyId = Entretien_evaluation::getItemsId($eid, 2);
+        $entretienSurveysId = array_merge($evalSurveyId, $carrerSurveyId);
+        $sum = 0;
+        $i = 0;
+        foreach ($entretienSurveysId as $key => $sid) {
+            $sum += self::getTotalNote($sid, $uid, $eid);
+            $i ++;
+        }
+
+        return number_format($sum / $i) + 0;
+    }
+
+    public static function usersNotes($eid, $users) {
+        $data = [];
+        if (empty($users)) return $data;
+        foreach ($users as $user) {
+            $data[] = [
+                "user_fullname" => $user->fullname(),
+                "note" => self::getUserGlobaleNote($eid, $user->id)
+            ];
+        }
+        $notes = array_column($data, 'note');
+        array_multisort($notes, SORT_DESC, $data);
+        return $data;
+    }
+
+    public static function getUsersNotesBy($modelName, $model_id, $users, $eid) {
+        $sum = 0;
+        if ($modelName == 'Fonction') {
+            $i = 0;
+            foreach ($users as $user) {
+                if ($user->function != $model_id) continue;
+                $sum += self::getUserGlobaleNote($eid, $user->id);
+                $i ++;
+            }
+        }
+        if ($modelName == 'Department') {
+            $i = 0;
+            foreach ($users as $user) {
+                if ($user->service != $model_id) continue;
+                $sum += self::getUserGlobaleNote($eid, $user->id);
+                $i ++;
+            }
+        }
+
+        $result = $i > 0 ? $sum / $i : 0;
+        return $result;
+    }
+
+    public static function getGlobalNoteByTab($modelName, $modelUsers, $eid) {
+        if (empty($modelUsers)) return 0;
+        $sum = 0;
+        $i = 0;
+        foreach ($modelUsers as $model_id => $users) {
+            $sum += self::getUsersNotesBy($modelName, $model_id, $users, $eid);
+            $i ++;
+        }
+
+        $result = $i > 0 ? $sum / $i : 0;
+        return $result;
     }
 
 }
