@@ -182,9 +182,11 @@
                 }
               ]
             })
+            chmAlert.createAlert("Nouveau block ajouté, vous avez " + this.objectifs.length + " blocks d'objectifs", "success", 500)
             setTimeout(function () {
               $('[data-toggle="tooltip"]').tooltip()
             }, 500)
+
           },
           removeObjectif: function (oIndex) {
             var confirmation = confirm("Etes-vous sûr de vouloir supprimer ?")

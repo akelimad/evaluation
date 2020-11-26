@@ -109,7 +109,7 @@ class Answer extends Model
             $i ++;
         }
 
-        return number_format($sum / $i) + 0;
+        return $i > 0 ? number_format($sum / $i) + 0 : 0;
     }
 
     public static function usersNotes($eid, $users) {

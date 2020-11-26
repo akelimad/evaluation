@@ -18,6 +18,7 @@
           <option value="{{ $function->id }}" {{ $skill->function_id == $function->id ? 'selected':'' }}>{{ $function->title }}</option>
         @endforeach
       </select>
+      <span class="d-block mt-5"><i><a href="{{ route('functions') }}" target="_blank">{{ __("Cliquer ici pour ajouter d'autres fonctions") }}</a></i></span>
     </div>
   </div>
   <div class="row">
