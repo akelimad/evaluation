@@ -65,6 +65,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN']], function() {
   Route::get('config/skills', 'SkillController@indexAdmin')->name('skills');
   Route::any('skills/form', 'SkillController@form')->name('skill.form');
   Route::post('skills/store', 'SkillController@store');
+  Route::get('skills/{id}/stats', 'SkillController@stats')->name('skill.stats');
   Route::delete('skills/delete', 'SkillController@delete');
 
   Route::get('emails/table', 'EmailController@getTable')->name('emails.table');

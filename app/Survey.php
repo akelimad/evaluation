@@ -50,11 +50,11 @@ class Survey extends Model
   {
     $user = \Auth::user();
     if(!empty($user->society_id)){ // this user is not owner
-      $fonctions = $user->owner->getSurveys();
+      $surveys = $user->owner->getSurveys();
     } else {
-      $fonctions = $user->getSurveys();
+      $surveys = $user->getSurveys();
     }
-    return $fonctions;
+    return $surveys;
   }
 
   public static function countGroups($sid)

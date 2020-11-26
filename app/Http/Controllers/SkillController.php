@@ -72,6 +72,12 @@ class SkillController extends Controller
       ],
       'bulk_action' => false,
     ]);
+    $table->addAction('stats', [
+      'icon' => 'fa fa-pie-chart',
+      'label' => 'Statistiques',
+      'route' => ['name' => 'skill.stats', 'args' => ['id' => '[id]']],
+      'bulk_action' => false,
+    ]);
     $table->addAction('delete', [
       'icon' => 'fa fa-trash',
       'label' => 'Supprimer',
@@ -198,6 +204,20 @@ class SkillController extends Controller
     return redirect()->back()->with("success", __("Les informations ont été sauvegardées avec succès"));
   }
 
+  public function stats($id, Request $request)
+  {
+    $skill = Skill::findOrFail($id);
+    if ($skill->user_id != User::getOwner()->id) {
+      abort(403);
+    }
+
+    if ($request->get('eid', 0) > 0) {
+      $e = Entretien::findOrFail($request->get('eid'));
+    }
+
+    return view('skills.stats', compact('skill'));
+  }
+
   /**
    * Remove the specified resource from storage.
    *
@@ -223,5 +243,7 @@ class SkillController extends Controller
       'content' => '<i class="fa fa-check-circle text-green"></i> '. __("La suppression a été effectuée avec succès"),
     ]);
   }
+
+
 
 }

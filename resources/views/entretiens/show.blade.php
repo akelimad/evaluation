@@ -12,6 +12,9 @@
 		.table-striped>tbody>tr:nth-of-type(odd) {
 			background: none !important;
 		}
+		.card-body.p-0 {
+			padding: 10px !important;
+		}
 	</style>
 @endsection
 @section('breadcrumb')
@@ -71,8 +74,8 @@
 		<div class="row mb-20">
 			<div class="col-md-6 mb-sm-20">
 				<div class="card card-danger p-0 m-0">
-					<div class="card-header text-center">
-						<h3 class="card-title text-muted font-22">Auto-évalutions</h3>
+					<div class="card-header text-center bg-primary text-white">
+						<h3 class="card-title font-22">Auto-évaluations</h3>
 					</div>
 					<div class="card-body">
 						<canvas id="collChart" style="height: 230px;"></canvas>
@@ -81,8 +84,8 @@
 			</div>
 			<div class="col-md-6">
 				<div class="card card-danger p-0 m-0">
-					<div class="card-header text-center">
-						<h3 class="card-title text-muted font-22">Evaluations {{ $e->isFeedback360() ? "des collègues" : "Manager" }} </h3>
+					<div class="card-header text-center bg-primary text-white bg-primary text-white">
+						<h3 class="card-title font-22">Evaluations {{ $e->isFeedback360() ? "des collègues" : "Manager" }} </h3>
 					</div>
 					<div class="card-body">
 						<canvas id="managerChart" style="height: 230px;"></canvas>
@@ -93,8 +96,8 @@
 		<div class="row mb-20">
 			<div class="col-md-12">
 				<div class="card m-0">
-					<div class="card-header text-center">
-						<h3 class="card-title text-muted font-22">Les évalués et leurs évaluateurs</h3>
+					<div class="card-header text-center bg-primary text-white">
+						<h3 class="card-title font-22">Les évalués et leurs évaluateurs</h3>
 					</div>
 					<div class="card-body p-0">
 						{{ request()->query->set('eid', $e->id) }}
@@ -111,8 +114,8 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="card p-0">
-					<div class="card-header text-center">
-						<h3 class="card-title text-muted font-22">Notes obtenues par les collaborateurs</h3>
+					<div class="card-header text-center bg-primary text-white">
+						<h3 class="card-title font-22">Notes obtenues par les collaborateurs</h3>
 					</div>
 					<div class="card-body p-0">
 						{{ request()->query->set('eid', $e->id) }}

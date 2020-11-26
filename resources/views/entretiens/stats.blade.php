@@ -81,7 +81,7 @@
                 <li class="nav-item {{ $deptCounter == 0 ? 'active':'' }}">
                   <a href="#department-{{ $dept_id }}-table" class="nav-link" data-toggle="tab">
                     {{ $dept ? $dept->title : 'N/A' }} ({{ $users->count() }})
-                    <p class="m-0" title="{{ __("Taux de réalisations") }}" data-toggle="tooltip">
+                    <p class="m-0">
                       {{ App\Answer::getUsersNotesBy('Department', $dept_id, $users, $e->id)  }}%
                     </p>
                   </a>

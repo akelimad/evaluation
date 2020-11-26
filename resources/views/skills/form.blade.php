@@ -93,9 +93,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
 
 <script>
-
   $(document).ready(function () {
-
     setTimeout(function () {
       new Vue({
         el: '#contentaa',

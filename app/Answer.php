@@ -72,7 +72,7 @@ class Answer extends Model
             }
         }
         $sum = number_format($sum, '2') + 0;
-        return $sum . ' %';
+        return $sum;
     }
 
     public static function getTotalNote($sid, $uid, $eid)
@@ -84,6 +84,10 @@ class Answer extends Model
         foreach ($groups as $group) {
             $grpNote = floatval(self::getGrpNote($group->id, $uid, $eid));
             $sum += $grpNote * ($group->ponderation / 100);
+        }
+
+        if (Setting::get('max_note', 10) == 10) {
+            $sum = $sum * 10;
         }
 
         return number_format($sum) + 0;

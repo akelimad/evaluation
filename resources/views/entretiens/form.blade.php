@@ -190,7 +190,7 @@
                     <div class="evals-wrapper mb-10">
                       <select name="items[{{$evaluation->id}}][object_id][]" id="entretien" class="form-control">
                         <option value="">Veuillez sélectionner</option>
-                        @foreach(App\Survey::getAll()->where('evaluation_id', 1)->orWhere('evaluation_id', 0)->get() as $s)
+                        @foreach(App\Survey::where('user_id', Auth::user()->getOwner()->id)->whereIn('evaluation_id', [0, 1])->get() as $s)
                           <option value="{{ $s->id }}" data-model-ref="{{ $s->getModele() ? $s->getModele()->ref : '---' }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>
@@ -201,7 +201,7 @@
                     <div class="carreers-wrapper mb-10">
                       <select name="items[{{$evaluation->id}}][object_id][]" id="carreer" class="form-control">
                         <option value="">Veuillez sélectionner</option>
-                        @foreach(App\Survey::getAll()->where('evaluation_id', 2)->orWhere('evaluation_id', 0)->get() as $s)
+                        @foreach(App\Survey::where('user_id', Auth::user()->getOwner()->id)->whereIn('evaluation_id', [0, 2])->get() as $s)
                           <option value="{{ $s->id }}" data-model-ref="{{ $s->getModele() ? $s->getModele()->ref : '---' }}" {{ in_array($s->id, $itemsId) ? 'selected':'' }}>{{ $s->title }}</option>
                         @endforeach
                       </select>

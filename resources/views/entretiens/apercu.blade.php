@@ -77,7 +77,7 @@
                 <div class="tab-content pt-30">
                   <div id="personnel" class="tab-pane fade in active">
                     @forelse($objectifsPersonnal as $key => $objectif)
-                      <h3 class="styled-title mt-0">{{ $objectif->title }}</h3>
+                      <h4 class="styled-title mt-0" style="border-radius: 5px;">{{ $objectif->title }}</h4>
                       <canvas class="chart" id="personnelChart{{$key+1}}" style="max-height: 600px;"></canvas>
                     @empty
                       <p>Aucun résultat trouvé !</p>
@@ -160,7 +160,7 @@
               @forelse($skill->getSkillsTypes() as $type)
                 <div class="row">
                   <div class="col-md-12">
-                    <h3 style="border-bottom: 2px solid gray;">{{ $type['title'] }} <span class="pull-md-right pull-sm-right">{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></h3>
+                    <h4 class="styled-title mt-0" style="border-radius: 5px;">{{ $type['title'] }} <span class="pull-md-right pull-sm-right">{{ $skill->getSkillTypeNote($e->id, $user->id, $user->parent->id, "skill_type_".$type['id'], $type['id'], 'mentor') }}/10</span></h4>
                     <canvas class="chart" id="type_{{ $type['id'] }}_chart" style="max-height: 600px;"></canvas>
                   </div>
                 </div>
@@ -178,7 +178,7 @@
               <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-salary"
                  aria-controls="collapse-salary">
                 <i class="more-less fa fa-chevron-right"></i>
-                Salaires
+                Primes
               </a>
             </h4>
           </div>

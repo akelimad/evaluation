@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Base;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 class Skill extends Model
@@ -101,7 +102,8 @@ class Skill extends Model
             $note = self::getNote($eid, $uid, $mentor_id, $field, $key, $profile);
             $sum += $note * ($ponderation / 100);
         }
-        return $sum;
+
+        return Base::cutNum($sum, 1);
     }
 
 }

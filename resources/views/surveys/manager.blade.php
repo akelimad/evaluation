@@ -351,7 +351,7 @@
     @if (!$e->isFeedback360())
     <div class="col-md-12 mt-30">
       <div class="alert alert-info">
-        @php($totalNote = \App\Answer::getTotalNote($survey->id, $user->id, $e->id))
+        @php($totalNote = App\Answer::getTotalNote($survey->id, $user->id, $e->id))
         @php($rateNote = ($totalNote * 10) / 100)
         @php($note = App\Helpers\Base::cutNum($rateNote, 1))
         <div class="row mb-0">
