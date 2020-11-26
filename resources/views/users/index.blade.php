@@ -23,6 +23,12 @@
           <a href="{{ url('users/import') }}" class="btn btn-success mb-sm-10"><i class="fa fa-upload"></i> {{ __("Importer") }}</a>
 
           <a href="{{ url('users/export') }}" class="btn bg-olive-active mb-sm-10"><i class="fa fa-download"></i> {{ __("Exporter") }}</a>
+
+          <a href="javascript:void(0)"
+             chm-modal="{{ route('users.demography') }}"
+             class="btn bg-orange-active mb-sm-10"
+          ><i class="fa fa-pie-chart"></i> {{ __("Démographie") }}
+          </a>
         </div>
       </div>
     </div>

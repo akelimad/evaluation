@@ -31,6 +31,7 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ADMIN|RH']], function() {
   Route::get('users/export', 'UserController@export')->name('users.export');
   Route::post('users/import_parse', 'UserController@parseImport');
   Route::post('users/import_process', 'UserController@processImport');
+  Route::get('users/demography', 'UserController@demography')->name('users.demography');
   Route::get('campagnes/table', 'EntretienController@getTable')->name('entretiens.table');
   Route::get('campagnes', 'EntretienController@index')->name('entretiens');
   Route::get('entretiens/{id}/show', 'EntretienController@show')->name('entretien.show');

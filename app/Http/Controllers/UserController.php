@@ -389,7 +389,16 @@ class UserController extends Controller
     } catch (\Exception $e) {
       return redirect()->back()->with('danger', __("Une erreur est survenue lors de l'exportation :error", ['error' => $e->getMessage()]));
     }
+  }
 
+  public function demography() {
+    ob_start();
+    $users = User::getUsers()->get();
+    $departments = $users->groupBy('service');
+    $functions = $users->groupBy('function');
+    echo view('users.demography', compact('users', 'departments', 'functions'));
+    $content = ob_get_clean();
+    return ['title' => __("Démographie des utilisateurs"), 'content' => $content];
   }
 
 
