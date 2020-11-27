@@ -42,6 +42,8 @@ import Fonction from './class/fonction'
 import Department from './class/department'
 import Team from './class/team'
 import Modele from './class/modele'
+import FormationLevel from './class/formationLevel'
+import ExperienceLevel from './class/experienceLevel'
 import Translation from './class/translation'
 
 // Standart jQuery script
@@ -84,4 +86,6 @@ window.Fonction = Fonction
 window.Department = Department
 window.Team = Team
 window.Modele = Modele
+window.FormationLevel = FormationLevel
+window.ExperienceLevel = ExperienceLevel
 window.Translation = Translation

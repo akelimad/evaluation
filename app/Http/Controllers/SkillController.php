@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entretien_user;
 use App\Fonction;
 use App\Http\Service\Table;
 use Illuminate\Http\Request;
@@ -68,7 +69,7 @@ class SkillController extends Controller
       'route' => ['name' => 'skill.form', 'args' => ['id' => '[id]']],
       'attrs' => [
         'chm-modal'=> '',
-        'chm-modal-options'=> '{"form":{"attributes":{"id":"skillForm", "target-table":"[chm-table]"}}}',
+        'chm-modal-options'=> '{"form":{"attributes":{"id":"skillForm","target-table":"[chm-table]"}}, "width": 700}',
       ],
       'bulk_action' => false,
     ]);
@@ -145,6 +146,13 @@ class SkillController extends Controller
     if ($functionAlreayHasSkills) {
       $validator->getMessageBag()->add('funct_exists', __("Cette fonction a déjà une fiche métier"));
     }
+    $functionnel_relationData = [];
+    if (isset($skillData['functionnel_relation'])) {
+      foreach ($skillData['functionnel_relation'] as $key => $item) {
+        if (empty($item['title']) || empty($item['description'])) continue;
+        $functionnel_relationData[] = $item;
+      }
+    }
     // validate ponderation
     foreach ($skillData['types'] as $tKey => $type) {
       if (empty($type['skills'])) continue;
@@ -161,6 +169,7 @@ class SkillController extends Controller
       return ["status" => "danger", "message" => $messages];
     }
     $skillData['skills_json'] = json_encode($skillData['types']);
+    $skillData['functionnel_relation'] = json_encode($functionnel_relationData);
     $skillData['user_id'] = User::getOwner()->id;
     if ($skillData['id'] > 0) {
       $skill = Skill::find($skillData['id']);

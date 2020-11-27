@@ -104,6 +104,18 @@ Route::group(['prefix' => '/', 'middleware' => ['role:ROOT']], function() {
   Route::post('model/store', 'ModeleController@store')->name('model.store');
   Route::delete('model/delete', 'ModeleController@delete')->name('model.delete');
 
+  Route::get('formation-levels/table', 'FormationLevelController@getTable')->name('formation-levels.table');
+  Route::get('config/settings/formation-levels', 'FormationLevelController@index')->name('formation-levels');
+  Route::any('formation-levels/form', 'FormationLevelController@form')->name('formation-levels.form');
+  Route::post('formation-levels/store', 'FormationLevelController@store')->name('formation-levels.store');
+  Route::delete('formation-levels/delete', 'FormationLevelController@delete')->name('formation-levels.delete');
+
+  Route::get('experience-levels/table', 'ExperienceLevelController@getTable')->name('experience-levels.table');
+  Route::get('config/settings/experience-levels', 'ExperienceLevelController@index')->name('experience-levels');
+  Route::any('experience-levels/form', 'ExperienceLevelController@form')->name('experience-levels.form');
+  Route::post('experience-levels/store', 'ExperienceLevelController@store')->name('experience-levels.store');
+  Route::delete('experience-levels/delete', 'ExperienceLevelController@delete')->name('experience-levels.delete');
+
   Route::get('roles/table', 'RoleController@getTable')->name('roles.table');
   Route::get('config/roles', 'RoleController@index')->name('config.roles');
   Route::any('role/form', 'RoleController@form')->name('role.form');

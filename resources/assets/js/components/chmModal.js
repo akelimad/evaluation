@@ -163,8 +163,7 @@ export default class chmModal {
 
         // Wrap every 3 dynamic fields in a row
         window.chmForm.wrapDynamicFields()
-
-        $(window).trigger('chmModalLoaded', {modal: modalTemplate, response: response})
+        $(document).trigger('chmModalLoaded')
       } catch (e) {
         console.error(e)
         classInstance.onError(options, e.message)

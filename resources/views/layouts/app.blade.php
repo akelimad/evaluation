@@ -192,7 +192,7 @@
         @endrole
 
         @role(["ROOT"])
-        @php($isRootConfig = in_array(Request::route()->getName(), ['languages', 'interface.translations', 'models', 'config.roles', 'permissions']))
+        @php($isRootConfig = in_array(Request::route()->getName(), ['languages', 'interface.translations', 'models', 'config.roles', 'permissions', 'formation-levels', 'experience-levels']))
         <li class="{{ Request::route()->getName() == 'companies' ? 'active' : '' }}">
           <a href="{{ route('companies') }}"><i class="fa fa-industry"></i> <span>{{ __("Comptes des sociétés") }}</span></a>
         </li>
@@ -210,6 +210,12 @@
             </li>
             <li class="{{ Request::route()->getName() == 'models' ? 'active' : '' }}">
               <a href="{{ route('models') }}"><i class="fa fa-list"></i> <span>{{ __("Modèles d'évaluations") }}</span></a>
+            </li>
+            <li class="{{ Request::route()->getName() == 'formation-levels' ? 'active' : '' }}">
+              <a href="{{ route('formation-levels') }}"><i class="fa fa-graduation-cap"></i> <span>{{ __("Niveaux de formations") }}</span></a>
+            </li>
+            <li class="{{ Request::route()->getName() == 'experience-levels' ? 'active' : '' }}">
+              <a href="{{ route('experience-levels') }}"><i class="fa fa-briefcase"></i> <span>{{ __("Niveaux d'expériences") }}</span></a>
             </li>
             <li class="{{ Request::route()->getName() == 'config.roles' ? 'active' : '' }}">
               <a href="{{ route('config.roles') }}"><i class="fa fa-user-secret"></i> {{ __("Rôles") }}</a>

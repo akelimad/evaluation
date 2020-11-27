@@ -3,6 +3,10 @@
 @section('breadcrumb')
   <li>Fiches métiers</li>
 @endsection
+@section('style')
+  @parent
+  <link rel="stylesheet" href="{{ asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
+@endsection
 @section('content')
   <section class="content p-sm-10" id="content">
     <div class="row">
@@ -38,11 +42,12 @@
 
 @section('javascript')
   @parent
+  <script src="{{asset('vendor/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
   <script>
-    $(document).ready(function () {
-      $(window).on('chmModalLoaded', function () {
 
-      })
+    $(document).ready(function () {
+
     })
+
   </script>
 @endsection

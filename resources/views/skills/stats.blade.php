@@ -32,14 +32,18 @@
       </form>
       <div class="graphs-container">
         <ul class="nav nav-tabs text-center" role="tablist" id="stats-tabs">
-          <li role="presentation" class="active">
-            <a href="#deptTab" role="tab" data-toggle="tab">{{ __("savoirgg") }}</a>
-          </li>
+          @forelse($skill->getSkillsTypes() as $key => $type)
+            <li role="presentation" class="{{ $key == 0 ? 'active':'' }}">
+              <a href="#tab-{{ $key }}" role="tab" data-toggle="tab">{{ $type['title'] }}</a>
+            </li>
+          @endforeach
         </ul>
         <div class="tab-content">
-          <div class="tab-pane fade active in" id="deptTab">
-            a
-          </div>
+          @forelse($skill->getSkillsTypes() as $key => $type)
+            <div class="tab-pane fade {{ $key == 0 ? 'active in':'' }}" id="tab-{{ $key }}">
+              {{ $key }}
+            </div>
+          @endforeach
         </div>
       </div>
     </div>

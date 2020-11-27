@@ -356,7 +356,7 @@
         @php($note = App\Helpers\Base::cutNum($rateNote, 1))
         <div class="row mb-0">
           <div class="col-md-4 mt-5">
-            <span class=""><b style="margin-right: 1em;">Note globale : {{ $note * 10 }}/100</b></span>
+            <span class=""><b style="margin-right: 1em;">Note globale : {{ $note * 10 }} %</b></span>
           </div>
           <div class="col-md-8">
             <div class="rating pull-left">

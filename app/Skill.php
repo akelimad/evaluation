@@ -8,7 +8,7 @@ use Auth;
 class Skill extends Model
 {
     protected $fillable = [
-      'function_id', 'title', 'description', 'skills_json', 'mobilite_pro', 'user_id'
+      'function_id', 'hierarchy_function_id', 'functional_function_id', 'formationlevel_id', 'experiencelevel_id', 'functionnel_relation', 'title', 'description', 'skills_json', 'mobilite_pro', 'user_id'
     ];
 
     public function user()
@@ -90,6 +90,13 @@ class Skill extends Model
 
     public function getSkillsTypes() {
         return json_decode($this->skills_json, true) ?: [];
+    }
+
+    public function getFunctionnelRelations() {
+        $data = json_decode($this->functionnel_relation, true) ?: [];
+        $data = count($data) <= 1 ? $data + ['' => ''] : $data;
+
+        return $data;
     }
 
     public function getSkillTypeNote($eid, $uid, $mentor_id, $field, $type_id, $profile) {
