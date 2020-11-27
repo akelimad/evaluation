@@ -343,11 +343,16 @@ class EntretienController extends Controller
     if (date('Y-m-d', strtotime('now')) < $date_limit) {
       $entretien->status = Entretien::CURRENT_STATUS;
     }
-
     $entretien->save();
 
-    // save cron job
-
+    if($file = $request->hasFile('guide')) {
+      $file = $request->file('guide') ;
+      $fileName = time().'.'.$file->clientExtension();
+      $destinationPath = public_path('/uploads/entretiens/'.$entretien->id) ;
+      $file->move($destinationPath,$fileName);
+      $entretien->guide = $fileName ;
+      $entretien->save();
+    }
 
     // attach evaluations ID
     if (!empty($request->items)) {

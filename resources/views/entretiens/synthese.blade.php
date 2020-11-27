@@ -90,6 +90,13 @@
                   <div class="col-md-8"> {{ $user->service ? App\Department::findOrFail($user->service)->title : '---' }} </div>
                   <div class="clearfix"></div>
                 </div>
+                  @if (!empty($e->guide))
+                  <div class="row">
+                    <label class="control-label col-md-4">Guide :</label>
+                    <div class="col-md-8"><a href="{{ asset('/uploads/entretiens/'.$e->id.'/'.$e->guide) }}" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fa fa-download"></i> Télécharger</a></div>
+                    <div class="clearfix"></div>
+                  </div>
+                  @endif
 
                 <div class="row">
                   <div class="col-md-12">

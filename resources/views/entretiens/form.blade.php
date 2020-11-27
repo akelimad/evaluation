@@ -313,6 +313,24 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="photo" class="control-label">Guide</label>
+              <div class="input-group">
+                <label class="input-group-btn">
+                <span class="btn btn-primary">
+                  Parcourir <input type="file" name="guide" chm-validate="extension,pdf|file_max_size,1024" style="display: none;" accept=".pdf">
+                </span>
+                </label>
+                <input type="text" id="guide" class="form-control" readonly="">
+              </div>
+              @if($entretien->guide != '')
+                <div class="logo" style="margin-top: 10px;">
+                  <a href="{{ asset('/uploads/entretiens/'.$entretien->id.'/'.$entretien->guide) }}" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fa fa-download"></i> Télécharger</a>
+                </div>
+              @endif
+            </div>
+          </div>
           <div class="actions">
             <button type="button" class="btn btn-default previous pull-left"><i class="fa fa-long-arrow-left"></i> Retour</button>
             <button type="button" class="btn btn-primary next pull-right">Continuer <i class="fa fa-long-arrow-right"></i></button>
@@ -407,6 +425,22 @@
 
   var usersId = []
   $(document).ready(function () {
+    $(document).on('change', ':file', function () {
+      var input = $(this),
+          numFiles = input.get(0).files ? input.get(0).files.length : 1,
+          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+      input.trigger('fileselect', [numFiles, label]);
+    });
+    $(document).ready(function () {
+      $(':file').on('fileselect', function (event, numFiles, label) {
+        var input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+        if (input.length) {
+          input.val(log);
+        }
+      });
+    });
+
     $('.datepicker').datepicker({
       startDate: new Date(),
       autoclose: true,
