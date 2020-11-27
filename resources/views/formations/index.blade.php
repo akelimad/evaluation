@@ -36,10 +36,6 @@
                        chm-table-params='{{ json_encode(request()->query->all()) }}'
                        id="FormationsTableContainer"
                   ></div>
-
-                  <div class="mt-20 p-20 bg-gray">
-                    <a href="{{ route('anglets.objectifs', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
-                  </div>
                 </div>
               </div>
             </div>

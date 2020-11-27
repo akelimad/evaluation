@@ -144,14 +144,6 @@
           @if(!App\Entretien::answered($e->id, Auth::user()->id))
             <button type="submit" class="btn btn-success pull-md-right pull-sm-right btn-xs-block mb-sm-10" id="submitAnswers"><i class="fa fa-save"></i> {{ __("Enregistrer") }}</button>
           @endif
-          @if(Request::route()->getName() == 'anglets.carrieres')
-            @php($route = 'anglets.evaluation-annuelle')
-          @elseif(Request::route()->getName() == 'anglets.evaluation-annuelle')
-            @php($route = 'anglets.synthese')
-          @else
-            @php($route = 'home')
-          @endif
-          <a href="{{ route($route, ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-xs-block"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
         </div>
       </form>
     @else

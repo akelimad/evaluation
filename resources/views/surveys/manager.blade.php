@@ -332,14 +332,6 @@
       @if (Route::current()->getName() != 'entretien.apercu')
         <div class="col-md-12">
           <div class="actions bg-gray p-20 clearfix">
-            @if(Request::route()->getName() == 'anglets.carrieres')
-              @php($route = 'anglets.evaluation-annuelle')
-            @elseif(Request::route()->getName() == 'anglets.evaluation-annuelle')
-              @php($route = 'anglets.synthese')
-            @else
-              @php($route = 'home')
-            @endif
-            <a href="{{ route($route, ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-xs-block mb-sm-10"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
             @if(!App\Entretien::answeredMentor($e->id, $user->id, $evaluator_id) && Route::current()->getName() != 'entretien.apercu')
               <button type="submit" class="btn btn-success pull-sm-right pull-md-right btn-xs-block" id="submitAnswers"><i class="fa fa-save "></i> {{ __("Enregistrer") }}</button>
             @endif
@@ -373,9 +365,3 @@
     <p class="alert alert-default">Aucune donnée disponible !</p>
   @endif
 </div>
-
-@section('javascript')
-  <script>
-
-  </script>
-@endsection

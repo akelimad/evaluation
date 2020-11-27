@@ -121,7 +121,6 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="p-20 bg-gray clearfix">
-                        <a href="{{ route('anglets.formations', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
                         @if(!App\Entretien::answered($e->id, $user->id) && Auth::user()->id == $user->id)
                           <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Enregistrer
                           </button>

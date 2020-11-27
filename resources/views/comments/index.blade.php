@@ -84,16 +84,6 @@
                       class="btn btn-success mb-20"
                   ><i class="fa fa-plus"></i>&nbsp;{{ "Ajouter un commentaire" }}</a>
               @endif
-
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="save-action bg-gray p-20">
-                      <a href="{{ route('anglets.primes', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
-                      <div class="clearfix"></div>
-                    </div>
-                  </div>
-                </div>
-
             </div>
           </div>
 

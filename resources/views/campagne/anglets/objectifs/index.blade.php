@@ -306,8 +306,6 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="save-action bg-gray p-20">
-                          <a href="{{ route('anglets.carrieres', ['eid' => $e->id, 'uid' => $user->id]) }}" class="btn btn-default btn-xs-block mb-sm-10"><i class="fa fa-long-arrow-left"></i> {{ __("Précédent") }}</a>
-
                           <button type="submit" class="btn btn-success pull-sm-right pull-md-right btn-xs-block"> <i class="fa fa-save"></i> Enregistrer tout</button>
                           <div class="clearfix"></div>
                         </div>
