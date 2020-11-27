@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="{{ asset('css/select2.min.css')}}">
   <link rel="stylesheet" href="{{ asset('vendor/bootstrap-slider/bootstrap-slider.min.css')}}">
   <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css')}} ">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jquery-bootstrap-scrolling-tabs@2.4.0/dist/jquery.scrolling-tabs.min.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -306,7 +307,16 @@
 <script src="{{asset('vendor/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
 <script src="{{asset('js/admin.min.js')}}"></script>
 <script src="{{asset('js/sweetalert2.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-bootstrap-scrolling-tabs@2.4.0/dist/jquery.scrolling-tabs.min.js"></script>
 <script src="{{ App\Asset::path('app.js') }}"></script>
+<script>
+  $(document).ready(function () {
+    $('.nav-tabs').scrollingTabs({
+      scrollToTabEdge: true,
+      enableSwiping: true
+    });
+  })
+</script>
 
 @yield('javascript')
 </body>

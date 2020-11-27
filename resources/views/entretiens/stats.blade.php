@@ -3,7 +3,6 @@
 @section('title', 'Statistiques')
 @section('style')
   @parent
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jquery-bootstrap-scrolling-tabs@2.4.0/dist/jquery.scrolling-tabs.min.css">
   <style>
     .scrtabs-tabs-fixed-container, .scrtabs-tab-container, #stats-tabs {
       height: 85px;
@@ -149,7 +148,6 @@
 
 @section('javascript')
   @parent
-  <script src="https://cdn.jsdelivr.net/npm/jquery-bootstrap-scrolling-tabs@2.4.0/dist/jquery.scrolling-tabs.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
   <script>

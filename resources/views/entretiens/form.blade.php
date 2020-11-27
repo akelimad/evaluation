@@ -182,7 +182,7 @@
                 @foreach($evaluations as $evaluation)
                   @php($itemsId = \App\Entretien_evaluation::getItemsId($entretien->id, $evaluation->id))
                   <div class="form-check">
-                    <input type="checkbox" name="items[{{$evaluation->id}}][]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="0" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
+                    <input type="checkbox" name="items[{{$evaluation->id}}][checked]" class="eval-item-checkbox form-check-input" id="eval-{{ $evaluation->id }}" value="1" chm-validate="required" {{ in_array($evaluation->id, $entretienEvalIds) ? 'checked':'' }}>
                     <label class="form-check-label" id="eval-{{$evaluation->id}}-label" for="eval-{{ $evaluation->id }}">{{ $evaluation->title }}</label>
                   </div>
 

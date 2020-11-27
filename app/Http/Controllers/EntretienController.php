@@ -358,7 +358,7 @@ class EntretienController extends Controller
     if (!empty($request->items)) {
       $clearedArrayKeys = [];
       foreach ($request->items as $evaluationId => $value) {
-        if (isset($value['object_id']) && isset($value['object_id'][0]) && empty($value['object_id'][0])) continue;
+        if (!isset($value['checked'])) continue;
         $clearedArrayKeys[] = $evaluationId;
       }
       $entretien->evaluations()->sync($clearedArrayKeys);
@@ -413,28 +413,6 @@ class EntretienController extends Controller
         }
       }
     }
-
-    // handle removed colls in edit action
-    /*$deleteEvalEmail = Email::getAll()->where('ref', 'delete_eval')->first();
-
-    if($deleteEvalEmail) {
-      foreach ($removedUsers as $uid) {
-        $user = User::findOrFail($uid);
-        if ($entretien->isFeedback360()) {
-          Entretien_user::where('entretien_id', $entretien->id)->where('user_id', $fb360_user_id)->where('mentor_id', $uid)->delete();
-        } else {
-          $entretien->users()->detach($user);
-        }
-        $campaignData = [
-          'entretien_id' => $entretien->id,
-          'email_id' => $deleteEvalEmail->id,
-          'receiver' => $user->email,
-          'shedule_type' => 'now',
-          'sheduled_at' => date('Y-m-d H:i'),
-        ];
-        Campaign::create($campaignData);
-      }
-    }*/
 
     return ["status" => "success", "message" => __("Les informations ont été sauvegardées avec succès")];
   }
