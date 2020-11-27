@@ -80,10 +80,10 @@
       <p class="control-label mb-5">{{ __("Relation fonctionnelle") }}</p>
       <div class="row" v-for="(item, iIndex) in functionnelRelations">
         <div class="col-md-4">
-          <textarea :name="'functionnel_relation['+iIndex+'][title]'" id="titre" placeholder="{{ __("Titre") }}" class="form-control" :value="item.title" style="min-height: 37px; height: 37px;"></textarea>
+          <input type="text" :name="'functionnel_relation['+iIndex+'][title]'" id="titre" placeholder="{{ __("Titre") }}" class="form-control" v-model="item.title">
         </div>
         <div class="col-md-7 pl-0">
-          <textarea :name="'functionnel_relation['+iIndex+'][description]'" id="description" placeholder="{{ __("Description") }}" class="form-control" :value="item.description" style="min-height: 37px; height: 37px;"></textarea>
+          <input type="text" :name="'functionnel_relation['+iIndex+'][description]'" id="description" placeholder="{{ __("Description") }}" class="form-control" v-model="item.description">
         </div>
         <div class="col-md-1 pl-0">
           <button type="button" :class="iIndex == functionnelRelations.length - 1 ? 'btn btn-success':'btn btn-danger'" @click="iIndex == functionnelRelations.length - 1 ? addFunctionnelRelation() : removeFunctionnelRelation(iIndex)"><i :class="iIndex == functionnelRelations.length - 1 ? 'fa fa-plus':'fa fa-minus'"></i></button>
@@ -164,8 +164,8 @@
           functionnelRelations: [
             @foreach($skill->getFunctionnelRelations() as $key => $item)
             {
-              title: "{!! isset($item['title']) ? $item['title'] : '' !!}",
-              description: "{!! isset($item['description']) ? $item['description'] : '' !!}",
+              title: "{{ isset($item['title']) ? $item['title'] : '' }}",
+              description: "{{ isset($item['description']) ? $item['description'] : '' }}",
             },
             @endforeach
           ],
@@ -221,8 +221,8 @@
           },
           addFunctionnelRelation: function () {
             this.functionnelRelations.push({
-              title: '',
-              description: ''
+              title: "",
+              description: ""
             })
           },
           removeFunctionnelRelation: function (iIndex) {

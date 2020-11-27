@@ -115,7 +115,7 @@
                 <li class="nav-item {{ $funcCounter == 0 ? 'active':'' }}">
                   <a href="#function-{{ $func_id }}-table" class="nav-link" data-toggle="tab">
                     {{ $func ? $func->title : 'N/A' }} ({{ $users->count() }})
-                    <p class="m-0" title="{{ __("Taux de réalisations") }}" data-toggle="tooltip">
+                    <p class="m-0">
                       {{ App\Answer::getUsersNotesBy('Fonction', $func_id, $users, $e->id)  }}%
                     </p>
                   </a>

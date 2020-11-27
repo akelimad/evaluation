@@ -219,12 +219,18 @@ class SkillController extends Controller
     if ($skill->user_id != User::getOwner()->id) {
       abort(403);
     }
-
+    $entretien = null;
+    $entretienUsers = [];
     if ($request->get('eid', 0) > 0) {
-      $e = Entretien::findOrFail($request->get('eid'));
+      $entretien = Entretien::findOrFail($request->get('eid'));
+      $entretienUsers = Entretien_user::join('users as u', 'u.id', '=', 'entretien_user.user_id')
+        ->select('u.*')
+        ->where('entretien_user.entretien_id', $entretien->id)
+        ->where('u.function', $skill->function_id)
+        ->get();
     }
 
-    return view('skills.stats', compact('skill'));
+    return view('skills.stats', compact('skill', 'entretien', 'entretienUsers'));
   }
 
   /**
