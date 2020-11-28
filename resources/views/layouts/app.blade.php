@@ -221,8 +221,8 @@
             <li class="{{ Request::route()->getName() == 'config.roles' ? 'active' : '' }}">
               <a href="{{ route('config.roles') }}"><i class="fa fa-user-secret"></i> {{ __("Rôles") }}</a>
             </li>
-            <li class="{{ Request::route()->getName() == 'permissions' ? 'active' : '' }}">
-              <a href="{{ route('permissions') }}"><i class="fa fa-lock"></i> {{ __("Permissions") }}</a>
+            <!--<li class="{{ Request::route()->getName() == 'permissions' ? 'active' : '' }}">
+              <a href="{{ route('permissions') }}"><i class="fa fa-lock"></i> {{ __("Permissions") }}</a>-->
             </li>
           </ul>
         </li>
