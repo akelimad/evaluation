@@ -4,26 +4,26 @@
 @section('style')
   @parent
   <style>
-    .scrtabs-tabs-fixed-container, .scrtabs-tab-container, #stats-tabs {
+    .scrtabs-tabs-fixed-container, .scrtabs-tab-container, #nav-tabs {
       height: 85px;
     }
-    #stats-tabs>li.active>a,
-    #stats-tabs>li.active>a:hover,
-    #stats-tabs>li.active>a:focus {
+    #nav-tabs>li.active>a,
+    #nav-tabs>li.active>a:hover,
+    #nav-tabs>li.active>a:focus {
       background-color: #fff;
       font-weight: 700;
       color: dodgerblue;
       border: none;
     }
-    #stats-tabs {
+    #nav-tabs {
       background-color: #CCC;
       font-weight: 700;
       color: #CCC;
     }
-    #stats-tabs li {
+    #nav-tabs li {
       height: 100%;
     }
-    #stats-tabs li a {
+    #nav-tabs li a {
       border-radius: 0;
       height: 100%;
       color: gray;
@@ -55,7 +55,7 @@
   <section class="content p-sm-10">
     <div class="row">
       <div class="col-md-12">
-        <ul class="nav nav-tabs text-center" role="tablist" id="stats-tabs">
+        <ul class="nav nav-tabs text-center" role="tablist" id="nav-tabs">
           <li role="presentation" class="active">
             <a href="#deptTab" role="tab" data-toggle="tab">
               {{ __("Départements") }}
@@ -161,10 +161,6 @@
     }
 
     $(document).ready(function () {
-      $('#stats-tabs').scrollingTabs({
-        scrollToTabEdge: true,
-        enableSwiping: true
-      });
 
       var chartOptions = {
         responsive: true,

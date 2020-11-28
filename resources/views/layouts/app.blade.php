@@ -311,7 +311,7 @@
 <script src="{{ App\Asset::path('app.js') }}"></script>
 <script>
   $(document).ready(function () {
-    $('.nav-tabs').scrollingTabs({
+    $('#nav-tabs').scrollingTabs({
       scrollToTabEdge: true,
       enableSwiping: true
     });

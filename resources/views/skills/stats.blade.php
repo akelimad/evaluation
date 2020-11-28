@@ -92,6 +92,7 @@
             stacked: false,
             ticks: {
               autoSkip: false,
+              min: 0,
               max: 10
             }
           }],

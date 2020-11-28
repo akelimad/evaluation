@@ -326,7 +326,7 @@ class EntretienUserController extends Controller
         if ($mentorHasSubmitted) $canReceive = false;
       } else {
         $reciever = User::findOrFail($item['user_id']);
-        $userHasSubmitted = Entretien_user::userHasSubmitedEval($eid, $uid);
+        $userHasSubmitted = Entretien_user::userHasSubmitedEval($eid, $item['user_id']);
         if ($userHasSubmitted) $canReceive = false;
       }
       if (!$canReceive) continue;
